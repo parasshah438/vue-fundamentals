@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue.js 3 Lifecycle Example</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">{{ message }}</div>
+    <script>
+        const { createApp } = Vue;
+        createApp({
+            data() {
+                return {
+                    message: 'Hello World!'
+                }
+            },
+            beforeCreate() {
+                console.log('beforeCreate: Instance is being initialized.');
+            },
+            created() {
+                console.log('created: Instance has been created.');
+            },
+            beforeMount() {
+                console.log('beforeMount: About to mount the instance.');
+            },
+            mounted() {
+                console.log('mounted: Instance has been mounted.');
+            },
+            beforeUpdate() {
+                console.log('beforeUpdate: Data is about to be updated.');
+            },
+            updated() {
+                console.log('updated: Data has been updated.');
+            },
+            beforeUnmount() {
+                console.log('beforeUnmount: Instance is about to be destroyed.');
+            },
+            unmounted() {
+                console.log('unmounted: Instance has been destroyed.');
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

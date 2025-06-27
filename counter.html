@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vue.js Example</title>
+  </head>
+  <body>
+    <div id="app">
+      <p>Counter value is : {{counter}}</p>
+      <button @click="increment">Increment</button>
+      <button @click="decrement">Decrement</button>
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+      const { createApp } = Vue;
+      createApp({
+        data() {
+          return {
+            counter: 0,
+          };
+        },
+        methods: {
+            increment() {
+                this.counter++;
+            },
+            decrement() {
+                if (this.counter > 0) {
+                    this.counter--;
+                }
+            },    
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

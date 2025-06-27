@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vue js</title>
+</head>
+<body>
+  <div id="app">
+
+
+    <form @submit.prevent="submitForm">
+        <input type="text" v-model="name" placeholder="Type something...">
+        <p>{{name}}</p>
+        <br>
+        <input type="text" v-model="email" placeholder="Type your email...">
+        <p>{{email}}</p>
+
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+    <div v-if="submitted" v-cloak style="color:green;">
+    Success! Form submitted.
+  </div>
+  </div>
+</body>
+</html>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script>
+const { createApp } = Vue;
+createApp({
+  data(){
+    return{
+        name:"",
+        email:"",
+        submitted: false,
+        itsShowing: false,
+    }
+  },
+  methods: {
+    submitForm() {
+      alert(this.name+ " " + this.email);
+      this.submitted = true;
+    }
+  },
+}).mount('#app')
+</script>

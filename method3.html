@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vue.js Example</title>
+  </head>
+  <body>
+    <div id="app">
+      <p v-if="displayMessage" >{{message}}</p>
+      <button @click="showMessage">Show Message</button>
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+      const { createApp } = Vue;
+      createApp({
+        data() {
+          return {
+            displayMessage: false,
+            message: "Hello message from Vue method",
+          };
+        },
+        methods: {
+          showMessage() {
+            this.displayMessage = !this.displayMessage;
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

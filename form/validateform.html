@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Vue Form Submit & Validation Example</title>
+</head>
+<body>
+  <div id="app">
+    <h2>Registration Form</h2>
+    <form @submit.prevent="submitForm">
+      <div>
+        <label>Name:</label>
+        <input v-model="name" type="text"  @input="nameError = ''">
+        <span style="color:red" v-if="nameError">{{ nameError }}</span>
+      </div>
+      <div>
+        <label>Email:</label>
+        <input v-model="email" type="email" @input="emailError = ''">
+        <span style="color:red" v-if="emailError">{{ emailError }}</span>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+    <div v-if="submitted">
+      <h3 :style="{color:'green'}">Form Submitted!</h3>
+      <p>Name: {{ name }}</p>
+      <p>Email: {{ email }}</p>
+    </div>
+  </div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          name: '',
+          email: '',
+          nameError: '',
+          emailError: '',
+          submitted: false
+        }
+      },
+      methods: {
+        submitForm() {
+          this.nameError = '';
+          this.emailError = '';
+          this.submitted = false;
+
+          if (!this.name) {
+            this.nameError = 'Name is required.';
+          }
+          if (!this.email) {
+            this.emailError = 'Email is required.';
+          }
+
+          if (!this.nameError && !this.emailError) {
+            this.submitted = true;
+            this.name = '';
+            this.email = '';
+          }
+        }
+      }
+    }).mount('#app')
+  </script>
+</body>
+</html>

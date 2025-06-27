@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vue js</title>
+</head>
+<body>
+<div id="app">
+  <h1>To-Do List</h1>
+  <input v-model="newTodo" type="text" placeholder="Enter a new todo">
+  <button @click="addTodo">Add Todo</button>
+  <span v-if="errorMessage" style="color: red;">{{ errorMessage }}</span>
+  <ul>
+    <li v-for="todo in todos" :key="todo">
+      {{ todo }}
+      <button @click="removeTodo(todo)">Remove</button>
+    </li>
+  </ul>
+</div>
+</body>
+</html>
+<script src="https://unpkg.com/vue@3.4.29/dist/vue.global.js"></script>
+<script>
+  const { createApp } = Vue;
+  createApp({
+    data() {
+      return {
+        newTodo: '',
+        todos: [],
+        errorMessage: ''
+      }
+    },
+    methods: {
+      addTodo() {
+        if (this.newTodo.trim()) {
+          this.todos.push(this.newTodo.trim());
+          this.newTodo = '';
+          this.errorMessage = '';
+        } else {
+          this.errorMessage = 'Todo cannot be empty';
+        }
+      },
+      removeTodo(todo) {
+        this.todos = this.todos.filter(t => t !== todo);
+      }
+    }
+  }).mount('#app')
+</script>

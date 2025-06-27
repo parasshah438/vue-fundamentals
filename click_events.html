@@ -1,0 +1,70 @@
+<html>
+    <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vue.js Example</title>
+    </head>
+    <body>
+        <div id="app">
+           <h2 v-text="message"></h2>
+           <!-- Click Events Example -->
+           <button @click="showMessage">Click Me</button>
+           <button @dblclick="doubleClick">Double Click Me</button>
+           <button @contextmenu.prevent="rightClick">Right Click Me</button>
+           <button @mousedown="mouseDown">Mouse Down</button>
+           <button @mouseup="mouseUp">Mouse Up</button>
+           <button @mouseenter="mouseEnter">Mouse Enter</button>
+           <button @mouseleave="mouseLeave">Mouse Leave</button>
+           <button @mouseover="mouseOver">Mouse Over</button>
+           <button @mouseout="mouseOut">Mouse Out</button>
+           <button @mousemove="mouseMove">Mouse Move</button>
+           <br><br>
+           <!-- Your previous example -->
+           <button @click="showMessage">Show message</button>
+           <button @mousedown="showMessage">Hover over me</button>
+        </div>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script>
+        const { createApp } = Vue;
+        createApp({
+            data(){
+                return{
+                    message: "Hello",
+                }
+            },
+            methods:{
+                showMessage() {
+                    this.message = "You clicked the button!";
+                },
+                doubleClick() {
+                    this.message = "You double-clicked the button!";
+                },
+                rightClick() {
+                    this.message = "You right-clicked the button!";
+                },
+                mouseDown() {
+                    this.message = "Mouse down on the button!";
+                },
+                mouseUp() {
+                    this.message = "Mouse up on the button!";
+                },
+                mouseEnter() {
+                    this.message = "Mouse entered the button!";
+                },
+                mouseLeave() {
+                    this.message = "Mouse left the button!";
+                },
+                mouseOver() {
+                    this.message = "Mouse over the button!";
+                },
+                mouseOut() {
+                    this.message = "Mouse out of the button!";
+                },
+                mouseMove() {
+                    this.message = "Mouse moving over the button!";
+                }
+            }
+        }).mount("#app")
+        </script>
+    </body>
+</html>

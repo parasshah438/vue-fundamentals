@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vue.js All Directives Example</title>
+  <style>
+    [v-cloak] { display: none; }
+    .box { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h2>{{ message }}</h2>
+    <h3>v-bind</h3>
+    <img v-bind:src="imageUrl" alt="Vue logo" width="60">
+
+    <h3>v-model</h3>
+    <input v-model="inputText" placeholder="Type something...">
+    <p>You typed: {{ inputText }}</p>
+
+    <h3>v-if, v-else-if, v-else</h3>
+    <input v-model.number="score" type="number" placeholder="Enter your score">
+    <p>
+      <span v-if="score >= 80">Excellent!</span>
+      <span v-else-if="score >= 50">Good job!</span>
+      <span v-else>Keep trying!</span>
+    </p>
+
+    <h3>v-for</h3>
+    <ul>
+      <li v-for="(item, index) in items" :key="index">{{ item }}</li>
+    </ul>
+
+    <h3>v-on</h3>
+    <button @click="showAlert">Click Me</button>
+
+    <h3>v-show</h3>
+    <button @click="isVisible = !isVisible">Toggle Message</button>
+    <p v-show="isVisible">This message is visible when isVisible is true.</p>
+
+    <h3>v-text</h3>
+    <p v-text="plainText"></p>
+
+    <h3>v-html</h3>
+    <p v-html="htmlContent"></p>
+
+    <h3>v-pre</h3>
+    <pre v-pre>{{ This will not be compiled }}</pre>
+
+    <h3 v-cloak>v-cloak</h3>
+    <div v-cloak>{{ cloakMessage }}</div>
+
+    <h3>v-once</h3>
+    <p v-once>{{ onceMessage }}</p>
+  </div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          message: "Vue.js All Directives Example",
+          imageUrl: "https://vuejs.org/images/logo.png",
+          inputText: '',
+          score: '',
+          items: ['Apple', 'Banana', 'Cherry'],
+          isVisible: true,
+          plainText: "This is plain text using v-text.",
+          htmlContent: "<strong>This is bold HTML using v-html.</strong>",
+          cloakMessage: "This will show after Vue is ready.",
+          onceMessage: "This will only render once!"
+        }
+      },
+      methods: {
+        showAlert() {
+          alert('Button clicked!');
+        }
+      }
+    }).mount('#app')
+  </script>
+</body>
+</html>

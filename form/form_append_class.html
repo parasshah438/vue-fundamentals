@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vue js</title>
+  <style>
+    .custom-input {
+      border: 2px solid #42b983;
+      background: #e6f9f0;
+      padding: 5px;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <input
+      type="text"
+      v-model="inputValue"
+      :class="inputValue.length > 0 ? 'custom-input' : ''"
+      placeholder="Type to add custom class"
+    >
+    <p>Input value: {{ inputValue }}</p>
+  </div>
+</body>
+</html>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script>
+const { createApp } = Vue;
+createApp({
+  data() {
+    return {
+      message: "Hello vue js",
+      version: "version 3",
+      inputValue: ""
+    }
+  }
+}).mount('#app')
+</script>

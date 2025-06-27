@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vue.js Example</title>
+    <style>
+      .error {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <input type="text" v-model="name" placeholder="Enter your name" />
+      <br />
+      <input type="text" v-model="email" placeholder="Enter your email" />
+      <br />
+      <button type="button" @click="addUser">Submit</button>
+      <br />
+      <span v-if="displayName && displayEmail">
+        Welcome, {{ displayName }}! Your email is {{ displayEmail }}.
+      </span>
+      <br />
+      <span v-if="errorMessage" class="error">{{ errorMessage }}</span>
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+      const { createApp } = Vue;
+      createApp({
+        data() {
+          return {
+            name: "",
+            email: "",
+            displayName: "",
+            displayEmail: "",
+            errorMessage: "",
+          };
+        },
+        methods: {
+          addUser() {
+            this.errorMessage = "";
+
+            // Validate name
+            if (this.name.trim() === "") {
+              this.displayName = "";
+              this.errorMessage = "Please enter your name";
+              return;
+            }
+
+            // Validate email
+            if (this.email.trim() === "") {
+              this.displayEmail = "";
+              this.errorMessage = "Please enter your email";
+              return;
+            }
+
+            // If both fields are valid
+            this.displayName = this.name;
+            this.displayEmail = this.email;
+            this.name = ""; // Clear input fields
+            this.email = "";
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

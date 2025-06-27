@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vue js</title>
+  <style>
+    .impClass {
+      background-color: lightcoral;
+    }
+  </style>
+</head>
+<body>
+  <!-- SyntaxGet 
+    <div v-bind:[attribute]="[Vue data]"></div>
+  -->
+  <div id="app">
+    <h2>{{ message }}</h2><!-- Contains only one data binding --->
+    <br>
+    <p v-bind:style="{color:textColor}">Hello vue js</p>
+    <br>
+    <p v-bind:style="{ color: textColor, 'background-color': bgcolor }">Hello vue js</p>
+    <br>
+    <p v-bind:class="className">Importance visualized by background color</p>
+    <br>
+    <img :src="imageUrl" :style="{width:imgWidth}"> <!-- Shorthand syntax -->
+  </div>
+</body>
+</html>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script>
+ const { createApp } = Vue;
+  createApp({
+    data() {
+      return {sd
+        message: 'Vue js v-bind directive',
+        textColor: 'pink',
+        bgcolor : 'black',
+        imageUrl: "https://vuejs.org/images/logo.png",
+        className : "impClass",
+        imgWidth : "50px"
+      }
+    }
+  }).mount('#app');
+</script>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vue js</title>
+</head>
+<body>
+  <div id="app">
+    <h2>{{ message }}</h2>
+    <br>
+
+    <div v-if="isStock > 0">
+      <p>Product on stock</p>
+    </div>
+
+    <div v-else="isStock">
+      <p>Product not in stock</p>
+    </div>
+
+    <div v-if="isDisplay > 0">
+      <img :src="imageUrl">
+    </div>
+
+    <div v-if="visible == 1">
+      <p>Message now visible</p>
+    </div>
+
+  </div>
+</body>
+</html>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script>
+ const { createApp } = Vue;
+  createApp({
+    data() {
+      return {
+        message:'Vue js v-if directive',
+        imageUrl:"https://vuejs.org/images/logo.png",
+        isDisplay:true,
+        isStock:1,
+        visible:1
+      }
+    }
+  }).mount('#app');
+</script>

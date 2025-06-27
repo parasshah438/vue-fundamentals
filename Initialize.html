@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vue js</title>
+</head>
+<body>
+  <div id="app">
+    <h2>{{ message }}</h2>
+    <br>
+    <p v-bind:style="{color:'red'}">{{app}}</p>
+  </div>
+</body>
+</html>
+<script src="https://unpkg.com/vue@3.4.29/dist/vue.global.js"></script>
+<script>
+ const { createApp } = Vue;
+  createApp({
+    data() {
+      return {
+        message: 'Hello Vue 3.4!',
+        app: 'Vue app',
+      }
+    }
+  });
+  const app = createApp({});
+</script>

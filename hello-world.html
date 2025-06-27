@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World with Vue.js 3</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">{{ message }}</div>
+    <script>
+        //Create a Vue application
+        const { createApp } = Vue; //Importing createApp from Vue 3
+        createApp({
+            data() {
+                return {
+                    message: 'Hello World!'
+                }
+            }
+            //Mount the application to the DOM
+        }).mount('#app');
+    </script>
+</body>
+</html>

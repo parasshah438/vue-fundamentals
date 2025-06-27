@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vue js</title>
+</head>
+<body>
+  <div id="app">
+    <form @submit.prevent="submitForm">
+      <div>
+        <label>first name:</label>
+        <input type="text" v-model="form.firstname" required>
+      </div>
+      <div>
+        <label>last name:</label>
+        <input type="text" v-model="form.lastname" required>
+      </div>
+      <div>
+        <label>Mobile Number:</label>
+        <input type="text" v-model="form.number" required>
+      </div>
+       <div>
+        <label>Email:</label>
+        <input type="text" v-model="form.email" required>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+    <div v-if="users.length">
+      <h3>User Details</h3>
+      <div v-for="(item, index) in users" :key="index" style="border:1px solid #ccc; margin-bottom:10px; padding:10px;">
+        <p><strong>First Name:</strong> {{ item.firstname }}</p>
+        <p><strong>Last Name:</strong> {{ item.lastname }}</p>
+         <p><strong>Mobile Number:</strong> {{ item.number }}</p>
+        <p><strong>Email:</strong> {{ item.email }}</p>
+      </div>
+    </div>
+    <div v-else>
+      <p>No user details submitted yet.</p>
+  </div>
+</body>
+</html>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script>
+const { createApp } = Vue;
+createApp({
+  data() {
+    return {
+      form: {
+        firstname: '',
+        lastname: '',
+        number: '',
+        email: '',
+      },
+      users: []
+    }
+  },
+  methods: {
+    submitForm() {
+      this.users.push({ ...this.form });// Push a copy of the form data to users array
+      // Clear the form fields after submission
+      this.form.firstname = '';
+      this.form.lastname = '';
+      this.form.number = '';
+      this.form.email = '';
+    }
+  }
+}).mount('#app')
+</script>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Vue All Events Example</title>
+</head>
+<body>
+  <div id="app">
+    <h2>{{ message }}</h2>
+    <h3>Mouse Events</h3>
+    <button @click="showMessage('Clicked!')">Click</button>
+    
+    <button @dblclick="showMessage('Double Clicked!')">Double Click</button>
+    
+    <button @contextmenu.prevent="showMessage('Right Clicked!')">Right Click</button>
+    
+    <button @mousedown="showMessage('Mouse Down!')">Mouse Down</button>
+    
+    <button @mouseup="showMessage('Mouse Up!')">Mouse Up</button>
+    
+    <button @mouseenter="showMessage('Mouse Enter!')">Mouse Enter</button>
+    
+    <button @mouseleave="showMessage('Mouse Leave!')">Mouse Leave</button>
+    
+    <button @mouseover="showMessage('Mouse Over!')">Mouse Over</button>
+    
+    <button @mouseout="showMessage('Mouse Out!')">Mouse Out</button>
+    
+    <button @mousemove="showMessage('Mouse Move!')">Mouse Move</button>
+
+    <h3>Keyboard Events</h3>
+    <input @keydown="showMessage('Key Down: ' + $event.key)" placeholder="Key Down">
+    <input @keyup="showMessage('Key Up: ' + $event.key)" placeholder="Key Up">
+    <input @keypress="showMessage('Key Press: ' + $event.key)" placeholder="Key Press">
+
+    <h3>Form Events</h3>
+    <input @input="showMessage('Input: ' + $event.target.value)" placeholder="Input">
+    <input @change="showMessage('Changed: ' + $event.target.value)" placeholder="Change">
+    <input @focus="showMessage('Focused!')" placeholder="Focus">
+    <input @blur="showMessage('Blurred!')" placeholder="Blur">
+    <form @submit.prevent="showMessage('Form Submitted!')">
+      <button type="submit">Submit Form</button>
+    </form>
+
+    <h3>Clipboard Events</h3>
+    <input @copy="showMessage('Copied!')" @cut="showMessage('Cut!')" @paste="showMessage('Pasted!')" placeholder="Copy/Cut/Paste">
+
+    <h3>Other Events</h3>
+    <div style="width:200px;height:50px;overflow:auto;border:1px solid #ccc;" @scroll="showMessage('Scrolled!')">
+      Scroll me!<br><br><br>More content...
+    </div>
+    <!-- Note: @resize works on window, not elements -->
+    <button @drag="showMessage('Dragging!')" draggable="true">Drag Me</button>
+    <div @drop="showMessage('Dropped!')" @dragover.prevent style="width:100px;height:40px;border:1px dashed #888;margin-top:10px;">
+      Drop Here
+    </div>
+  </div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          message: "Vue All Events Example"
+        }
+      },
+      methods: {
+        showMessage(msg) {
+          this.message = msg;
+        }
+      }
+    }).mount('#app')
+  </script>
+</body>
+</html>

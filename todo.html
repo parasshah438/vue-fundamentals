@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vue js</title>
+</head>
+<body>
+<div id="app">
+  <h1>To-Do List</h1>
+  <input v-model="newTodo" @keyup.enter="addTodo">
+  <ul>
+    <li v-for="todo in todos" :key="todo">
+      {{ todo }}
+      <button @click="removeTodo(todo)">Remove</button>
+    </li>
+  </ul>
+</div>
+</body>
+</html>
+<script src="https://unpkg.com/vue@3.4.29/dist/vue.global.js"></script>
+<script>
+  const { createApp } = Vue;
+  createApp({
+    data() {
+      return {
+        newTodo: '',
+        todos: []
+      }
+    },
+    methods: {
+      addTodo() {
+        if (this.newTodo) {
+          this.todos.push(this.newTodo);
+          this.newTodo = '';
+        }
+      },
+      removeTodo(todo) {
+        this.todos = this.todos.filter(t => t !== todo);
+      }
+    }
+  }).mount('#app')
+</script>
