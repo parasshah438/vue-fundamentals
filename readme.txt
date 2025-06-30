@@ -176,9 +176,7 @@ Each component has its own template, logic, and data.
 To break your app into smaller, manageable pieces (like buttons, forms, cards, etc.)
 To reuse UI blocks across your app
 To organize code for better readability and maintainability
-
-
-
+You can think of components as custom elements that you define and reuse anywhere in your app.
 
 
 Useful Links

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue 3 Directives Example</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    [v-cloak] {
+      display: none;
+    }
+    .card {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app" v-cloak>
+  <!-- v-bind -->
+  <img :src="imageUrl" alt="Vue Logo" width="100" />
+
+  <!-- v-model -->
+  <input v-model="inputText" placeholder="Type something..." />
+
+  <!-- v-if / v-else-if / v-else -->
+  <p v-if="inputText.length > 10">Text is too long!</p>
+  <p v-else-if="inputText.length > 0">Looks good!</p>
+  <p v-else>Start typing</p>
+
+  <!-- v-for -->
+  <ul>
+    <li v-for="(item, index) in items" :key="index">
+      {{ index + 1 }}. {{ item }}
+    </li>
+  </ul>
+
+  <!-- v-on -->
+  <button v-on:click="addItem">Add Item</button>
+
+  <!-- v-show -->
+  <p v-show="showMessage">This message is conditionally shown</p>
+
+  <!-- v-text -->
+  <p v-text="textContent"></p>
+
+  <!-- v-html -->
+  <div v-html="htmlContent"></div>
+
+  <!-- v-once -->
+  <p v-once>This will never change: {{ onceText }}</p>
+
+  <!-- v-pre -->
+  <pre v-pre>{{ this will not be compiled }}</pre>
+
+  <!-- v-slot example using inline component -->
+  <custom-card>
+    <template v-slot:header>
+      <h2>Custom Header</h2>
+    </template>
+    <template v-slot:default>
+      <p>This is default slot content.</p>
+    </template>
+  </custom-card>
+</div>
+
+<script>
+const { createApp, defineComponent } = Vue;
+
+// Custom card component with named slots
+const CustomCard = defineComponent({
+  template: `
+    <div class="card">
+      <header><slot name="header"></slot></header>
+      <main><slot></slot></main>
+    </div>
+  `
+});
+
+// Main app
+createApp({
+  components: {
+    CustomCard
+  },
+  data() {
+    return {
+      inputText: '',
+      imageUrl: 'https://vuejs.org/images/logo.png',
+      items: ['Apple', 'Banana', 'Cherry'],
+      showMessage: true,
+      textContent: 'This is v-text example',
+      htmlContent: '<strong>This is bold via v-html</strong>',
+      onceText: 'Loaded once only'
+    };
+  },
+  methods: {
+    addItem() {
+      this.items.push('New Item');
+    }
+  }
+}).mount('#app');
+</script>
+
+</body>
+</html>
