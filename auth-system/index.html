@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue.js 3 Authentication System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .auth-header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .auth-header h2 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .auth-body {
+            padding: 40px 30px;
+        }
+
+        .form-floating {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            height: auto;
+        }
+
+        .form-control:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+        }
+
+        .btn-auth {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-auth:hover {
+            background: linear-gradient(135deg, #45a049 0%, #4CAF50 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .auth-switch a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-switch a:hover {
+            color: #45a049;
+            text-decoration: underline;
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .dashboard-container {
+            background: white;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand, .navbar-nav .nav-link {
+            color: white !important;
+            font-weight: 500;
+        }
+
+        .navbar-nav .nav-link:hover {
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 40px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .profile-card h5 {
+            color: #4CAF50;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f8f9fa;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 500;
+            color: #6c757d;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .stats-card .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .stats-card .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stats-card .label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Loading Spinner -->
+        <div v-if="loading" class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <!-- Authentication Views -->
+        <div v-else-if="!user" class="auth-container">
+            <div class="auth-card">
+                <!-- Login Form -->
+                <div v-if="currentView === 'login'">
+                    <div class="auth-header">
+                        <i class="fas fa-user-circle fa-3x mb-3"></i>
+                        <h2>Welcome Back</h2>
+                        <p class="mb-0">Sign in to your account</p>
+                    </div>
+                    <div class="auth-body">
+                        <div v-if="alert.message" :class="'alert alert-' + alert.type" role="alert">
+                            <i :class="'fas ' + (alert.type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle')"></i>
+                            {{ alert.message }}
+                        </div>
+                        
+                        <form @submit.prevent="login" :class="{ loading: submitting }">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="loginEmail" 
+                                       v-model="loginForm.email" placeholder="name@example.com" required>
+                                <label for="loginEmail">
+                                    <i class="fas fa-envelope me-2"></i>Email address
+                                </label>
+                            </div>
+                            
+                            <div class="form-floating">
+                                <input type="password" class="form-control" id="loginPassword" 
+                                       v-model="loginForm.password" placeholder="Password" required>
+                                <label for="loginPassword">
+                                    <i class="fas fa-lock me-2"></i>Password
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-auth btn-primary w-100" :disabled="submitting">
+                                <span v-if="submitting">
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                    Signing In...
+                                </span>
+                                <span v-else>
+                                    <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                                </span>
+                            </button>
+                        </form>
+                        
+                        <div class="auth-switch">
+                            <p>Don't have an account? 
+                                <a href="#" @click="currentView = 'register'">Sign up here</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Register Form -->
+                <div v-else-if="currentView === 'register'">
+                    <div class="auth-header">
+                        <i class="fas fa-user-plus fa-3x mb-3"></i>
+                        <h2>Create Account</h2>
+                        <p class="mb-0">Join us today</p>
+                    </div>
+                    <div class="auth-body">
+                        <div v-if="alert.message" :class="'alert alert-' + alert.type" role="alert">
+                            <i :class="'fas ' + (alert.type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle')"></i>
+                            {{ alert.message }}
+                        </div>
+                        
+                        <form @submit.prevent="register" :class="{ loading: submitting }">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="firstName" 
+                                               v-model="registerForm.first_name" placeholder="First Name" required>
+                                        <label for="firstName">
+                                            <i class="fas fa-user me-2"></i>First Name
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="lastName" 
+                                               v-model="registerForm.last_name" placeholder="Last Name" required>
+                                        <label for="lastName">
+                                            <i class="fas fa-user me-2"></i>Last Name
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="registerEmail" 
+                                       v-model="registerForm.email" placeholder="name@example.com" required>
+                                <label for="registerEmail">
+                                    <i class="fas fa-envelope me-2"></i>Email address
+                                </label>
+                            </div>
+                            
+                            <div class="form-floating">
+                                <input type="tel" class="form-control" id="phone" 
+                                       v-model="registerForm.phone" placeholder="Phone Number">
+                                <label for="phone">
+                                    <i class="fas fa-phone me-2"></i>Phone Number (Optional)
+                                </label>
+                            </div>
+                            
+                            <div class="form-floating">
+                                <input type="password" class="form-control" id="registerPassword" 
+                                       v-model="registerForm.password" placeholder="Password" required minlength="6">
+                                <label for="registerPassword">
+                                    <i class="fas fa-lock me-2"></i>Password
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-auth btn-primary w-100" :disabled="submitting">
+                                <span v-if="submitting">
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                    Creating Account...
+                                </span>
+                                <span v-else>
+                                    <i class="fas fa-user-plus me-2"></i>Create Account
+                                </span>
+                            </button>
+                        </form>
+                        
+                        <div class="auth-switch">
+                            <p>Already have an account? 
+                                <a href="#" @click="currentView = 'login'">Sign in here</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Views -->
+        <div v-else class="dashboard-container">
+            <!-- Navigation -->
+            <nav class="navbar navbar-expand-lg">
+                <div class="container">
+                    <a class="navbar-brand" href="#">
+                        <i class="fas fa-shield-alt me-2"></i>AuthSystem
+                    </a>
+                    
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" @click="dashboardView = 'home'" 
+                                   :class="{ active: dashboardView === 'home' }">
+                                    <i class="fas fa-home me-1"></i>Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" @click="dashboardView = 'profile'" 
+                                   :class="{ active: dashboardView === 'profile' }">
+                                    <i class="fas fa-user me-1"></i>Profile
+                                </a>
+                            </li>
+                        </ul>
+                        
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-circle me-2"></i>{{ user.first_name }} {{ user.last_name }}
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#" @click="dashboardView = 'profile'">
+                                        <i class="fas fa-user me-2"></i>Profile
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#" @click="logout">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Dashboard Content -->
+            <div class="container mt-4">
+                <!-- Home Dashboard -->
+                <div v-if="dashboardView === 'home'">
+                    <div class="dashboard-header text-center">
+                        <div class="container">
+                            <div class="profile-avatar mx-auto">
+                                {{ user.first_name.charAt(0) }}{{ user.last_name.charAt(0) }}
+                            </div>
+                            <h1 class="mb-2">Welcome back, {{ user.first_name }}!</h1>
+                            <p class="text-muted">Here's your account overview</p>
+                        </div>
+                    </div>
+
+                    <div class="container mt-5">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="stats-card">
+                                    <div class="icon">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <div class="number">{{ formatDate(user.created_at) }}</div>
+                                    <div class="label">Member Since</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="stats-card">
+                                    <div class="icon">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div class="number">1</div>
+                                    <div class="label">Email Verified</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="stats-card">
+                                    <div class="icon">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <div class="number">Active</div>
+                                    <div class="label">Account Status</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="profile-card">
+                                    <h5><i class="fas fa-info-circle me-2"></i>Account Information</h5>
+                                    <div class="info-item">
+                                        <span class="info-label">Full Name:</span>
+                                        <span class="info-value">{{ user.first_name }} {{ user.last_name }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Email:</span>
+                                        <span class="info-value">{{ user.email }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Phone:</span>
+                                        <span class="info-value">{{ user.phone || 'Not provided' }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Account Created:</span>
+                                        <span class="info-value">{{ new Date(user.created_at).toLocaleDateString() }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Dashboard -->
+                <div v-else-if="dashboardView === 'profile'">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="profile-card">
+                                <h5><i class="fas fa-user-edit me-2"></i>Update Profile</h5>
+                                
+                                <div v-if="alert.message" :class="'alert alert-' + alert.type" role="alert">
+                                    <i :class="'fas ' + (alert.type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle')"></i>
+                                    {{ alert.message }}
+                                </div>
+
+                                <form @submit.prevent="updateProfile" :class="{ loading: submitting }">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="profileFirstName" 
+                                                       v-model="profileForm.first_name" placeholder="First Name" required>
+                                                <label for="profileFirstName">First Name</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="profileLastName" 
+                                                       v-model="profileForm.last_name" placeholder="Last Name" required>
+                                                <label for="profileLastName">Last Name</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-floating mb-3">
+                                        <input type="tel" class="form-control" id="profilePhone" 
+                                               v-model="profileForm.phone" placeholder="Phone Number">
+                                        <label for="profilePhone">Phone Number</label>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-auth btn-primary" :disabled="submitting">
+                                        <span v-if="submitting">
+                                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                            Updating...
+                                        </span>
+                                        <span v-else>
+                                            <i class="fas fa-save me-2"></i>Update Profile
+                                        </span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6">
+                            <div class="profile-card">
+                                <h5><i class="fas fa-key me-2"></i>Change Password</h5>
+                                
+                                <div v-if="passwordAlert.message" :class="'alert alert-' + passwordAlert.type" role="alert">
+                                    <i :class="'fas ' + (passwordAlert.type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle')"></i>
+                                    {{ passwordAlert.message }}
+                                </div>
+
+                                <form @submit.prevent="changePassword" :class="{ loading: changingPassword }">
+                                    <div class="form-floating mb-3">
+                                        <input type="password" class="form-control" id="oldPassword" 
+                                               v-model="passwordForm.old_password" placeholder="Current Password" required>
+                                        <label for="oldPassword">Current Password</label>
+                                    </div>
+                                    
+                                    <div class="form-floating mb-3">
+                                        <input type="password" class="form-control" id="newPassword" 
+                                               v-model="passwordForm.new_password" placeholder="New Password" required minlength="6">
+                                        <label for="newPassword">New Password</label>
+                                    </div>
+                                    
+                                    <div class="form-floating mb-3">
+                                        <input type="password" class="form-control" id="confirmPassword" 
+                                               v-model="passwordForm.confirm_password" placeholder="Confirm New Password" required>
+                                        <label for="confirmPassword">Confirm New Password</label>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-auth btn-primary" :disabled="changingPassword">
+                                        <span v-if="changingPassword">
+                                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                            Changing...
+                                        </span>
+                                        <span v-else>
+                                            <i class="fas fa-key me-2"></i>Change Password
+                                        </span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    loading: true,
+                    currentView: 'login',
+                    dashboardView: 'home',
+                    user: null,
+                    submitting: false,
+                    changingPassword: false,
+                    alert: { message: '', type: '' },
+                    passwordAlert: { message: '', type: '' },
+                    loginForm: {
+                        email: '',
+                        password: ''
+                    },
+                    registerForm: {
+                        first_name: '',
+                        last_name: '',
+                        email: '',
+                        password: '',
+                        phone: ''
+                    },
+                    profileForm: {
+                        first_name: '',
+                        last_name: '',
+                        phone: ''
+                    },
+                    passwordForm: {
+                        old_password: '',
+                        new_password: '',
+                        confirm_password: ''
+                    }
+                }
+            },
+            
+            async mounted() {
+                await this.checkAuth();
+                this.loading = false;
+            },
+
+            methods: {
+                async checkAuth() {
+                    try {
+                        const response = await fetch('api/profile.php');
+                        const data = await response.json();
+                        
+                        if (data.success && data.user) {
+                            this.user = data.user;
+                            this.profileForm = {
+                                first_name: data.user.first_name,
+                                last_name: data.user.last_name,
+                                phone: data.user.phone || ''
+                            };
+                        }
+                    } catch (error) {
+                        console.log('Not authenticated');
+                    }
+                },
+
+                async login() {
+                    this.submitting = true;
+                    this.clearAlert();
+
+                    try {
+                        const response = await fetch('api/login.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(this.loginForm)
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            this.user = data.user;
+                            this.profileForm = {
+                                first_name: data.user.first_name,
+                                last_name: data.user.last_name,
+                                phone: data.user.phone || ''
+                            };
+                            this.showAlert('Login successful! Welcome back.', 'success');
+                            this.resetForms();
+                        } else {
+                            this.showAlert(data.message, 'danger');
+                        }
+                    } catch (error) {
+                        this.showAlert('Network error. Please try again.', 'danger');
+                    }
+
+                    this.submitting = false;
+                },
+
+                async register() {
+                    this.submitting = true;
+                    this.clearAlert();
+
+                    try {
+                        const response = await fetch('api/register.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(this.registerForm)
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            this.showAlert(data.message, 'success');
+                            this.resetForms();
+                            setTimeout(() => {
+                                this.currentView = 'login';
+                            }, 2000);
+                        } else {
+                            this.showAlert(data.message, 'danger');
+                        }
+                    } catch (error) {
+                        this.showAlert('Network error. Please try again.', 'danger');
+                    }
+
+                    this.submitting = false;
+                },
+
+                async updateProfile() {
+                    this.submitting = true;
+                    this.clearAlert();
+
+                    try {
+                        const response = await fetch('api/profile.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(this.profileForm)
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            this.showAlert(data.message, 'success');
+                            // Update user data
+                            this.user.first_name = this.profileForm.first_name;
+                            this.user.last_name = this.profileForm.last_name;
+                            this.user.phone = this.profileForm.phone;
+                        } else {
+                            this.showAlert(data.message, 'danger');
+                        }
+                    } catch (error) {
+                        this.showAlert('Network error. Please try again.', 'danger');
+                    }
+
+                    this.submitting = false;
+                },
+
+                async changePassword() {
+                    if (this.passwordForm.new_password !== this.passwordForm.confirm_password) {
+                        this.showPasswordAlert('New password and confirmation do not match.', 'danger');
+                        return;
+                    }
+
+                    this.changingPassword = true;
+                    this.clearPasswordAlert();
+
+                    try {
+                        const response = await fetch('api/change-password.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                old_password: this.passwordForm.old_password,
+                                new_password: this.passwordForm.new_password
+                            })
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            this.showPasswordAlert(data.message, 'success');
+                            this.passwordForm = {
+                                old_password: '',
+                                new_password: '',
+                                confirm_password: ''
+                            };
+                        } else {
+                            this.showPasswordAlert(data.message, 'danger');
+                        }
+                    } catch (error) {
+                        this.showPasswordAlert('Network error. Please try again.', 'danger');
+                    }
+
+                    this.changingPassword = false;
+                },
+
+                async logout() {
+                    try {
+                        const response = await fetch('api/logout.php', {
+                            method: 'POST'
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            this.user = null;
+                            this.currentView = 'login';
+                            this.dashboardView = 'home';
+                            this.resetForms();
+                            this.showAlert('Logout successful. See you soon!', 'success');
+                        }
+                    } catch (error) {
+                        console.error('Logout error:', error);
+                    }
+                },
+
+                showAlert(message, type) {
+                    this.alert = { message, type };
+                    setTimeout(() => this.clearAlert(), 5000);
+                },
+
+                showPasswordAlert(message, type) {
+                    this.passwordAlert = { message, type };
+                    setTimeout(() => this.clearPasswordAlert(), 5000);
+                },
+
+                clearAlert() {
+                    this.alert = { message: '', type: '' };
+                },
+
+                clearPasswordAlert() {
+                    this.passwordAlert = { message: '', type: '' };
+                },
+
+                resetForms() {
+                    this.loginForm = { email: '', password: '' };
+                    this.registerForm = {
+                        first_name: '',
+                        last_name: '',
+                        email: '',
+                        password: '',
+                        phone: ''
+                    };
+                },
+
+                formatDate(dateString) {
+                    const date = new Date(dateString);
+                    return date.getFullYear();
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

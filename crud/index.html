@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue.js 3 CRUD with PHP</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .form-container {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+      font-weight: bold;
+    }
+    
+    input[type="text"], input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    button {
+      background: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+    
+    button:hover {
+      background: #0056b3;
+    }
+    
+    .btn-success {
+      background: #28a745;
+    }
+    
+    .btn-success:hover {
+      background: #1e7e34;
+    }
+    
+    .btn-warning {
+      background: #ffc107;
+      color: #212529;
+    }
+    
+    .btn-warning:hover {
+      background: #e0a800;
+    }
+    
+    .btn-danger {
+      background: #dc3545;
+    }
+    
+    .btn-danger:hover {
+      background: #c82333;
+    }
+    
+    .users-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    
+    .users-table th,
+    .users-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .users-table th {
+      background-color: #f8f9fa;
+      font-weight: bold;
+      color: #333;
+    }
+    
+    .users-table tr:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+    
+    .error {
+      color: #dc3545;
+      background: #f8d7da;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    
+    .success {
+      color: #155724;
+      background: #d4edda;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    
+    .stats-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #e9ecef;
+      border-radius: 8px;
+    }
+    
+    .search-container {
+      margin-bottom: 20px;
+    }
+    
+    .search-input {
+      width: 300px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+      gap: 10px;
+    }
+    
+    .pagination button {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      background: white;
+      color: #333;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .pagination button:hover:not(:disabled) {
+      background: #007bff;
+      color: white;
+    }
+    
+    .pagination button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .pagination .active {
+      background: #007bff;
+      color: white;
+      border-color: #007bff;
+    }
+    
+    .page-info {
+      margin: 0 15px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <div class="container">
+    <h1>Vue.js 3 CRUD with PHP MySQL</h1>
+    
+    <!-- Success/Error Messages -->
+    <div v-if="message.text" :class="message.type">
+      {{ message.text }}
+    </div>
+    
+    <!-- User Form -->
+    <div class="form-container">
+      <h2>{{ editMode ? 'Update User' : 'Add New User' }}</h2>
+      <form @submit.prevent="saveUser">
+        <div class="form-group">
+          <label>Name:</label>
+          <input 
+            type="text" 
+            v-model="form.name" 
+            required 
+            placeholder="Enter full name"
+          >
+        </div>
+        
+        <div class="form-group">
+          <label>Email:</label>
+          <input 
+            type="email" 
+            v-model="form.email" 
+            required 
+            placeholder="Enter email address"
+          >
+        </div>
+        
+        <div class="form-group">
+          <label>Phone:</label>
+          <input 
+            type="text" 
+            v-model="form.phone" 
+            placeholder="Enter phone number (optional)"
+          >
+        </div>
+        
+        <button type="submit" :class="editMode ? 'btn-warning' : 'btn-success'">
+          {{ editMode ? 'Update User' : 'Add User' }}
+        </button>
+        
+        <button v-if="editMode" type="button" @click="cancelEdit" class="btn-secondary">
+          Cancel
+        </button>
+      </form>
+    </div>
+    
+    <!-- Users List -->
+    <div>
+      <div class="stats-container">
+        <h2>Users List</h2>
+        <div>
+          <strong>Total Users: {{ filteredUsers.length }}</strong>
+          <span v-if="searchQuery"> ({{ users.length }} total)</span>
+        </div>
+      </div>
+      
+      <!-- Search -->
+      <div class="search-container">
+        <input 
+          type="text" 
+          v-model="searchQuery" 
+          placeholder="Search users by name or email..." 
+          class="search-input"
+        >
+      </div>
+      
+      <div v-if="loading" class="loading">
+        Loading users...
+      </div>
+      
+      <div v-else-if="filteredUsers.length === 0 && searchQuery" class="loading">
+        No users found matching "{{ searchQuery }}". <button @click="searchQuery = ''" class="btn-secondary">Clear Search</button>
+      </div>
+      
+      <div v-else-if="users.length === 0" class="loading">
+        No users found. Add some users above.
+      </div>
+      
+      <div v-else>
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="user in paginatedUsers" :key="user.id">
+              <td>{{ user.id }}</td>
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.phone || '-' }}</td>
+              <td>
+                <button @click="editUser(user)" class="btn-warning">Edit</button>
+                <button @click="deleteUser(user.id)" class="btn-danger">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <!-- Pagination -->
+        <div v-if="totalPages > 1" class="pagination">
+          <button @click="currentPage = 1" :disabled="currentPage === 1">First</button>
+          <button @click="currentPage--" :disabled="currentPage === 1">Previous</button>
+          
+          <button 
+            v-for="page in visiblePages" 
+            :key="page"
+            @click="currentPage = page"
+            :class="{ active: currentPage === page }"
+          >
+            {{ page }}
+          </button>
+          
+          <button @click="currentPage++" :disabled="currentPage === totalPages">Next</button>
+          <button @click="currentPage = totalPages" :disabled="currentPage === totalPages">Last</button>
+          
+          <div class="page-info">
+            Page {{ currentPage }} of {{ totalPages }} 
+            ({{ filteredUsers.length }} total users)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Vue.js 3 and Axios CDN -->
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+  data() {
+    return {
+      users: [],
+      loading: true,
+      editMode: false,
+      searchQuery: '',
+      currentPage: 1,
+      itemsPerPage: 5,
+      form: {
+        id: null,
+        name: '',
+        email: '',
+        phone: ''
+      },
+      message: {
+        text: '',
+        type: ''
+      }
+    }
+  },
+  
+  mounted() {
+    this.fetchUsers();
+  },
+  
+  computed: {
+    // Filter users based on search query
+    filteredUsers() {
+      if (!this.searchQuery) {
+        return this.users;
+      }
+      return this.users.filter(user => 
+        user.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    },
+    
+    // Calculate total pages for pagination
+    totalPages() {
+      return Math.ceil(this.filteredUsers.length / this.itemsPerPage);
+    },
+    
+    // Get users for current page
+    paginatedUsers() {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.filteredUsers.slice(start, end);
+    },
+    
+    // Calculate visible page numbers for pagination
+    visiblePages() {
+      const pages = [];
+      const maxVisible = 5;
+      let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+      let end = Math.min(this.totalPages, start + maxVisible - 1);
+      
+      // Adjust start if we're near the end
+      if (end - start + 1 < maxVisible) {
+        start = Math.max(1, end - maxVisible + 1);
+      }
+      
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+      return pages;
+    }
+  },
+  
+  watch: {
+    // Reset to first page when search query changes
+    searchQuery() {
+      this.currentPage = 1;
+    },
+    
+    // Reset to first page when users data changes
+    users() {
+      this.currentPage = 1;
+    }
+  },
+  
+  methods: {
+    // Fetch all users from API
+    async fetchUsers() {
+      try {
+        this.loading = true;
+        const response = await axios.get('api.php');
+        this.users = response.data;
+        this.loading = false;
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        this.showMessage('Error fetching users', 'error');
+        this.loading = false;
+      }
+    },
+    
+    // Save user (create or update)
+    async saveUser() {
+      try {
+        if (this.editMode) {
+          // Update existing user
+          const response = await axios.put('api.php', this.form);
+          if (response.data.success) {
+            this.showMessage('User updated successfully!', 'success');
+            this.fetchUsers();
+            this.resetForm();
+          } else {
+            this.showMessage(response.data.error, 'error');
+          }
+        } else {
+          // Create new user
+          const response = await axios.post('api.php', this.form);
+          if (response.data.success) {
+            this.showMessage('User added successfully!', 'success');
+            this.fetchUsers();
+            this.resetForm();
+          } else {
+            this.showMessage(response.data.error, 'error');
+          }
+        }
+      } catch (error) {
+        console.error('Error saving user:', error);
+        this.showMessage('Error saving user', 'error');
+      }
+    },
+    
+    // Edit user (populate form)
+    editUser(user) {
+      this.form = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone || ''
+      };
+      this.editMode = true;
+    },
+    
+    // Delete user
+    async deleteUser(id) {
+      if (confirm('Are you sure you want to delete this user?')) {
+        try {
+          const response = await axios.delete(`api.php?id=${id}`);
+          if (response.data.success) {
+            this.showMessage('User deleted successfully!', 'success');
+            this.fetchUsers();
+          } else {
+            this.showMessage(response.data.error, 'error');
+          }
+        } catch (error) {
+          console.error('Error deleting user:', error);
+          this.showMessage('Error deleting user', 'error');
+        }
+      }
+    },
+    
+    // Cancel edit mode
+    cancelEdit() {
+      this.resetForm();
+    },
+    
+    // Reset form
+    resetForm() {
+      this.form = {
+        id: null,
+        name: '',
+        email: '',
+        phone: ''
+      };
+      this.editMode = false;
+    },
+    
+    // Show message
+    showMessage(text, type) {
+      this.message = { text, type };
+      setTimeout(() => {
+        this.message = { text: '', type: '' };
+      }, 3000);
+    }
+  }
+}).mount('#app');
+</script>
+
+</body>
+</html>
