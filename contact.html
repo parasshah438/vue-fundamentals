@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Vue.js 3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        /* Validation states */
+        .form-group.has-error input,
+        .form-group.has-error textarea {
+            border-color: #e74c3c;
+            background: #fdf2f2;
+        }
+
+        .form-group.has-success input,
+        .form-group.has-success textarea {
+            border-color: #27ae60;
+            background: #f2f9f2;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-icon {
+            position: absolute;
+            right: 15px;
+            top: 45px;
+            color: #27ae60;
+            font-size: 1.2rem;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            position: relative;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            position: relative;
+            animation: slideDown 0.5s ease;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-left: 5px solid #28a745;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-left: 5px solid #dc3545;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        .success-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+            z-index: 1000;
+            animation: slideInRight 0.5s ease;
+            max-width: 300px;
+        }
+
+        .success-notification .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            float: right;
+            margin-left: 10px;
+            padding: 0;
+        }
+
+        .form-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .char-count {
+            font-size: 0.8rem;
+            color: #999;
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        .char-count.warning {
+            color: #f39c12;
+        }
+
+        .char-count.danger {
+            color: #e74c3c;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideOutRight {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(100%); }
+        }
+
+        .slide-out {
+            animation: slideOutRight 0.5s ease forwards;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .success-notification {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" v-cloak>
+        <!-- Success Notification -->
+        <div v-if="showNotification" class="success-notification" :class="{ 'slide-out': notificationClosing }">
+            <button class="close-btn" @click="closeNotification">&times;</button>
+            <strong>Success!</strong> {{ notificationMessage }}
+        </div>
+
+        <div class="container">
+            <div class="header">
+                <h1>Contact Us</h1>
+                <p>We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+            </div>
+            
+            <div class="form-container">
+                <div v-if="successMessage" class="message success">
+                    <strong>✓ Success!</strong> {{ successMessage }}
+                </div>
+                
+                <div v-if="errorMessage" class="message error">
+                    <strong>✗ Error!</strong> {{ errorMessage }}
+                </div>
+
+                <div class="form-stats">
+                    <span>Fields completed: {{ completedFields }}/5</span>
+                    <span>Form {{ formValidationStatus }}</span>
+                </div>
+
+                <form @submit.prevent="submitForm" novalidate>
+                    <div class="form-row">
+                        <div class="form-group" :class="getFieldClass('name')">
+                            <label for="name">Full Name <span class="required">*</span></label>
+                            <input 
+                                type="text" 
+                                id="name"
+                                v-model="form.name" 
+                                placeholder="Enter your full name"
+                                @blur="validateField('name')"
+                                @input="clearFieldError('name')"
+                                :class="{ 'error': errors.name }"
+                            >
+                            <span v-if="!errors.name && form.name.length > 2" class="success-icon">✓</span>
+                            <span v-if="errors.name" class="error-message">{{ errors.name }}</span>
+                        </div>
+                        
+                        <div class="form-group" :class="getFieldClass('email')">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input 
+                                type="email" 
+                                id="email"
+                                v-model="form.email" 
+                                placeholder="Enter your email address"
+                                @blur="validateField('email')"
+                                @input="clearFieldError('email')"
+                                :class="{ 'error': errors.email }"
+                            >
+                            <span v-if="!errors.email && isValidEmail(form.email)" class="success-icon">✓</span>
+                            <span v-if="errors.email" class="error-message">{{ errors.email }}</span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" :class="getFieldClass('phone')">
+                            <label for="phone">Phone Number</label>
+                            <input 
+                                type="tel" 
+                                id="phone"
+                                v-model="form.phone" 
+                                placeholder="Enter your phone number"
+                                @blur="validateField('phone')"
+                                @input="clearFieldError('phone')"
+                            >
+                            <span v-if="form.phone.length > 9" class="success-icon">✓</span>
+                            <span v-if="errors.phone" class="error-message">{{ errors.phone }}</span>
+                        </div>
+                        
+                        <div class="form-group" :class="getFieldClass('subject')">
+                            <label for="subject">Subject <span class="required">*</span></label>
+                            <input 
+                                type="text" 
+                                id="subject"
+                                v-model="form.subject" 
+                                placeholder="Enter message subject"
+                                @blur="validateField('subject')"
+                                @input="clearFieldError('subject')"
+                                :class="{ 'error': errors.subject }"
+                            >
+                            <span v-if="!errors.subject && form.subject.length > 3" class="success-icon">✓</span>
+                            <span v-if="errors.subject" class="error-message">{{ errors.subject }}</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group" :class="getFieldClass('message')">
+                        <label for="message">Message <span class="required">*</span></label>
+                        <textarea 
+                            id="message"
+                            v-model="form.message" 
+                            placeholder="Enter your message here..."
+                            @blur="validateField('message')"
+                            @input="clearFieldError('message')"
+                            :class="{ 'error': errors.message }"
+                            maxlength="1000"
+                        ></textarea>
+                        <div class="char-count" :class="getCharCountClass()">
+                            {{ form.message.length }}/1000 characters
+                        </div>
+                        <span v-if="errors.message" class="error-message">{{ errors.message }}</span>
+                    </div>
+
+                    <button type="submit" class="submit-btn" :disabled="isSubmitting || !isFormValid">
+                        <span v-if="isSubmitting" class="loading"></span>
+                        {{ isSubmitting ? 'Sending...' : 'Send Message' }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp } = Vue;
+        
+        createApp({
+            data() {
+                return {
+                    form: {
+                        name: '',
+                        email: '',
+                        phone: '',
+                        subject: '',
+                        message: ''
+                    },
+                    errors: {
+                        name: '',
+                        email: '',
+                        phone: '',
+                        subject: '',
+                        message: ''
+                    },
+                    isSubmitting: false,
+                    successMessage: '',
+                    errorMessage: '',
+                    showNotification: false,
+                    notificationMessage: '',
+                    notificationClosing: false
+                }
+            },
+            computed: {
+                completedFields() {
+                    let count = 0;
+                    if (this.form.name.trim()) count++;
+                    if (this.form.email.trim()) count++;
+                    if (this.form.phone.trim()) count++;
+                    if (this.form.subject.trim()) count++;
+                    if (this.form.message.trim()) count++;
+                    return count;
+                },
+                formValidationStatus() {
+                    if (this.isFormValid) return '✓ Valid';
+                    if (this.completedFields === 0) return 'Empty';
+                    return 'Incomplete';
+                },
+                isFormValid() {
+                    return this.form.name.trim().length > 2 &&
+                           this.isValidEmail(this.form.email) &&
+                           this.form.subject.trim().length > 3 &&
+                           this.form.message.trim().length > 10 &&
+                           !Object.values(this.errors).some(error => error);
+                }
+            },
+            methods: {
+                validateField(field) {
+                    switch(field) {
+                        case 'name':
+                            if (!this.form.name.trim()) {
+                                this.errors.name = 'Name is required';
+                            } else if (this.form.name.trim().length < 2) {
+                                this.errors.name = 'Name must be at least 2 characters';
+                            } else if (!/^[a-zA-Z\s]+$/.test(this.form.name.trim())) {
+                                this.errors.name = 'Name can only contain letters and spaces';
+                            } else {
+                                this.errors.name = '';
+                            }
+                            break;
+                            
+                        case 'email':
+                            if (!this.form.email.trim()) {
+                                this.errors.email = 'Email is required';
+                            } else if (!this.isValidEmail(this.form.email)) {
+                                this.errors.email = 'Please enter a valid email address';
+                            } else {
+                                this.errors.email = '';
+                            }
+                            break;
+                            
+                        case 'phone':
+                            if (this.form.phone.trim() && !/^[\d\s\-\+\(\)]+$/.test(this.form.phone.trim())) {
+                                this.errors.phone = 'Please enter a valid phone number';
+                            } else if (this.form.phone.trim() && this.form.phone.trim().length < 10) {
+                                this.errors.phone = 'Phone number must be at least 10 digits';
+                            } else {
+                                this.errors.phone = '';
+                            }
+                            break;
+                            
+                        case 'subject':
+                            if (!this.form.subject.trim()) {
+                                this.errors.subject = 'Subject is required';
+                            } else if (this.form.subject.trim().length < 3) {
+                                this.errors.subject = 'Subject must be at least 3 characters';
+                            } else {
+                                this.errors.subject = '';
+                            }
+                            break;
+                            
+                        case 'message':
+                            if (!this.form.message.trim()) {
+                                this.errors.message = 'Message is required';
+                            } else if (this.form.message.trim().length < 10) {
+                                this.errors.message = 'Message must be at least 10 characters';
+                            } else if (this.form.message.length > 1000) {
+                                this.errors.message = 'Message cannot exceed 1000 characters';
+                            } else {
+                                this.errors.message = '';
+                            }
+                            break;
+                    }
+                },
+                
+                clearFieldError(field) {
+                    if (this.errors[field]) {
+                        this.errors[field] = '';
+                    }
+                },
+                
+                validateAllFields() {
+                    this.validateField('name');
+                    this.validateField('email');
+                    this.validateField('phone');
+                    this.validateField('subject');
+                    this.validateField('message');
+                },
+                
+                isValidEmail(email) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    return emailRegex.test(email);
+                },
+                
+                getFieldClass(field) {
+                    if (this.errors[field]) return 'has-error';
+                    if (field === 'name' && this.form.name.length > 2) return 'has-success';
+                    if (field === 'email' && this.isValidEmail(this.form.email)) return 'has-success';
+                    if (field === 'phone' && this.form.phone.length > 9) return 'has-success';
+                    if (field === 'subject' && this.form.subject.length > 3) return 'has-success';
+                    if (field === 'message' && this.form.message.length > 10) return 'has-success';
+                    return '';
+                },
+                
+                getCharCountClass() {
+                    const length = this.form.message.length;
+                    if (length > 900) return 'danger';
+                    if (length > 800) return 'warning';
+                    return '';
+                },
+                
+                showSuccessNotification(message) {
+                    this.notificationMessage = message;
+                    this.showNotification = true;
+                    this.notificationClosing = false;
+                    
+                    // Auto close after 5 seconds
+                    setTimeout(() => {
+                        this.closeNotification();
+                    }, 5000);
+                },
+                
+                closeNotification() {
+                    this.notificationClosing = true;
+                    setTimeout(() => {
+                        this.showNotification = false;
+                        this.notificationClosing = false;
+                    }, 500);
+                },
+                
+                async submitForm() {
+                    // Clear previous messages
+                    this.successMessage = '';
+                    this.errorMessage = '';
+                    
+                    // Validate all fields
+                    this.validateAllFields();
+                    
+                    // Check if form is valid
+                    if (!this.isFormValid || Object.values(this.errors).some(error => error)) {
+                        this.errorMessage = 'Please fix all validation errors before submitting.';
+                        return;
+                    }
+                    
+                    this.isSubmitting = true;
+                    
+                    try {
+                        const response = await fetch('contact/contact_api.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(this.form)
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            this.successMessage = result.message;
+                            this.showSuccessNotification('Your message has been sent successfully!');
+                            this.resetForm();
+                        } else {
+                            this.errorMessage = result.error || 'An error occurred while sending your message.';
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        this.errorMessage = 'Network error. Please check your connection and try again.';
+                    } finally {
+                        this.isSubmitting = false;
+                    }
+                },
+                
+                resetForm() {
+                    // Clear form data
+                    this.form = {
+                        name: '',
+                        email: '',
+                        phone: '',
+                        subject: '',
+                        message: ''
+                    };
+                    
+                    // Clear all errors
+                    this.errors = {
+                        name: '',
+                        email: '',
+                        phone: '',
+                        subject: '',
+                        message: ''
+                    };
+                    
+                    // Clear messages after a delay
+                    setTimeout(() => {
+                        this.successMessage = '';
+                        this.errorMessage = '';
+                    }, 3000);
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

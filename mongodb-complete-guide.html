@@ -1,0 +1,2567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB Complete Guide - A to Z</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #2E8B57 0%, #228B22 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #2E8B57 0%, #228B22 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Navigation */
+        .nav-toggle {
+            display: none;
+            background: #2E8B57;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            border-radius: 5px;
+            font-size: 1.2rem;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #1a252f;
+            color: white;
+            overflow-y: auto;
+            z-index: 1000;
+            transform: translateX(-280px);
+            transition: transform 0.3s ease;
+            padding-top: 80px;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            border-bottom: 1px solid #2c3e50;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            transition: background 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .sidebar a:hover {
+            background: #2c3e50;
+            padding-left: 30px;
+        }
+
+        .sidebar a.active {
+            background: #2E8B57;
+            border-left: 4px solid #228B22;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 0;
+            padding: 2rem;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.shifted {
+            margin-left: 280px;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+            scroll-margin-top: 100px;
+        }
+
+        .section h2 {
+            color: #1a252f;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #2E8B57;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem 0;
+            padding-left: 10px;
+            border-left: 4px solid #2E8B57;
+        }
+
+        .section h4 {
+            color: #555;
+            font-size: 1.2rem;
+            margin: 1rem 0 0.5rem 0;
+        }
+
+        /* Code Blocks */
+        pre {
+            background: #2d3748 !important;
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow-x: auto;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        code {
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+        }
+
+        .inline-code {
+            background: #f1f5f9;
+            color: #e53e3e;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Feature Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .feature-card h4 {
+            color: #2E8B57;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Lists */
+        ul, ol {
+            padding-left: 2rem;
+            margin: 1rem 0;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            background: #2E8B57;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 2px;
+        }
+
+        .badge.new { background: #ff6b6b; }
+        .badge.advanced { background: #4ecdc4; }
+        .badge.important { background: #feca57; color: #333; }
+        .badge.laravel { background: #FF2D20; }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #2E8B57;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+        }
+
+        .alert.info {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #1565c0;
+        }
+
+        .alert.warning {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #ef6c00;
+        }
+
+        .alert.success {
+            background: #e8f5e8;
+            border-color: #2E8B57;
+            color: #1b5e20;
+        }
+
+        .alert.danger {
+            background: #ffebee;
+            border-color: #f44336;
+            color: #c62828;
+        }
+
+        /* Progress Bar */
+        .progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(46, 139, 87, 0.3);
+            z-index: 1002;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #2E8B57;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Back to Top */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #2E8B57;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: #228B22;
+            transform: translateY(-2px);
+        }
+
+        /* Search */
+        .search-container {
+            padding: 20px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-box:focus {
+            border-color: #2E8B57;
+        }
+
+        /* Command Box */
+        .command-box {
+            background: #1a1a1a;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border: 1px solid #333;
+        }
+
+        .command-box::before {
+            content: "$ ";
+            color: #00ff00;
+            font-weight: bold;
+        }
+
+        /* Links */
+        .link-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-left: 4px solid #2E8B57;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .link-card a {
+            color: #2E8B57;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .link-card a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .section h2 {
+                font-size: 1.5rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            pre {
+                font-size: 0.8rem;
+                overflow-x: auto;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            animation: fadeInUp 0.6s ease;
+        }
+
+        /* Syntax highlighting improvements */
+        pre[class*="language-"] {
+            background: #1a202c !important;
+            color: #e2e8f0;
+        }
+
+        .token.comment { color: #718096; }
+        .token.string { color: #68d391; }
+        .token.number { color: #fbb6ce; }
+        .token.keyword { color: #63b3ed; }
+        .token.function { color: #f6e05e; }
+        .token.operator { color: #ed8936; }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress">
+        <div class="progress-bar"></div>
+    </div>
+
+    <!-- Navigation Toggle -->
+    <button class="nav-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="search-container">
+            <input type="text" class="search-box" placeholder="Search topics..." onkeyup="searchContent(this.value)">
+        </div>
+        <ul>
+            <li><a href="#introduction" onclick="closeSidebar()"><i class="fas fa-home"></i> What is MongoDB?</a></li>
+            <li><a href="#features" onclick="closeSidebar()"><i class="fas fa-star"></i> Features</a></li>
+            <li><a href="#usecases" onclick="closeSidebar()"><i class="fas fa-lightbulb"></i> Use Cases</a></li>
+            <li><a href="#installation" onclick="closeSidebar()"><i class="fas fa-download"></i> Installation</a></li>
+            <li><a href="#software" onclick="closeSidebar()"><i class="fas fa-tools"></i> Software & Tools</a></li>
+            <li><a href="#basics" onclick="closeSidebar()"><i class="fas fa-play"></i> Basic Concepts</a></li>
+            <li><a href="#crud" onclick="closeSidebar()"><i class="fas fa-edit"></i> CRUD Operations</a></li>
+            <li><a href="#queries-basic" onclick="closeSidebar()"><i class="fas fa-search"></i> Basic Queries</a></li>
+            <li><a href="#queries-advanced" onclick="closeSidebar()"><i class="fas fa-rocket"></i> Advanced Queries</a></li>
+            <li><a href="#aggregation" onclick="closeSidebar()"><i class="fas fa-chart-bar"></i> Aggregation</a></li>
+            <li><a href="#indexing" onclick="closeSidebar()"><i class="fas fa-bolt"></i> Indexing</a></li>
+            <li><a href="#replication" onclick="closeSidebar()"><i class="fas fa-copy"></i> Replication</a></li>
+            <li><a href="#sharding" onclick="closeSidebar()"><i class="fas fa-th"></i> Sharding</a></li>
+            <li><a href="#security" onclick="closeSidebar()"><i class="fas fa-shield-alt"></i> Security</a></li>
+            <li><a href="#laravel" onclick="closeSidebar()"><i class="fab fa-laravel"></i> MongoDB + Laravel</a></li>
+            <li><a href="#performance" onclick="closeSidebar()"><i class="fas fa-tachometer-alt"></i> Performance</a></li>
+            <li><a href="#examples" onclick="closeSidebar()"><i class="fas fa-code"></i> Real Examples</a></li>
+            <li><a href="#resources" onclick="closeSidebar()"><i class="fas fa-link"></i> Resources</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1><i class="fas fa-database"></i> MongoDB Complete Guide</h1>
+            <p>Master MongoDB from A to Z - Everything you need to know!</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content" id="main-content">
+            
+            <!-- Introduction -->
+            <section class="section" id="introduction">
+                <h2><i class="fas fa-info-circle"></i> What is MongoDB?</h2>
+                <p>MongoDB is a <strong>NoSQL document-oriented database</strong> that stores data in flexible, JSON-like documents. It's designed for modern applications that need to scale horizontally.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-file-alt"></i> Document-Based</h4>
+                        <p>Stores data as documents (BSON format)</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-expand-arrows-alt"></i> Scalable</h4>
+                        <p>Horizontal scaling with sharding</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-code"></i> Schema Flexible</h4>
+                        <p>Dynamic schema design</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-tachometer-alt"></i> High Performance</h4>
+                        <p>Fast read/write operations</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-sync"></i> ACID Transactions</h4>
+                        <p>Multi-document transactions</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-globe"></i> Cross-Platform</h4>
+                        <p>Available on all major platforms</p>
+                    </div>
+                </div>
+
+                <div class="alert info">
+                    <strong>Why MongoDB?</strong> Perfect for modern applications with complex data structures, real-time analytics, content management, IoT applications, and mobile backends.
+                </div>
+            </section>
+
+            <!-- Features -->
+            <section class="section" id="features">
+                <h2><i class="fas fa-star"></i> Key Features</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-file-code"></i> Document Model</h4>
+                        <p><strong>JSON-like documents</strong> with dynamic schemas</p>
+                        <pre><code class="language-json">{
+  "_id": ObjectId("..."),
+  "name": "John Doe",
+  "age": 30,
+  "skills": ["JavaScript", "Python"],
+  "address": {
+    "city": "New York",
+    "country": "USA"
+  }
+}</code></pre>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-search"></i> Rich Query Language</h4>
+                        <p>Powerful query operators and expressions</p>
+                        <ul>
+                            <li>Field queries</li>
+                            <li>Range queries</li>
+                            <li>Regular expressions</li>
+                            <li>Geospatial queries</li>
+                            <li>Text search</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-chart-line"></i> Aggregation Framework</h4>
+                        <p>Powerful data processing pipeline</p>
+                        <ul>
+                            <li>$match, $group, $sort</li>
+                            <li>$project, $lookup</li>
+                            <li>$unwind, $facet</li>
+                            <li>Complex analytics</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-bolt"></i> Indexing</h4>
+                        <p>Multiple index types for performance</p>
+                        <ul>
+                            <li>Single field indexes</li>
+                            <li>Compound indexes</li>
+                            <li>Text indexes</li>
+                            <li>Geospatial indexes</li>
+                            <li>Partial indexes</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-copy"></i> Replication</h4>
+                        <p>High availability with replica sets</p>
+                        <ul>
+                            <li>Automatic failover</li>
+                            <li>Data redundancy</li>
+                            <li>Read scaling</li>
+                            <li>Geographic distribution</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-th"></i> Sharding</h4>
+                        <p>Horizontal scaling across clusters</p>
+                        <ul>
+                            <li>Auto-balancing</li>
+                            <li>Range-based sharding</li>
+                            <li>Hash-based sharding</li>
+                            <li>Zone sharding</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Use Cases -->
+            <section class="section" id="usecases">
+                <h2><i class="fas fa-lightbulb"></i> Use Cases</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-mobile-alt"></i> Mobile Applications</h4>
+                        <p>Perfect for mobile backends with flexible data models</p>
+                        <ul>
+                            <li>User profiles and preferences</li>
+                            <li>Real-time chat applications</li>
+                            <li>Location-based services</li>
+                            <li>Push notifications</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-chart-bar"></i> Real-time Analytics</h4>
+                        <p>Process and analyze data as it arrives</p>
+                        <ul>
+                            <li>User behavior tracking</li>
+                            <li>IoT sensor data</li>
+                            <li>Financial transactions</li>
+                            <li>Social media analytics</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-edit"></i> Content Management</h4>
+                        <p>Store and manage diverse content types</p>
+                        <ul>
+                            <li>CMS platforms</li>
+                            <li>Blogging platforms</li>
+                            <li>Product catalogs</li>
+                            <li>Media metadata</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-shopping-cart"></i> E-commerce</h4>
+                        <p>Handle complex product data and user interactions</p>
+                        <ul>
+                            <li>Product catalogs</li>
+                            <li>Shopping carts</li>
+                            <li>Inventory management</li>
+                            <li>Recommendation engines</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-microchip"></i> Internet of Things</h4>
+                        <p>Store and process IoT device data</p>
+                        <ul>
+                            <li>Sensor data collection</li>
+                            <li>Device management</li>
+                            <li>Time-series data</li>
+                            <li>Edge computing</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-users"></i> Social Networks</h4>
+                        <p>Handle complex social interactions and relationships</p>
+                        <ul>
+                            <li>User profiles</li>
+                            <li>Friend connections</li>
+                            <li>Activity feeds</li>
+                            <li>Message systems</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Installation -->
+            <section class="section" id="installation">
+                <h2><i class="fas fa-download"></i> Installation & Setup</h2>
+                
+                <h3>A. MongoDB Community Edition</h3>
+                
+                <h4><i class="fab fa-windows"></i> Windows</h4>
+                <div class="command-box">
+                    # Download from MongoDB official website<br>
+                    # Or use Chocolatey<br>
+                    choco install mongodb
+                </div>
+                
+                <h4><i class="fab fa-apple"></i> macOS</h4>
+                <div class="command-box">
+                    # Using Homebrew<br>
+                    brew tap mongodb/brew<br>
+                    brew install mongodb-community
+                </div>
+                
+                <h4><i class="fab fa-linux"></i> Ubuntu/Debian</h4>
+                <div class="command-box">
+                    # Import MongoDB public key<br>
+                    wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -<br>
+                    <br>
+                    # Add MongoDB repository<br>
+                    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list<br>
+                    <br>
+                    # Install MongoDB<br>
+                    sudo apt update<br>
+                    sudo apt install mongodb-org
+                </div>
+                
+                <h4><i class="fab fa-redhat"></i> CentOS/RHEL</h4>
+                <div class="command-box">
+                    # Create repository file<br>
+                    sudo vi /etc/yum.repos.d/mongodb-org-6.0.repo<br>
+                    <br>
+                    # Install MongoDB<br>
+                    sudo yum install mongodb-org
+                </div>
+
+                <h3>B. Docker Installation</h3>
+                <div class="command-box">
+                    # Pull MongoDB image<br>
+                    docker pull mongo<br>
+                    <br>
+                    # Run MongoDB container<br>
+                    docker run --name mongodb -p 27017:27017 -d mongo<br>
+                    <br>
+                    # With authentication<br>
+                    docker run --name mongodb -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password -d mongo
+                </div>
+
+                <h3>C. Starting MongoDB</h3>
+                <div class="command-box">
+                    # Start MongoDB service<br>
+                    sudo systemctl start mongod<br>
+                    <br>
+                    # Enable auto-start<br>
+                    sudo systemctl enable mongod<br>
+                    <br>
+                    # Check status<br>
+                    sudo systemctl status mongod<br>
+                    <br>
+                    # Connect to MongoDB<br>
+                    mongo
+                </div>
+
+                <div class="alert success">
+                    <strong>Quick Test:</strong> After installation, run <code>mongo</code> in terminal. If you see the MongoDB shell prompt, installation is successful!
+                </div>
+            </section>
+
+            <!-- Software & Tools -->
+            <section class="section" id="software">
+                <h2><i class="fas fa-tools"></i> Software & Tools</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-terminal"></i> MongoDB Shell (mongosh)</h4>
+                        <p>Interactive JavaScript shell for MongoDB</p>
+                        <div class="command-box">
+                            # Install mongosh<br>
+                            npm install -g @mongosh/cli<br>
+                            <br>
+                            # Connect to MongoDB<br>
+                            mongosh "mongodb://localhost:27017"
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-compass"></i> MongoDB Compass</h4>
+                        <p>Official GUI for MongoDB</p>
+                        <ul>
+                            <li>Visual query builder</li>
+                            <li>Schema visualization</li>
+                            <li>Performance monitoring</li>
+                            <li>Index management</li>
+                        </ul>
+                        <div class="link-card">
+                            <a href="https://www.mongodb.com/products/compass" target="_blank">Download MongoDB Compass</a>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-code"></i> Studio 3T</h4>
+                        <p>Professional MongoDB IDE</p>
+                        <ul>
+                            <li>IntelliShell with autocomplete</li>
+                            <li>Visual query builder</li>
+                            <li>SQL to MongoDB migration</li>
+                            <li>Data compare & sync</li>
+                        </ul>
+                        <div class="link-card">
+                            <a href="https://studio3t.com/" target="_blank">Visit Studio 3T</a>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-robot"></i> Robo 3T</h4>
+                        <p>Lightweight MongoDB GUI</p>
+                        <ul>
+                            <li>Native MongoDB shell</li>
+                            <li>Embedded shell experience</li>
+                            <li>Cross-platform support</li>
+                            <li>Free and open source</li>
+                        </ul>
+                        <div class="link-card">
+                            <a href="https://robomongo.org/" target="_blank">Download Robo 3T</a>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-chart-line"></i> MongoDB Atlas</h4>
+                        <p>Cloud database service</p>
+                        <ul>
+                            <li>Fully managed service</li>
+                            <li>Auto-scaling</li>
+                            <li>Built-in security</li>
+                            <li>Global clusters</li>
+                        </ul>
+                        <div class="link-card">
+                            <a href="https://www.mongodb.com/cloud/atlas" target="_blank">MongoDB Atlas</a>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-extension"></i> VS Code Extensions</h4>
+                        <p>MongoDB extensions for developers</p>
+                        <ul>
+                            <li>MongoDB for VS Code</li>
+                            <li>MongoDB Snippets</li>
+                            <li>MongoDB Runner</li>
+                            <li>NoSQL Viewer</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Basic Concepts -->
+            <section class="section" id="basics">
+                <h2><i class="fas fa-play"></i> Basic Concepts</h2>
+                
+                <h3>A. Database Structure</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>MongoDB</th>
+                            <th>SQL Database</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Database</td>
+                            <td>Database</td>
+                            <td>Container for collections</td>
+                        </tr>
+                        <tr>
+                            <td>Collection</td>
+                            <td>Table</td>
+                            <td>Group of documents</td>
+                        </tr>
+                        <tr>
+                            <td>Document</td>
+                            <td>Row/Record</td>
+                            <td>BSON document</td>
+                        </tr>
+                        <tr>
+                            <td>Field</td>
+                            <td>Column</td>
+                            <td>Key-value pair</td>
+                        </tr>
+                        <tr>
+                            <td>_id</td>
+                            <td>Primary Key</td>
+                            <td>Unique identifier</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>B. Data Types</h3>
+                <pre><code class="language-javascript">// Common MongoDB data types
+{
+  // String
+  "name": "John Doe",
+  
+  // Number (Integer/Float)
+  "age": 30,
+  "salary": 50000.50,
+  
+  // Boolean
+  "isActive": true,
+  
+  // Date
+  "createdAt": new Date(),
+  
+  // Array
+  "skills": ["JavaScript", "Python", "MongoDB"],
+  
+  // Object/Embedded Document
+  "address": {
+    "street": "123 Main St",
+    "city": "New York",
+    "zipCode": "10001"
+  },
+  
+  // ObjectId
+  "_id": ObjectId("507f1f77bcf86cd799439011"),
+  
+  // Binary Data
+  "profilePicture": BinData(0, "..."),
+  
+  // Regular Expression
+  "pattern": /^[A-Z]/,
+  
+  // Null
+  "middleName": null
+}</code></pre>
+
+                <div class="alert info">
+                    <strong>BSON:</strong> MongoDB stores documents in Binary JSON (BSON) format, which supports additional data types like ObjectId, Date, and Binary data.
+                </div>
+            </section>
+
+            <!-- CRUD Operations -->
+            <section class="section" id="crud">
+                <h2><i class="fas fa-edit"></i> CRUD Operations</h2>
+                
+                <h3>A. Create Operations</h3>
+                <pre><code class="language-javascript">// Insert one document
+db.users.insertOne({
+  name: "John Doe",
+  email: "john@example.com",
+  age: 30,
+  skills: ["JavaScript", "MongoDB"]
+});
+
+// Insert multiple documents
+db.users.insertMany([
+  {
+    name: "Jane Smith",
+    email: "jane@example.com",
+    age: 25,
+    skills: ["Python", "Django"]
+  },
+  {
+    name: "Bob Johnson", 
+    email: "bob@example.com",
+    age: 35,
+    skills: ["Java", "Spring"]
+  }
+]);</code></pre>
+
+                <h3>B. Read Operations</h3>
+                <pre><code class="language-javascript">// Find all documents
+db.users.find();
+
+// Find with condition
+db.users.find({ age: { $gte: 25 } });
+
+// Find one document
+db.users.findOne({ email: "john@example.com" });
+
+// Find with projection (specific fields)
+db.users.find(
+  { age: { $gte: 25 } },
+  { name: 1, email: 1, _id: 0 }
+);
+
+// Find with sorting
+db.users.find().sort({ age: -1 }); // Descending
+
+// Find with limit and skip
+db.users.find().limit(5).skip(10);
+
+// Count documents
+db.users.countDocuments({ age: { $gte: 30 } });</code></pre>
+
+                <h3>C. Update Operations</h3>
+                <pre><code class="language-javascript">// Update one document
+db.users.updateOne(
+  { email: "john@example.com" },
+  { 
+    $set: { age: 31, lastLogin: new Date() },
+    $push: { skills: "React" }
+  }
+);
+
+// Update multiple documents
+db.users.updateMany(
+  { age: { $lt: 30 } },
+  { $set: { category: "young" } }
+);
+
+// Replace entire document
+db.users.replaceOne(
+  { email: "john@example.com" },
+  {
+    name: "John Doe",
+    email: "john@example.com",
+    age: 31,
+    skills: ["JavaScript", "MongoDB", "React"],
+    updatedAt: new Date()
+  }
+);
+
+// Update with upsert (create if not exists)
+db.users.updateOne(
+  { email: "new@example.com" },
+  { 
+    $set: { 
+      name: "New User",
+      age: 28,
+      createdAt: new Date()
+    }
+  },
+  { upsert: true }
+);</code></pre>
+
+                <h3>D. Delete Operations</h3>
+                <pre><code class="language-javascript">// Delete one document
+db.users.deleteOne({ email: "john@example.com" });
+
+// Delete multiple documents
+db.users.deleteMany({ age: { $lt: 18 } });
+
+// Find and delete (returns deleted document)
+db.users.findOneAndDelete({ email: "john@example.com" });</code></pre>
+            </section>
+
+            <!-- Basic Queries -->
+            <section class="section" id="queries-basic">
+                <h2><i class="fas fa-search"></i> Basic Queries</h2>
+                
+                <h3>A. Comparison Operators</h3>
+                <pre><code class="language-javascript">// Equal to
+db.users.find({ age: 30 });
+
+// Not equal to
+db.users.find({ age: { $ne: 30 } });
+
+// Greater than
+db.users.find({ age: { $gt: 25 } });
+
+// Greater than or equal
+db.users.find({ age: { $gte: 25 } });
+
+// Less than
+db.users.find({ age: { $lt: 30 } });
+
+// Less than or equal
+db.users.find({ age: { $lte: 30 } });
+
+// In array
+db.users.find({ age: { $in: [25, 30, 35] } });
+
+// Not in array
+db.users.find({ age: { $nin: [25, 30, 35] } });</code></pre>
+
+                <h3>B. Logical Operators</h3>
+                <pre><code class="language-javascript">// AND (implicit)
+db.users.find({ age: { $gte: 25 }, name: "John Doe" });
+
+// AND (explicit)
+db.users.find({
+  $and: [
+    { age: { $gte: 25 } },
+    { skills: "JavaScript" }
+  ]
+});
+
+// OR
+db.users.find({
+  $or: [
+    { age: { $lt: 25 } },
+    { age: { $gt: 35 } }
+  ]
+});
+
+// NOT
+db.users.find({ age: { $not: { $gte: 30 } } });
+
+// NOR (not or)
+db.users.find({
+  $nor: [
+    { age: { $lt: 25 } },
+    { skills: "PHP" }
+  ]
+});</code></pre>
+
+                <h3>C. Element Operators</h3>
+                <pre><code class="language-javascript">// Field exists
+db.users.find({ middleName: { $exists: true } });
+
+// Field doesn't exist
+db.users.find({ middleName: { $exists: false } });
+
+// Type check
+db.users.find({ age: { $type: "number" } });
+db.users.find({ age: { $type: 16 } }); // 16 is int32</code></pre>
+
+                <h3>D. Array Queries</h3>
+                <pre><code class="language-javascript">// Array contains element
+db.users.find({ skills: "JavaScript" });
+
+// Array contains all elements
+db.users.find({ skills: { $all: ["JavaScript", "MongoDB"] } });
+
+// Array element matches condition
+db.users.find({ "scores.0": { $gt: 80 } });
+
+// Array size
+db.users.find({ skills: { $size: 3 } });
+
+// Element match (for array of objects)
+db.products.find({
+  reviews: {
+    $elemMatch: {
+      rating: { $gte: 4 },
+      author: "John"
+    }
+  }
+});</code></pre>
+            </section>
+
+            <!-- Advanced Queries -->
+            <section class="section" id="queries-advanced">
+                <h2><i class="fas fa-rocket"></i> Advanced Queries</h2>
+                
+                <h3>A. Regular Expressions</h3>
+                <pre><code class="language-javascript">// Case-insensitive search
+db.users.find({ name: { $regex: /john/i } });
+
+// Starts with
+db.users.find({ email: { $regex: /^john/ } });
+
+// Ends with
+db.users.find({ email: { $regex: /@gmail\.com$/ } });
+
+// Contains
+db.users.find({ name: { $regex: /doe/ } });</code></pre>
+
+                <h3>B. Text Search</h3>
+                <pre><code class="language-javascript">// Create text index first
+db.articles.createIndex({ 
+  title: "text", 
+  content: "text" 
+});
+
+// Text search
+db.articles.find({ $text: { $search: "mongodb tutorial" } });
+
+// Text search with phrase
+db.articles.find({ 
+  $text: { $search: "\"mongodb tutorial\"" } 
+});
+
+// Text search with exclusion
+db.articles.find({ 
+  $text: { $search: "mongodb -mysql" } 
+});
+
+// Text search with score
+db.articles.find(
+  { $text: { $search: "mongodb" } },
+  { score: { $meta: "textScore" } }
+).sort({ score: { $meta: "textScore" } });</code></pre>
+
+                <h3>C. Geospatial Queries</h3>
+                <pre><code class="language-javascript">// Create 2dsphere index
+db.places.createIndex({ location: "2dsphere" });
+
+// Find near location
+db.places.find({
+  location: {
+    $near: {
+      $geometry: {
+        type: "Point",
+        coordinates: [-73.97, 40.77] // [longitude, latitude]
+      },
+      $maxDistance: 1000 // meters
+    }
+  }
+});
+
+// Find within polygon
+db.places.find({
+  location: {
+    $geoWithin: {
+      $geometry: {
+        type: "Polygon",
+        coordinates: [[
+          [-73.98, 40.75],
+          [-73.96, 40.75],
+          [-73.96, 40.78],
+          [-73.98, 40.78],
+          [-73.98, 40.75]
+        ]]
+      }
+    }
+  }
+});</code></pre>
+
+                <h3>D. Complex Nested Queries</h3>
+                <pre><code class="language-javascript">// Query nested objects
+db.users.find({ "address.city": "New York" });
+
+// Query array of objects
+db.orders.find({ "items.product": "laptop" });
+
+// Multiple conditions on array elements
+db.inventory.find({
+  $and: [
+    { "items.name": "journal" },
+    { "items.quantity": { $gte: 25 } }
+  ]
+});
+
+// Projection with nested fields
+db.users.find(
+  {},
+  { 
+    name: 1,
+    "address.city": 1,
+    "skills.0": 1  // First element of skills array
+  }
+);</code></pre>
+            </section>
+
+            <!-- Aggregation -->
+            <section class="section" id="aggregation">
+                <h2><i class="fas fa-chart-bar"></i> Aggregation Framework</h2>
+                
+                <h3>A. Basic Pipeline Stages</h3>
+                <pre><code class="language-javascript">// $match - Filter documents
+db.sales.aggregate([
+  { $match: { status: "completed" } }
+]);
+
+// $project - Reshape documents
+db.users.aggregate([
+  {
+    $project: {
+      name: 1,
+      email: 1,
+      fullName: { $concat: ["$firstName", " ", "$lastName"] },
+      yearBorn: { $subtract: [2023, "$age"] }
+    }
+  }
+]);
+
+// $group - Group by field
+db.sales.aggregate([
+  {
+    $group: {
+      _id: "$product",
+      totalSales: { $sum: "$amount" },
+      avgSale: { $avg: "$amount" },
+      count: { $sum: 1 }
+    }
+  }
+]);
+
+// $sort - Sort documents
+db.sales.aggregate([
+  { $group: { _id: "$product", total: { $sum: "$amount" } } },
+  { $sort: { total: -1 } }
+]);</code></pre>
+
+                <h3>B. Advanced Aggregation</h3>
+                <pre><code class="language-javascript">// Complex aggregation pipeline
+db.orders.aggregate([
+  // Stage 1: Match orders from last month
+  {
+    $match: {
+      orderDate: {
+        $gte: new Date(new Date().setMonth(new Date().getMonth() - 1))
+      }
+    }
+  },
+  
+  // Stage 2: Unwind items array
+  { $unwind: "$items" },
+  
+  // Stage 3: Group by product category
+  {
+    $group: {
+      _id: "$items.category",
+      totalRevenue: { $sum: { $multiply: ["$items.price", "$items.quantity"] } },
+      totalQuantity: { $sum: "$items.quantity" },
+      averageOrderValue: { $avg: "$total" },
+      orders: { $addToSet: "$_id" }
+    }
+  },
+  
+  // Stage 4: Add computed fields
+  {
+    $project: {
+      category: "$_id",
+      totalRevenue: 1,
+      totalQuantity: 1,
+      averageOrderValue: 1,
+      orderCount: { $size: "$orders" },
+      _id: 0
+    }
+  },
+  
+  // Stage 5: Sort by revenue
+  { $sort: { totalRevenue: -1 } },
+  
+  // Stage 6: Limit results
+  { $limit: 10 }
+]);</code></pre>
+
+                <h3>C. Lookup (JOIN)</h3>
+                <pre><code class="language-javascript">// Left outer join
+db.orders.aggregate([
+  {
+    $lookup: {
+      from: "customers",        // Join with customers collection
+      localField: "customerId", // Field in orders collection
+      foreignField: "_id",      // Field in customers collection
+      as: "customerInfo"        // Output array field
+    }
+  },
+  {
+    $unwind: "$customerInfo"   // Convert array to object
+  }
+]);
+
+// Complex lookup with pipeline
+db.orders.aggregate([
+  {
+    $lookup: {
+      from: "products",
+      let: { orderItems: "$items" },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $in: ["$_id", "$$orderItems.productId"]
+            }
+          }
+        },
+        {
+          $project: { name: 1, category: 1, price: 1 }
+        }
+      ],
+      as: "productDetails"
+    }
+  }
+]);</code></pre>
+
+                <h3>D. Faceted Search</h3>
+                <pre><code class="language-javascript">// Multiple aggregations in parallel
+db.products.aggregate([
+  {
+    $facet: {
+      // Price distribution
+      "priceRanges": [
+        {
+          $bucket: {
+            groupBy: "$price",
+            boundaries: [0, 50, 100, 500, 1000],
+            default: "Other",
+            output: {
+              count: { $sum: 1 },
+              avgPrice: { $avg: "$price" }
+            }
+          }
+        }
+      ],
+      
+      // Category breakdown
+      "categories": [
+        {
+          $group: {
+            _id: "$category",
+            count: { $sum: 1 }
+          }
+        },
+        { $sort: { count: -1 } }
+      ],
+      
+      // Top rated products
+      "topRated": [
+        { $match: { rating: { $gte: 4.5 } } },
+        { $sort: { rating: -1 } },
+        { $limit: 5 },
+        { $project: { name: 1, rating: 1, price: 1 } }
+      ]
+    }
+  }
+]);</code></pre>
+            </section>
+
+            <!-- Indexing -->
+            <section class="section" id="indexing">
+                <h2><i class="fas fa-bolt"></i> Indexing</h2>
+                
+                <h3>A. Index Types</h3>
+                <pre><code class="language-javascript">// Single field index
+db.users.createIndex({ email: 1 });      // Ascending
+db.users.createIndex({ age: -1 });       // Descending
+
+// Compound index
+db.users.createIndex({ age: 1, name: 1 });
+
+// Multikey index (on arrays)
+db.users.createIndex({ skills: 1 });
+
+// Text index
+db.articles.createIndex({ 
+  title: "text", 
+  content: "text" 
+});
+
+// Geospatial index
+db.places.createIndex({ location: "2dsphere" });
+
+// Partial index (with condition)
+db.users.createIndex(
+  { email: 1 },
+  { partialFilterExpression: { email: { $exists: true } } }
+);
+
+// TTL index (auto-delete after time)
+db.sessions.createIndex(
+  { createdAt: 1 },
+  { expireAfterSeconds: 3600 }
+);
+
+// Unique index
+db.users.createIndex({ email: 1 }, { unique: true });
+
+// Sparse index (ignore null values)
+db.users.createIndex({ phone: 1 }, { sparse: true });</code></pre>
+
+                <h3>B. Index Management</h3>
+                <pre><code class="language-javascript">// List indexes
+db.users.getIndexes();
+
+// Get index stats
+db.users.stats().indexSizes;
+
+// Drop index
+db.users.dropIndex({ email: 1 });
+db.users.dropIndex("email_1");  // By name
+
+// Rebuild indexes
+db.users.reIndex();
+
+// Get execution plan
+db.users.find({ email: "john@example.com" }).explain("executionStats");
+
+// Check index usage
+db.users.aggregate([
+  { $indexStats: {} }
+]);</code></pre>
+
+                <div class="alert warning">
+                    <strong>Index Best Practices:</strong> Create indexes on frequently queried fields, but avoid over-indexing as it impacts write performance. Use compound indexes for queries with multiple fields.
+                </div>
+            </section>
+
+            <!-- Replication -->
+            <section class="section" id="replication">
+                <h2><i class="fas fa-copy"></i> Replication</h2>
+                
+                <h3>A. Replica Set Setup</h3>
+                <pre><code class="language-javascript">// Start MongoDB instances with replica set
+mongod --replSet myReplicaSet --port 27017 --dbpath /data/db1
+mongod --replSet myReplicaSet --port 27018 --dbpath /data/db2  
+mongod --replSet myReplicaSet --port 27019 --dbpath /data/db3
+
+// Connect to primary and initialize
+mongo --port 27017
+
+// Initialize replica set
+rs.initiate({
+  _id: "myReplicaSet",
+  members: [
+    { _id: 0, host: "localhost:27017" },
+    { _id: 1, host: "localhost:27018" },
+    { _id: 2, host: "localhost:27019" }
+  ]
+});
+
+// Check replica set status
+rs.status();
+
+// Add member to replica set
+rs.add("localhost:27020");
+
+// Remove member
+rs.remove("localhost:27020");</code></pre>
+
+                <h3>B. Read Preferences</h3>
+                <pre><code class="language-javascript">// Read from primary (default)
+db.users.find().readPref("primary");
+
+// Read from secondary
+db.users.find().readPref("secondary");
+
+// Read from primary preferred
+db.users.find().readPref("primaryPreferred");
+
+// Read from secondary preferred  
+db.users.find().readPref("secondaryPreferred");
+
+// Read from nearest
+db.users.find().readPref("nearest");</code></pre>
+
+                <div class="alert info">
+                    <strong>Replica Set Benefits:</strong> High availability, data redundancy, automatic failover, and read scaling. Minimum of 3 members recommended for production.
+                </div>
+            </section>
+
+            <!-- Sharding -->
+            <section class="section" id="sharding">
+                <h2><i class="fas fa-th"></i> Sharding</h2>
+                
+                <h3>A. Sharding Architecture</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-server"></i> Config Servers</h4>
+                        <p>Store metadata and configuration</p>
+                        <ul>
+                            <li>Cluster metadata</li>
+                            <li>Shard key ranges</li>
+                            <li>Chunk information</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-route"></i> mongos Router</h4>
+                        <p>Query router for sharded cluster</p>
+                        <ul>
+                            <li>Routes queries to shards</li>
+                            <li>Aggregates results</li>
+                            <li>Handles client connections</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-database"></i> Shard Servers</h4>
+                        <p>Store actual data</p>
+                        <ul>
+                            <li>Replica sets</li>
+                            <li>Data partitions</li>
+                            <li>Local indexes</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>B. Shard Setup</h3>
+                <pre><code class="language-javascript">// 1. Start config servers (replica set)
+mongod --configsvr --replSet configReplSet --port 27019
+mongod --configsvr --replSet configReplSet --port 27020  
+mongod --configsvr --replSet configReplSet --port 27021
+
+// Initialize config server replica set
+mongo --port 27019
+rs.initiate({
+  _id: "configReplSet",
+  configsvr: true,
+  members: [
+    { _id: 0, host: "localhost:27019" },
+    { _id: 1, host: "localhost:27020" }, 
+    { _id: 2, host: "localhost:27021" }
+  ]
+});
+
+// 2. Start shard servers (replica sets)
+mongod --shardsvr --replSet shard1 --port 27017
+mongod --shardsvr --replSet shard2 --port 27018
+
+// 3. Start mongos router
+mongos --configdb configReplSet/localhost:27019,localhost:27020,localhost:27021 --port 27016
+
+// 4. Connect to mongos and add shards
+mongo --port 27016
+sh.addShard("shard1/localhost:27017");
+sh.addShard("shard2/localhost:27018");</code></pre>
+
+                <h3>C. Shard Key Selection</h3>
+                <pre><code class="language-javascript">// Enable sharding on database
+sh.enableSharding("mystore");
+
+// Shard collection with hash-based key
+sh.shardCollection("mystore.products", { _id: "hashed" });
+
+// Shard with range-based key
+sh.shardCollection("mystore.orders", { customerId: 1 });
+
+// Compound shard key
+sh.shardCollection("mystore.analytics", { 
+  date: 1, 
+  userId: 1 
+});
+
+// Check shard status
+sh.status();</code></pre>
+
+                <div class="alert warning">
+                    <strong>Shard Key Considerations:</strong> Choose a shard key with high cardinality, good write distribution, and supports common query patterns. Shard key cannot be changed after sharding.
+                </div>
+            </section>
+
+            <!-- Security -->
+            <section class="section" id="security">
+                <h2><i class="fas fa-shield-alt"></i> Security</h2>
+                
+                <h3>A. Authentication</h3>
+                <pre><code class="language-javascript">// Create admin user
+use admin
+db.createUser({
+  user: "admin",
+  pwd: "secure_password",
+  roles: [
+    { role: "userAdminAnyDatabase", db: "admin" },
+    { role: "readWriteAnyDatabase", db: "admin" },
+    { role: "dbAdminAnyDatabase", db: "admin" },
+    { role: "clusterAdmin", db: "admin" }
+  ]
+});
+
+// Create database user
+use mystore
+db.createUser({
+  user: "storeUser",
+  pwd: "user_password", 
+  roles: [
+    { role: "readWrite", db: "mystore" }
+  ]
+});
+
+// Built-in roles
+// read, readWrite, dbAdmin, userAdmin
+// readAnyDatabase, readWriteAnyDatabase
+// dbAdminAnyDatabase, userAdminAnyDatabase
+// clusterMonitor, clusterManager, clusterAdmin
+// backup, restore</code></pre>
+
+                <h3>B. Enable Authentication</h3>
+                <div class="command-box">
+                    # Start mongod with auth enabled<br>
+                    mongod --auth --port 27017<br>
+                    <br>
+                    # Or in configuration file<br>
+                    security:<br>
+                      authorization: enabled
+                </div>
+
+                <h3>C. SSL/TLS Configuration</h3>
+                <pre><code class="language-yaml"># MongoDB configuration file (mongod.conf)
+net:
+  ssl:
+    mode: requireSSL
+    PEMKeyFile: /path/to/mongodb.pem
+    CAFile: /path/to/ca.pem
+    allowConnectionsWithoutCertificates: false</code></pre>
+
+                <h3>D. IP Whitelisting</h3>
+                <pre><code class="language-yaml">net:
+  bindIp: 127.0.0.1,192.168.1.100
+  port: 27017</code></pre>
+
+                <div class="alert danger">
+                    <strong>Security Checklist:</strong> Enable authentication, use SSL/TLS, restrict network access, regular security updates, audit logging, and principle of least privilege for users.
+                </div>
+            </section>
+
+            <!-- MongoDB with Laravel -->
+            <section class="section" id="laravel">
+                <h2><i class="fab fa-laravel"></i> MongoDB with Laravel</h2>
+                
+                <h3>A. Installation & Setup</h3>
+                <div class="command-box">
+                    # Install MongoDB PHP driver<br>
+                    sudo pecl install mongodb<br>
+                    <br>
+                    # Add to php.ini<br>
+                    extension=mongodb<br>
+                    <br>
+                    # Install Laravel MongoDB package<br>
+                    composer require mongodb/laravel-mongodb
+                </div>
+
+                <h3>B. Configuration</h3>
+                <pre><code class="language-php">// config/database.php
+'connections' => [
+    'mongodb' => [
+        'driver' => 'mongodb',
+        'host' => env('MONGO_DB_HOST', '127.0.0.1'),
+        'port' => env('MONGO_DB_PORT', 27017),
+        'database' => env('MONGO_DB_DATABASE', 'laravel'),
+        'username' => env('MONGO_DB_USERNAME', ''),
+        'password' => env('MONGO_DB_PASSWORD', ''),
+        'options' => [
+            'database' => env('MONGO_DB_AUTHENTICATION_DATABASE', 'admin'),
+        ],
+    ],
+],</code></pre>
+
+                <h3>C. Environment Configuration</h3>
+                <pre><code class="language-env"># .env file
+MONGO_DB_HOST=127.0.0.1
+MONGO_DB_PORT=27017
+MONGO_DB_DATABASE=laravel_app
+MONGO_DB_USERNAME=
+MONGO_DB_PASSWORD=</code></pre>
+
+                <h3>D. Eloquent Models</h3>
+                <pre><code class="language-php"><?php
+// app/Models/User.php
+namespace App\Models;
+
+use MongoDB\Laravel\Eloquent\Model;
+
+class User extends Model
+{
+    protected $connection = 'mongodb';
+    protected $collection = 'users';
+    
+    protected $fillable = [
+        'name', 
+        'email', 
+        'password', 
+        'profile'
+    ];
+    
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+    
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'profile' => 'array',
+    ];
+    
+    // Define relationships
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+    
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+}</code></pre>
+
+                <h3>E. Basic CRUD Operations</h3>
+                <pre><code class="language-php"><?php
+// Create
+$user = User::create([
+    'name' => 'John Doe',
+    'email' => 'john@example.com',
+    'profile' => [
+        'age' => 30,
+        'skills' => ['PHP', 'Laravel', 'MongoDB'],
+        'address' => [
+            'city' => 'New York',
+            'country' => 'USA'
+        ]
+    ]
+]);
+
+// Read
+$users = User::all();
+$user = User::where('email', 'john@example.com')->first();
+$users = User::where('profile.age', '>', 25)->get();
+
+// Update
+User::where('email', 'john@example.com')
+    ->update(['profile.age' => 31]);
+
+// Delete
+User::where('email', 'john@example.com')->delete();</code></pre>
+
+                <h3>F. Advanced Queries</h3>
+                <pre><code class="language-php"><?php
+// Array operations
+$users = User::where('profile.skills', 'PHP')->get();
+$users = User::whereIn('profile.skills', ['PHP', 'Python'])->get();
+
+// Nested field queries
+$users = User::where('profile.address.city', 'New York')->get();
+
+// Regular expressions
+$users = User::where('name', 'regexp', '/^John/i')->get();
+
+// Aggregation
+$result = User::raw()->aggregate([
+    [
+        '$group' => [
+            '_id' => '$profile.address.city',
+            'count' => ['$sum' => 1],
+            'avgAge' => ['$avg' => '$profile.age']
+        ]
+    ],
+    ['$sort' => ['count' => -1]]
+]);
+
+// Using MongoDB query builder
+$users = User::whereRaw([
+    'profile.age' => ['$gte' => 25],
+    'profile.skills' => ['$in' => ['PHP', 'Laravel']]
+])->get();</code></pre>
+
+                <h3>G. Controller Example</h3>
+                <pre><code class="language-php"><?php
+// app/Http/Controllers/UserController.php
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use Illuminate\Http\Request;
+
+class UserController extends Controller
+{
+    public function index()
+    {
+        $users = User::paginate(10);
+        return response()->json($users);
+    }
+    
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'profile.age' => 'required|integer|min:1',
+        ]);
+        
+        $user = User::create($request->all());
+        return response()->json($user, 201);
+    }
+    
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
+        return response()->json($user);
+    }
+    
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $user->update($request->all());
+        return response()->json($user);
+    }
+    
+    public function destroy($id)
+    {
+        User::findOrFail($id)->delete();
+        return response()->json(null, 204);
+    }
+    
+    // Custom query methods
+    public function searchBySkills(Request $request)
+    {
+        $skills = $request->input('skills', []);
+        $users = User::whereIn('profile.skills', $skills)->get();
+        return response()->json($users);
+    }
+    
+    public function usersByCity($city)
+    {
+        $users = User::where('profile.address.city', $city)->get();
+        return response()->json($users);
+    }
+}</code></pre>
+
+                <h3>H. Service Provider</h3>
+                <pre><code class="language-php"><?php
+// config/app.php - Add to providers array
+'providers' => [
+    // Other providers...
+    MongoDB\Laravel\MongoDBServiceProvider::class,
+],</code></pre>
+
+                <h3>I. Artisan Commands</h3>
+                <pre><code class="language-php"><?php
+// Create model with MongoDB
+php artisan make:model Product --mongodb
+
+// Database seeder
+// database/seeders/UserSeeder.php
+use App\Models\User;
+
+class UserSeeder extends Seeder
+{
+    public function run()
+    {
+        User::create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'profile' => [
+                'role' => 'admin',
+                'permissions' => ['create', 'read', 'update', 'delete'],
+                'settings' => [
+                    'theme' => 'dark',
+                    'notifications' => true
+                ]
+            ]
+        ]);
+        
+        // Create multiple users
+        for ($i = 1; $i <= 50; $i++) {
+            User::create([
+                'name' => "User {$i}",
+                'email' => "user{$i}@example.com",
+                'profile' => [
+                    'age' => rand(18, 65),
+                    'skills' => collect(['PHP', 'JavaScript', 'Python', 'Java', 'C++'])
+                        ->random(rand(1, 3))->toArray(),
+                    'address' => [
+                        'city' => collect(['New York', 'London', 'Tokyo', 'Paris'])
+                            ->random(),
+                        'country' => 'USA'
+                    ]
+                ]
+            ]);
+        }
+    }
+}</code></pre>
+
+                <div class="alert success">
+                    <strong>Laravel + MongoDB Benefits:</strong> Eloquent ORM support, migrations, relationships, validation, and all Laravel features work seamlessly with MongoDB.
+                </div>
+
+                <span class="badge laravel">Laravel</span>
+                <span class="badge important">Production Ready</span>
+            </section>
+
+            <!-- Performance -->
+            <section class="section" id="performance">
+                <h2><i class="fas fa-tachometer-alt"></i> Performance Optimization</h2>
+                
+                <h3>A. Query Optimization</h3>
+                <pre><code class="language-javascript">// Use explain() to analyze queries
+db.users.find({ age: { $gte: 25 } }).explain("executionStats");
+
+// Create proper indexes
+db.users.createIndex({ age: 1, status: 1 });
+
+// Use projection to limit fields
+db.users.find(
+  { age: { $gte: 25 } },
+  { name: 1, email: 1, _id: 0 }
+);
+
+// Use limit and skip for pagination
+db.users.find().skip(100).limit(10);
+
+// Avoid $where operator
+// Bad: 
+db.users.find({ $where: "this.age > 25" });
+// Good:
+db.users.find({ age: { $gt: 25 } });</code></pre>
+
+                <h3>B. Schema Design</h3>
+                <pre><code class="language-javascript">// Embed vs Reference
+// Embed for 1-to-few relationships
+{
+  _id: ObjectId("..."),
+  name: "John Doe",
+  addresses: [
+    {
+      type: "home",
+      street: "123 Main St",
+      city: "New York"
+    },
+    {
+      type: "work", 
+      street: "456 Business Ave",
+      city: "New York"
+    }
+  ]
+}
+
+// Reference for 1-to-many relationships
+// User document
+{
+  _id: ObjectId("user123"),
+  name: "John Doe",
+  email: "john@example.com"
+}
+
+// Posts collection
+{
+  _id: ObjectId("..."),
+  title: "My Blog Post",
+  content: "...",
+  authorId: ObjectId("user123")
+}</code></pre>
+
+                <h3>C. Connection Optimization</h3>
+                <pre><code class="language-javascript">// Connection pooling settings
+const MongoClient = require('mongodb').MongoClient;
+
+const options = {
+  maxPoolSize: 10,          // Maximum connections
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
+  bufferMaxEntries: 0,      // Disable mongoose buffering
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+};
+
+MongoClient.connect(uri, options);</code></pre>
+
+                <div class="alert info">
+                    <strong>Performance Tips:</strong> Use appropriate indexes, avoid large result sets, use aggregation for complex queries, monitor slow queries, and optimize schema design.
+                </div>
+            </section>
+
+            <!-- Real Examples -->
+            <section class="section" id="examples">
+                <h2><i class="fas fa-code"></i> Real-World Examples</h2>
+                
+                <h3>A. E-commerce Product Catalog</h3>
+                <pre><code class="language-javascript">// Product schema
+{
+  _id: ObjectId("..."),
+  name: "Wireless Headphones",
+  description: "High-quality wireless headphones...",
+  price: 199.99,
+  category: "Electronics",
+  subcategory: "Audio",
+  brand: "TechBrand",
+  images: [
+    "https://example.com/image1.jpg",
+    "https://example.com/image2.jpg"
+  ],
+  specifications: {
+    color: "Black",
+    weight: "250g",
+    batteryLife: "30 hours",
+    connectivity: ["Bluetooth 5.0", "USB-C"]
+  },
+  inventory: {
+    inStock: true,
+    quantity: 50,
+    warehouse: "NYC-001"
+  },
+  reviews: [
+    {
+      userId: ObjectId("..."),
+      rating: 5,
+      comment: "Great headphones!",
+      date: new Date("2023-01-15")
+    }
+  ],
+  tags: ["wireless", "bluetooth", "audio", "portable"],
+  createdAt: new Date(),
+  updatedAt: new Date()
+}
+
+// Complex product search
+db.products.aggregate([
+  // Text search
+  {
+    $match: {
+      $text: { $search: "wireless headphones" },
+      price: { $gte: 50, $lte: 500 },
+      "inventory.inStock": true
+    }
+  },
+  
+  // Add average rating
+  {
+    $addFields: {
+      avgRating: { $avg: "$reviews.rating" },
+      reviewCount: { $size: "$reviews" }
+    }
+  },
+  
+  // Filter by rating
+  {
+    $match: { avgRating: { $gte: 4.0 } }
+  },
+  
+  // Sort and limit
+  { $sort: { avgRating: -1, reviewCount: -1 } },
+  { $limit: 20 },
+  
+  // Project fields
+  {
+    $project: {
+      name: 1,
+      price: 1,
+      images: { $slice: ["$images", 1] },
+      avgRating: 1,
+      reviewCount: 1
+    }
+  }
+]);</code></pre>
+
+                <h3>B. Social Media Application</h3>
+                <pre><code class="language-javascript">// User profile
+{
+  _id: ObjectId("..."),
+  username: "johndoe",
+  email: "john@example.com",
+  profile: {
+    firstName: "John",
+    lastName: "Doe",
+    bio: "Software developer passionate about tech",
+    avatar: "https://example.com/avatar.jpg",
+    location: "New York, NY",
+    website: "https://johndoe.dev"
+  },
+  followers: [],  // Array of user IDs
+  following: [],  // Array of user IDs
+  stats: {
+    followersCount: 1250,
+    followingCount: 890,
+    postsCount: 45
+  },
+  settings: {
+    private: false,
+    emailNotifications: true,
+    theme: "dark"
+  },
+  createdAt: new Date(),
+  lastActive: new Date()
+}
+
+// Post document
+{
+  _id: ObjectId("..."),
+  authorId: ObjectId("..."),
+  content: "Just deployed my new MongoDB application! 🚀",
+  media: [
+    {
+      type: "image",
+      url: "https://example.com/screenshot.jpg",
+      alt: "Application screenshot"
+    }
+  ],
+  hashtags: ["mongodb", "nodejs", "webdev"],
+  mentions: [ObjectId("user456")],
+  likes: [], // Array of user IDs
+  comments: [
+    {
+      _id: ObjectId("..."),
+      authorId: ObjectId("..."),
+      content: "Looks awesome!",
+      createdAt: new Date()
+    }
+  ],
+  stats: {
+    likesCount: 42,
+    commentsCount: 8,
+    sharesCount: 5
+  },
+  createdAt: new Date(),
+  updatedAt: new Date()
+}
+
+// Get user's timeline
+db.posts.aggregate([
+  // Get posts from followed users
+  {
+    $match: {
+      authorId: { 
+        $in: [
+          ObjectId("currentUserId"),
+          ...followingUserIds
+        ]
+      }
+    }
+  },
+  
+  // Lookup author information
+  {
+    $lookup: {
+      from: "users",
+      localField: "authorId",
+      foreignField: "_id",
+      as: "author"
+    }
+  },
+  
+  // Unwind author array
+  { $unwind: "$author" },
+  
+  // Sort by creation time
+  { $sort: { createdAt: -1 } },
+  
+  // Limit to recent posts
+  { $limit: 50 },
+  
+  // Project required fields
+  {
+    $project: {
+      content: 1,
+      media: 1,
+      hashtags: 1,
+      stats: 1,
+      createdAt: 1,
+      "author.username": 1,
+      "author.profile.firstName": 1,
+      "author.profile.lastName": 1,
+      "author.profile.avatar": 1
+    }
+  }
+]);</code></pre>
+
+                <h3>C. Analytics Dashboard</h3>
+                <pre><code class="language-javascript">// Event tracking document
+{
+  _id: ObjectId("..."),
+  event: "page_view",
+  userId: ObjectId("..."),
+  sessionId: "sess_abc123",
+  page: "/products/wireless-headphones",
+  referrer: "https://google.com",
+  userAgent: "Mozilla/5.0...",
+  ip: "192.168.1.1",
+  location: {
+    country: "USA",
+    city: "New York",
+    coordinates: [-74.006, 40.7128]
+  },
+  device: {
+    type: "desktop",
+    os: "Windows",
+    browser: "Chrome"
+  },
+  timestamp: new Date(),
+  metadata: {
+    loadTime: 1.2,
+    previousPage: "/category/electronics"
+  }
+}
+
+// Daily analytics aggregation
+db.events.aggregate([
+  // Match today's events
+  {
+    $match: {
+      timestamp: {
+        $gte: new Date(new Date().setHours(0,0,0,0)),
+        $lt: new Date(new Date().setHours(23,59,59,999))
+      }
+    }
+  },
+  
+  // Group by hour
+  {
+    $group: {
+      _id: { 
+        hour: { $hour: "$timestamp" },
+        event: "$event"
+      },
+      count: { $sum: 1 },
+      uniqueUsers: { $addToSet: "$userId" },
+      avgLoadTime: { $avg: "$metadata.loadTime" }
+    }
+  },
+  
+  // Calculate unique users count
+  {
+    $addFields: {
+      uniqueUsersCount: { $size: "$uniqueUsers" }
+    }
+  },
+  
+  // Sort by hour
+  { $sort: { "_id.hour": 1 } }
+]);</code></pre>
+
+                <div class="alert success">
+                    <strong>Real-world Tips:</strong> Design schema based on query patterns, use appropriate data types, implement proper error handling, and monitor performance in production.
+                </div>
+            </section>
+
+            <!-- Resources -->
+            <section class="section" id="resources">
+                <h2><i class="fas fa-link"></i> Useful Resources</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-book"></i> Official Documentation</h4>
+                        <div class="link-card">
+                            <a href="https://docs.mongodb.com/" target="_blank">MongoDB Documentation</a>
+                            <p>Complete official documentation with guides and references</p>
+                        </div>
+                        <div class="link-card">
+                            <a href="https://university.mongodb.com/" target="_blank">MongoDB University</a>
+                            <p>Free online courses and certification programs</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-cloud"></i> Cloud Services</h4>
+                        <div class="link-card">
+                            <a href="https://www.mongodb.com/cloud/atlas" target="_blank">MongoDB Atlas</a>
+                            <p>Fully managed cloud database service</p>
+                        </div>
+                        <div class="link-card">
+                            <a href="https://www.mongodb.com/realm" target="_blank">MongoDB Realm</a>
+                            <p>Mobile and web application platform</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-code"></i> Drivers & Libraries</h4>
+                        <div class="link-card">
+                            <a href="https://docs.mongodb.com/drivers/" target="_blank">Official Drivers</a>
+                            <p>Drivers for all major programming languages</p>
+                        </div>
+                        <div class="link-card">
+                            <a href="https://github.com/mongodb/laravel-mongodb" target="_blank">Laravel MongoDB</a>
+                            <p>Laravel MongoDB integration package</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-users"></i> Community</h4>
+                        <div class="link-card">
+                            <a href="https://community.mongodb.com/" target="_blank">MongoDB Community</a>
+                            <p>Official community forum for discussions</p>
+                        </div>
+                        <div class="link-card">
+                            <a href="https://stackoverflow.com/questions/tagged/mongodb" target="_blank">Stack Overflow</a>
+                            <p>Questions and answers about MongoDB</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-blog"></i> Blogs & Tutorials</h4>
+                        <div class="link-card">
+                            <a href="https://www.mongodb.com/blog" target="_blank">MongoDB Blog</a>
+                            <p>Official blog with updates and tutorials</p>
+                        </div>
+                        <div class="link-card">
+                            <a href="https://www.freecodecamp.org/news/tag/mongodb/" target="_blank">FreeCodeCamp MongoDB</a>
+                            <p>Free MongoDB tutorials and articles</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-terminal"></i> Tools & Extensions</h4>
+                        <div class="link-card">
+                            <a href="https://marketplace.visualstudio.com/items?itemName=mongodb.mongodb-vscode" target="_blank">MongoDB VS Code</a>
+                            <p>Official MongoDB extension for VS Code</p>
+                        </div>
+                        <div class="link-card">
+                            <a href="https://github.com/mongodb/mongo-tools" target="_blank">MongoDB Tools</a>
+                            <p>Command-line tools for MongoDB</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert info">
+                    <strong>Learning Path:</strong> Start with basic CRUD operations, learn aggregation framework, practice with real projects, and explore advanced features like sharding and replication.
+                </div>
+
+                <div class="alert success">
+                    <strong>Summary:</strong> This comprehensive guide covers everything you need to master MongoDB - from basic concepts to advanced features and real-world implementations with Laravel. Practice regularly and build projects to reinforce your learning!
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('shifted');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            sidebar.classList.remove('active');
+            mainContent.classList.remove('shifted');
+        }
+
+        // Progress Bar
+        function updateProgressBar() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.querySelector('.progress-bar').style.width = scrolled + '%';
+        }
+
+        // Back to Top
+        function scrollToTop() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+
+        function toggleBackToTop() {
+            const backToTop = document.getElementById('backToTop');
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        }
+
+        // Active Navigation
+        function updateActiveNav() {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.sidebar a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Search Functionality
+        function searchContent(query) {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.sidebar a');
+            
+            if (!query) {
+                sections.forEach(section => section.style.display = 'block');
+                navLinks.forEach(link => link.style.display = 'block');
+                return;
+            }
+
+            const searchTerm = query.toLowerCase();
+            
+            sections.forEach(section => {
+                const content = section.textContent.toLowerCase();
+                if (content.includes(searchTerm)) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+
+            navLinks.forEach(link => {
+                const text = link.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    link.style.display = 'block';
+                } else {
+                    link.style.display = 'none';
+                }
+            });
+        }
+
+        // Smooth Scrolling
+        document.querySelectorAll('.sidebar a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Event Listeners
+        window.addEventListener('scroll', () => {
+            updateProgressBar();
+            toggleBackToTop();
+            updateActiveNav();
+        });
+
+        // Click outside sidebar to close
+        document.addEventListener('click', (e) => {
+            const sidebar = document.getElementById('sidebar');
+            const navToggle = document.querySelector('.nav-toggle');
+            
+            if (!sidebar.contains(e.target) && !navToggle.contains(e.target)) {
+                closeSidebar();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateProgressBar();
+            updateActiveNav();
+            
+            // Add copy buttons to code blocks
+            const codeBlocks = document.querySelectorAll('pre code');
+            codeBlocks.forEach((block, index) => {
+                const button = document.createElement('button');
+                button.className = 'copy-btn';
+                button.innerHTML = '<i class="fas fa-copy"></i>';
+                button.title = 'Copy code';
+                button.style.cssText = `
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background: #2E8B57;
+                    color: white;
+                    border: none;
+                    padding: 5px 8px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 12px;
+                    opacity: 0.8;
+                    transition: opacity 0.2s;
+                `;
+                
+                button.addEventListener('click', () => {
+                    navigator.clipboard.writeText(block.textContent).then(() => {
+                        button.innerHTML = '<i class="fas fa-check"></i>';
+                        setTimeout(() => {
+                            button.innerHTML = '<i class="fas fa-copy"></i>';
+                        }, 2000);
+                    });
+                });
+                
+                block.parentNode.style.position = 'relative';
+                block.parentNode.appendChild(button);
+                
+                button.addEventListener('mouseenter', () => button.style.opacity = '1');
+                button.addEventListener('mouseleave', () => button.style.opacity = '0.8');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,3009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Complete Guide - A to Z</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #0066b2 0%, #004080 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0066b2 0%, #004080 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Navigation */
+        .nav-toggle {
+            display: none;
+            background: #0066b2;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            border-radius: 5px;
+            font-size: 1.2rem;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #1a252f;
+            color: white;
+            overflow-y: auto;
+            z-index: 1000;
+            transform: translateX(-280px);
+            transition: transform 0.3s ease;
+            padding-top: 80px;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            border-bottom: 1px solid #34495e;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            transition: background 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .sidebar a:hover {
+            background: #34495e;
+            padding-left: 30px;
+        }
+
+        .sidebar a.active {
+            background: #0066b2;
+            border-left: 4px solid #004080;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 0;
+            padding: 2rem;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.shifted {
+            margin-left: 280px;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+            scroll-margin-top: 100px;
+        }
+
+        .section h2 {
+            color: #1a252f;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #0066b2;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem 0;
+            padding-left: 10px;
+            border-left: 4px solid #0066b2;
+        }
+
+        .section h4 {
+            color: #555;
+            font-size: 1.2rem;
+            margin: 1rem 0 0.5rem 0;
+        }
+
+        /* Code Blocks */
+        pre {
+            background: #2d3748 !important;
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow-x: auto;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        code {
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+        }
+
+        .inline-code {
+            background: #f1f5f9;
+            color: #e53e3e;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Feature Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .feature-card h4 {
+            color: #0066b2;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Lists */
+        ul, ol {
+            padding-left: 2rem;
+            margin: 1rem 0;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            background: #0066b2;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 2px;
+        }
+
+        .badge.new { background: #ff6b6b; }
+        .badge.advanced { background: #4ecdc4; }
+        .badge.important { background: #feca57; color: #333; }
+        .badge.plugin { background: #28a745; }
+        .badge.deprecated { background: #6c757d; }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #0066b2;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+        }
+
+        .alert.info {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #1565c0;
+        }
+
+        .alert.warning {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #ef6c00;
+        }
+
+        .alert.success {
+            background: #e8f5e8;
+            border-color: #0066b2;
+            color: #1b5e20;
+        }
+
+        .alert.danger {
+            background: #ffebee;
+            border-color: #f44336;
+            color: #c62828;
+        }
+
+        /* Progress Bar */
+        .progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(0, 102, 178, 0.3);
+            z-index: 1002;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #0066b2;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Back to Top */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #0066b2;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: #004080;
+            transform: translateY(-2px);
+        }
+
+        /* Search */
+        .search-container {
+            padding: 20px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-box:focus {
+            border-color: #0066b2;
+        }
+
+        /* Demo Boxes */
+        .demo-box {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 1rem 0;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: #4a5568;
+        }
+
+        .demo-box.active {
+            background: #e3f2fd;
+            border-color: #0066b2;
+            color: #0066b2;
+        }
+
+        /* Plugin Cards */
+        .plugin-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 1px solid #cbd5e0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .plugin-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .plugin-card h4 {
+            color: #0066b2;
+            margin-bottom: 0.5rem;
+        }
+
+        .plugin-card .version {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Links */
+        .link-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-left: 4px solid #0066b2;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .link-card a {
+            color: #0066b2;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .link-card a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .section h2 {
+                font-size: 1.5rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            pre {
+                font-size: 0.8rem;
+                overflow-x: auto;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            animation: fadeInUp 0.6s ease;
+        }
+
+        /* Syntax highlighting improvements */
+        pre[class*="language-"] {
+            background: #1a202c !important;
+            color: #e2e8f0;
+        }
+
+        .token.comment { color: #718096; }
+        .token.string { color: #68d391; }
+        .token.number { color: #fbb6ce; }
+        .token.keyword { color: #63b3ed; }
+        .token.function { color: #f6e05e; }
+        .token.operator { color: #ed8936; }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress">
+        <div class="progress-bar"></div>
+    </div>
+
+    <!-- Navigation Toggle -->
+    <button class="nav-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="search-container">
+            <input type="text" class="search-box" placeholder="Search topics..." onkeyup="searchContent(this.value)">
+        </div>
+        <ul>
+            <li><a href="#introduction" onclick="closeSidebar()"><i class="fas fa-home"></i> What is jQuery?</a></li>
+            <li><a href="#installation" onclick="closeSidebar()"><i class="fas fa-download"></i> Installation & CDN</a></li>
+            <li><a href="#syntax" onclick="closeSidebar()"><i class="fas fa-code"></i> Basic Syntax</a></li>
+            <li><a href="#selectors" onclick="closeSidebar()"><i class="fas fa-mouse-pointer"></i> Selectors</a></li>
+            <li><a href="#events" onclick="closeSidebar()"><i class="fas fa-hand-pointer"></i> Event Handling</a></li>
+            <li><a href="#effects" onclick="closeSidebar()"><i class="fas fa-magic"></i> Effects & Animations</a></li>
+            <li><a href="#html" onclick="closeSidebar()"><i class="fas fa-edit"></i> HTML Manipulation</a></li>
+            <li><a href="#css" onclick="closeSidebar()"><i class="fas fa-paint-brush"></i> CSS Manipulation</a></li>
+            <li><a href="#traversing" onclick="closeSidebar()"><i class="fas fa-sitemap"></i> DOM Traversing</a></li>
+            <li><a href="#ajax" onclick="closeSidebar()"><i class="fas fa-server"></i> AJAX</a></li>
+            <li><a href="#utilities" onclick="closeSidebar()"><i class="fas fa-tools"></i> Utility Functions</a></li>
+            <li><a href="#chaining" onclick="closeSidebar()"><i class="fas fa-link"></i> Method Chaining</a></li>
+            <li><a href="#advanced" onclick="closeSidebar()"><i class="fas fa-rocket"></i> Advanced Techniques</a></li>
+            <li><a href="#plugins" onclick="closeSidebar()"><i class="fas fa-puzzle-piece"></i> Best Plugins</a></li>
+            <li><a href="#validation" onclick="closeSidebar()"><i class="fas fa-check-circle"></i> Validation Plugins</a></li>
+            <li><a href="#ui" onclick="closeSidebar()"><i class="fas fa-desktop"></i> UI Plugins</a></li>
+            <li><a href="#performance" onclick="closeSidebar()"><i class="fas fa-tachometer-alt"></i> Performance</a></li>
+            <li><a href="#best-practices" onclick="closeSidebar()"><i class="fas fa-star"></i> Best Practices</a></li>
+            <li><a href="#resources" onclick="closeSidebar()"><i class="fas fa-link"></i> Resources</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1><i class="fab fa-js-square"></i> jQuery Complete Guide</h1>
+            <p>Master jQuery from A to Z - Everything you need to know!</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content" id="main-content">
+            
+            <!-- Introduction -->
+            <section class="section" id="introduction">
+                <h2><i class="fas fa-info-circle"></i> What is jQuery?</h2>
+                <p>jQuery is a <strong>fast, lightweight, and feature-rich JavaScript library</strong> that simplifies HTML document traversing, manipulation, event handling, animation, and Ajax interactions.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-mouse-pointer"></i> Easy DOM Manipulation</h4>
+                        <p>Select and manipulate HTML elements with simple syntax</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-bolt"></i> Cross-browser Compatibility</h4>
+                        <p>Works consistently across all major browsers</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-magic"></i> Rich Effects & Animations</h4>
+                        <p>Built-in animations and effects</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-server"></i> Powerful AJAX Support</h4>
+                        <p>Simplified AJAX calls and data handling</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-puzzle-piece"></i> Extensive Plugin Ecosystem</h4>
+                        <p>Thousands of plugins available</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-graduation-cap"></i> Easy to Learn</h4>
+                        <p>Gentle learning curve for beginners</p>
+                    </div>
+                </div>
+
+                <div class="alert info">
+                    <strong>Why jQuery?</strong> jQuery simplifies JavaScript programming by providing a consistent API that works across all browsers, reducing development time and complexity.
+                </div>
+
+                <h3>Where to Use jQuery</h3>
+                <ul>
+                    <li><strong>Web Applications:</strong> Interactive websites and web apps</li>
+                    <li><strong>Form Handling:</strong> Validation, submission, and dynamic forms</li>
+                    <li><strong>UI Enhancement:</strong> Animations, effects, and user interactions</li>
+                    <li><strong>AJAX Applications:</strong> Dynamic content loading without page refresh</li>
+                    <li><strong>DOM Manipulation:</strong> Dynamic content creation and modification</li>
+                    <li><strong>Event Handling:</strong> User interaction management</li>
+                </ul>
+            </section>
+
+            <!-- Installation -->
+            <section class="section" id="installation">
+                <h2><i class="fas fa-download"></i> Installation & CDN</h2>
+                
+                <h3>A. Latest Version Information</h3>
+                <div class="alert success">
+                    <strong>Current Stable Version:</strong> jQuery 3.7.1 (Released: August 2023)
+                    <br><strong>File Size:</strong> ~30KB minified and gzipped
+                </div>
+
+                <h3>B. CDN Installation (Recommended)</h3>
+                <pre><code class="language-html">&lt;!-- jQuery 3.7.1 from jQuery CDN -->
+&lt;script src="https://code.jquery.com/jquery-3.7.1.min.js">&lt;/script>
+
+&lt;!-- jQuery 3.7.1 from Google CDN -->
+&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js">&lt;/script>
+
+&lt;!-- jQuery 3.7.1 from Microsoft CDN -->
+&lt;script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.7.1.min.js">&lt;/script>
+
+&lt;!-- jQuery 3.7.1 from cdnjs -->
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js">&lt;/script></code></pre>
+
+                <h3>C. Download and Host</h3>
+                <pre><code class="language-html">&lt;!-- Download from https://jquery.com/download/ -->
+&lt;script src="js/jquery-3.7.1.min.js">&lt;/script></code></pre>
+
+                <h3>D. NPM Installation</h3>
+                <pre><code class="language-bash">npm install jquery
+
+# Import in your JavaScript
+import $ from 'jquery';</code></pre>
+
+                <h3>E. Basic HTML Template</h3>
+                <pre><code class="language-html">&lt;!DOCTYPE html>
+&lt;html lang="en">
+&lt;head>
+    &lt;meta charset="UTF-8">
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0">
+    &lt;title>jQuery Example&lt;/title>
+&lt;/head>
+&lt;body>
+    &lt;h1 id="title">Hello jQuery!&lt;/h1>
+    &lt;button id="btn">Click Me&lt;/button>
+    
+    &lt;script src="https://code.jquery.com/jquery-3.7.1.min.js">&lt;/script>
+    &lt;script>
+        $(document).ready(function() {
+            $('#btn').click(function() {
+                $('#title').fadeOut();
+            });
+        });
+    &lt;/script>
+&lt;/body>
+&lt;/html></code></pre>
+            </section>
+
+            <!-- Basic Syntax -->
+            <section class="section" id="syntax">
+                <h2><i class="fas fa-code"></i> Basic Syntax</h2>
+                
+                <h3>A. The jQuery Function</h3>
+                <pre><code class="language-javascript">// jQuery syntax: $(selector).action()
+$(document).ready(function() {
+    // Your code here
+});
+
+// Shorthand for document ready
+$(function() {
+    // Your code here
+});
+
+// Alternative syntax (avoid conflicts)
+jQuery(document).ready(function($) {
+    // Your code here
+});</code></pre>
+
+                <h3>B. Basic Structure</h3>
+                <pre><code class="language-javascript">// Select elements and perform actions
+$('p').hide();              // Hide all paragraphs
+$('#myId').show();          // Show element with ID 'myId'
+$('.myClass').fadeIn();     // Fade in elements with class 'myClass'
+
+// Chaining methods
+$('div').hide().css('color', 'red').fadeIn();</code></pre>
+
+                <h3>C. The $ Symbol</h3>
+                <pre><code class="language-javascript">// $ is an alias for jQuery
+$('selector') === jQuery('selector')  // true
+
+// Avoiding conflicts with other libraries
+var $j = jQuery.noConflict();
+$j(document).ready(function() {
+    $j('p').hide();
+});</code></pre>
+
+                <div class="alert warning">
+                    <strong>Important:</strong> Always wrap your jQuery code in $(document).ready() to ensure the DOM is fully loaded before executing scripts.
+                </div>
+            </section>
+
+            <!-- Selectors -->
+            <section class="section" id="selectors">
+                <h2><i class="fas fa-mouse-pointer"></i> Selectors</h2>
+                
+                <h3>A. Basic Selectors</h3>
+                <pre><code class="language-javascript">// Element selector
+$('p')           // All paragraph elements
+$('div')         // All div elements
+
+// ID selector
+$('#myId')       // Element with ID 'myId'
+
+// Class selector
+$('.myClass')    // All elements with class 'myClass'
+
+// Universal selector
+$('*')           // All elements</code></pre>
+
+                <h3>B. Hierarchy Selectors</h3>
+                <pre><code class="language-javascript">// Descendant selector
+$('div p')       // All p elements inside div elements
+
+// Child selector
+$('div > p')     // All p elements that are direct children of div
+
+// Adjacent sibling selector
+$('h1 + p')      // p element immediately after h1
+
+// General sibling selector
+$('h1 ~ p')      // All p elements that are siblings of h1</code></pre>
+
+                <h3>C. Attribute Selectors</h3>
+                <pre><code class="language-javascript">// Has attribute
+$('[title]')           // Elements with title attribute
+
+// Attribute equals
+$('[title="hello"]')   // Elements where title="hello"
+
+// Attribute contains
+$('[title*="hello"]')  // Elements where title contains "hello"
+
+// Attribute starts with
+$('[title^="hello"]')  // Elements where title starts with "hello"
+
+// Attribute ends with
+$('[title$="hello"]')  // Elements where title ends with "hello"</code></pre>
+
+                <h3>D. Pseudo Selectors</h3>
+                <pre><code class="language-javascript">// Position-based
+$('li:first')       // First li element
+$('li:last')        // Last li element  
+$('li:even')        // Even-indexed li elements (0, 2, 4...)
+$('li:odd')         // Odd-indexed li elements (1, 3, 5...)
+$('li:eq(2)')       // Li element at index 2
+
+// State-based
+$(':checked')       // All checked form elements
+$(':selected')      // All selected option elements
+$(':disabled')      // All disabled form elements
+$(':enabled')       // All enabled form elements
+
+// Content-based
+$(':empty')         // All empty elements
+$(':contains("text")')  // Elements containing "text"
+
+// Visibility
+$(':visible')       // All visible elements
+$(':hidden')        // All hidden elements</code></pre>
+
+                <h3>E. Form Selectors</h3>
+                <pre><code class="language-javascript">// Form element types
+$(':input')         // All input, textarea, select, button elements
+$(':text')          // All text input elements
+$(':password')      // All password input elements
+$(':radio')         // All radio button elements
+$(':checkbox')      // All checkbox elements
+$(':submit')        // All submit button elements
+$(':reset')         // All reset button elements
+$(':button')        // All button elements
+$(':file')          // All file input elements</code></pre>
+            </section>
+
+            <!-- Event Handling -->
+            <section class="section" id="events">
+                <h2><i class="fas fa-hand-pointer"></i> Event Handling</h2>
+                
+                <h3>A. Mouse Events</h3>
+                <pre><code class="language-javascript">// Click events
+$('button').click(function() {
+    alert('Button clicked!');
+});
+
+// Double click
+$('div').dblclick(function() {
+    $(this).hide();
+});
+
+// Mouse enter and leave
+$('div').mouseenter(function() {
+    $(this).css('background-color', 'yellow');
+}).mouseleave(function() {
+    $(this).css('background-color', '');
+});
+
+// Hover (combines mouseenter and mouseleave)
+$('div').hover(
+    function() { $(this).addClass('highlight'); },    // mouse enter
+    function() { $(this).removeClass('highlight'); }  // mouse leave
+);
+
+// Mouse down and up
+$('button').mousedown(function() {
+    $(this).css('background-color', 'red');
+}).mouseup(function() {
+    $(this).css('background-color', '');
+});</code></pre>
+
+                <h3>B. Keyboard Events</h3>
+                <pre><code class="language-javascript">// Key events
+$('input').keydown(function(event) {
+    console.log('Key pressed: ' + event.which);
+});
+
+$('input').keyup(function() {
+    console.log('Key released');
+});
+
+$('input').keypress(function(event) {
+    console.log('Character: ' + String.fromCharCode(event.which));
+});
+
+// Specific key detection
+$(document).keydown(function(event) {
+    if (event.which === 13) { // Enter key
+        alert('Enter pressed!');
+    }
+    if (event.which === 27) { // Escape key
+        alert('Escape pressed!');
+    }
+});</code></pre>
+
+                <h3>C. Form Events</h3>
+                <pre><code class="language-javascript">// Form submission
+$('form').submit(function(event) {
+    event.preventDefault(); // Prevent default submission
+    console.log('Form submitted');
+});
+
+// Input focus and blur
+$('input').focus(function() {
+    $(this).css('border-color', 'blue');
+}).blur(function() {
+    $(this).css('border-color', '');
+});
+
+// Input change
+$('input, select').change(function() {
+    console.log('Value changed to: ' + $(this).val());
+});
+
+// Input event (fires on every keystroke)
+$('input').on('input', function() {
+    console.log('Current value: ' + $(this).val());
+});</code></pre>
+
+                <h3>D. Event Methods</h3>
+                <pre><code class="language-javascript">// Generic event binding
+$('button').on('click', function() {
+    alert('Clicked!');
+});
+
+// Multiple events
+$('div').on('mouseenter mouseleave', function() {
+    $(this).toggleClass('highlight');
+});
+
+// Event delegation (for dynamic elements)
+$(document).on('click', '.dynamic-button', function() {
+    alert('Dynamic button clicked!');
+});
+
+// Remove events
+$('button').off('click');
+
+// One-time event
+$('button').one('click', function() {
+    alert('This will only fire once');
+});
+
+// Trigger events programmatically
+$('button').trigger('click');</code></pre>
+
+                <div class="demo-box">
+                    <p>Interactive Demo Area - Click elements to see events in action!</p>
+                </div>
+            </section>
+
+            <!-- Effects & Animations -->
+            <section class="section" id="effects">
+                <h2><i class="fas fa-magic"></i> Effects & Animations</h2>
+                
+                <h3>A. Basic Show/Hide Effects</h3>
+                <pre><code class="language-javascript">// Show and hide
+$('#element').show();           // Show element
+$('#element').hide();           // Hide element
+$('#element').toggle();         // Toggle visibility
+
+// With duration
+$('#element').show(1000);       // Show over 1 second
+$('#element').hide('slow');     // Hide slowly (600ms)
+$('#element').toggle('fast');   // Toggle quickly (200ms)
+
+// With callback
+$('#element').hide(500, function() {
+    alert('Hide animation complete!');
+});</code></pre>
+
+                <h3>B. Fading Effects</h3>
+                <pre><code class="language-javascript">// Fade effects
+$('#element').fadeIn();         // Fade in
+$('#element').fadeOut();        // Fade out
+$('#element').fadeToggle();     // Toggle fade
+
+// Fade to specific opacity
+$('#element').fadeTo(1000, 0.5); // Fade to 50% opacity over 1 second
+
+// With duration and callback
+$('#element').fadeOut('slow', function() {
+    $(this).remove(); // Remove element after fade out
+});</code></pre>
+
+                <h3>C. Sliding Effects</h3>
+                <pre><code class="language-javascript">// Slide effects
+$('#element').slideDown();      // Slide down
+$('#element').slideUp();        // Slide up
+$('#element').slideToggle();    // Toggle slide
+
+// With duration
+$('#element').slideDown(800);
+$('#element').slideUp('fast');
+
+// Slide with easing
+$('#element').slideToggle(1000, 'swing', function() {
+    console.log('Slide animation complete');
+});</code></pre>
+
+                <h3>D. Custom Animations</h3>
+                <pre><code class="language-javascript">// Basic animation
+$('#element').animate({
+    left: '250px',
+    opacity: '0.5',
+    height: '150px',
+    width: '150px'
+}, 1000);
+
+// Complex animation with multiple properties
+$('#element').animate({
+    left: '+=50px',      // Relative values
+    top: '-=25px',
+    fontSize: '20px',
+    borderRadius: '50%'
+}, {
+    duration: 2000,
+    easing: 'swing',
+    complete: function() {
+        alert('Animation complete!');
+    }
+});
+
+// Queue multiple animations
+$('#element')
+    .animate({left: '100px'}, 500)
+    .animate({top: '100px'}, 500)
+    .animate({left: '0px'}, 500)
+    .animate({top: '0px'}, 500);
+
+// Stop animations
+$('#element').stop();           // Stop current animation
+$('#element').stop(true);       // Stop and clear queue
+$('#element').stop(true, true); // Stop, clear queue, and jump to end</code></pre>
+
+                <h3>E. Animation Control</h3>
+                <pre><code class="language-javascript">// Delay animation
+$('#element').delay(1000).fadeOut();
+
+// Check if animating
+if ($('#element').is(':animated')) {
+    console.log('Element is currently animating');
+}
+
+// Custom easing functions (requires jQuery UI or easing plugin)
+$('#element').animate({
+    left: '100px'
+}, 1000, 'easeInOutBounce');
+
+// Animation settings
+$.fx.interval = 13;  // Animation frame rate (default: 13ms)
+$.fx.off = true;     // Disable all animations</code></pre>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Effect Method</th>
+                            <th>Description</th>
+                            <th>Duration Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>show() / hide()</td>
+                            <td>Show or hide elements</td>
+                            <td>'slow', 'fast', or milliseconds</td>
+                        </tr>
+                        <tr>
+                            <td>fadeIn() / fadeOut()</td>
+                            <td>Fade elements in or out</td>
+                            <td>'slow', 'fast', or milliseconds</td>
+                        </tr>
+                        <tr>
+                            <td>slideDown() / slideUp()</td>
+                            <td>Slide elements down or up</td>
+                            <td>'slow', 'fast', or milliseconds</td>
+                        </tr>
+                        <tr>
+                            <td>animate()</td>
+                            <td>Custom property animations</td>
+                            <td>Object with duration, easing, complete</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="alert info">
+                    <strong>Animation Tips:</strong> Use callbacks for chaining animations, stop() method to prevent animation queuing, and consider performance with complex animations.
+                </div>
+            </section>
+
+            <!-- HTML Manipulation -->
+            <section class="section" id="html">
+                <h2><i class="fas fa-edit"></i> HTML Manipulation</h2>
+                
+                <h3>A. Getting and Setting Content</h3>
+                <pre><code class="language-javascript">// Get and set text content
+var text = $('p').text();          // Get text content
+$('p').text('New text content');   // Set text content
+
+// Get and set HTML content
+var html = $('div').html();        // Get HTML content
+$('div').html('&lt;strong>Bold text&lt;/strong>'); // Set HTML content
+
+// Get and set form values
+var value = $('input').val();      // Get input value
+$('input').val('New value');       // Set input value
+
+// Get and set attributes
+var src = $('img').attr('src');    // Get attribute
+$('img').attr('src', 'new.jpg');   // Set attribute
+$('img').attr({                    // Set multiple attributes
+    'src': 'new.jpg',
+    'alt': 'New image',
+    'title': 'New title'
+});
+
+// Remove attributes
+$('img').removeAttr('title');</code></pre>
+
+                <h3>B. Adding Content</h3>
+                <pre><code class="language-javascript">// Append content (inside, at the end)
+$('ul').append('&lt;li>New item&lt;/li>');
+$('&lt;li>New item&lt;/li>').appendTo('ul');
+
+// Prepend content (inside, at the beginning)
+$('ul').prepend('&lt;li>First item&lt;/li>');
+$('&lt;li>First item&lt;/li>').prependTo('ul');
+
+// Insert content after element
+$('p').after('&lt;div>After paragraph&lt;/div>');
+$('&lt;div>After paragraph&lt;/div>').insertAfter('p');
+
+// Insert content before element
+$('p').before('&lt;div>Before paragraph&lt;/div>');
+$('&lt;div>Before paragraph&lt;/div>').insertBefore('p');</code></pre>
+
+                <h3>C. Removing Content</h3>
+                <pre><code class="language-javascript">// Remove elements
+$('p').remove();                   // Remove all p elements
+$('p').remove('.highlight');       // Remove p elements with class 'highlight'
+
+// Empty elements (remove content but keep element)
+$('div').empty();
+
+// Detach elements (remove but keep data and events)
+var detached = $('p').detach();    // Remove and store
+$('body').append(detached);        // Re-add later</code></pre>
+
+                <h3>D. Replacing Content</h3>
+                <pre><code class="language-javascript">// Replace elements
+$('p').replaceWith('&lt;div>New content&lt;/div>');
+$('&lt;div>New content&lt;/div>').replaceAll('p');
+
+// Wrap elements
+$('p').wrap('&lt;div class="wrapper">&lt;/div>');     // Wrap each p individually
+$('p').wrapAll('&lt;div class="container">&lt;/div>'); // Wrap all p elements together
+$('p').wrapInner('&lt;strong>&lt;/strong>');          // Wrap content inside each p
+
+// Unwrap elements
+$('p').unwrap();                   // Remove parent wrapper</code></pre>
+
+                <h3>E. Cloning Elements</h3>
+                <pre><code class="language-javascript">// Clone elements
+var cloned = $('div').clone();           // Clone without events
+var clonedWithEvents = $('div').clone(true); // Clone with events
+
+// Clone and append
+$('div').clone().appendTo('body');
+
+// Clone with data
+$('div').clone(true, true).appendTo('body'); // Clone with events and data</code></pre>
+
+                <div class="alert success">
+                    <strong>Best Practices:</strong> Use text() for plain text to prevent XSS attacks, use html() only when you need to insert HTML markup, and always validate user input.
+                </div>
+            </section>
+
+            <!-- CSS Manipulation -->
+            <section class="section" id="css">
+                <h2><i class="fas fa-paint-brush"></i> CSS Manipulation</h2>
+                
+                <h3>A. CSS Classes</h3>
+                <pre><code class="language-javascript">// Add classes
+$('div').addClass('highlight');
+$('div').addClass('highlight important'); // Multiple classes
+
+// Remove classes
+$('div').removeClass('highlight');
+$('div').removeClass('highlight important');
+$('div').removeClass(); // Remove all classes
+
+// Toggle classes
+$('div').toggleClass('highlight');
+$('div').toggleClass('highlight', true);  // Force add
+$('div').toggleClass('highlight', false); // Force remove
+
+// Check if class exists
+if ($('div').hasClass('highlight')) {
+    console.log('Element has highlight class');
+}</code></pre>
+
+                <h3>B. CSS Properties</h3>
+                <pre><code class="language-javascript">// Get CSS property
+var color = $('p').css('color');
+var fontSize = $('p').css('font-size');
+
+// Set CSS property
+$('p').css('color', 'red');
+$('p').css('font-size', '16px');
+
+// Set multiple properties
+$('p').css({
+    'color': 'red',
+    'font-size': '16px',
+    'background-color': 'yellow',
+    'border': '1px solid black'
+});
+
+// Relative values
+$('div').css('width', '+=50px');  // Add 50px to current width
+$('div').css('height', '-=20px'); // Subtract 20px from current height</code></pre>
+
+                <h3>C. Dimensions</h3>
+                <pre><code class="language-javascript">// Width and height
+$('div').width();           // Get width (content only)
+$('div').width(200);        // Set width to 200px
+$('div').height();          // Get height (content only)  
+$('div').height(150);       // Set height to 150px
+
+// Inner dimensions (including padding)
+$('div').innerWidth();      // Width + padding
+$('div').innerHeight();     // Height + padding
+
+// Outer dimensions (including border)
+$('div').outerWidth();      // Width + padding + border
+$('div').outerHeight();     // Height + padding + border
+
+// Outer dimensions (including margin)
+$('div').outerWidth(true);  // Width + padding + border + margin
+$('div').outerHeight(true); // Height + padding + border + margin</code></pre>
+
+                <h3>D. Positioning</h3>
+                <pre><code class="language-javascript">// Get position relative to parent
+var pos = $('div').position();
+console.log('Left: ' + pos.left + ', Top: ' + pos.top);
+
+// Get position relative to document
+var offset = $('div').offset();
+console.log('Left: ' + offset.left + ', Top: ' + offset.top);
+
+// Set position
+$('div').offset({left: 100, top: 50});
+
+// Scroll position
+var scrollTop = $(window).scrollTop();
+var scrollLeft = $(window).scrollLeft();
+
+// Set scroll position
+$(window).scrollTop(100);
+$('body').scrollTop(0); // Scroll to top</code></pre>
+
+                <h3>E. Visibility and Display</h3>
+                <pre><code class="language-javascript">// Check visibility
+if ($('div').is(':visible')) {
+    console.log('Element is visible');
+}
+
+if ($('div').is(':hidden')) {
+    console.log('Element is hidden');
+}
+
+// Show/hide with CSS
+$('div').css('display', 'none');    // Hide
+$('div').css('display', 'block');   // Show
+$('div').css('visibility', 'hidden'); // Hide but keep space
+$('div').css('visibility', 'visible'); // Show</code></pre>
+            </section>
+
+            <!-- DOM Traversing -->
+            <section class="section" id="traversing">
+                <h2><i class="fas fa-sitemap"></i> DOM Traversing</h2>
+                
+                <h3>A. Tree Traversal</h3>
+                <pre><code class="language-javascript">// Parent traversal
+$('li').parent();           // Direct parent
+$('li').parents();          // All ancestors
+$('li').parents('ul');      // Ancestors that match selector
+$('li').parentsUntil('div'); // Ancestors until div (exclusive)
+
+// Child traversal
+$('ul').children();         // Direct children
+$('ul').children('li');     // Direct children that match selector
+$('ul').find('a');          // All descendants that match selector
+
+// Sibling traversal
+$('li').siblings();         // All siblings
+$('li').siblings('.active'); // Siblings that match selector
+$('li').next();             // Next sibling
+$('li').nextAll();          // All following siblings
+$('li').nextUntil('.last'); // Following siblings until .last
+$('li').prev();             // Previous sibling
+$('li').prevAll();          // All preceding siblings
+$('li').prevUntil('.first'); // Preceding siblings until .first</code></pre>
+
+                <h3>B. Filtering</h3>
+                <pre><code class="language-javascript">// Filter elements
+$('li').first();            // First element in set
+$('li').last();             // Last element in set
+$('li').eq(2);              // Element at index 2
+$('li').filter('.active');  // Elements that match selector
+$('li').filter(function(index) {
+    return $(this).text().length > 10;
+});
+
+// Exclude elements
+$('li').not('.disabled');   // Elements that don't match selector
+$('li').not(function(index) {
+    return $(this).hasClass('hidden');
+});
+
+// Check if elements match
+if ($('div').is('.active')) {
+    console.log('Element has active class');
+}
+
+// Get subset
+$('li').slice(1, 3);        // Elements from index 1 to 2</code></pre>
+
+                <h3>C. Collection Manipulation</h3>
+                <pre><code class="language-javascript">// Add elements to collection
+$('div').add('p');          // Add all p elements
+$('div').add('.highlight'); // Add elements with class
+
+// Get elements by index
+$('li').get(0);             // Get DOM element (not jQuery object)
+$('li')[0];                 // Same as above
+$('li').eq(0);              // Get jQuery object
+
+// Iterate through elements
+$('li').each(function(index, element) {
+    console.log(index + ': ' + $(element).text());
+});
+
+// Map elements to array
+var texts = $('li').map(function() {
+    return $(this).text();
+}).get(); // Convert to regular array
+
+// Get collection length
+var count = $('li').length;</code></pre>
+
+                <h3>D. Content Search</h3>
+                <pre><code class="language-javascript">// Find elements containing text
+$('p:contains("jQuery")');  // Paragraphs containing "jQuery"
+
+// Find empty elements
+$('div:empty');
+
+// Find elements with specific attributes
+$('input[type="text"]');
+$('a[href*="jquery"]');
+
+// Find form elements
+$(':input');                // All form elements
+$(':text');                 // Text inputs
+$(':checkbox:checked');     // Checked checkboxes</code></pre>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-arrow-up"></i> Ancestor Methods</h4>
+                        <ul>
+                            <li><code>parent()</code> - Direct parent</li>
+                            <li><code>parents()</code> - All ancestors</li>
+                            <li><code>parentsUntil()</code> - Ancestors until selector</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-arrow-down"></i> Descendant Methods</h4>
+                        <ul>
+                            <li><code>children()</code> - Direct children</li>
+                            <li><code>find()</code> - All descendants</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-arrows-alt-h"></i> Sibling Methods</h4>
+                        <ul>
+                            <li><code>siblings()</code> - All siblings</li>
+                            <li><code>next()</code> / <code>prev()</code> - Adjacent siblings</li>
+                            <li><code>nextAll()</code> / <code>prevAll()</code> - All following/preceding</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-filter"></i> Filtering Methods</h4>
+                        <ul>
+                            <li><code>filter()</code> - Elements that match</li>
+                            <li><code>not()</code> - Elements that don't match</li>
+                            <li><code>first()</code> / <code>last()</code> - First/last element</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AJAX -->
+            <section class="section" id="ajax">
+                <h2><i class="fas fa-server"></i> AJAX</h2>
+                
+                <h3>A. Basic AJAX Methods</h3>
+                <pre><code class="language-javascript">// GET request
+$.get('api/data.json', function(data) {
+    console.log('Data loaded:', data);
+}).fail(function() {
+    console.log('Error loading data');
+});
+
+// POST request
+$.post('api/submit.php', {
+    name: 'John',
+    email: 'john@example.com'
+}, function(response) {
+    console.log('Data submitted:', response);
+});
+
+// Load HTML content
+$('#content').load('page.html');
+$('#content').load('page.html #section'); // Load specific section
+
+// Get JSON data
+$.getJSON('api/users.json', function(users) {
+    $.each(users, function(index, user) {
+        $('ul').append('&lt;li>' + user.name + '&lt;/li>');
+    });
+});
+
+// Get script
+$.getScript('js/plugin.js', function() {
+    console.log('Script loaded and executed');
+});</code></pre>
+
+                <h3>B. Advanced AJAX with $.ajax()</h3>
+                <pre><code class="language-javascript">// Full AJAX configuration
+$.ajax({
+    url: 'api/data.php',
+    type: 'POST',
+    dataType: 'json',
+    data: {
+        id: 123,
+        action: 'update'
+    },
+    headers: {
+        'X-API-Key': 'your-api-key'
+    },
+    timeout: 5000,
+    beforeSend: function(xhr) {
+        // Show loading indicator
+        $('#loading').show();
+    },
+    success: function(data, status, xhr) {
+        console.log('Success:', data);
+        $('#result').html(data.message);
+    },
+    error: function(xhr, status, error) {
+        console.log('Error:', error);
+        alert('Request failed: ' + error);
+    },
+    complete: function(xhr, status) {
+        // Hide loading indicator
+        $('#loading').hide();
+    }
+});
+
+// Using promises (jQuery 3.0+)
+$.ajax({
+    url: 'api/data.json',
+    method: 'GET'
+}).done(function(data) {
+    console.log('Success:', data);
+}).fail(function(xhr, status, error) {
+    console.log('Error:', error);
+}).always(function() {
+    console.log('Request completed');
+});</code></pre>
+
+                <h3>C. AJAX Global Events</h3>
+                <pre><code class="language-javascript">// Global AJAX event handlers
+$(document).ajaxStart(function() {
+    $('#loading').show();
+});
+
+$(document).ajaxStop(function() {
+    $('#loading').hide();
+});
+
+$(document).ajaxSuccess(function(event, xhr, settings) {
+    console.log('AJAX request succeeded');
+});
+
+$(document).ajaxError(function(event, xhr, settings, error) {
+    console.log('AJAX request failed: ' + error);
+});
+
+// Disable global events for specific request
+$.ajax({
+    url: 'api/data.json',
+    global: false  // This request won't trigger global events
+});</code></pre>
+
+                <h3>D. Form Serialization</h3>
+                <pre><code class="language-javascript">// Serialize form data
+var formData = $('form').serialize();
+// Result: "name=John&email=john%40example.com"
+
+var formArray = $('form').serializeArray();
+// Result: [{name: "name", value: "John"}, {name: "email", value: "john@example.com"}]
+
+// Submit form via AJAX
+$('form').submit(function(e) {
+    e.preventDefault();
+    
+    $.ajax({
+        url: 'submit.php',
+        type: 'POST',
+        data: $(this).serialize(),
+        success: function(response) {
+            alert('Form submitted successfully!');
+        },
+        error: function() {
+            alert('Form submission failed!');
+        }
+    });
+});
+
+// File upload with FormData
+$('#file-form').submit(function(e) {
+    e.preventDefault();
+    
+    var formData = new FormData(this);
+    
+    $.ajax({
+        url: 'upload.php',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            console.log('File uploaded:', response);
+        }
+    });
+});</code></pre>
+
+                <h3>E. AJAX Configuration</h3>
+                <pre><code class="language-javascript">// Set global AJAX defaults
+$.ajaxSetup({
+    timeout: 10000,
+    cache: false,
+    headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+    }
+});
+
+// CSRF token handling
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", $('[name=csrfmiddlewaretoken]').val());
+        }
+    }
+});</code></pre>
+
+                <div class="alert warning">
+                    <strong>Security Note:</strong> Always validate and sanitize data on the server side. Never trust client-side data. Use CSRF protection for state-changing requests.
+                </div>
+            </section>
+
+            <!-- Utility Functions -->
+            <section class="section" id="utilities">
+                <h2><i class="fas fa-tools"></i> Utility Functions</h2>
+                
+                <h3>A. Array and Object Utilities</h3>
+                <pre><code class="language-javascript">// Each utility
+$.each([1, 2, 3], function(index, value) {
+    console.log(index + ': ' + value);
+});
+
+$.each({name: 'John', age: 30}, function(key, value) {
+    console.log(key + ': ' + value);
+});
+
+// Map utility
+var doubled = $.map([1, 2, 3], function(value, index) {
+    return value * 2;
+}); // Result: [2, 4, 6]
+
+// Grep (filter) utility
+var filtered = $.grep([1, 2, 3, 4, 5], function(value, index) {
+    return value > 2;
+}); // Result: [3, 4, 5]
+
+// In array check
+var index = $.inArray('b', ['a', 'b', 'c']); // Result: 1
+var notFound = $.inArray('d', ['a', 'b', 'c']); // Result: -1
+
+// Merge arrays
+var merged = $.merge([1, 2], [3, 4]); // Result: [1, 2, 3, 4]
+
+// Unique array elements
+var unique = $.unique([1, 2, 2, 3, 1]); // Result: [1, 2, 3]</code></pre>
+
+                <h3>B. Object Utilities</h3>
+                <pre><code class="language-javascript">// Extend objects (shallow copy)
+var obj1 = {a: 1, b: 2};
+var obj2 = {c: 3, d: 4};
+var extended = $.extend(obj1, obj2); // obj1 is modified
+
+// Deep extend (deep copy)
+var obj1 = {a: {x: 1, y: 2}};
+var obj2 = {a: {z: 3}};
+var deepExtended = $.extend(true, {}, obj1, obj2);
+
+// Check if object is empty
+$.isEmptyObject({}); // true
+$.isEmptyObject({a: 1}); // false
+
+// Check if plain object
+$.isPlainObject({}); // true
+$.isPlainObject([]); // false
+$.isPlainObject(new Date()); // false
+
+// Check if array
+$.isArray([]); // true
+$.isArray({}); // false
+
+// Check if function
+$.isFunction(function(){}); // true
+$.isFunction('string'); // false</code></pre>
+
+                <h3>C. Type Checking</h3>
+                <pre><code class="language-javascript">// Type checking utilities
+$.type(null);           // "null"
+$.type(undefined);      // "undefined"  
+$.type(true);           // "boolean"
+$.type(42);             // "number"
+$.type("string");       // "string"
+$.type([]);             // "array"
+$.type({});             // "object"
+$.type(function(){}); // "function"
+$.type(new Date());     // "date"
+$.type(/regex/);        // "regexp"
+
+// Numeric check
+$.isNumeric("42");      // true
+$.isNumeric("abc");     // false
+$.isNumeric(42);        // true
+
+// Window check
+$.isWindow(window);     // true
+$.isWindow(document);   // false</code></pre>
+
+                <h3>D. String and Data Utilities</h3>
+                <pre><code class="language-javascript">// Trim whitespace
+$.trim("  hello world  "); // "hello world"
+
+// Parse JSON
+var obj = $.parseJSON('{"name":"John","age":30}');
+
+// Parse XML
+var xml = $.parseXML('&lt;root>&lt;item>value&lt;/item>&lt;/root>');
+
+// Parse HTML
+var html = $.parseHTML('&lt;div>Hello&lt;/div>&lt;p>World&lt;/p>');
+
+// Create DOM elements
+var div = $('&lt;div>', {
+    'class': 'my-div',
+    'text': 'Hello World',
+    'click': function() {
+        alert('Clicked!');
+    }
+});
+
+// Data storage (better than using attributes)
+$('#element').data('key', 'value');  // Store data
+var value = $('#element').data('key'); // Retrieve data
+$('#element').removeData('key');     // Remove data
+
+// Global data
+$.data(document.body, 'key', 'value'); // Store
+$.data(document.body, 'key');         // Retrieve</code></pre>
+
+                <h3>E. Deferred Objects and Promises</h3>
+                <pre><code class="language-javascript">// Create deferred object
+var deferred = $.Deferred();
+
+// Resolve deferred
+deferred.resolve('Success!');
+
+// Reject deferred
+deferred.reject('Error occurred');
+
+// Promise methods
+deferred.promise().then(
+    function(result) { console.log('Success:', result); },
+    function(error) { console.log('Error:', error); }
+);
+
+// Multiple promises
+$.when(
+    $.get('api/users.json'),
+    $.get('api/posts.json')
+).then(function(users, posts) {
+    console.log('Both requests completed');
+});
+
+// Custom promise
+function loadData() {
+    var deferred = $.Deferred();
+    
+    setTimeout(function() {
+        deferred.resolve('Data loaded');
+    }, 1000);
+    
+    return deferred.promise();
+}
+
+loadData().then(function(result) {
+    console.log(result);
+});</code></pre>
+            </section>
+
+            <!-- Method Chaining -->
+            <section class="section" id="chaining">
+                <h2><i class="fas fa-link"></i> Method Chaining</h2>
+                
+                <h3>A. Basic Chaining</h3>
+                <pre><code class="language-javascript">// Chain multiple methods
+$('#element')
+    .hide()
+    .css('color', 'red')
+    .fadeIn()
+    .addClass('highlight');
+
+// Complex chaining example
+$('div.content')
+    .find('p')
+    .filter(':even')
+    .css('background-color', 'yellow')
+    .end()          // Return to div.content
+    .find('h2')
+    .addClass('title');
+
+// Animation chaining
+$('#box')
+    .animate({left: '100px'}, 500)
+    .animate({top: '100px'}, 500)
+    .animate({left: '0px'}, 500)
+    .animate({top: '0px'}, 500);</code></pre>
+
+                <h3>B. Breaking and Resuming Chains</h3>
+                <pre><code class="language-javascript">// Store chain in variable
+var $elements = $('div').addClass('processed');
+
+// Continue chain later
+$elements.css('border', '1px solid red').fadeIn();
+
+// End method returns to previous selection
+$('ul')
+    .find('li')
+    .addClass('item')
+    .filter(':first')
+    .addClass('first')
+    .end()                    // Back to all li elements
+    .filter(':last')
+    .addClass('last');
+
+// Add back method (jQuery 1.8+)
+$('li')
+    .filter(':even')
+    .css('color', 'red')
+    .addBack()               // Include original selection
+    .addClass('processed');</code></pre>
+
+                <h3>C. Conditional Chaining</h3>
+                <pre><code class="language-javascript">// Conditional operations in chain
+$('div')
+    .css('color', 'blue')
+    .each(function() {
+        if ($(this).text().length > 10) {
+            $(this).addClass('long-text');
+        }
+    })
+    .filter('.long-text')
+    .css('font-weight', 'bold');
+
+// Using queue for conditional logic
+$('#element')
+    .fadeOut()
+    .queue(function(next) {
+        if (someCondition) {
+            $(this).addClass('special');
+        }
+        next(); // Continue the queue
+    })
+    .fadeIn();
+
+// Promise-based chaining
+$.get('api/data.json')
+    .then(function(data) {
+        return $.post('api/process.php', data);
+    })
+    .then(function(result) {
+        $('#result').html(result);
+    })
+    .catch(function(error) {
+        console.log('Error:', error);
+    });</code></pre>
+
+                <h3>D. Custom Chainable Methods</h3>
+                <pre><code class="language-javascript">// Extend jQuery with custom chainable method
+$.fn.makeRed = function() {
+    return this.css('color', 'red');
+};
+
+// Usage
+$('p').makeRed().addClass('highlight');
+
+// More complex custom method
+$.fn.slideAndFade = function(duration) {
+    return this.each(function() {
+        $(this).slideUp(duration).fadeOut(duration);
+    });
+};
+
+// Plugin pattern
+$.fn.myPlugin = function(options) {
+    var settings = $.extend({
+        color: 'blue',
+        fontSize: '14px'
+    }, options);
+    
+    return this.each(function() {
+        $(this).css({
+            color: settings.color,
+            fontSize: settings.fontSize
+        });
+    });
+};
+
+// Usage
+$('p').myPlugin({color: 'red'}).addClass('styled');</code></pre>
+
+                <div class="alert info">
+                    <strong>Chaining Benefits:</strong> Method chaining makes code more readable, reduces variable declarations, and improves performance by avoiding repeated element selection.
+                </div>
+            </section>
+
+            <!-- Advanced Techniques -->
+            <section class="section" id="advanced">
+                <h2><i class="fas fa-rocket"></i> Advanced Techniques</h2>
+                
+                <h3>A. Event Delegation</h3>
+                <pre><code class="language-javascript">// Event delegation for dynamic content
+$(document).on('click', '.dynamic-button', function() {
+    console.log('Dynamic button clicked');
+});
+
+// Delegated events with specific context
+$('#container').on('click', '.item', function() {
+    $(this).toggleClass('selected');
+});
+
+// Multiple delegated events
+$('#list').on({
+    'mouseenter': function() {
+        $(this).addClass('hover');
+    },
+    'mouseleave': function() {
+        $(this).removeClass('hover');
+    },
+    'click': function() {
+        $(this).toggleClass('selected');
+    }
+}, 'li');
+
+// Namespace events
+$('#element').on('click.myNamespace', function() {
+    console.log('Namespaced click event');
+});
+
+// Remove namespaced events
+$('#element').off('.myNamespace');</code></pre>
+
+                <h3>B. Custom Events</h3>
+                <pre><code class="language-javascript">// Define and trigger custom events
+$('#element').on('customEvent', function(event, data) {
+    console.log('Custom event triggered with data:', data);
+});
+
+// Trigger custom event
+$('#element').trigger('customEvent', {message: 'Hello World'});
+
+// Custom event with multiple parameters
+$('#element').on('dataUpdate', function(event, id, name, value) {
+    console.log('Data updated:', id, name, value);
+});
+
+$('#element').trigger('dataUpdate', [123, 'username', 'john_doe']);
+
+// Event object methods
+$('#element').on('click', function(event) {
+    event.preventDefault();        // Prevent default behavior
+    event.stopPropagation();      // Stop event bubbling
+    event.stopImmediatePropagation(); // Stop other handlers
+    
+    console.log('Event type:', event.type);
+    console.log('Target:', event.target);
+    console.log('Current target:', event.currentTarget);
+});</code></pre>
+
+                <h3>C. Performance Optimization</h3>
+                <pre><code class="language-javascript">// Cache selectors
+var $window = $(window);
+var $document = $(document);
+var $body = $('body');
+
+// Use specific selectors
+$('#myId .class');        // Better
+$('.class');              // Avoid if possible in complex DOM
+
+// Limit DOM queries
+var $elements = $('.items');
+$elements.addClass('processed');
+$elements.css('color', 'blue');
+
+// Use event delegation instead of multiple handlers
+// Bad
+$('.button').click(handler);
+
+// Good
+$(document).on('click', '.button', handler);
+
+// Detach elements during manipulation
+var $list = $('#list').detach();
+for (var i = 0; i < 1000; i++) {
+    $list.append('&lt;li>Item ' + i + '&lt;/li>');
+}
+$('#container').append($list);
+
+// Use DocumentFragment for multiple insertions
+var fragment = document.createDocumentFragment();
+for (var i = 0; i < 100; i++) {
+    var li = document.createElement('li');
+    li.textContent = 'Item ' + i;
+    fragment.appendChild(li);
+}
+document.getElementById('list').appendChild(fragment);</code></pre>
+
+                <h3>D. Plugin Development</h3>
+                <pre><code class="language-javascript">// Basic plugin structure
+(function($) {
+    $.fn.myPlugin = function(options) {
+        // Default settings
+        var settings = $.extend({
+            option1: 'default1',
+            option2: 'default2'
+        }, options);
+        
+        // Plugin logic
+        return this.each(function() {
+            var $this = $(this);
+            
+            // Add plugin functionality
+            $this.data('myPlugin', {
+                settings: settings,
+                init: function() {
+                    // Initialization code
+                }
+            });
+        });
+    };
+})(jQuery);
+
+// Advanced plugin with methods
+(function($) {
+    var methods = {
+        init: function(options) {
+            var settings = $.extend({
+                speed: 300,
+                color: 'red'
+            }, options);
+            
+            return this.each(function() {
+                $(this).data('pluginData', settings);
+            });
+        },
+        
+        destroy: function() {
+            return this.each(function() {
+                $(this).removeData('pluginData');
+            });
+        },
+        
+        update: function(options) {
+            return this.each(function() {
+                var settings = $(this).data('pluginData');
+                $.extend(settings, options);
+            });
+        }
+    };
+    
+    $.fn.advancedPlugin = function(method) {
+        if (methods[method]) {
+            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+        } else if (typeof method === 'object' || !method) {
+            return methods.init.apply(this, arguments);
+        } else {
+            $.error('Method ' + method + ' does not exist');
+        }
+    };
+})(jQuery);
+
+// Usage
+$('#element').advancedPlugin();              // Init
+$('#element').advancedPlugin('update', {speed: 500}); // Update
+$('#element').advancedPlugin('destroy');     // Destroy</code></pre>
+
+                <h3>E. Working with Promises</h3>
+                <pre><code class="language-javascript">// Promise-based AJAX
+function loadUserData(userId) {
+    return $.ajax({
+        url: 'api/users/' + userId,
+        method: 'GET',
+        dataType: 'json'
+    });
+}
+
+// Chaining promises
+loadUserData(123)
+    .then(function(user) {
+        return $.ajax({
+            url: 'api/posts',
+            method: 'GET',
+            data: {userId: user.id}
+        });
+    })
+    .then(function(posts) {
+        console.log('User posts:', posts);
+    })
+    .catch(function(error) {
+        console.error('Error loading data:', error);
+    });
+
+// Multiple parallel requests
+$.when(
+    $.get('api/users.json'),
+    $.get('api/posts.json'),
+    $.get('api/comments.json')
+).then(function(users, posts, comments) {
+    console.log('All data loaded');
+}).fail(function() {
+    console.error('One or more requests failed');
+});</code></pre>
+            </section>
+
+            <!-- Best Plugins -->
+            <section class="section" id="plugins">
+                <h2><i class="fas fa-puzzle-piece"></i> Best jQuery Plugins</h2>
+                
+                <div class="feature-grid">
+                    <div class="plugin-card">
+                        <h4><i class="fas fa-sliders-h"></i> jQuery UI</h4>
+                        <div class="version">Version: 1.13.2</div>
+                        <p>Official jQuery UI library with widgets, interactions, and effects.</p>
+                        <div class="link-card">
+                            <a href="https://jqueryui.com/" target="_blank">jQuery UI Official Site</a>
+                        </div>
+                        <pre><code class="language-html">&lt;link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/ui-lightness/jquery-ui.css">
+&lt;script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js">&lt;/script></code></pre>
+                        <span class="badge plugin">UI Framework</span>
+                    </div>
+                    
+                    <div class="plugin-card">
+                        <h4><i class="fas fa-images"></i> Slick Carousel</h4>
+                        <div class="version">Version: 1.8.1</div>
+                        <p>Responsive carousel/slider with touch support and lots of customization options.</p>
+                        <div class="link-card">
+                            <a href="https://kenwheeler.github.io/slick/" target="_blank">Slick Carousel</a>
+                        </div>
+                        <pre><code class="language-html">&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
+&lt;script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js">&lt;/script></code></pre>
+                        <span class="badge plugin">Carousel</span>
+                    </div>
+                    
+                    <div class="plugin-card">
+                        <h4><i class="fas fa-search"></i> DataTables</h4>
+                        <div class="version">Version: 1.13.6</div>
+                        <p>Advanced table plugin with search, sort, pagination, and responsive design.</p>
+                        <div class="link-card">
+                            <a href="https://datatables.net/" target="_blank">DataTables Official</a>
+                        </div>
+                        <pre><code class="language-html">&lt;link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+&lt;script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js">&lt;/script></code></pre>
+                        <span class="badge plugin">Tables</span>
+                    </div>
+                    
+                    <div class="plugin-card">
+                        <h4><i class="fas fa-magic"></i> Animate.css</h4>
+                        <div class="version">Version: 4.1.1</div>
+                        <p>CSS animations that work great with jQuery for adding motion to elements.</p>
+                        <div class="link-card">
+                            <a href="https://animate.style/" target="_blank">Animate.css</a>
+                        </div>
+                        <pre><code class="language-html">&lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"></code></pre>
+                        <span class="badge plugin">Animations</span>
+                    </div>
+                    
+                    <div class="plugin-card">
+                        <h4><i class="fas fa-calendar"></i> jQuery Datepicker</h4>
+                        <div class="version">Version: Built into jQuery UI</div>
+                        <p>User-friendly date picker with calendar interface and customization options.</p>
+                        <pre><code class="language-javascript">$('#datepicker').datepicker({
+    dateFormat: 'yy-mm-dd',
+    changeMonth: true,
+    changeYear: true
+});</code></pre>
+                        <span class="badge plugin">Date Picker</span>
+                    </div>
+                    
+                    <div class="plugin-card">
+                        <h4><i class="fas fa-eye"></i> Lightbox2</h4>
+                        <div class="version">Version: 2.11.3</div>
+                        <p>Simple, elegant lightbox for displaying images and galleries.</p>
+                        <div class="link-card">
+                            <a href="https://lokeshdhakar.com/projects/lightbox2/" target="_blank">Lightbox2</a>
+                        </div>
+                        <pre><code class="language-html">&lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js">&lt;/script></code></pre>
+                        <span class="badge plugin">Gallery</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Validation Plugins -->
+            <section class="section" id="validation">
+                <h2><i class="fas fa-check-circle"></i> Validation Plugins</h2>
+                
+                <div class="feature-grid">
+                    <div class="plugin-card">
+                        <h4><i class="fas fa-shield-alt"></i> jQuery Validation Plugin</h4>
+                        <div class="version">Version: 1.19.5</div>
+                        <p>The most popular jQuery validation plugin with extensive features.</p>
+                        <div class="link-card">
+                            <a href="https://jqueryvalidation.org/" target="_blank">jQuery Validation</a>
+                        </div>
+                        <pre><code class="language-html">&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js">&lt;/script>
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js">&lt;/script></code></pre>
+                        
+                        <h4>Basic Usage:</h4>
+                        <pre><code class="language-javascript">$('#myform').validate({
+    rules: {
+        firstname: 'required',
+        email: {
+            required: true,
+            email: true
+        },
+        password: {
+            required: true,
+            minlength: 8
+        }
+    },
+    messages: {
+        firstname: 'Please enter your first name',
+        email: 'Please enter a valid email address',
+        password: {
+            required: 'Please provide a password',
+            minlength: 'Password must be at least 8 characters long'
+        }
+    }
+});</code></pre>
+                        
+                        <h4>Advanced Validation:</h4>
+                        <pre><code class="language-javascript">$('#myform').validate({
+    rules: {
+        username: {
+            required: true,
+            minlength: 3,
+            remote: 'check-username.php' // AJAX validation
+        },
+        password: 'required',
+        confirm_password: {
+            required: true,
+            equalTo: '#password'
+        }
+    },
+    errorClass: 'error',
+    validClass: 'valid',
+    errorPlacement: function(error, element) {
+        error.insertAfter(element.next('.help-block'));
+    },
+    highlight: function(element) {
+        $(element).closest('.form-group').addClass('has-error');
+    },
+    unhighlight: function(element) {
+        $(element).closest('.form-group').removeClass('has-error');
+    }
+});</code></pre>
+                        <span class="badge important">Most Popular</span>
+                    </div>
+                    
+                    <div class="plugin-card">
+                        <h4><i class="fas fa-cog"></i> Parsley.js</h4>
+                        <div class="version">Version: 2.9.2</div>
+                        <p>JavaScript form validation library with data-attributes approach.</p>
+                        <div class="link-card">
+                            <a href="https://parsleyjs.org/" target="_blank">Parsley.js</a>
+                        </div>
+                        <pre><code class="language-html">&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.2/parsley.min.js">&lt;/script></code></pre>
+                        
+                        <h4>HTML5 Data Attributes:</h4>
+                        <pre><code class="language-html">&lt;form data-parsley-validate>
+    &lt;input type="text" 
+           data-parsley-required 
+           data-parsley-minlength="3"
+           data-parsley-pattern="[a-zA-Z]+"
+           placeholder="Name">
+    
+    &lt;input type="email" 
+           data-parsley-required 
+           data-parsley-type="email"
+           placeholder="Email">
+           
+    &lt;button type="submit">Submit&lt;/button>
+&lt;/form></code></pre>
+                        <span class="badge plugin">Data Attributes</span>
+                    </div>
+                    
+                    <div class="plugin-card">
+                        <h4><i class="fas fa-bolt"></i> FormValidation</h4>
+                        <div class="version">Version: 2.4.0</div>
+                        <p>Professional form validation library with framework integrations.</p>
+                        <div class="link-card">
+                            <a href="https://formvalidation.io/" target="_blank">FormValidation</a>
+                        </div>
+                        <pre><code class="language-javascript">$('#myForm').formValidation({
+    framework: 'bootstrap',
+    fields: {
+        email: {
+            validators: {
+                notEmpty: {
+                    message: 'Email is required'
+                },
+                emailAddress: {
+                    message: 'Invalid email address'
+                }
+            }
+        }
+    }
+});</code></pre>
+                        <span class="badge plugin">Framework Support</span>
+                    </div>
+                </div>
+
+                <h3>Custom Validation Rules</h3>
+                <pre><code class="language-javascript">// Custom validation rule for jQuery Validation
+$.validator.addMethod('strongPassword', function(value, element) {
+    return this.optional(element) || 
+           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/.test(value);
+}, 'Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character');
+
+// Usage
+$('#myform').validate({
+    rules: {
+        password: {
+            required: true,
+            minlength: 8,
+            strongPassword: true
+        }
+    }
+});
+
+// Real-time validation
+$('#email').on('blur', function() {
+    var email = $(this).val();
+    if (validateEmail(email)) {
+        $(this).removeClass('error').addClass('valid');
+        $('.email-error').hide();
+    } else {
+        $(this).removeClass('valid').addClass('error');
+        $('.email-error').show();
+    }
+});
+
+function validateEmail(email) {
+    var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+}</code></pre>
+
+                <div class="alert success">
+                    <strong>Validation Best Practices:</strong> Always validate on both client and server side, provide clear error messages, validate in real-time for better UX, and use appropriate input types.
+                </div>
+            </section>
+
+            <!-- UI Plugins -->
+            <section class="section" id="ui">
+                <h2><i class="fas fa-desktop"></i> UI Enhancement Plugins</h2>
+                
+                <div class="feature-grid">
+                    <div class="plugin-card">
+                        <h4><i class="fas fa-list"></i> Select2</h4>
+                        <div class="version">Version: 4.1.0</div>
+                        <p>Enhanced select boxes with search, tagging, and remote data support.</p>
+                        <div class="link-card">
+                            <a href="https://select2.org/" target="_blank">Select2 Official</a>
+                        </div>
+                        <pre><code class="language-html">&lt;link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+&lt;script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js">&lt;/script></code></pre>
+                        
+                        <pre><code class="language-javascript">// Basic Select2
+$('.select2').select2({
+    placeholder: 'Select an option',
+    allowClear: true
+});
+
+// AJAX data source
+$('.select2-ajax').select2({
+    ajax: {
+        url: 'api/search',
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+            return {
+                q: params.term,
+                page: params.page
+            };
+        }
+    }
+});</code></pre>
+                        <span class="badge plugin">Select Enhancement</span>
+                    </div>
+                    
+                    <div class="plugin-card">
+                        <h4><i class="fas fa-window-maximize"></i> jQuery Modal</h4>
+                        <div class="version">Version: 0.9.2</div>
+                        <p>Simple and elegant modal dialogs with customization options.</p>
+                        <div class="link-card">
+                            <a href="https://jquerymodal.com/" target="_blank">jQuery Modal</a>
+                        </div>
+                        <pre><code class="language-html">&lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.css" />
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.js">&lt;/script></code></pre>
+                        
+                        <pre><code class="language-javascript">// Open modal
+$('#myModal').modal();
+
+// Modal with options
+$('#content').modal({
+    fadeDuration: 250,
+    fadeDelay: 0.5,
+    showClose: false
+});
+
+// Programmatic modal
+$.modal('&lt;p>Hello World!&lt;/p>', {
+    closeExisting: false,
+    escapeClose: false,
+    clickClose: false
+});</code></pre>
+                        <span class="badge plugin">Modals</span>
+                    </div>
+                    
+                    <div class="plugin-card">
+                        <h4><i class="fas fa-bell"></i> Toastr</h4>
+                        <div class="version">Version: 2.1.4</div>
+                        <p>Non-blocking notifications with beautiful animations and positioning.</p>
+                        <div class="link-card">
+                            <a href="https://codeseven.github.io/toastr/" target="_blank">Toastr</a>
+                        </div>
+                        <pre><code class="language-html">&lt;link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js">&lt;/script></code></pre>
+                        
+                        <pre><code class="language-javascript">// Different notification types
+toastr.success('Success message!');
+toastr.info('Info message!');
+toastr.warning('Warning message!');
+toastr.error('Error message!');
+
+// Configuration
+toastr.options = {
+    closeButton: true,
+    debug: false,
+    newestOnTop: false,
+    progressBar: true,
+    positionClass: 'toast-top-right',
+    preventDuplicates: false,
+    timeOut: 5000
+};</code></pre>
+                        <span class="badge plugin">Notifications</span>
+                    </div>
+                    
+                    <div class="plugin-card">
+                        <h4><i class="fas fa-chart-bar"></i> Chart.js</h4>
+                        <div class="version">Version: 3.9.1</div>
+                        <p>Simple yet flexible JavaScript charting library with jQuery integration.</p>
+                        <div class="link-card">
+                            <a href="https://www.chartjs.org/" target="_blank">Chart.js</a>
+                        </div>
+                        <pre><code class="language-html">&lt;script src="https://cdn.jsdelivr.net/npm/chart.js">&lt;/script></code></pre>
+                        
+                        <pre><code class="language-javascript">// Create chart
+var ctx = $('#myChart')[0].getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    }
+});</code></pre>
+                        <span class="badge plugin">Charts</span>
+                    </div>
+                    
+                    <div class="plugin-card">
+                        <h4><i class="fas fa-arrows-alt"></i> jQuery Sortable</h4>
+                        <div class="version">Part of jQuery UI</div>
+                        <p>Drag and drop sorting for lists and grids with touch support.</p>
+                        <pre><code class="language-javascript">// Basic sortable
+$('#sortable').sortable({
+    placeholder: 'ui-state-highlight',
+    update: function(event, ui) {
+        console.log('Order changed');
+    }
+});
+
+// Sortable with connected lists
+$('#list1, #list2').sortable({
+    connectWith: '.connected-sortable',
+    items: 'li:not(.ui-state-disabled)'
+});</code></pre>
+                        <span class="badge plugin">Drag & Drop</span>
+                    </div>
+                    
+                    <div class="plugin-card">
+                        <h4><i class="fas fa-upload"></i> Dropzone.js</h4>
+                        <div class="version">Version: 5.9.3</div>
+                        <p>Drag and drop file uploads with image previews and progress bars.</p>
+                        <div class="link-card">
+                            <a href="https://www.dropzonejs.com/" target="_blank">Dropzone.js</a>
+                        </div>
+                        <pre><code class="language-html">&lt;link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css" rel="stylesheet">
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js">&lt;/script></code></pre>
+                        
+                        <pre><code class="language-javascript">// Initialize Dropzone
+Dropzone.options.myDropzone = {
+    paramName: 'file',
+    maxFilesize: 2, // MB
+    maxFiles: 5,
+    acceptedFiles: 'image/*',
+    init: function() {
+        this.on('success', function(file, response) {
+            console.log('File uploaded:', response);
+        });
+    }
+};</code></pre>
+                        <span class="badge plugin">File Upload</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Performance -->
+            <section class="section" id="performance">
+                <h2><i class="fas fa-tachometer-alt"></i> Performance Optimization</h2>
+                
+                <h3>A. Selector Optimization</h3>
+                <pre><code class="language-javascript">// Use ID selectors when possible (fastest)
+$('#myId')              // Fastest
+
+// Cache selectors
+var $window = $(window);
+var $document = $(document);
+var $body = $('body');
+
+// Be specific with selectors
+$('#content .highlight')  // Better than $('.highlight')
+
+// Use child selector when appropriate
+$('#menu > li')          // Direct children only
+
+// Avoid universal selectors
+$('*')                   // Avoid this
+
+// Use class selectors efficiently
+$('.class', '#context')  // Limit scope</code></pre>
+
+                <h3>B. DOM Manipulation Optimization</h3>
+                <pre><code class="language-javascript">// Batch DOM operations
+var html = '';
+for (var i = 0; i < 100; i++) {
+    html += '&lt;li>Item ' + i + '&lt;/li>';
+}
+$('#list').html(html);
+
+// Detach elements during heavy manipulation
+var $list = $('#list').detach();
+// ... perform multiple operations on $list
+$('#container').append($list);
+
+// Use DocumentFragment for multiple insertions
+var fragment = document.createDocumentFragment();
+for (var i = 0; i < 100; i++) {
+    var li = document.createElement('li');
+    li.textContent = 'Item ' + i;
+    fragment.appendChild(li);
+}
+document.getElementById('list').appendChild(fragment);
+
+// Chain operations
+$('#element')
+    .addClass('active')
+    .css('color', 'red')
+    .fadeIn();</code></pre>
+
+                <h3>C. Event Optimization</h3>
+                <pre><code class="language-javascript">// Use event delegation for dynamic content
+$(document).on('click', '.dynamic-element', handler);
+
+// Remove unused event handlers
+$('#element').off('click');
+
+// Use one() for single-use events
+$('#element').one('click', handler);
+
+// Throttle/debounce expensive operations
+var throttle = function(func, delay) {
+    var timeoutId;
+    var lastExecTime = 0;
+    return function() {
+        var context = this;
+        var args = arguments;
+        var currentTime = Date.now();
+        
+        if (currentTime - lastExecTime > delay) {
+            func.apply(context, args);
+            lastExecTime = currentTime;
+        } else {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(function() {
+                func.apply(context, args);
+                lastExecTime = Date.now();
+            }, delay);
+        }
+    };
+};
+
+$(window).on('scroll', throttle(function() {
+    // Expensive scroll handler
+}, 100));</code></pre>
+
+                <h3>D. AJAX Optimization</h3>
+                <pre><code class="language-javascript">// Cache AJAX requests
+var cache = {};
+function getData(url) {
+    if (cache[url]) {
+        return $.Deferred().resolve(cache[url]).promise();
+    }
+    
+    return $.get(url).done(function(data) {
+        cache[url] = data;
+    });
+}
+
+// Abort previous requests
+var currentRequest;
+function searchData(query) {
+    if (currentRequest) {
+        currentRequest.abort();
+    }
+    
+    currentRequest = $.get('api/search', {q: query});
+    return currentRequest;
+}
+
+// Use appropriate HTTP methods
+$.ajax({
+    url: 'api/data',
+    method: 'GET',
+    cache: true,        // Cache GET requests
+    dataType: 'json',
+    timeout: 5000
+});</code></pre>
+
+                <h3>E. Memory Management</h3>
+                <pre><code class="language-javascript">// Remove data and events when removing elements
+$('#element').removeData().off().remove();
+
+// Clear references
+var $elements = null;
+
+// Avoid memory leaks with closures
+function createHandler(element) {
+    return function() {
+        // Don't reference element directly
+        $(this).addClass('clicked');
+    };
+}
+
+// Use weak references when possible
+var weakMap = new WeakMap();
+weakMap.set(element, data);
+
+// Clean up intervals and timeouts
+var intervalId = setInterval(function() {
+    // ...
+}, 1000);
+
+// Later...
+clearInterval(intervalId);</code></pre>
+
+                <div class="alert info">
+                    <strong>Performance Tips:</strong> Profile your code using browser dev tools, minimize DOM queries, use event delegation, batch DOM updates, and consider using vanilla JavaScript for performance-critical code.
+                </div>
+            </section>
+
+            <!-- Best Practices -->
+            <section class="section" id="best-practices">
+                <h2><i class="fas fa-star"></i> Best Practices</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-code"></i> Code Organization</h4>
+                        <ul>
+                            <li>Always wrap code in $(document).ready()</li>
+                            <li>Use meaningful variable names</li>
+                            <li>Cache frequently used selectors</li>
+                            <li>Use consistent coding style</li>
+                            <li>Comment complex code sections</li>
+                            <li>Organize code into logical functions</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-tachometer-alt"></i> Performance</h4>
+                        <ul>
+                            <li>Use ID selectors when possible</li>
+                            <li>Minimize DOM manipulation</li>
+                            <li>Use event delegation for dynamic content</li>
+                            <li>Chain jQuery methods</li>
+                            <li>Avoid global variables</li>
+                            <li>Remove unused event handlers</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-shield-alt"></i> Security</h4>
+                        <ul>
+                            <li>Never trust user input</li>
+                            <li>Use .text() instead of .html() for user data</li>
+                            <li>Validate all form inputs</li>
+                            <li>Use CSRF protection</li>
+                            <li>Sanitize data before DOM insertion</li>
+                            <li>Use HTTPS for sensitive data</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-mobile-alt"></i> Responsive Design</h4>
+                        <ul>
+                            <li>Test on multiple devices</li>
+                            <li>Use touch-friendly event handlers</li>
+                            <li>Consider mobile performance</li>
+                            <li>Use responsive breakpoints</li>
+                            <li>Optimize for touch interactions</li>
+                            <li>Test with slow connections</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-bug"></i> Debugging</h4>
+                        <ul>
+                            <li>Use console.log() for debugging</li>
+                            <li>Check browser developer tools</li>
+                            <li>Validate HTML and CSS</li>
+                            <li>Test in multiple browsers</li>
+                            <li>Use jQuery debug version</li>
+                            <li>Handle errors gracefully</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-universal-access"></i> Accessibility</h4>
+                        <ul>
+                            <li>Maintain keyboard navigation</li>
+                            <li>Use ARIA attributes</li>
+                            <li>Provide alternative text</li>
+                            <li>Ensure color contrast</li>
+                            <li>Test with screen readers</li>
+                            <li>Support assistive technologies</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Code Style Guidelines</h3>
+                <pre><code class="language-javascript">// Good practices
+$(document).ready(function() {
+    // Cache selectors
+    var $window = $(window);
+    var $document = $(document);
+    var $navMenu = $('#nav-menu');
+    
+    // Use meaningful function names
+    function initializeNavigation() {
+        $navMenu.on('click', 'a', handleNavigationClick);
+    }
+    
+    function handleNavigationClick(event) {
+        event.preventDefault();
+        var $this = $(this);
+        var href = $this.attr('href');
+        
+        // Validate before processing
+        if (href && href !== '#') {
+            loadPage(href);
+        }
+    }
+    
+    function loadPage(url) {
+        $.ajax({
+            url: url,
+            method: 'GET',
+            dataType: 'html',
+            success: handlePageLoad,
+            error: handleLoadError
+        });
+    }
+    
+    function handlePageLoad(data) {
+        $('#main-content').html(data);
+    }
+    
+    function handleLoadError() {
+        console.error('Failed to load page');
+        // Show user-friendly error message
+    }
+    
+    // Initialize
+    initializeNavigation();
+});
+
+// Error handling
+try {
+    // Risky operation
+    someFunction();
+} catch (error) {
+    console.error('Error occurred:', error);
+    // Handle error gracefully
+}
+
+// Feature detection
+if ($.fn.datepicker) {
+    $('.date-input').datepicker();
+}</code></pre>
+
+                <div class="alert success">
+                    <strong>Summary:</strong> Following best practices ensures maintainable, performant, and accessible jQuery applications. Always consider user experience, security, and code quality.
+                </div>
+            </section>
+
+            <!-- Resources -->
+            <section class="section" id="resources">
+                <h2><i class="fas fa-link"></i> Useful Resources</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-home"></i> Official Resources</h4>
+                        <div class="link-card">
+                            <a href="https://jquery.com/" target="_blank">jQuery Official Website</a>
+                            <p>Main website with downloads, documentation, and news</p>
+                        </div>
+                        <div class="link-card">
+                            <a href="https://api.jquery.com/" target="_blank">jQuery API Documentation</a>
+                            <p>Complete API reference with examples</p>
+                        </div>
+                        <div class="link-card">
+                            <a href="https://learn.jquery.com/" target="_blank">jQuery Learning Center</a>
+                            <p>Tutorials and guides for beginners to advanced</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-puzzle-piece"></i> Plugin Resources</h4>
+                        <div class="link-card">
+                            <a href="https://plugins.jquery.com/" target="_blank">jQuery Plugin Registry</a>
+                            <p>Official plugin repository (deprecated but still useful)</p>
+                        </div>
+                        <div class="link-card">
+                            <a href="https://www.npmjs.com/search?q=jquery" target="_blank">NPM jQuery Packages</a>
+                            <p>jQuery plugins available via NPM</p>
+                        </div>
+                        <div class="link-card">
+                            <a href="https://github.com/topics/jquery-plugin" target="_blank">GitHub jQuery Plugins</a>
+                            <p>jQuery plugins on GitHub</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-graduation-cap"></i> Learning Resources</h4>
+                        <div class="link-card">
+                            <a href="https://www.codecademy.com/learn/learn-jquery" target="_blank">Codecademy jQuery Course</a>
+                            <p>Interactive jQuery course for beginners</p>
+                        </div>
+                        <div class="link-card">
+                            <a href="https://www.freecodecamp.org/learn/front-end-libraries/jquery/" target="_blank">freeCodeCamp jQuery</a>
+                            <p>Free jQuery curriculum with projects</p>
+                        </div>
+                        <div class="link-card">
+                            <a href="https://www.w3schools.com/jquery/" target="_blank">W3Schools jQuery Tutorial</a>
+                            <p>Comprehensive jQuery tutorial with examples</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-users"></i> Community</h4>
+                        <div class="link-card">
+                            <a href="https://stackoverflow.com/questions/tagged/jquery" target="_blank">Stack Overflow</a>
+                            <p>Questions and answers about jQuery</p>
+                        </div>
+                        <div class="link-card">
+                            <a href="https://forum.jquery.com/" target="_blank">jQuery Forum</a>
+                            <p>Official jQuery community forum</p>
+                        </div>
+                        <div class="link-card">
+                            <a href="https://reddit.com/r/jquery" target="_blank">Reddit r/jquery</a>
+                            <p>jQuery community on Reddit</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-tools"></i> Development Tools</h4>
+                        <div class="link-card">
+                            <a href="https://jsfiddle.net/" target="_blank">JSFiddle</a>
+                            <p>Online code editor with jQuery support</p>
+                        </div>
+                        <div class="link-card">
+                            <a href="https://codepen.io/" target="_blank">CodePen</a>
+                            <p>Code playground for front-end development</p>
+                        </div>
+                        <div class="link-card">
+                            <a href="https://jquerybuilder.com/" target="_blank">jQuery Builder</a>
+                            <p>Custom jQuery builds for smaller file sizes</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4><i class="fas fa-book"></i> Books & References</h4>
+                        <div class="link-card">
+                            <a href="https://github.com/AllThingsSmitty/jquery-tips-everyone-should-know" target="_blank">jQuery Tips Everyone Should Know</a>
+                            <p>Collection of jQuery tips and best practices</p>
+                        </div>
+                        <div class="link-card">
+                            <a href="https://oscarotero.com/jquery/" target="_blank">jQuery Cheat Sheet</a>
+                            <p>Quick reference for jQuery methods</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>CDN Links Quick Reference</h3>
+                <pre><code class="language-html">&lt;!-- jQuery 3.7.1 --&gt;
+&lt;script src="https://code.jquery.com/jquery-3.7.1.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- jQuery UI 1.13.2 --&gt;
+&lt;link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/ui-lightness/jquery-ui.css"&gt;
+&lt;script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- jQuery Validation 1.19.5 --&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- jQuery Mobile 1.4.5 --&gt;
+&lt;link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"&gt;
+&lt;script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"&gt;&lt;/script&gt;</code></pre>
+
+                <div class="alert info">
+                    <strong>Final Note:</strong> While jQuery remains popular and useful, consider modern alternatives like vanilla JavaScript, Vue.js, React, or Angular for new projects. jQuery is still excellent for enhancing existing websites and rapid prototyping.
+                </div>
+
+                <div class="alert success">
+                    <strong>Conclusion:</strong> This comprehensive guide covers everything you need to master jQuery - from basic syntax to advanced techniques and best plugins. Practice regularly, build projects, and stay updated with the community!
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('shifted');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            sidebar.classList.remove('active');
+            mainContent.classList.remove('shifted');
+        }
+
+        // Progress Bar
+        function updateProgressBar() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.querySelector('.progress-bar').style.width = scrolled + '%';
+        }
+
+        // Back to Top
+        function scrollToTop() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+
+        function toggleBackToTop() {
+            const backToTop = document.getElementById('backToTop');
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        }
+
+        // Active Navigation
+        function updateActiveNav() {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.sidebar a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Search Functionality
+        function searchContent(query) {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.sidebar a');
+            
+            if (!query) {
+                sections.forEach(section => section.style.display = 'block');
+                navLinks.forEach(link => link.style.display = 'block');
+                return;
+            }
+
+            const searchTerm = query.toLowerCase();
+            
+            sections.forEach(section => {
+                const content = section.textContent.toLowerCase();
+                if (content.includes(searchTerm)) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+
+            navLinks.forEach(link => {
+                const text = link.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    link.style.display = 'block';
+                } else {
+                    link.style.display = 'none';
+                }
+            });
+        }
+
+        // Smooth Scrolling
+        document.querySelectorAll('.sidebar a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Event Listeners
+        window.addEventListener('scroll', () => {
+            updateProgressBar();
+            toggleBackToTop();
+            updateActiveNav();
+        });
+
+        // Click outside sidebar to close
+        document.addEventListener('click', (e) => {
+            const sidebar = document.getElementById('sidebar');
+            const navToggle = document.querySelector('.nav-toggle');
+            
+            if (!sidebar.contains(e.target) && !navToggle.contains(e.target)) {
+                closeSidebar();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateProgressBar();
+            updateActiveNav();
+            
+            // Add copy buttons to code blocks
+            const codeBlocks = document.querySelectorAll('pre code');
+            codeBlocks.forEach((block, index) => {
+                const button = document.createElement('button');
+                button.className = 'copy-btn';
+                button.innerHTML = '<i class="fas fa-copy"></i>';
+                button.title = 'Copy code';
+                button.style.cssText = `
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background: #0066b2;
+                    color: white;
+                    border: none;
+                    padding: 5px 8px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 12px;
+                    opacity: 0.8;
+                    transition: opacity 0.2s;
+                `;
+                
+                button.addEventListener('click', () => {
+                    navigator.clipboard.writeText(block.textContent).then(() => {
+                        button.innerHTML = '<i class="fas fa-check"></i>';
+                        setTimeout(() => {
+                            button.innerHTML = '<i class="fas fa-copy"></i>';
+                        }, 2000);
+                    });
+                });
+                
+                block.parentNode.style.position = 'relative';
+                block.parentNode.appendChild(button);
+                
+                button.addEventListener('mouseenter', () => button.style.opacity = '1');
+                button.addEventListener('mouseleave', () => button.style.opacity = '0.8');
+            });
+        });
+    </script>
+</body>
+</html>
