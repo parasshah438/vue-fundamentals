@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue.js 3 Advanced CRUD - All HTML5 Input Types</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --success-gradient: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      --danger-gradient: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+      --warning-gradient: linear-gradient(135deg, #feca57 0%, #ff9ff3 100%);
+      --info-gradient: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    }
+
+    body {
+      background: var(--primary-gradient);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .main-container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      margin: 20px auto;
+      padding: 0;
+      overflow: hidden;
+      max-width: 1400px;
+    }
+    
+    .header-section {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+      animation: float 20s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 2;
+    }
+    
+    .header-section h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .header-section p {
+      font-size: 1.3rem;
+      opacity: 0.9;
+      margin-bottom: 0;
+    }
+    
+    .content-section {
+      padding: 40px;
+    }
+
+    .stats-cards {
+      margin-bottom: 40px;
+    }
+    
+    .stat-card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      border: 1px solid #f0f0f0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--primary-gradient);
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    }
+    
+    .stat-card i {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-card h3 {
+      color: #2c3e50;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .stat-card p {
+      color: #6c757d;
+      font-weight: 500;
+      margin-bottom: 0;
+    }
+    
+    .table-container {
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      background: white;
+    }
+    
+    .table th {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      font-weight: 600;
+      padding: 20px 15px;
+      font-size: 1.1rem;
+    }
+
+    .table td {
+      padding: 15px;
+      vertical-align: middle;
+      border-color: #f8f9fa;
+    }
+    
+    .table tbody tr {
+      transition: all 0.3s ease;
+    }
+    
+    .table tbody tr:hover {
+      background-color: #f8f9fa;
+      transform: scale(1.02);
+    }
+    
+    /* No results styling */
+    .no-results {
+      padding: 40px 20px;
+    }
+    
+    .no-results i {
+      opacity: 0.6;
+    }
+    
+    .no-results h5 {
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    
+    .no-results p {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    
+    .btn-action {
+      padding: 8px 12px;
+      margin: 0 3px;
+      border-radius: 10px;
+      border: none;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-action::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-action:hover::before {
+      left: 100%;
+    }
+
+    .btn-edit {
+      background: var(--warning-gradient);
+      color: white;
+    }
+
+    .btn-delete {
+      background: var(--danger-gradient);
+      color: white;
+    }
+
+    .btn-view {
+      background: var(--info-gradient);
+      color: white;
+    }
+    
+    .search-container {
+      position: relative;
+      margin-bottom: 30px;
+    }
+    
+    .search-container input {
+      border-radius: 25px;
+      padding: 15px 20px 15px 55px;
+      border: 2px solid #e9ecef;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+    }
+
+    .search-container input:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .search-container .search-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6c757d;
+      font-size: 1.2rem;
+    }
+    
+    .modal-header {
+      background: var(--primary-gradient);
+      color: white;
+      border-radius: 15px 15px 0 0;
+      padding: 25px;
+    }
+
+    .modal-content {
+      border-radius: 15px;
+      border: none;
+      overflow: hidden;
+    }
+
+    .modal-body {
+      padding: 30px;
+    }
+
+    .form-section {
+      margin-bottom: 30px;
+      padding: 25px;
+      background: #f8f9fa;
+      border-radius: 15px;
+      border-left: 5px solid #667eea;
+    }
+
+    .form-section h5 {
+      color: #2c3e50;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .form-floating label {
+      color: #6c757d;
+      font-weight: 500;
+    }
+
+    .form-control, .form-select {
+      border-radius: 10px;
+      border: 2px solid #e9ecef;
+      padding: 12px 15px;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
+    }
+
+    .form-check-input {
+      border-radius: 6px;
+      border: 2px solid #e9ecef;
+      width: 1.2em;
+      height: 1.2em;
+    }
+
+    .form-check-input:checked {
+      background-color: #667eea;
+      border-color: #667eea;
+    }
+
+    .btn-primary {
+      background: var(--primary-gradient);
+      border: none;
+      border-radius: 10px;
+      padding: 12px 30px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-success {
+      background: var(--success-gradient);
+      border: none;
+      border-radius: 10px;
+      padding: 12px 30px;
+      font-weight: 600;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 30px;
+      font-weight: 600;
+    }
+    
+    .pagination {
+      justify-content: center;
+      margin-top: 30px;
+    }
+    
+    .pagination .page-link {
+      border-radius: 10px;
+      margin: 0 5px;
+      border: 2px solid #e9ecef;
+      background: white;
+      color: #495057;
+      padding: 10px 15px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .pagination .page-link:hover {
+      background: #f8f9fa;
+      border-color: #667eea;
+      color: #667eea;
+    }
+    
+    .pagination .page-item.active .page-link {
+      background: var(--primary-gradient);
+      border-color: #667eea;
+      color: white;
+    }
+    
+    .loading-spinner {
+      text-align: center;
+      padding: 60px;
+    }
+
+    .loading-spinner .spinner-border {
+      width: 4rem;
+      height: 4rem;
+      color: #667eea;
+    }
+    
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity 0.4s ease;
+    }
+    .fade-enter-from, .fade-leave-to {
+      opacity: 0;
+    }
+
+    .slide-enter-active, .slide-leave-active {
+      transition: transform 0.3s ease;
+    }
+    .slide-enter-from {
+      transform: translateX(100%);
+    }
+    .slide-leave-to {
+      transform: translateX(-100%);
+    }
+
+    .user-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #e9ecef;
+    }
+
+    .badge {
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .badge-success {
+      background: var(--success-gradient);
+      color: white;
+    }
+
+    .badge-warning {
+      background: var(--warning-gradient);
+      color: white;
+    }
+
+    .badge-danger {
+      background: var(--danger-gradient);
+      color: white;
+    }
+
+    .tooltip-custom {
+      background: var(--primary-gradient);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: white;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .header-section h1 {
+        font-size: 2rem;
+      }
+      
+      .header-section p {
+        font-size: 1rem;
+      }
+
+      .content-section {
+        padding: 20px;
+      }
+
+      .stat-card {
+        margin-bottom: 20px;
+      }
+
+      .table-responsive {
+        border-radius: 15px;
+      }
+
+      .modal-body {
+        padding: 20px;
+      }
+
+      .form-section {
+        padding: 15px;
+      }
+    }
+
+    /* Custom file input styling */
+    .file-input-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      cursor: pointer;
+      background: var(--primary-gradient);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .file-input-wrapper:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .file-input-wrapper input[type=file] {
+      position: absolute;
+      left: -9999px;
+    }
+
+    /* Color input styling */
+    .color-input-wrapper {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid #e9ecef;
+    }
+
+    .color-input-wrapper input[type=color] {
+      width: 100%;
+      height: 50px;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Range slider styling */
+    .range-slider {
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: #e9ecef;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #667eea;
+      cursor: pointer;
+      border: 2px solid white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .range-slider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #667eea;
+      cursor: pointer;
+      border: 2px solid white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <div class="container-fluid">
+    <div class="main-container">
+      
+      <!-- Header Section -->
+      <div class="header-section">
+        <div class="header-content">
+          <h1>
+            <i class="fas fa-rocket"></i>
+            Vue.js 3 Advanced CRUD
+          </h1>
+          <p>Complete HTML5 Input Types with Professional Design</p>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <!-- Stats Cards -->
+        <div class="stats-cards">
+          <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4">
+              <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <h3>{{ stats.total_users || 0 }}</h3>
+                <p>Total Records</p>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+              <div class="stat-card">
+                <i class="fas fa-search"></i>
+                <h3>{{ users.length }}</h3>
+                <p>Filtered Results</p>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+              <div class="stat-card">
+                <i class="fas fa-list"></i>
+                <h3>{{ totalPagesFromAPI }}</h3>
+                <p>Total Pages</p>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+              <div class="stat-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>{{ stats.active_users || 0 }}</h3>
+                <p>Active Users</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Search & Actions -->
+        <div class="row mb-4">
+          <div class="col-md-8">
+            <div class="search-container">
+              <i class="fas fa-search search-icon"></i>
+              <input 
+                type="text" 
+                v-model="searchQuery" 
+                class="form-control" 
+                placeholder="Search users by name, email, or any field..."
+              >
+            </div>
+          </div>
+          <div class="col-md-4 text-md-end">
+            <button @click="openModal('add')" class="btn btn-primary btn-lg">
+              <i class="fas fa-plus"></i> Add New Record
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div v-if="loading" class="loading-spinner">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-3 text-muted">Loading data...</p>
+        </div>
+
+        <!-- Users Table -->
+        <div v-else class="table-container">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead>
+                <tr>
+                  <th>Avatar</th>
+                  <th>Full Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Country</th>
+                  <th>Status</th>
+                  <th>Join Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="user in users" :key="user.id">
+                  <td>
+                    <img :src="user.avatar || 'https://via.placeholder.com/50'" 
+                         :alt="user.first_name" 
+                         class="user-avatar">
+                  </td>
+                  <td>
+                    <strong>{{ user.first_name }} {{ user.last_name }}</strong>
+                  </td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.phone }}</td>
+                  <td>{{ user.country }}</td>
+                  <td>
+                    <span :class="['badge', user.status === 'active' ? 'badge-success' : user.status === 'pending' ? 'badge-warning' : 'badge-danger']">
+                      {{ user.status }}
+                    </span>
+                  </td>
+                  <td>{{ formatDate(user.date_joined) }}</td>
+                  <td>
+                    <button @click="viewUser(user)" class="btn btn-view btn-action btn-sm" title="View Details">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button @click="editUser(user)" class="btn btn-edit btn-action btn-sm" title="Edit User">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button @click="deleteUser(user.id)" class="btn btn-delete btn-action btn-sm" title="Delete User">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+                <!-- No results found row -->
+                <tr v-if="!loading && users.length === 0">
+                  <td colspan="8" class="text-center py-5">
+                    <div class="no-results">
+                      <i class="fas fa-search-minus fa-3x text-muted mb-3"></i>
+                      <h5 class="text-muted">No Results Found</h5>
+                      <p class="text-muted mb-0">
+                        <span v-if="searchQuery">
+                          No users found matching "<strong>{{ searchQuery }}</strong>"
+                        </span>
+                        <span v-else>
+                          No users available in the database
+                        </span>
+                      </p>
+                      <button v-if="searchQuery" @click="clearSearch" class="btn btn-outline-primary btn-sm mt-3">
+                        <i class="fas fa-times me-1"></i> Clear Search
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <nav v-if="totalPagesFromAPI > 1" class="mt-4">
+          <ul class="pagination">
+            <li class="page-item" :class="{ disabled: currentPage === 1 }">
+              <a class="page-link" @click="changePage(currentPage - 1)" href="#">
+                <i class="fas fa-chevron-left"></i>
+              </a>
+            </li>
+            <li v-for="page in visiblePages" :key="page" class="page-item" :class="{ active: page === currentPage }">
+              <a class="page-link" @click="changePage(page)" href="#">{{ page }}</a>
+            </li>
+            <li class="page-item" :class="{ disabled: currentPage === totalPagesFromAPI }">
+              <a class="page-link" @click="changePage(currentPage + 1)" href="#">
+                <i class="fas fa-chevron-right"></i>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <!-- User Modal -->
+    <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="userModalLabel">
+              <i :class="modalMode === 'add' ? 'fas fa-plus' : modalMode === 'edit' ? 'fas fa-edit' : 'fas fa-eye'"></i>
+              {{ modalMode === 'add' ? 'Add New User' : modalMode === 'edit' ? 'Edit User' : 'View User Details' }}
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form @submit.prevent="saveUser">
+              
+              <!-- Basic Information Section -->
+              <div class="form-section">
+                <h5><i class="fas fa-user"></i> Basic Information</h5>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="text" 
+                             class="form-control" 
+                             id="firstName" 
+                             v-model="currentUser.firstName" 
+                             placeholder="First Name"
+                             :readonly="modalMode === 'view'"
+                             required>
+                      <label for="firstName">First Name *</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="text" 
+                             class="form-control" 
+                             id="lastName" 
+                             v-model="currentUser.lastName" 
+                             placeholder="Last Name"
+                             :readonly="modalMode === 'view'"
+                             required>
+                      <label for="lastName">Last Name *</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="email" 
+                             class="form-control" 
+                             id="email" 
+                             v-model="currentUser.email" 
+                             placeholder="Email Address"
+                             :readonly="modalMode === 'view'"
+                             required>
+                      <label for="email">Email Address *</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="tel" 
+                             class="form-control" 
+                             id="phone" 
+                             v-model="currentUser.phone" 
+                             placeholder="Phone Number"
+                             :readonly="modalMode === 'view'">
+                      <label for="phone">Phone Number</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Personal Details Section -->
+              <div class="form-section">
+                <h5><i class="fas fa-id-card"></i> Personal Details</h5>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="date" 
+                             class="form-control" 
+                             id="dateOfBirth" 
+                             v-model="currentUser.dateOfBirth" 
+                             :readonly="modalMode === 'view'">
+                      <label for="dateOfBirth">Date of Birth</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <select class="form-select" 
+                              id="gender" 
+                              v-model="currentUser.gender"
+                              :disabled="modalMode === 'view'">
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                        <option value="prefer-not-to-say">Prefer not to say</option>
+                      </select>
+                      <label for="gender">Gender</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="number" 
+                             class="form-control" 
+                             id="age" 
+                             v-model="currentUser.age" 
+                             placeholder="Age"
+                             min="1" max="150"
+                             :readonly="modalMode === 'view'">
+                      <label for="age">Age</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <select class="form-select" 
+                              id="maritalStatus" 
+                              v-model="currentUser.maritalStatus"
+                              :disabled="modalMode === 'view'">
+                        <option value="">Select Marital Status</option>
+                        <option value="single">Single</option>
+                        <option value="married">Married</option>
+                        <option value="divorced">Divorced</option>
+                        <option value="widowed">Widowed</option>
+                      </select>
+                      <label for="maritalStatus">Marital Status</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Address Information Section -->
+              <div class="form-section">
+                <h5><i class="fas fa-map-marker-alt"></i> Address Information</h5>
+                <div class="form-floating mb-3">
+                  <textarea class="form-control" 
+                            id="address" 
+                            v-model="currentUser.address" 
+                            placeholder="Full Address"
+                            style="height: 100px"
+                            :readonly="modalMode === 'view'"></textarea>
+                  <label for="address">Full Address</label>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="text" 
+                             class="form-control" 
+                             id="city" 
+                             v-model="currentUser.city" 
+                             placeholder="City"
+                             :readonly="modalMode === 'view'">
+                      <label for="city">City</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="text" 
+                             class="form-control" 
+                             id="state" 
+                             v-model="currentUser.state" 
+                             placeholder="State/Province"
+                             :readonly="modalMode === 'view'">
+                      <label for="state">State/Province</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="text" 
+                             class="form-control" 
+                             id="zipCode" 
+                             v-model="currentUser.zipCode" 
+                             placeholder="ZIP/Postal Code"
+                             :readonly="modalMode === 'view'">
+                      <label for="zipCode">ZIP/Postal Code</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <select class="form-select" 
+                              id="country" 
+                              v-model="currentUser.country"
+                              :disabled="modalMode === 'view'">
+                        <option value="">Select Country</option>
+                        <option value="US">United States</option>
+                        <option value="CA">Canada</option>
+                        <option value="UK">United Kingdom</option>
+                        <option value="AU">Australia</option>
+                        <option value="IN">India</option>
+                        <option value="DE">Germany</option>
+                        <option value="FR">France</option>
+                        <option value="JP">Japan</option>
+                        <option value="CN">China</option>
+                        <option value="BR">Brazil</option>
+                      </select>
+                      <label for="country">Country</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Professional Information Section -->
+              <div class="form-section">
+                <h5><i class="fas fa-briefcase"></i> Professional Information</h5>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="text" 
+                             class="form-control" 
+                             id="jobTitle" 
+                             v-model="currentUser.jobTitle" 
+                             placeholder="Job Title"
+                             :readonly="modalMode === 'view'">
+                      <label for="jobTitle">Job Title</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="text" 
+                             class="form-control" 
+                             id="company" 
+                             v-model="currentUser.company" 
+                             placeholder="Company Name"
+                             :readonly="modalMode === 'view'">
+                      <label for="company">Company Name</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <select class="form-select" 
+                              id="department" 
+                              v-model="currentUser.department"
+                              :disabled="modalMode === 'view'">
+                        <option value="">Select Department</option>
+                        <option value="engineering">Engineering</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="sales">Sales</option>
+                        <option value="hr">Human Resources</option>
+                        <option value="finance">Finance</option>
+                        <option value="operations">Operations</option>
+                        <option value="design">Design</option>
+                        <option value="support">Customer Support</option>
+                      </select>
+                      <label for="department">Department</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="number" 
+                             class="form-control" 
+                             id="salary" 
+                             v-model="currentUser.salary" 
+                             placeholder="Annual Salary"
+                             min="0" step="1000"
+                             :readonly="modalMode === 'view'">
+                      <label for="salary">Annual Salary ($)</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="date" 
+                             class="form-control" 
+                             id="hireDate" 
+                             v-model="currentUser.hireDate" 
+                             :readonly="modalMode === 'view'">
+                      <label for="hireDate">Hire Date</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <select class="form-select" 
+                              id="employmentType" 
+                              v-model="currentUser.employmentType"
+                              :disabled="modalMode === 'view'">
+                        <option value="">Select Employment Type</option>
+                        <option value="full-time">Full Time</option>
+                        <option value="part-time">Part Time</option>
+                        <option value="contract">Contract</option>
+                        <option value="freelance">Freelance</option>
+                        <option value="internship">Internship</option>
+                      </select>
+                      <label for="employmentType">Employment Type</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Advanced HTML5 Inputs Section -->
+              <div class="form-section">
+                <h5><i class="fas fa-cogs"></i> Advanced Settings & Preferences</h5>
+                
+                <!-- Color & Range Inputs -->
+                <div class="row">
+                  <div class="col-md-6">
+                    <label class="form-label">Favorite Color</label>
+                    <div class="color-input-wrapper mb-3">
+                      <input type="color" 
+                             id="favoriteColor" 
+                             v-model="currentUser.favoriteColor" 
+                             :disabled="modalMode === 'view'">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Experience Level ({{ currentUser.experienceLevel || 0 }} years)</label>
+                    <input type="range" 
+                           class="range-slider mb-3" 
+                           id="experienceLevel" 
+                           v-model="currentUser.experienceLevel" 
+                           min="0" max="50" step="1"
+                           :disabled="modalMode === 'view'">
+                  </div>
+                </div>
+
+                <!-- Time & DateTime Inputs -->
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="time" 
+                             class="form-control" 
+                             id="preferredWorkTime" 
+                             v-model="currentUser.preferredWorkTime" 
+                             :readonly="modalMode === 'view'">
+                      <label for="preferredWorkTime">Preferred Work Start Time</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="datetime-local" 
+                             class="form-control" 
+                             id="lastLogin" 
+                             v-model="currentUser.lastLogin" 
+                             :readonly="modalMode === 'view'">
+                      <label for="lastLogin">Last Login</label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- URL & Search Inputs -->
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="url" 
+                             class="form-control" 
+                             id="website" 
+                             v-model="currentUser.website" 
+                             placeholder="https://example.com"
+                             :readonly="modalMode === 'view'">
+                      <label for="website">Personal Website</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="url" 
+                             class="form-control" 
+                             id="linkedinProfile" 
+                             v-model="currentUser.linkedinProfile" 
+                             placeholder="https://linkedin.com/in/username"
+                             :readonly="modalMode === 'view'">
+                      <label for="linkedinProfile">LinkedIn Profile</label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- File Upload -->
+                <div class="row" v-if="modalMode !== 'view'">
+                  <div class="col-md-6">
+                    <label class="form-label">Profile Picture</label>
+                    <div class="file-input-wrapper mb-3" @click="$refs.profilePictureInput.click()">
+                      <i class="fas fa-upload"></i> Choose Profile Picture
+                      <input type="file" 
+                             ref="profilePictureInput"
+                             id="profilePicture" 
+                             @change="handleFileUpload" 
+                             accept="image/*"
+                             style="display: none;">
+                    </div>
+                    <!-- Preview selected image -->
+                    <div v-if="currentUser.avatar" class="mt-2">
+                      <img :src="currentUser.avatar" alt="Profile Preview" class="img-thumbnail" style="max-width: 150px; max-height: 150px;">
+                      <p class="text-muted small mt-1">Current profile picture</p>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Resume/CV</label>
+                    <div class="file-input-wrapper mb-3" @click="$refs.resumeInput.click()">
+                      <i class="fas fa-file-pdf"></i> Upload Resume
+                      <input type="file" 
+                             ref="resumeInput"
+                             id="resume" 
+                             @change="handleResumeUpload" 
+                             accept=".pdf,.doc,.docx"
+                             style="display: none;">
+                    </div>
+                    <!-- Show uploaded resume name -->
+                    <div v-if="currentUser.resume" class="mt-2">
+                      <i class="fas fa-file-alt text-primary"></i>
+                      <span class="text-muted small">{{ currentUser.resume }}</span>
+                      <p class="text-muted small mt-1">Current resume file</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Checkboxes & Radio Buttons -->
+                <div class="row">
+                  <div class="col-md-6">
+                    <label class="form-label">Skills & Interests</label>
+                    <div class="mb-3">
+                      <div class="form-check mb-2">
+                        <input class="form-check-input" 
+                               type="checkbox" 
+                               id="skillJavaScript" 
+                               v-model="currentUser.skills" 
+                               value="javascript"
+                               :disabled="modalMode === 'view'">
+                        <label class="form-check-label" for="skillJavaScript">JavaScript</label>
+                      </div>
+                      <div class="form-check mb-2">
+                        <input class="form-check-input" 
+                               type="checkbox" 
+                               id="skillPython" 
+                               v-model="currentUser.skills" 
+                               value="python"
+                               :disabled="modalMode === 'view'">
+                        <label class="form-check-label" for="skillPython">Python</label>
+                      </div>
+                      <div class="form-check mb-2">
+                        <input class="form-check-input" 
+                               type="checkbox" 
+                               id="skillReact" 
+                               v-model="currentUser.skills" 
+                               value="react"
+                               :disabled="modalMode === 'view'">
+                        <label class="form-check-label" for="skillReact">React</label>
+                      </div>
+                      <div class="form-check mb-2">
+                        <input class="form-check-input" 
+                               type="checkbox" 
+                               id="skillVue" 
+                               v-model="currentUser.skills" 
+                               value="vue"
+                               :disabled="modalMode === 'view'">
+                        <label class="form-check-label" for="skillVue">Vue.js</label>
+                      </div>
+                      <div class="form-check mb-2">
+                        <input class="form-check-input" 
+                               type="checkbox" 
+                               id="skillNode" 
+                               v-model="currentUser.skills" 
+                               value="nodejs"
+                               :disabled="modalMode === 'view'">
+                        <label class="form-check-label" for="skillNode">Node.js</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Preferred Work Mode</label>
+                    <div class="mb-3">
+                      <div class="form-check mb-2">
+                        <input class="form-check-input" 
+                               type="radio" 
+                               name="workMode" 
+                               id="workRemote" 
+                               v-model="currentUser.workMode" 
+                               value="remote"
+                               :disabled="modalMode === 'view'">
+                        <label class="form-check-label" for="workRemote">Remote</label>
+                      </div>
+                      <div class="form-check mb-2">
+                        <input class="form-check-input" 
+                               type="radio" 
+                               name="workMode" 
+                               id="workOffice" 
+                               v-model="currentUser.workMode" 
+                               value="office"
+                               :disabled="modalMode === 'view'">
+                        <label class="form-check-label" for="workOffice">Office</label>
+                      </div>
+                      <div class="form-check mb-2">
+                        <input class="form-check-input" 
+                               type="radio" 
+                               name="workMode" 
+                               id="workHybrid" 
+                               v-model="currentUser.workMode" 
+                               value="hybrid"
+                               :disabled="modalMode === 'view'">
+                        <label class="form-check-label" for="workHybrid">Hybrid</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Status & Notifications -->
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <select class="form-select" 
+                              id="status" 
+                              v-model="currentUser.status"
+                              :disabled="modalMode === 'view'">
+                        <option value="active">Active</option>
+                        <option value="pending">Pending</option>
+                        <option value="suspended">Suspended</option>
+                        <option value="inactive">Inactive</option>
+                      </select>
+                      <label for="status">Account Status</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-check form-switch mb-3 pt-3">
+                      <input class="form-check-input" 
+                             type="checkbox" 
+                             id="emailNotifications" 
+                             v-model="currentUser.emailNotifications"
+                             :disabled="modalMode === 'view'">
+                      <label class="form-check-label" for="emailNotifications">
+                        Email Notifications
+                      </label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                      <input class="form-check-input" 
+                             type="checkbox" 
+                             id="smsNotifications" 
+                             v-model="currentUser.smsNotifications"
+                             :disabled="modalMode === 'view'">
+                      <label class="form-check-label" for="smsNotifications">
+                        SMS Notifications
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Additional Notes -->
+                <div class="form-floating mb-3">
+                  <textarea class="form-control" 
+                            id="notes" 
+                            v-model="currentUser.notes" 
+                            placeholder="Additional notes about the user"
+                            style="height: 120px"
+                            :readonly="modalMode === 'view'"></textarea>
+                  <label for="notes">Additional Notes</label>
+                </div>
+              </div>
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <i class="fas fa-times"></i> {{ modalMode === 'view' ? 'Close' : 'Cancel' }}
+            </button>
+            <button v-if="modalMode !== 'view'" 
+                    type="button" 
+                    @click="saveUser" 
+                    class="btn btn-success">
+              <i class="fas fa-save"></i> {{ modalMode === 'add' ? 'Add User' : 'Update User' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title" id="deleteModalLabel">
+              <i class="fas fa-exclamation-triangle"></i> Confirm Delete
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to delete this user? This action cannot be undone.</p>
+            <div v-if="userToDelete" class="alert alert-warning">
+              <strong>User:</strong> {{ userToDelete.firstName }} {{ userToDelete.lastName }}<br>
+              <strong>Email:</strong> {{ userToDelete.email }}
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <i class="fas fa-times"></i> Cancel
+            </button>
+            <button type="button" @click="confirmDelete" class="btn btn-danger">
+              <i class="fas fa-trash"></i> Delete User
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Vue.js 3 -->
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<script>
+  const { createApp } = Vue;
+
+  createApp({
+    data() {
+      return {
+        users: [],
+        currentUser: {},
+        modalMode: 'add', // 'add', 'edit', 'view'
+        searchQuery: '',
+        searchTimeout: null,
+        currentPage: 1,
+        itemsPerPage: 10,
+        loading: false,
+        userToDelete: null,
+        nextId: 1,
+        totalPagesFromAPI: 1,
+        totalRecords: 0,
+        stats: {
+          total_users: 0,
+          active_users: 0,
+          pending_users: 0,
+          suspended_users: 0,
+          inactive_users: 0
+        },
+        
+        // Initialize empty user template
+        emptyUser: {
+          id: null,
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          dateOfBirth: '',
+          gender: '',
+          age: '',
+          maritalStatus: '',
+          address: '',
+          city: '',
+          state: '',
+          zipCode: '',
+          country: '',
+          jobTitle: '',
+          company: '',
+          department: '',
+          salary: '',
+          hireDate: '',
+          employmentType: '',
+          status: 'active',
+          dateJoined: '',
+          avatar: '',
+          website: '',
+          linkedinProfile: '',
+          favoriteColor: '#667eea',
+          experienceLevel: 0,
+          preferredWorkTime: '',
+          lastLogin: '',
+          skills: [],
+          workMode: '',
+          emailNotifications: true,
+          smsNotifications: false,
+          notes: '',
+          resume: ''
+        }
+      }
+    },
+    
+    computed: {
+      filteredUsers() {
+        // Since we're using server-side filtering, return users as-is
+        return this.users;
+      },
+      
+      totalPages() {
+        // This will be set from API response
+        return this.totalPagesFromAPI || 1;
+      },
+      
+      paginatedUsers() {
+        // Since pagination is handled server-side, return all users
+        return this.users;
+      },
+      
+      visiblePages() {
+        const totalPages = this.totalPagesFromAPI;
+        const current = this.currentPage;
+        const pages = [];
+        
+        if (totalPages <= 7) {
+          for (let i = 1; i <= totalPages; i++) {
+            pages.push(i);
+          }
+        } else {
+          if (current <= 4) {
+            for (let i = 1; i <= 5; i++) pages.push(i);
+            pages.push('...');
+            pages.push(totalPages);
+          } else if (current >= totalPages - 3) {
+            pages.push(1);
+            pages.push('...');
+            for (let i = totalPages - 4; i <= totalPages; i++) pages.push(i);
+          } else {
+            pages.push(1);
+            pages.push('...');
+            for (let i = current - 1; i <= current + 1; i++) pages.push(i);
+            pages.push('...');
+            pages.push(totalPages);
+          }
+        }
+        
+        return pages;
+      }
+    },
+    
+    methods: {
+      // Modal Management
+      openModal(mode, user = null) {
+        this.modalMode = mode;
+        if (mode === 'add') {
+          this.currentUser = { ...this.emptyUser };
+          this.currentUser.id = this.nextId++;
+          this.currentUser.dateJoined = new Date().toISOString().split('T')[0];
+        } else {
+          // Convert snake_case from API to camelCase for form
+          this.currentUser = {
+            id: user.id,
+            firstName: user.first_name || '',
+            lastName: user.last_name || '',
+            email: user.email || '',
+            phone: user.phone || '',
+            dateOfBirth: user.date_of_birth || '',
+            gender: user.gender || '',
+            age: user.age || '',
+            maritalStatus: user.marital_status || '',
+            address: user.address || '',
+            city: user.city || '',
+            state: user.state || '',
+            zipCode: user.zip_code || '',
+            country: user.country || '',
+            jobTitle: user.job_title || '',
+            company: user.company || '',
+            department: user.department || '',
+            salary: user.salary || '',
+            hireDate: user.hire_date || '',
+            employmentType: user.employment_type || '',
+            status: user.status || 'active',
+            dateJoined: user.date_joined || '',
+            avatar: user.avatar || '',
+            website: user.website || '',
+            linkedinProfile: user.linkedin_profile || '',
+            favoriteColor: user.favorite_color || '#667eea',
+            experienceLevel: user.experience_level || 0,
+            preferredWorkTime: user.preferred_work_time || '',
+            lastLogin: user.last_login || '',
+            skills: user.skills || [],
+            workMode: user.work_mode || '',
+            emailNotifications: user.email_notifications || false,
+            smsNotifications: user.sms_notifications || false,
+            notes: user.notes || '',
+            resume: user.resume || ''
+          };
+        }
+        
+        const modal = new bootstrap.Modal(document.getElementById('userModal'));
+        modal.show();
+      },
+      
+      // User Operations
+      async saveUser() {
+        try {
+          this.loading = true;
+          const url = this.modalMode === 'add' ? 'api/create.php' : 'api/update.php';
+          const method = this.modalMode === 'add' ? 'POST' : 'PUT';
+          
+          // Convert camelCase to snake_case for API
+          const userData = {
+            id: this.currentUser.id,
+            first_name: this.currentUser.firstName,
+            last_name: this.currentUser.lastName,
+            email: this.currentUser.email,
+            phone: this.currentUser.phone,
+            date_of_birth: this.currentUser.dateOfBirth,
+            gender: this.currentUser.gender,
+            age: this.currentUser.age,
+            marital_status: this.currentUser.maritalStatus,
+            address: this.currentUser.address,
+            city: this.currentUser.city,
+            state: this.currentUser.state,
+            zip_code: this.currentUser.zipCode,
+            country: this.currentUser.country,
+            job_title: this.currentUser.jobTitle,
+            company: this.currentUser.company,
+            department: this.currentUser.department,
+            salary: this.currentUser.salary,
+            hire_date: this.currentUser.hireDate,
+            employment_type: this.currentUser.employmentType,
+            status: this.currentUser.status,
+            date_joined: this.currentUser.dateJoined,
+            avatar: this.currentUser.avatar,
+            website: this.currentUser.website,
+            linkedin_profile: this.currentUser.linkedinProfile,
+            favorite_color: this.currentUser.favoriteColor,
+            experience_level: this.currentUser.experienceLevel,
+            preferred_work_time: this.currentUser.preferredWorkTime,
+            last_login: this.currentUser.lastLogin,
+            skills: this.currentUser.skills,
+            work_mode: this.currentUser.workMode,
+            email_notifications: this.currentUser.emailNotifications,
+            sms_notifications: this.currentUser.smsNotifications,
+            notes: this.currentUser.notes,
+            resume: this.currentUser.resume
+          };
+          
+          const response = await fetch(url, {
+            method: method,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData)
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            // Refresh the user list
+            await this.loadUsers();
+            
+            const modal = bootstrap.Modal.getInstance(document.getElementById('userModal'));
+            modal.hide();
+            
+            this.showNotification(
+              this.modalMode === 'add' ? 'User added successfully!' : 'User updated successfully!',
+              'success'
+            );
+          } else {
+            this.showNotification(result.message || 'Operation failed', 'error');
+          }
+        } catch (error) {
+          console.error('Error saving user:', error);
+          this.showNotification('Network error occurred', 'error');
+        } finally {
+          this.loading = false;
+        }
+      },
+      
+      editUser(user) {
+        this.openModal('edit', user);
+      },
+      
+      viewUser(user) {
+        this.openModal('view', user);
+      },
+      
+      deleteUser(userId) {
+        this.userToDelete = this.users.find(u => u.id === userId);
+        const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        modal.show();
+      },
+      
+      async confirmDelete() {
+        if (this.userToDelete) {
+          try {
+            this.loading = true;
+            
+            const response = await fetch('api/delete.php', {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ id: this.userToDelete.id })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+              // Refresh the user list
+              await this.loadUsers();
+              
+              const modal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+              modal.hide();
+              
+              this.showNotification('User deleted successfully!', 'success');
+              this.userToDelete = null;
+              
+              // Adjust current page if necessary
+              if (this.paginatedUsers.length === 0 && this.currentPage > 1) {
+                this.currentPage--;
+                await this.loadUsers();
+              }
+            } else {
+              this.showNotification(result.message || 'Delete operation failed', 'error');
+            }
+          } catch (error) {
+            console.error('Error deleting user:', error);
+            this.showNotification('Network error occurred', 'error');
+          } finally {
+            this.loading = false;
+          }
+        }
+      },
+      
+      // Pagination
+      async changePage(page) {
+        if (page >= 1 && page <= this.totalPages) {
+          this.currentPage = page;
+          await this.loadUsers();
+        }
+      },
+      
+      // Utility Methods
+      formatDate(dateString) {
+        if (!dateString) return '';
+        return new Date(dateString).toLocaleDateString();
+      },
+      
+      getActiveUsersCount() {
+        return this.users.filter(user => user.status === 'active').length;
+      },
+      
+      handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+          // Show immediate feedback
+          this.showNotification(`Selected: ${file.name}`, 'info');
+          this.uploadFile(file, 'avatar');
+        }
+      },
+      
+      handleResumeUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+          // Show immediate feedback
+          this.showNotification(`Selected: ${file.name}`, 'info');
+          this.uploadFile(file, 'resume');
+        }
+      },
+      
+      async uploadFile(file, type) {
+        try {
+          this.loading = true;
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append('type', type);
+          
+          const response = await fetch('api/upload.php', {
+            method: 'POST',
+            body: formData
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            if (type === 'avatar') {
+              this.currentUser.avatar = result.data.url;
+              this.showNotification('Profile picture uploaded successfully!', 'success');
+            } else if (type === 'resume') {
+              this.currentUser.resume = result.data.filename;
+              this.showNotification('Resume uploaded successfully!', 'success');
+            }
+          } else {
+            this.showNotification(result.message || 'Upload failed', 'error');
+          }
+        } catch (error) {
+          console.error('Error uploading file:', error);
+          this.showNotification('Upload error occurred', 'error');
+        } finally {
+          this.loading = false;
+        }
+      },
+      
+      showNotification(message, type = 'info') {
+        // Enhanced notification with better styling
+        const alertClass = type === 'success' ? 'alert-success' : 
+                          type === 'error' ? 'alert-danger' : 
+                          type === 'warning' ? 'alert-warning' : 'alert-info';
+        
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `alert ${alertClass} alert-dismissible fade show position-fixed`;
+        notification.style.cssText = `
+          top: 20px; 
+          right: 20px; 
+          z-index: 9999; 
+          min-width: 300px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        `;
+        notification.innerHTML = `
+          <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+          ${message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        }, 5000);
+      },
+      
+      // Load users from API
+      async loadUsers() {
+        try {
+          this.loading = true;
+          
+          const params = new URLSearchParams({
+            page: this.currentPage,
+            limit: this.itemsPerPage,
+            search: this.searchQuery
+          });
+          
+          const response = await fetch(`api/users.php?${params}`);
+          const result = await response.json();
+          
+          if (result.success) {
+            this.users = result.data;
+            this.totalPages = result.pagination.total_pages;
+            this.totalRecords = result.pagination.total_records;
+            this.stats = result.stats;
+          } else {
+            this.showNotification(result.message || 'Failed to load users', 'error');
+          }
+        } catch (error) {
+          console.error('Error loading users:', error);
+          this.showNotification('Network error occurred', 'error');
+        } finally {
+          this.loading = false;
+        }
+      },
+      
+      async loadSampleData() {
+        await this.loadUsers();
+      },
+      
+      clearSearch() {
+        this.searchQuery = '';
+      }
+    },
+    
+    watch: {
+      searchQuery() {
+        // Clear previous timeout
+        if (this.searchTimeout) {
+          clearTimeout(this.searchTimeout);
+        }
+        
+        // Set new timeout for debounced search
+        this.searchTimeout = setTimeout(() => {
+          this.currentPage = 1;
+          this.loadUsers();
+        }, 300); // 300ms delay
+      }
+    },
+    
+    mounted() {
+      this.loadSampleData();
+    }
+  }).mount('#app');
+</script>
+
+</body>
+</html>
