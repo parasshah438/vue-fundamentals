@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country State City Dropdown - Vue.js 3 with PHP MySQL</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            padding-top: 50px;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            margin: 20px 0;
+        }
+
+        .form-title {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .tech-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0 5px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-select {
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+        }
+
+        .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            background-color: white;
+        }
+
+        .form-select:disabled {
+            background-color: #e9ecef;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .form-select.is-invalid {
+            border-color: #dc3545;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .success-message {
+            color: #28a745;
+            font-size: 14px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .result-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            border-left: 5px solid #28a745;
+        }
+
+        .result-title {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .result-value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity 0.3s ease;
+        }
+
+        .fade-enter-from, .fade-leave-to {
+            opacity: 0;
+        }
+
+        .reset-btn {
+            background: #6c757d;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .reset-btn:hover {
+            background: #5a6268;
+            transform: translateY(-1px);
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .database-info {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .database-info i {
+            font-size: 1.2rem;
+            margin-right: 8px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding-top: 20px;
+            }
+
+            .form-card {
+                padding: 25px;
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .form-title {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+
+            .tech-badge {
+                display: block;
+                margin: 5px 0;
+                text-align: center;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .form-select {
+                padding: 10px 12px;
+                font-size: 14px;
+            }
+
+            .submit-btn {
+                padding: 12px 25px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <div class="form-card">
+                        <h1 class="form-title">
+                            <i class="fas fa-globe-americas"></i>
+                            Country State City Selector
+                        </h1>
+
+                        <div class="database-info">
+                            <i class="fas fa-database"></i>
+                            <strong>Powered by:</strong>
+                            <span class="tech-badge">Vue.js 3</span>
+                            <span class="tech-badge">PHP 8</span>
+                            <span class="tech-badge">MySQL</span>
+                            <span class="tech-badge">Bootstrap 5</span>
+                        </div>
+
+                        <form @submit.prevent="submitForm">
+                            <!-- Country Dropdown -->
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-flag"></i>
+                                    Select Country *
+                                </label>
+                                <div style="position: relative;">
+                                    <select 
+                                        v-model="selectedCountry" 
+                                        @change="onCountryChange"
+                                        class="form-select"
+                                        :class="{ 'is-invalid': errors.country }"
+                                        :disabled="loading.countries"
+                                    >
+                                        <option value="">Choose a country...</option>
+                                        <option 
+                                            v-for="country in countries" 
+                                            :key="country.id" 
+                                            :value="country.id"
+                                        >
+                                            {{ country.name }}
+                                        </option>
+                                    </select>
+                                    <div v-if="loading.countries" class="loading-overlay">
+                                        <div class="loading"></div>
+                                    </div>
+                                </div>
+                                <div v-if="errors.country" class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ errors.country }}
+                                </div>
+                            </div>
+
+                            <!-- State Dropdown -->
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Select State *
+                                </label>
+                                <div style="position: relative;">
+                                    <select 
+                                        v-model="selectedState" 
+                                        @change="onStateChange"
+                                        class="form-select"
+                                        :class="{ 'is-invalid': errors.state }"
+                                        :disabled="!selectedCountry || states.length === 0 || loading.states"
+                                    >
+                                        <option value="">
+                                            {{ !selectedCountry ? 'First select a country...' : 'Choose a state...' }}
+                                        </option>
+                                        <option 
+                                            v-for="state in states" 
+                                            :key="state.id" 
+                                            :value="state.id"
+                                        >
+                                            {{ state.name }}
+                                        </option>
+                                    </select>
+                                    <div v-if="loading.states" class="loading-overlay">
+                                        <div class="loading"></div>
+                                    </div>
+                                </div>
+                                <div v-if="errors.state" class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ errors.state }}
+                                </div>
+                            </div>
+
+                            <!-- City Dropdown -->
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-city"></i>
+                                    Select City *
+                                </label>
+                                <div style="position: relative;">
+                                    <select 
+                                        v-model="selectedCity" 
+                                        @change="onCityChange"
+                                        class="form-select"
+                                        :class="{ 'is-invalid': errors.city }"
+                                        :disabled="!selectedState || cities.length === 0 || loading.cities"
+                                    >
+                                        <option value="">
+                                            {{ !selectedState ? 'First select a state...' : 'Choose a city...' }}
+                                        </option>
+                                        <option 
+                                            v-for="city in cities" 
+                                            :key="city.id" 
+                                            :value="city.id"
+                                        >
+                                            {{ city.name }}
+                                        </option>
+                                    </select>
+                                    <div v-if="loading.cities" class="loading-overlay">
+                                        <div class="loading"></div>
+                                    </div>
+                                </div>
+                                <div v-if="errors.city" class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ errors.city }}
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button 
+                                type="submit" 
+                                class="submit-btn"
+                                :disabled="isSubmitting || !isFormValid"
+                            >
+                                <span v-if="isSubmitting" class="loading"></span>
+                                <i v-else class="fas fa-paper-plane"></i>
+                                {{ isSubmitting ? 'Processing...' : 'Submit Selection' }}
+                            </button>
+
+                            <!-- Reset Button -->
+                            <button 
+                                type="button" 
+                                class="reset-btn"
+                                @click="resetForm"
+                                :disabled="isSubmitting"
+                            >
+                                <i class="fas fa-redo"></i>
+                                Reset Form
+                            </button>
+                        </form>
+
+                        <!-- Result Display -->
+                        <transition name="fade">
+                            <div v-if="submissionResult" class="result-card">
+                                <h3 class="result-title">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    Selection Summary (Saved to Database)
+                                </h3>
+                                <div class="result-item">
+                                    <span class="result-label">Country:</span>
+                                    <span class="result-value">{{ submissionResult.country }}</span>
+                                </div>
+                                <div class="result-item">
+                                    <span class="result-label">State:</span>
+                                    <span class="result-value">{{ submissionResult.state }}</span>
+                                </div>
+                                <div class="result-item">
+                                    <span class="result-label">City:</span>
+                                    <span class="result-value">{{ submissionResult.city }}</span>
+                                </div>
+                                <div class="result-item">
+                                    <span class="result-label">Submitted At:</span>
+                                    <span class="result-value">{{ submissionResult.timestamp }}</span>
+                                </div>
+                                <div class="result-item">
+                                    <span class="result-label">Database ID:</span>
+                                    <span class="result-value">#{{ submissionResult.submissionId }}</span>
+                                </div>
+                            </div>
+                        </transition>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

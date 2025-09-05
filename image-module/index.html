@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload Module - Vue.js 3</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container-fluid {
+            padding-top: 30px;
+        }
+
+        .module-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .module-title {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .nav-tabs .nav-link {
+            border-radius: 10px 10px 0 0;
+            font-weight: 600;
+            color: #667eea;
+            border: 2px solid transparent;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .upload-area {
+            border: 3px dashed #cbd5e0;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: #f8f9fa;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #e3f2fd;
+        }
+
+        .upload-area.dragover {
+            border-color: #667eea;
+            background: #e3f2fd;
+            transform: scale(1.02);
+        }
+
+        .upload-area.error {
+            border-color: #dc3545;
+            background: #ffebee;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .upload-hint {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .upload-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .upload-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .progress-container {
+            margin-top: 20px;
+        }
+
+        .progress {
+            height: 8px;
+            border-radius: 10px;
+            background: #e9ecef;
+        }
+
+        .progress-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .success-message {
+            color: #28a745;
+            font-size: 14px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .image-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .image-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .image-info {
+            padding: 15px;
+        }
+
+        .image-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            word-break: break-word;
+        }
+
+        .image-details {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .image-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background: #c82333;
+            transform: translateY(-1px);
+        }
+
+        .btn-view {
+            background: #17a2b8;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view:hover {
+            background: #138496;
+            transform: translateY(-1px);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .batch-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .batch-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .batch-details {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .filter-controls {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .filter-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .modal-content {
+            border-radius: 15px;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity 0.3s ease;
+        }
+
+        .fade-enter-from, .fade-leave-to {
+            opacity: 0;
+        }
+
+        .validation-info {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .validation-title {
+            font-weight: 600;
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .validation-list {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .validation-list li {
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .container-fluid {
+                padding-top: 15px;
+            }
+
+            .module-card {
+                padding: 20px;
+                margin-bottom: 20px;
+                border-radius: 15px;
+            }
+
+            .module-title {
+                font-size: 1.5rem;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .upload-area {
+                padding: 25px;
+            }
+
+            .upload-icon {
+                font-size: 2rem;
+            }
+
+            .upload-text {
+                font-size: 1rem;
+            }
+
+            .image-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 15px;
+            }
+
+            .image-preview {
+                height: 150px;
+            }
+
+            .image-info {
+                padding: 10px;
+            }
+
+            .filter-controls {
+                padding: 15px;
+            }
+        }
+        
+        /* Fix tab visibility - ensure upload areas are always visible */
+        .tab-pane {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        .upload-area {
+            display: block !important;
+            visibility: visible !important;
+            min-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+       
+        
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="module-card">
+                        <h1 class="module-title">
+                            <i class="fas fa-images"></i>
+                            Image Upload Module
+                            <span class="badge bg-success">Vue.js 3 + PHP + MySQL</span>
+                        </h1>
+                        
+                    
+                        <!-- Validation Info -->
+                        <div class="validation-info">
+                            <div class="validation-title">
+                                <i class="fas fa-shield-alt"></i>
+                                Upload Validation Rules
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul class="validation-list">
+                                        <li><strong>File Types:</strong> JPEG, PNG, GIF, WebP</li>
+                                        <li><strong>Max File Size:</strong> 5MB per image</li>
+                                        <li><strong>Max Dimensions:</strong> 4000x4000 pixels</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="validation-list">
+                                        <li><strong>Min Dimensions:</strong> 50x50 pixels</li>
+                                        <li><strong>Multiple Upload:</strong> Max 10 files</li>
+                                        <li><strong>Total Size Limit:</strong> 50MB per batch</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Navigation Tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button 
+                                    class="nav-link" 
+                                    :class="{ active: activeTab === 'single' }"
+                                    @click="activeTab = 'single'"
+                                    type="button"
+                                >
+                                    <i class="fas fa-image"></i>
+                                    Single Upload
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button 
+                                    class="nav-link" 
+                                    :class="{ active: activeTab === 'multiple' }"
+                                    @click="activeTab = 'multiple'"
+                                    type="button"
+                                >
+                                    <i class="fas fa-images"></i>
+                                    Multiple Upload
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button 
+                                    class="nav-link" 
+                                    :class="{ active: activeTab === 'gallery' }"
+                                    @click="activeTab = 'gallery'; loadImages()"
+                                    type="button"
+                                >
+                                    <i class="fas fa-th"></i>
+                                    Gallery
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <!-- Debug Info -->
+                        <div class="alert alert-info mt-2">
+                            <small>Active Tab: {{ activeTab }} | Vue.js Status: {{ $data ? 'Loaded' : 'Not Loaded' }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Single Upload Tab -->
+                <div v-if="activeTab === 'single'" class="tab-pane">
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto">
+                            <div class="module-card">
+                                <h3 class="text-center mb-4">
+                                    <i class="fas fa-upload"></i>
+                                    Single Image Upload
+                                </h3>
+
+                                <!-- Upload Area -->
+                                <div 
+                                    class="upload-area"
+                                    :class="{ 
+                                        dragover: single.isDragOver, 
+                                        error: single.error 
+                                    }"
+                                    @click="$refs.singleFileInput.click()"
+                                    @dragover.prevent="single.isDragOver = true"
+                                    @dragleave.prevent="single.isDragOver = false"
+                                    @drop.prevent="handleSingleDrop"
+                                >
+                                    <div class="upload-icon">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                    </div>
+                                    <div class="upload-text">
+                                        Click to select image or drag & drop
+                                    </div>
+                                    <div class="upload-hint">
+                                        Supported: JPEG, PNG, GIF, WebP (Max: 5MB)
+                                    </div>
+                                    
+                                    <input 
+                                        ref="singleFileInput"
+                                        type="file" 
+                                        class="file-input"
+                                        accept="image/*"
+                                        @change="handleSingleFileSelect"
+                                    >
+                                </div>
+
+                                <!-- Selected File Info -->
+                                <div v-if="single.selectedFile" class="mt-3">
+                                    <div class="alert alert-info">
+                                        <strong>Selected File:</strong> {{ single.selectedFile.name }}<br>
+                                        <strong>Size:</strong> {{ formatBytes(single.selectedFile.size) }}<br>
+                                        <strong>Type:</strong> {{ single.selectedFile.type }}
+                                    </div>
+                                </div>
+
+                                <!-- Upload Button -->
+                                <div class="text-center">
+                                    <button 
+                                        class="upload-btn"
+                                        :disabled="!single.selectedFile || single.uploading"
+                                        @click="uploadSingleImage"
+                                    >
+                                        <span v-if="single.uploading" class="loading"></span>
+                                        <i v-else class="fas fa-upload"></i>
+                                        {{ single.uploading ? 'Uploading...' : 'Upload Image' }}
+                                    </button>
+                                </div>
+
+                                <!-- Progress Bar -->
+                                <div v-if="single.uploading" class="progress-container">
+                                    <div class="progress">
+                                        <div 
+                                            class="progress-bar" 
+                                            :style="{ width: single.progress + '%' }"
+                                        ></div>
+                                    </div>
+                                    <div class="text-center mt-2">
+                                        {{ single.progress }}%
+                                    </div>
+                                </div>
+
+                                <!-- Error Message -->
+                                <div v-if="single.error" class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ single.error }}
+                                </div>
+
+                                <!-- Success Message -->
+                                <div v-if="single.success" class="success-message">
+                                    <i class="fas fa-check-circle"></i>
+                                    {{ single.success }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Multiple Upload Tab -->
+                <div v-if="activeTab === 'multiple'" class="tab-pane">
+                    <div class="row">
+                        <div class="col-lg-10 mx-auto">
+                            <div class="module-card">
+                                <h3 class="text-center mb-4">
+                                    <i class="fas fa-upload"></i>
+                                    Multiple Images Upload
+                                </h3>
+
+                                <!-- Upload Area -->
+                                <div 
+                                    class="upload-area"
+                                    :class="{ 
+                                        dragover: multiple.isDragOver, 
+                                        error: multiple.error 
+                                    }"
+                                    @click="$refs.multipleFileInput.click()"
+                                    @dragover.prevent="multiple.isDragOver = true"
+                                    @dragleave.prevent="multiple.isDragOver = false"
+                                    @drop.prevent="handleMultipleDrop"
+                                >
+                                    <div class="upload-icon">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                    </div>
+                                    <div class="upload-text">
+                                        Click to select images or drag & drop
+                                    </div>
+                                    <div class="upload-hint">
+                                        Supported: JPEG, PNG, GIF, WebP (Max: 10 files, 50MB total)
+                                    </div>
+                                    
+                                    <input 
+                                        ref="multipleFileInput"
+                                        type="file" 
+                                        class="file-input"
+                                        accept="image/*"
+                                        multiple
+                                        @change="handleMultipleFileSelect"
+                                    >
+                                </div>
+
+                                <!-- Selected Files Info -->
+                                <div v-if="multiple.selectedFiles.length > 0" class="mt-3">
+                                    <div class="alert alert-info">
+                                        <strong>Selected Files:</strong> {{ multiple.selectedFiles.length }}<br>
+                                        <strong>Total Size:</strong> {{ formatBytes(multiple.totalSize) }}
+                                    </div>
+                                    
+                                    <!-- File List -->
+                                    <div class="row">
+                                        <div 
+                                            v-for="(file, index) in multiple.selectedFiles" 
+                                            :key="index"
+                                            class="col-md-6 col-lg-4 mb-2"
+                                        >
+                                            <div class="card">
+                                                <div class="card-body p-2">
+                                                    <small class="text-muted">
+                                                        {{ file.name }} ({{ formatBytes(file.size) }})
+                                                    </small>
+                                                    <button 
+                                                        class="btn btn-sm btn-outline-danger float-end"
+                                                        @click="removeSelectedFile(index)"
+                                                    >
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Upload Button -->
+                                <div class="text-center">
+                                    <button 
+                                        class="upload-btn"
+                                        :disabled="multiple.selectedFiles.length === 0 || multiple.uploading"
+                                        @click="uploadMultipleImages"
+                                    >
+                                        <span v-if="multiple.uploading" class="loading"></span>
+                                        <i v-else class="fas fa-upload"></i>
+                                        {{ multiple.uploading ? 'Uploading...' : 'Upload Images' }}
+                                    </button>
+                                </div>
+
+                                <!-- Progress Bar -->
+                                <div v-if="multiple.uploading" class="progress-container">
+                                    <div class="progress">
+                                        <div 
+                                            class="progress-bar" 
+                                            :style="{ width: multiple.progress + '%' }"
+                                        ></div>
+                                    </div>
+                                    <div class="text-center mt-2">
+                                        {{ multiple.progress }}%
+                                    </div>
+                                </div>
+
+                                <!-- Error Message -->
+                                <div v-if="multiple.error" class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ multiple.error }}
+                                </div>
+
+                                <!-- Success Message -->
+                                <div v-if="multiple.success" class="success-message">
+                                    <i class="fas fa-check-circle"></i>
+                                    {{ multiple.success }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gallery Tab -->
+                <div v-if="activeTab === 'gallery'" class="tab-pane">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="module-card">
+                                <h3 class="text-center mb-4">
+                                    <i class="fas fa-images"></i>
+                                    Image Gallery
+                                </h3>
+
+                                <!-- Filter Controls -->
+                                <div class="filter-controls">
+                                    <div class="filter-title">
+                                        <i class="fas fa-filter"></i>
+                                        Filters & Controls
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Upload Type:</label>
+                                            <select 
+                                                v-model="gallery.filters.type" 
+                                                class="form-select"
+                                                @change="loadImages"
+                                            >
+                                                <option value="all">All Images</option>
+                                                <option value="single">Single Upload</option>
+                                                <option value="multiple">Multiple Upload</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Sort By:</label>
+                                            <select 
+                                                v-model="gallery.filters.sortBy" 
+                                                class="form-select"
+                                                @change="loadImages"
+                                            >
+                                                <option value="uploaded_at">Upload Date</option>
+                                                <option value="original_name">Name</option>
+                                                <option value="file_size">File Size</option>
+                                                <option value="width">Width</option>
+                                                <option value="height">Height</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Order:</label>
+                                            <select 
+                                                v-model="gallery.filters.sortOrder" 
+                                                class="form-select"
+                                                @change="loadImages"
+                                            >
+                                                <option value="DESC">Descending</option>
+                                                <option value="ASC">Ascending</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Per Page:</label>
+                                            <select 
+                                                v-model="gallery.filters.limit" 
+                                                class="form-select"
+                                                @change="loadImages"
+                                            >
+                                                <option value="12">12</option>
+                                                <option value="24">24</option>
+                                                <option value="48">48</option>
+                                                <option value="100">100</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <button 
+                                                class="btn btn-primary"
+                                                @click="loadImages"
+                                                :disabled="gallery.loading"
+                                            >
+                                                <i class="fas fa-sync-alt"></i>
+                                                Refresh
+                                            </button>
+                                            <button 
+                                                class="btn btn-danger ms-2"
+                                                @click="deleteAllImages"
+                                                :disabled="gallery.images.length === 0"
+                                            >
+                                                <i class="fas fa-trash"></i>
+                                                Delete All
+                                            </button>
+                                        </div>
+                                        <div class="col-md-6 text-end">
+                                            <span class="text-muted">
+                                                Total: {{ gallery.pagination.totalCount }} images
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Loading -->
+                                <div v-if="gallery.loading" class="text-center py-5">
+                                    <div class="loading" style="width: 40px; height: 40px; border-width: 4px;"></div>
+                                    <div class="mt-3">Loading images...</div>
+                                </div>
+
+                                <!-- Images Grid -->
+                                <div v-else-if="gallery.images.length > 0" class="image-grid">
+                                    <div 
+                                        v-for="image in gallery.images" 
+                                        :key="image.id"
+                                        class="image-card"
+                                    >
+                                        <img 
+                                            :src="image.thumbnail_path || image.file_path" 
+                                            :alt="image.original_name"
+                                            class="image-preview"
+                                            @click="viewImage(image)"
+                                        >
+                                        <div class="image-info">
+                                            <div class="image-name">{{ image.original_name }}</div>
+                                            <div class="image-details">
+                                                {{ image.dimensions }} • {{ image.file_size_formatted }}<br>
+                                                {{ image.uploaded_at_formatted }}
+                                                <span v-if="image.batch_id" class="badge bg-secondary ms-1">
+                                                    Batch
+                                                </span>
+                                            </div>
+                                            <div class="image-actions">
+                                                <button 
+                                                    class="btn-view"
+                                                    @click="viewImage(image)"
+                                                >
+                                                    <i class="fas fa-eye"></i>
+                                                    View
+                                                </button>
+                                                <button 
+                                                    class="btn-delete"
+                                                    @click="deleteImage(image.id)"
+                                                >
+                                                    <i class="fas fa-trash"></i>
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- No Images -->
+                                <div v-else class="text-center py-5">
+                                    <i class="fas fa-images" style="font-size: 3rem; color: #ccc;"></i>
+                                    <div class="mt-3 text-muted">No images found</div>
+                                </div>
+
+                                <!-- Pagination -->
+                                <div v-if="gallery.pagination.totalPages > 1" class="d-flex justify-content-center mt-4">
+                                    <nav>
+                                        <ul class="pagination">
+                                            <li class="page-item" :class="{ disabled: !gallery.pagination.hasPrevPage }">
+                                                <button 
+                                                    class="page-link" 
+                                                    @click="changePage(gallery.pagination.currentPage - 1)"
+                                                    :disabled="!gallery.pagination.hasPrevPage"
+                                                >
+                                                    Previous
+                                                </button>
+                                            </li>
+                                            <li class="page-item active">
+                                                <span class="page-link">
+                                                    {{ gallery.pagination.currentPage }} of {{ gallery.pagination.totalPages }}
+                                                </span>
+                                            </li>
+                                            <li class="page-item" :class="{ disabled: !gallery.pagination.hasNextPage }">
+                                                <button 
+                                                    class="page-link" 
+                                                    @click="changePage(gallery.pagination.currentPage + 1)"
+                                                    :disabled="!gallery.pagination.hasNextPage"
+                                                >
+                                                    Next
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image View Modal -->
+        <div 
+            class="modal fade" 
+            id="imageModal" 
+            tabindex="-1" 
+            v-if="selectedImage"
+        >
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ selectedImage.original_name }}</h5>
+                        <button 
+                            type="button" 
+                            class="btn-close btn-close-white" 
+                            @click="closeImageModal"
+                        ></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img 
+                            :src="selectedImage.file_path" 
+                            :alt="selectedImage.original_name"
+                            class="img-fluid"
+                            style="max-height: 500px;"
+                        >
+                        <div class="mt-3">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Dimensions:</strong> {{ selectedImage.dimensions }}<br>
+                                    <strong>File Size:</strong> {{ selectedImage.file_size_formatted }}<br>
+                                    <strong>MIME Type:</strong> {{ selectedImage.mime_type }}
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Upload Type:</strong> {{ selectedImage.upload_type }}<br>
+                                    <strong>Uploaded:</strong> {{ selectedImage.uploaded_at_formatted }}<br>
+                                    <span v-if="selectedImage.batch_id">
+                                        <strong>Batch ID:</strong> {{ selectedImage.batch_id }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button 
+                            type="button" 
+                            class="btn btn-danger"
+                            @click="deleteImage(selectedImage.id); closeImageModal()"
+                        >
+                            <i class="fas fa-trash"></i>
+                            Delete Image
+                        </button>
+                        <button 
+                            type="button" 
+                            class="btn btn-secondary" 
+                            @click="closeImageModal"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
