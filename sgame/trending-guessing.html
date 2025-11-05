@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Trending / Today's Matka Guessing and AI Matka Tips - Smart predictions and insights">
+    <title>🔥 Trending • Today’s Matka Guessing | 🤖 AI Matka Tips</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
+    
+    <!-- CSS Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div id="preloader">
+        <div class="loader-container">
+            <div class="dice-loader">
+                <div class="dice">
+                    <div class="face front">🎲</div>
+                    <div class="face back">🎲</div>
+                    <div class="face right">🎲</div>
+                    <div class="face left">🎲</div>
+                    <div class="face top">🎲</div>
+                    <div class="face bottom">🎲</div>
+                </div>
+            </div>
+            <h3 class="loading-text">Loading<span class="dots"></span></h3>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div class="floating-actions">
+        <button class="fab-main" id="fabMain">
+            <i class="fas fa-plus"></i>
+        </button>
+        <div class="fab-options" id="fabOptions">
+            <button class="fab-option" data-tooltip="Share">
+                <i class="fas fa-share-alt"></i>
+            </button>
+            <button class="fab-option" data-tooltip="Notifications">
+                <i class="fas fa-bell"></i>
+            </button>
+            <button class="fab-option" data-tooltip="Home">
+                <i class="fas fa-home"></i>
+            </button>
+        </div>
+    </div>
+
+    <button id="scrollTopBtn" class="scroll-top-btn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-glass sticky-top">
+        <div class="container">
+            <a class="navbar-brand logo-animated" href="index.html">
+                <span class="logo-icon">🎲</span>
+                <span class="logo-text">
+                    <span class="logo-main">SATTA MATKA</span>
+                    <span class="logo-sub">LIVE RESULTS</span>
+                </span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon">
+                    <i class="fas fa-bars"></i>
+                </span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="live-results.html"><i class="fas fa-broadcast-tower"></i> Live Results</a></li>
+                    <li class="nav-item"><a class="nav-link" href="recent-results.html"><i class="fas fa-history"></i> Recent Results</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="trending-guessing.html"><i class="fas fa-fire"></i> Trending</a></li>
+                </ul>
+                <div class="ms-3 d-flex align-items-center gap-2">
+                    <button class="btn btn-glow btn-sm"><i class="fas fa-bell"></i> Subscribe</button>
+                    <button class="btn btn-glass btn-sm theme-toggle" id="themeToggle" title="Switch theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="page-hero-section">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-9" data-aos="fade-up">
+                    <div class="badge-container mb-4">
+                        <span class="hero-badge"><i class="fas fa-fire"></i> TRENDING • TODAY’S GUESSING</span>
+                    </div>
+                    <h1 class="hero-title text-white">
+                        Trending / <span class="gradient-text">Today’s Matka Guessing</span>
+                    </h1>
+                    <p class="hero-subtitle text-white-50">Community-driven insights and AI-backed suggestions. Play responsibly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trending / Today’s Guessing -->
+    <section class="py-5">
+        <div class="container">
+            <div class="section-header text-center mb-5" data-aos="fade-up">
+                <div class="section-badge"><i class="fas fa-chart-line"></i> TODAY’S GUESSING</div>
+                <h2 class="section-title">Top <span class="gradient-text">Trending</span> Picks</h2>
+                <p class="section-subtitle">Based on recent performance and user activity</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="result-card-modern">
+                        <div class="card-glow"></div>
+                        <div class="card-header-modern">
+                            <div class="market-icon bg-success"><i class="fas fa-sun"></i></div>
+                            <div class="market-info">
+                                <h3 class="market-name">Milan Day</h3>
+                                <span class="market-subtitle">Today’s Trend</span>
+                            </div>
+                        </div>
+                        <div class="card-body-modern">
+                            <div class="result-display-modern">
+                                <div class="result-item">
+                                    <span class="result-label">OPEN</span>
+                                    <div class="result-value neon-text"><span class="digit">1</span><span class="digit">5</span><span class="digit">6</span></div>
+                                </div>
+                                <div class="result-item jodi-center">
+                                    <span class="result-label">JODI</span>
+                                    <div class="result-value neon-text-green"><span class="digit">2</span><span class="digit">3</span></div>
+                                </div>
+                                <div class="result-item">
+                                    <span class="result-label">CLOSE</span>
+                                    <div class="result-value neon-text-red"><span class="digit">*</span><span class="digit">*</span><span class="digit">*</span></div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-success">High Confidence</span>
+                                <small class="text-white-50">Updated 2m ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="result-card-modern">
+                        <div class="card-glow"></div>
+                        <div class="card-header-modern">
+                            <div class="market-icon bg-info"><i class="fas fa-building"></i></div>
+                            <div class="market-info">
+                                <h3 class="market-name">Rajdhani Day</h3>
+                                <span class="market-subtitle">Strong Movement</span>
+                            </div>
+                        </div>
+                        <div class="card-body-modern">
+                            <div class="result-display-modern">
+                                <div class="result-item">
+                                    <span class="result-label">OPEN</span>
+                                    <div class="result-value neon-text"><span class="digit">2</span><span class="digit">3</span><span class="digit">4</span></div>
+                                </div>
+                                <div class="result-item jodi-center">
+                                    <span class="result-label">JODI</span>
+                                    <div class="result-value neon-text-green"><span class="digit">4</span><span class="digit">5</span></div>
+                                </div>
+                                <div class="result-item">
+                                    <span class="result-label">CLOSE</span>
+                                    <div class="result-value neon-text-red"><span class="digit">*</span><span class="digit">*</span><span class="digit">*</span></div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-warning text-dark">Medium Confidence</span>
+                                <small class="text-white-50">Updated 5m ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="result-card-modern">
+                        <div class="card-glow"></div>
+                        <div class="card-header-modern">
+                            <div class="market-icon bg-purple"><i class="fas fa-clock"></i></div>
+                            <div class="market-info">
+                                <h3 class="market-name">Time Bazar</h3>
+                                <span class="market-subtitle">Fast Market</span>
+                            </div>
+                        </div>
+                        <div class="card-body-modern">
+                            <div class="result-display-modern">
+                                <div class="result-item">
+                                    <span class="result-label">OPEN</span>
+                                    <div class="result-value neon-text"><span class="digit">1</span><span class="digit">6</span><span class="digit">8</span></div>
+                                </div>
+                                <div class="result-item jodi-center">
+                                    <span class="result-label">JODI</span>
+                                    <div class="result-value neon-text-green"><span class="digit">0</span><span class="digit">2</span></div>
+                                </div>
+                                <div class="result-item">
+                                    <span class="result-label">CLOSE</span>
+                                    <div class="result-value neon-text-red"><span class="digit">*</span><span class="digit">*</span><span class="digit">*</span></div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-info">Emerging</span>
+                                <small class="text-white-50">Updated 1m ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Prediction Section (AI Matka Tips) -->
+    <section class="py-5 bg-dark-gradient">
+        <div class="container">
+            <div class="section-header text-center mb-5" data-aos="fade-up">
+                <div class="section-badge"><i class="fas fa-robot"></i> AI MATKA TIPS</div>
+                <h2 class="section-title text-white">AI <span class="gradient-text">Prediction</span> Section</h2>
+                <p class="section-subtitle text-white-50">Data-driven suggestions using recent trend analysis</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="info-card-modern">
+                        <div class="info-icon bg-info"><i class="fas fa-lightbulb"></i></div>
+                        <h4>Smart Jodi Tips</h4>
+                        <p>AI suggests focus jodi combinations based on rolling 7-day performance and volatility.</p>
+                        <ul class="mission-points">
+                            <li><i class="fas fa-check-circle text-success"></i> 23, 45</li>
+                            <li><i class="fas fa-check-circle text-success"></i> 12, 78</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="info-card-modern">
+                        <div class="info-icon bg-success"><i class="fas fa-chart-area"></i></div>
+                        <h4>Open/Close Bias</h4>
+                        <p>Signal metrics highlight probable bias shifts to help time your entries better.</p>
+                        <div class="d-flex justify-content-center gap-2">
+                            <span class="badge bg-success">Open: Positive</span>
+                            <span class="badge bg-warning text-dark">Close: Neutral</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="info-card-modern">
+                        <div class="info-icon bg-warning"><i class="fas fa-shield-alt"></i></div>
+                        <h4>Risk Advisory</h4>
+                        <p>AI confidence bands and risk notices to encourage responsible decision-making.</p>
+                        <div class="d-flex justify-content-center gap-2">
+                            <span class="badge bg-info">Confidence: Medium</span>
+                            <span class="badge bg-danger">Risk: High</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5" data-aos="fade-up">
+                <a href="index.html#live-results" class="btn btn-glow-primary btn-lg">
+                    <i class="fas fa-bolt"></i> See Live Results
+                </a>
+                <a href="recent-results.html" class="btn btn-glass btn-lg">
+                    <i class="fas fa-database"></i> Explore History
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-modern">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="footer-widget">
+                            <div class="footer-logo"><span class="logo-icon">🎲</span><span class="logo-text">SATTA MATKA LIVE</span></div>
+                            <p class="footer-description">Your most trusted source for real-time satta matka results.</p>
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="footer-widget">
+                            <h5 class="footer-title">Quick Links</h5>
+                            <ul class="footer-links">
+                                <li><a href="index.html">Home</a></li>
+                                <li><a href="live-results.html">Live Results</a></li>
+                                <li><a href="recent-results.html">Recent Results</a></li>
+                                <li><a href="trending-guessing.html">Trending</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-widget">
+                            <h5 class="footer-title">Legal</h5>
+                            <ul class="footer-links">
+                                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                                <li><a href="terms-of-use.html">Terms of Use</a></li>
+                                <li><a href="disclaimer.html">Disclaimer</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-widget">
+                            <h5 class="footer-title">Contact Info</h5>
+                            <ul class="footer-contact">
+                                <li><i class="fas fa-envelope"></i><span>info@sattamatkalive.com</span></li>
+                                <li><i class="fas fa-phone"></i><span>+91 98765 43210</span></li>
+                                <li><i class="fas fa-clock"></i><span>24/7 Support</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6"><p class="copyright">© 2024 Satta Matka Live. All rights reserved.</p></div>
+                    <div class="col-md-6 text-md-end">
+                        <div class="footer-bottom-links">
+                            <a href="privacy-policy.html">Privacy Policy</a>
+                            <a href="terms-of-use.html">Terms of Service</a>
+                            <a href="disclaimer.html">Disclaimer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-wave">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#0a0e27" fill-opacity="0.3" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,101.3C1248,85,1344,75,1392,69.3L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+            </svg>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+
+    <style>
+        /* Page-specific tweaks */
+        .page-hero-section { padding: 6rem 0 4rem; }
+        .badge.bg-warning.text-dark { font-weight: 700; }
+        .info-card-modern ul { margin: 0; padding-left: 0; list-style: none; }
+        .info-card-modern ul li { display: flex; align-items: center; gap: .5rem; }
+    </style>
+</body>
+</html>
+

@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Satta Matka Recent Results - Complete history of all markets with advanced filtering">
+    <title>📊 Recent Satta Matka Results | Complete History | All Markets</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
+    
+    <!-- CSS Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader-container">
+            <div class="dice-loader">
+                <div class="dice">
+                    <div class="face front">🎲</div>
+                    <div class="face back">🎲</div>
+                    <div class="face right">🎲</div>
+                    <div class="face left">🎲</div>
+                    <div class="face top">🎲</div>
+                    <div class="face bottom">🎲</div>
+                </div>
+            </div>
+            <h3 class="loading-text">Loading<span class="dots"></span></h3>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div class="floating-actions">
+        <button class="fab-main" id="fabMain">
+            <i class="fas fa-plus"></i>
+        </button>
+        <div class="fab-options" id="fabOptions">
+            <button class="fab-option" data-tooltip="Export Results">
+                <i class="fas fa-download"></i>
+            </button>
+            <button class="fab-option" data-tooltip="Print">
+                <i class="fas fa-print"></i>
+            </button>
+            <button class="fab-option" data-tooltip="Share">
+                <i class="fas fa-share-alt"></i>
+            </button>
+            <button class="fab-option" data-tooltip="Filter">
+                <i class="fas fa-filter"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollTopBtn" class="scroll-top-btn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Modern Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-glass sticky-top">
+        <div class="container">
+            <a class="navbar-brand logo-animated" href="index.html">
+                <span class="logo-icon">🎲</span>
+                <span class="logo-text">
+                    <span class="logo-main">SATTA MATKA</span>
+                    <span class="logo-sub">LIVE RESULTS</span>
+                </span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon">
+                    <i class="fas fa-bars"></i>
+                </span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="live-results.html">
+                            <i class="fas fa-broadcast-tower"></i> Live Results
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="recent-results.html">
+                            <i class="fas fa-history"></i> Recent Results
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="kalyan-matka.html">
+                            <i class="fas fa-crown"></i> Kalyan Matka
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="information.html">
+                            <i class="fas fa-info-circle"></i> Information
+                        </a>
+                    </li>
+                </ul>
+                <div class="ms-3 d-flex align-items-center gap-2">
+                    <button class="btn btn-glow btn-sm">
+                        <i class="fas fa-bell"></i> Subscribe
+                    </button>
+                    <button class="btn btn-glass btn-sm theme-toggle" id="themeToggle" title="Switch theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Live Ticker -->
+    <div class="live-ticker">
+        <div class="ticker-label">
+            <i class="fas fa-database"></i> RESULTS DATABASE
+        </div>
+        <div class="ticker-content">
+            <div class="ticker-wrapper">
+                <span>📊 10,000+ Results Archived</span>
+                <span>🔍 Advanced Search Available</span>
+                <span>📅 Historical Data from 2020</span>
+                <span>💾 Download & Export Options</span>
+                <span>📊 10,000+ Results Archived</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="page-hero-section bg-dark-gradient">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-8" data-aos="fade-up">
+                    <div class="badge-container mb-4">
+                        <span class="hero-badge">
+                            <i class="fas fa-history"></i> COMPLETE ARCHIVE
+                        </span>
+                    </div>
+                    <h1 class="hero-title text-white">
+                        <span class="gradient-text">Recent Results</span>
+                        <span class="d-block">History</span>
+                    </h1>
+                    <p class="hero-subtitle text-white-50">Access complete historical data with advanced search and filtering options</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Search & Filters -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row" data-aos="fade-up">
+                <div class="col-12">
+                    <div class="search-filter-card">
+                        <h4 class="mb-4"><i class="fas fa-search"></i> Advanced Search & Filters</h4>
+                        <div class="row g-3">
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label text-white">Market</label>
+                                <select class="form-select custom-select">
+                                    <option selected>All Markets</option>
+                                    <option>Kalyan Matka</option>
+                                    <option>Milan Day</option>
+                                    <option>Milan Night</option>
+                                    <option>Rajdhani Day</option>
+                                    <option>Time Bazar</option>
+                                    <option>Main Bazar</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label text-white">Date Range</label>
+                                <select class="form-select custom-select">
+                                    <option selected>Today</option>
+                                    <option>Yesterday</option>
+                                    <option>Last 7 Days</option>
+                                    <option>Last 30 Days</option>
+                                    <option>This Month</option>
+                                    <option>Custom Range</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label text-white">Status</label>
+                                <select class="form-select custom-select">
+                                    <option selected>All Status</option>
+                                    <option>Live</option>
+                                    <option>Closed</option>
+                                    <option>Waiting</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label text-white">Sort By</label>
+                                <select class="form-select custom-select">
+                                    <option selected>Latest First</option>
+                                    <option>Oldest First</option>
+                                    <option>Market Name</option>
+                                    <option>Most Viewed</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-lg-9 col-md-8">
+                                <input type="text" class="form-control custom-input" placeholder="Search by date, market name, or result number...">
+                            </div>
+                            <div class="col-lg-3 col-md-4">
+                                <button class="btn btn-glow-primary w-100">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Table -->
+    <section class="py-5 bg-dark-gradient">
+        <div class="container">
+            <div class="row" data-aos="fade-up" data-aos-delay="100">
+                <div class="col-12">
+                    <div class="table-card-modern">
+                        <div class="table-card-header">
+                            <div>
+                                <h4><i class="fas fa-table"></i> Results History</h4>
+                                <p class="mb-0 text-muted small">Showing latest results from all markets</p>
+                            </div>
+                            <div class="table-actions">
+                                <button class="btn btn-sm btn-outline-light me-2">
+                                    <i class="fas fa-download"></i> Export
+                                </button>
+                                <button class="btn btn-sm btn-outline-light">
+                                    <i class="fas fa-print"></i> Print
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="modern-table">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fas fa-hashtag"></i> Sr.</th>
+                                        <th><i class="fas fa-calendar-alt"></i> Date</th>
+                                        <th><i class="fas fa-clock"></i> Time</th>
+                                        <th><i class="fas fa-store"></i> Market</th>
+                                        <th><i class="fas fa-arrow-up"></i> Open</th>
+                                        <th><i class="fas fa-star"></i> Jodi</th>
+                                        <th><i class="fas fa-arrow-down"></i> Close</th>
+                                        <th><i class="fas fa-info-circle"></i> Status</th>
+                                        <th><i class="fas fa-cog"></i> Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="table-row-animated">
+                                        <td><strong>1</strong></td>
+                                        <td><span class="date-badge">Today</span></td>
+                                        <td><small class="text-muted">09:30 PM</small></td>
+                                        <td>
+                                            <span class="market-badge kalyan">
+                                                <i class="fas fa-crown"></i> Kalyan
+                                            </span>
+                                        </td>
+                                        <td><span class="number-badge open">239</span></td>
+                                        <td><span class="number-badge jodi">45</span></td>
+                                        <td><span class="number-badge close">***</span></td>
+                                        <td><span class="status-pill live">● LIVE</span></td>
+                                        <td>
+                                            <button class="table-action-btn" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row-animated">
+                                        <td><strong>2</strong></td>
+                                        <td><span class="date-badge">Today</span></td>
+                                        <td><small class="text-muted">03:30 PM</small></td>
+                                        <td>
+                                            <span class="market-badge milan-day">
+                                                <i class="fas fa-sun"></i> Milan Day
+                                            </span>
+                                        </td>
+                                        <td><span class="number-badge open">127</span></td>
+                                        <td><span class="number-badge jodi">69</span></td>
+                                        <td><span class="number-badge close">***</span></td>
+                                        <td><span class="status-pill waiting">⏳ Waiting</span></td>
+                                        <td>
+                                            <button class="table-action-btn" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row-animated">
+                                        <td><strong>3</strong></td>
+                                        <td><span class="date-badge">Yesterday</span></td>
+                                        <td><small class="text-muted">09:30 PM</small></td>
+                                        <td>
+                                            <span class="market-badge kalyan">
+                                                <i class="fas fa-crown"></i> Kalyan
+                                            </span>
+                                        </td>
+                                        <td><span class="number-badge open">345</span></td>
+                                        <td><span class="number-badge jodi">28</span></td>
+                                        <td><span class="number-badge close">167</span></td>
+                                        <td><span class="status-pill closed">✓ Closed</span></td>
+                                        <td>
+                                            <button class="table-action-btn" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row-animated">
+                                        <td><strong>4</strong></td>
+                                        <td><span class="date-badge">Yesterday</span></td>
+                                        <td><small class="text-muted">12:30 AM</small></td>
+                                        <td>
+                                            <span class="market-badge milan-night">
+                                                <i class="fas fa-moon"></i> Milan Night
+                                            </span>
+                                        </td>
+                                        <td><span class="number-badge open">158</span></td>
+                                        <td><span class="number-badge jodi">47</span></td>
+                                        <td><span class="number-badge close">290</span></td>
+                                        <td><span class="status-pill closed">✓ Closed</span></td>
+                                        <td>
+                                            <button class="table-action-btn" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row-animated">
+                                        <td><strong>5</strong></td>
+                                        <td><span class="date-badge">Yesterday</span></td>
+                                        <td><small class="text-muted">04:30 PM</small></td>
+                                        <td>
+                                            <span class="market-badge rajdhani">
+                                                <i class="fas fa-building"></i> Rajdhani Day
+                                            </span>
+                                        </td>
+                                        <td><span class="number-badge open">234</span></td>
+                                        <td><span class="number-badge jodi">90</span></td>
+                                        <td><span class="number-badge close">456</span></td>
+                                        <td><span class="status-pill closed">✓ Closed</span></td>
+                                        <td>
+                                            <button class="table-action-btn" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <!-- Add more rows as needed -->
+                                    <tr class="table-row-animated">
+                                        <td><strong>6</strong></td>
+                                        <td>15 Dec 2024</td>
+                                        <td><small class="text-muted">02:00 PM</small></td>
+                                        <td>
+                                            <span class="market-badge" style="background: rgba(168, 85, 247, 0.2); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.3);">
+                                                <i class="fas fa-clock"></i> Time Bazar
+                                            </span>
+                                        </td>
+                                        <td><span class="number-badge open">678</span></td>
+                                        <td><span class="number-badge jodi">12</span></td>
+                                        <td><span class="number-badge close">349</span></td>
+                                        <td><span class="status-pill closed">✓ Closed</span></td>
+                                        <td>
+                                            <button class="table-action-btn" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row-animated">
+                                        <td><strong>7</strong></td>
+                                        <td>15 Dec 2024</td>
+                                        <td><small class="text-muted">07:00 PM</small></td>
+                                        <td>
+                                            <span class="market-badge" style="background: rgba(31, 41, 55, 0.5); color: #9ca3af; border: 1px solid rgba(156, 163, 175, 0.3);">
+                                                <i class="fas fa-store"></i> Main Bazar
+                                            </span>
+                                        </td>
+                                        <td><span class="number-badge open">123</span></td>
+                                        <td><span class="number-badge jodi">67</span></td>
+                                        <td><span class="number-badge close">890</span></td>
+                                        <td><span class="status-pill closed">✓ Closed</span></td>
+                                        <td>
+                                            <button class="table-action-btn" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-card-footer">
+                            <div class="pagination-info">
+                                Showing 1-7 of 500 results
+                            </div>
+                            <div class="pagination-modern">
+                                <button class="pagination-btn" disabled>
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button class="pagination-btn active">1</button>
+                                <button class="pagination-btn">2</button>
+                                <button class="pagination-btn">3</button>
+                                <button class="pagination-btn">4</button>
+                                <button class="pagination-btn">5</button>
+                                <span class="pagination-dots">...</span>
+                                <button class="pagination-btn">50</button>
+                                <button class="pagination-btn">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="section-header text-center mb-5" data-aos="fade-up">
+                <div class="section-badge">
+                    <i class="fas fa-chart-bar"></i> STATISTICS
+                </div>
+                <h2 class="section-title">
+                    Results <span class="gradient-text">Analytics</span>
+                </h2>
+                <p class="section-subtitle">Data insights from recent results</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stats-card-modern text-center">
+                        <div class="stats-icon mx-auto bg-primary">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h3 class="stats-number">10,523</h3>
+                        <p class="stats-label">Total Results</p>
+                        <div class="stats-trend up">
+                            <i class="fas fa-arrow-up"></i> +245 today
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stats-card-modern text-center">
+                        <div class="stats-icon mx-auto bg-success">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <h3 class="stats-number">24</h3>
+                        <p class="stats-label">Active Markets</p>
+                        <div class="stats-trend up">
+                            <i class="fas fa-check-circle"></i> All Live
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stats-card-modern text-center">
+                        <div class="stats-icon mx-auto bg-warning">
+                            <i class="fas fa-calendar-week"></i>
+                        </div>
+                        <h3 class="stats-number">1,680</h3>
+                        <p class="stats-label">This Week</p>
+                        <div class="stats-trend up">
+                            <i class="fas fa-arrow-up"></i> +12%
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="stats-card-modern text-center">
+                        <div class="stats-icon mx-auto bg-info">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <h3 class="stats-number">5.2K</h3>
+                        <p class="stats-label">Downloads</p>
+                        <div class="stats-trend up">
+                            <i class="fas fa-arrow-up"></i> +8% today
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter-section py-5 bg-dark-gradient">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8" data-aos="zoom-in">
+                    <div class="newsletter-card">
+                        <div class="newsletter-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <h3>Subscribe for Daily Updates</h3>
+                        <p>Get complete results history delivered to your inbox</p>
+                        <form class="newsletter-form">
+                            <div class="input-group-modern">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" placeholder="Enter your email address" required>
+                                <button type="submit" class="btn btn-glow-primary">
+                                    Subscribe <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </form>
+                        <p class="newsletter-note">
+                            <i class="fas fa-lock"></i> We respect your privacy. Unsubscribe anytime.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-modern">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="footer-widget">
+                            <div class="footer-logo">
+                                <span class="logo-icon">🎲</span>
+                                <span class="logo-text">SATTA MATKA LIVE</span>
+                            </div>
+                            <p class="footer-description">Your most trusted source for real-time satta matka results. We provide accurate and instant updates from all major markets 24/7.</p>
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="footer-widget">
+                            <h5 class="footer-title">Quick Links</h5>
+                            <ul class="footer-links">
+                                <li><a href="index.html">Home</a></li>
+                                <li><a href="live-results.html">Live Results</a></li>
+                                <li><a href="recent-results.html">Recent Results</a></li>
+                                <li><a href="kalyan-matka.html">Kalyan Matka</a></li>
+                                <li><a href="information.html">Information</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-widget">
+                            <h5 class="footer-title">Popular Markets</h5>
+                            <ul class="footer-links">
+                                <li><a href="kalyan-matka.html">Kalyan Matka</a></li>
+                                <li><a href="#">Milan Day</a></li>
+                                <li><a href="#">Milan Night</a></li>
+                                <li><a href="#">Rajdhani Day</a></li>
+                                <li><a href="#">Time Bazar</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-widget">
+                            <h5 class="footer-title">Contact Info</h5>
+                            <ul class="footer-contact">
+                                <li>
+                                    <i class="fas fa-envelope"></i>
+                                    <span>info@sattamatkalive.com</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-phone"></i>
+                                    <span>+91 98765 43210</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-clock"></i>
+                                    <span>24/7 Support</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="copyright">© 2024 Satta Matka Live. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <div class="footer-bottom-links">
+                            <a href="#">Privacy Policy</a>
+                            <a href="#">Terms of Service</a>
+                            <a href="#">Disclaimer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-wave">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#0a0e27" fill-opacity="0.3" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,101.3C1248,85,1344,75,1392,69.3L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+            </svg>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+    
+    <style>
+        /* Page-specific styles */
+        .search-filter-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            color: white;
+        }
+        
+        .custom-select, .custom-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+        }
+        
+        .custom-select:focus, .custom-input:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #6366f1;
+            color: white;
+            box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+        }
+        
+        .custom-select option {
+            background: #1a1f3a;
+            color: white;
+        }
+        
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .table-card-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .table-actions {
+                width: 100%;
+            }
+            
+            .table-actions button {
+                flex: 1;
+            }
+        }
+    </style>
+</body>
+</html>

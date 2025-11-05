@@ -1,0 +1,3331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker for Windows - Complete A-Z Tutorial & Commands Guide</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6; color: #333;
+            background: linear-gradient(135deg, #0078d4 0%, #106ebe 100%);
+            min-height: 100vh; overflow-x: hidden;
+        }
+        .container { max-width: 1200px; }
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #0078d4, #106ebe);
+            color: white; padding: 3rem 2rem; text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .header::before {
+            content: ''; position: absolute; top: -50%;
+            left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .header h1 {
+            font-size: 3rem; margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative; z-index: 1;
+        }
+        .header p {
+            font-size: 1.2rem; opacity: 0.9;
+            position: relative; z-index: 1;
+        }
+        .sidebar {
+            background: #f8f9fa; border-right: 1px solid #e9ecef;
+            height: 100vh; overflow-y: auto; position: sticky; top: 0;
+            scrollbar-width: thin; scrollbar-color: #0078d4 #f8f9fa;
+        }
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-track { background: #f8f9fa; }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #0078d4; border-radius: 3px;
+        }
+        .nav-link {
+            color: #495057; padding: 0.75rem 1.5rem;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #0078d4; background-color: rgba(0, 120, 212, 0.1);
+            border-left-color: #0078d4;
+        }
+        .content { padding: 2rem; }
+        .section {
+            margin-bottom: 3rem; opacity: 0;
+            transform: translateY(30px);
+            animation: slideUp 0.6s ease forwards;
+        }
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .section h2 {
+            color: #0078d4; margin-bottom: 1.5rem;
+            border-bottom: 2px solid #0078d4;
+            padding-bottom: 0.5rem; font-size: 2rem;
+        }
+        .command-card {
+            background: white; border: 1px solid #e9ecef;
+            border-radius: 10px; margin-bottom: 1.5rem;
+            transition: all 0.3s ease; position: relative;
+            overflow: hidden;
+        }
+        .command-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 120, 212, 0.15);
+            border-color: #0078d4;
+        }
+        .command-header {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 1rem 1.5rem; border-bottom: 1px solid #e9ecef;
+            position: relative;
+        }
+        .command-title {
+            font-weight: 600; color: #0078d4;
+            margin-bottom: 0.5rem; font-size: 1.1rem;
+        }
+        .command-code {
+            background: #1e1e1e; color: #d4d4d4;
+            padding: 1rem; border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            position: relative; margin: 1rem 0;
+        }
+        .copy-btn {
+            position: absolute; top: 0.5rem; right: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none; color: white; padding: 0.25rem 0.5rem;
+            border-radius: 4px; cursor: pointer;
+            transition: all 0.3s ease; font-size: 0.8rem;
+        }
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+        .command-description {
+            padding: 1rem 1.5rem; color: #6c757d;
+            line-height: 1.6;
+        }
+        .search-container {
+            padding: 1.5rem; background: white;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .search-box {
+            border: 2px solid #e9ecef; border-radius: 50px;
+            padding: 0.75rem 1.5rem; font-size: 1rem;
+            transition: all 0.3s ease; width: 100%;
+        }
+        .search-box:focus {
+            outline: none; border-color: #0078d4;
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.1);
+        }
+        .badge {
+            background: linear-gradient(135deg, #0078d4, #106ebe);
+            color: white; font-size: 0.8rem;
+        }
+        .toggle-sidebar {
+            display: none; position: fixed; top: 20px; left: 20px;
+            z-index: 1000; background: #0078d4; color: white;
+            border: none; padding: 0.5rem; border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 120, 212, 0.3);
+        }
+        .windows-badge {
+            background: #0078d4; color: white; 
+            padding: 0.2rem 0.5rem; border-radius: 4px;
+            font-size: 0.75rem; margin-left: 0.5rem;
+        }
+        @media (max-width: 768px) {
+            .toggle-sidebar { display: block; }
+            .sidebar {
+                position: fixed; left: -100%; transition: left 0.3s ease;
+                width: 280px; z-index: 999;
+            }
+            .sidebar.show { left: 0; }
+            .overlay {
+                position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(0, 0, 0, 0.5); z-index: 998;
+                display: none;
+            }
+            .overlay.show { display: block; }
+            .header h1 { font-size: 2rem; }
+            .content { padding: 1rem; }
+        }
+        .highlight { background: linear-gradient(135deg, #fff3cd, #ffeaa7); }
+        .table-responsive { border-radius: 10px; overflow: hidden; }
+        .table { margin: 0; }
+        .table th {
+            background: linear-gradient(135deg, #0078d4, #106ebe);
+            color: white; border: none;
+        }
+        .powershell { background: #012456; }
+        .cmd { background: #333; }
+    </style>
+</head>
+<body>
+    <button class="toggle-sidebar" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="overlay" onclick="toggleSidebar()"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 col-lg-2 px-0">
+                <div class="sidebar" id="sidebar">
+                    <div class="search-container">
+                        <input type="text" class="search-box" id="searchBox" 
+                               placeholder="Search commands..." onkeyup="searchCommands()">
+                    </div>
+                    <nav class="nav flex-column">
+                        <a class="nav-link active" href="#installation"><i class="fab fa-windows me-2"></i>Installation & Setup</a>
+                        <a class="nav-link" href="#desktop"><i class="fas fa-desktop me-2"></i>Docker Desktop</a>
+                        <a class="nav-link" href="#wsl2"><i class="fab fa-linux me-2"></i>WSL2 Integration</a>
+                        <a class="nav-link" href="#basics"><i class="fas fa-play me-2"></i>Windows Commands</a>
+                        <a class="nav-link" href="#images"><i class="fas fa-layer-group me-2"></i>Image Management</a>
+                        <a class="nav-link" href="#containers"><i class="fas fa-cube me-2"></i>Container Management</a>
+                        <a class="nav-link" href="#windows-containers"><i class="fab fa-microsoft me-2"></i>Windows Containers</a>
+                        <a class="nav-link" href="#volumes"><i class="fas fa-hdd me-2"></i>Windows Storage</a>
+                        <a class="nav-link" href="#networks"><i class="fas fa-network-wired me-2"></i>Windows Networking</a>
+                        <a class="nav-link" href="#compose"><i class="fas fa-layer-group me-2"></i>Docker Compose</a>
+                        <a class="nav-link" href="#powershell"><i class="fas fa-terminal me-2"></i>PowerShell Scripts</a>
+                        <a class="nav-link" href="#development"><i class="fas fa-code me-2"></i>Development Setup</a>
+                        <a class="nav-link" href="#troubleshooting"><i class="fas fa-tools me-2"></i>Windows Troubleshooting</a>
+                        <a class="nav-link" href="#performance"><i class="fas fa-tachometer-alt me-2"></i>Performance Tuning</a>
+                        <a class="nav-link" href="#best-practices"><i class="fas fa-star me-2"></i>Windows Best Practices</a>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-md-9 col-lg-10">
+                <div class="main-content">
+                    <div class="header">
+                        <h1><i class="fab fa-docker me-3"></i><i class="fab fa-windows me-2"></i>Docker for Windows</h1>
+                        <p>Complete A-Z Tutorial: Basic to Advanced Docker Commands for Windows Platform</p>
+                    </div>
+                    <div class="content" id="content">
+                        
+                        <!-- Installation Section -->
+                        <section class="section" id="installation">
+                            <h2><i class="fab fa-windows me-2"></i>Installation & Setup</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">System Requirements <span class="windows-badge">Windows</span></div>
+                                </div>
+                                <div class="command-description">
+                                    <strong>Minimum Requirements:</strong><br>
+                                    • <strong>Windows 10 64-bit:</strong> Home or Pro 21H1 (build 19043) or higher, or Enterprise or Education 20H2 (build 19042) or higher<br>
+                                    • <strong>Windows 11 64-bit:</strong> Home or Pro version 21H2 or higher, or Enterprise or Education version 21H2 or higher<br>
+                                    • <strong>Hardware:</strong> SLAT-capable 64-bit processor, 4GB RAM, UEFI firmware with Secure Boot capability<br>
+                                    • <strong>Hyper-V and Containers:</strong> Windows features must be enabled<br>
+                                    • <strong>WSL 2 backend:</strong> Windows Subsystem for Linux version 2 (recommended)<br><br>
+
+                                    <strong>Hardware Virtualization:</strong><br>
+                                    • Virtualization must be enabled in BIOS/UEFI<br>
+                                    • Hyper-V compatible processor required
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Download and Install Docker Desktop</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell - Check Windows version and build
+Get-ComputerInfo | Select WindowsProductName, WindowsVersion, WindowsBuildLabEx
+
+# Check if Hyper-V is enabled
+Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All
+
+# Enable Hyper-V (requires restart)
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+
+# Enable Containers feature
+Enable-WindowsOptionalFeature -Online -FeatureName Containers -All
+
+# Download Docker Desktop using PowerShell
+Invoke-WebRequest -Uri "https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe" -OutFile "DockerDesktopInstaller.exe"
+
+# Install silently (optional)
+.\DockerDesktopInstaller.exe install --quiet</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Download and install Docker Desktop for Windows with system prerequisite checks. Visit <strong>https://docs.docker.com/desktop/install/windows/</strong> for the latest installer.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Manual Installation Steps</div>
+                                </div>
+                                <div class="command-description">
+                                    <strong>Step 1: Enable Required Windows Features</strong><br>
+                                    1. Open "Turn Windows features on or off"<br>
+                                    2. Check "Hyper-V" (all sub-features)<br>
+                                    3. Check "Containers"<br>
+                                    4. Check "Windows Subsystem for Linux" (for WSL 2)<br>
+                                    5. Check "Virtual Machine Platform"<br>
+                                    6. Restart your computer<br><br>
+
+                                    <strong>Step 2: Install WSL 2 (Recommended Backend)</strong><br>
+                                    1. Download WSL 2 Linux kernel update<br>
+                                    2. Run the installer<br>
+                                    3. Set WSL 2 as default: <code>wsl --set-default-version 2</code><br><br>
+
+                                    <strong>Step 3: Download and Install Docker Desktop</strong><br>
+                                    1. Download Docker Desktop from official website<br>
+                                    2. Run installer as Administrator<br>
+                                    3. Choose "Use WSL 2 instead of Hyper-V" during installation<br>
+                                    4. Complete installation and restart
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Post-Installation Verification</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Command Prompt / PowerShell - Verify Docker installation
+docker --version
+docker version
+docker info
+
+# Test Docker installation
+docker run hello-world
+
+# Check Docker Desktop status
+docker system info
+
+# View Docker Desktop settings
+# GUI: Docker Desktop → Settings → General
+
+# Check available Docker contexts
+docker context list
+
+# Switch to different context (if multiple available)
+docker context use default</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Verify that Docker is properly installed and running on your Windows system.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Alternative Installation Methods</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Install via Chocolatey
+choco install docker-desktop
+
+# Install via Winget (Windows Package Manager)
+winget install Docker.DockerDesktop
+
+# Install via Scoop
+scoop bucket add extras
+scoop install docker
+
+# Verify installation path
+where docker
+
+# Check Docker service status (Windows Services)
+Get-Service | Where-Object {$_.Name -like "*docker*"}</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Alternative installation methods using popular Windows package managers.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Docker Desktop Section -->
+                        <section class="section" id="desktop">
+                            <h2><i class="fas fa-desktop me-2"></i>Docker Desktop for Windows</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Docker Desktop Management</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Start Docker Desktop (GUI method)
+# Click Docker Desktop icon in system tray or Start Menu
+
+# PowerShell - Start Docker Desktop programmatically
+Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe"
+
+# Check if Docker Desktop is running
+Get-Process -Name "Docker Desktop" -ErrorAction SilentlyContinue
+
+# Stop Docker Desktop
+Stop-Process -Name "Docker Desktop" -Force
+
+# Restart Docker Desktop service
+Restart-Service -Name "com.docker.service"
+
+# Docker Desktop from command line
+"C:\Program Files\Docker\Docker\Docker Desktop.exe"</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Manage Docker Desktop application startup, shutdown, and service control.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Docker Desktop Settings Configuration</div>
+                                </div>
+                                <div class="command-description">
+                                    <strong>Key Settings to Configure:</strong><br><br>
+                                    
+                                    <strong>General Settings:</strong><br>
+                                    • Start Docker Desktop when you log in<br>
+                                    • Use WSL 2 based engine (recommended)<br>
+                                    • Send usage statistics<br><br>
+                                    
+                                    <strong>Resources Settings:</strong><br>
+                                    • <strong>Memory:</strong> Allocate RAM for Docker (default: 2GB, recommended: 4-8GB)<br>
+                                    • <strong>CPUs:</strong> Number of CPU cores to use<br>
+                                    • <strong>Disk image size:</strong> Maximum size for Docker images/containers<br>
+                                    • <strong>Swap:</strong> Virtual memory allocation<br><br>
+                                    
+                                    <strong>File Sharing:</strong><br>
+                                    • Configure which drives Docker can access<br>
+                                    • Add paths that containers can mount<br><br>
+                                    
+                                    <strong>Docker Engine:</strong><br>
+                                    • Configure daemon.json settings<br>
+                                    • Registry mirrors and insecure registries
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Docker Desktop CLI Commands</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Open Docker Desktop dashboard
+docker desktop
+
+# Reset Docker Desktop to factory defaults (PowerShell)
+& "C:\Program Files\Docker\Docker\Docker Desktop.exe" --factory-reset
+
+# Check Docker Desktop version
+docker desktop version
+
+# Export Docker Desktop logs
+docker desktop logs > docker-logs.txt
+
+# Import/Export Docker Desktop settings
+# Settings are stored in: %APPDATA%\Docker\settings.json
+
+# View Docker Desktop system tray menu options
+# Right-click Docker whale icon in system tray</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Command-line operations for Docker Desktop management and configuration.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- WSL2 Integration Section -->
+                        <section class="section" id="wsl2">
+                            <h2><i class="fab fa-linux me-2"></i>WSL2 Integration</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">WSL2 Setup for Docker</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell (Run as Administrator) - Install WSL2
+# Enable WSL feature
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+
+# Enable Virtual Machine Platform
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+
+# Download and install WSL2 Linux kernel update
+# https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
+
+# Set WSL2 as default version
+wsl --set-default-version 2
+
+# Install Ubuntu from Microsoft Store or command line
+wsl --install -d Ubuntu
+
+# List installed WSL distributions
+wsl --list --verbose
+
+# Set specific distro as default
+wsl --set-default Ubuntu</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Set up Windows Subsystem for Linux 2 as the Docker backend for better performance.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Docker in WSL2 Linux Distributions</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Access Ubuntu WSL2 from Windows
+wsl -d Ubuntu
+
+# Inside WSL2 Ubuntu - Verify Docker access
+docker --version
+docker ps
+
+# Mount Windows drives in WSL2
+# Windows drives are automatically mounted at /mnt/c, /mnt/d, etc.
+ls /mnt/c/
+
+# Access WSL2 files from Windows
+# File path: \\wsl$\Ubuntu\home\username\
+
+# Run Docker commands from Windows PowerShell/CMD that execute in WSL2
+docker run -it ubuntu bash
+
+# Manage WSL2 memory usage
+# Create .wslconfig file in %UserProfile%
+# [wsl2]
+# memory=4GB
+# processors=2</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Use Docker within WSL2 Linux distributions with seamless Windows integration.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">WSL2 Performance Optimization</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Create .wslconfig file in user profile directory
+# %UserProfile%\.wslconfig
+
+[wsl2]
+memory=8GB
+processors=4
+swap=2GB
+swapFile=C:\\temp\\wsl-swap.vhdx
+localhostForwarding=true
+
+# WSL2 commands for management
+wsl --shutdown  # Shutdown all WSL2 instances
+wsl --restart   # Restart WSL2
+
+# Check WSL2 resource usage
+wsl --status
+wsl --list --running
+
+# Export and Import WSL2 distributions
+wsl --export Ubuntu C:\Ubuntu-backup.tar
+wsl --import Ubuntu-restored C:\Ubuntu-restored\ C:\Ubuntu-backup.tar
+
+# Unregister WSL2 distribution
+wsl --unregister Ubuntu</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Optimize WSL2 performance for Docker workloads with proper resource allocation.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Windows Commands Section -->
+                        <section class="section" id="basics">
+                            <h2><i class="fas fa-play me-2"></i>Docker Commands for Windows</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Windows PowerShell & Command Prompt Setup</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell - Check Docker installation
+docker --version
+docker version --format json | ConvertFrom-Json
+
+# Command Prompt - Check Docker installation  
+docker --version
+docker version
+
+# PowerShell - Get detailed system information
+docker info | ConvertFrom-Json
+Get-ComputerInfo | Select-Object WindowsProductName, TotalPhysicalMemory
+
+# Check Docker context and daemon status
+docker context list
+docker system info</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Basic Docker commands specifically formatted for Windows PowerShell and Command Prompt environments.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Your First Windows Container</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Run hello-world container
+docker run hello-world
+
+# Run Windows Server Core container interactively
+docker run -it mcr.microsoft.com/windows/servercore:ltsc2019 cmd
+
+# Run PowerShell in Windows container
+docker run -it mcr.microsoft.com/windows/servercore:ltsc2019 powershell
+
+# Run Linux container (via WSL2)
+docker run -it ubuntu bash
+
+# Run IIS web server on Windows
+docker run -d -p 8080:80 mcr.microsoft.com/windows/servercore/iis:windowsservercore
+
+# Run nginx on Linux (through WSL2 backend)
+docker run -d -p 8081:80 nginx</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Run your first containers on Windows, including both Windows and Linux containers.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Windows-Specific Docker Commands</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell - Docker commands with Windows paths
+docker run -v C:\HostData:C:\ContainerData mcr.microsoft.com/windows/nanoserver
+
+# Mount current directory in PowerShell
+docker run -v ${PWD}:C:\app mcr.microsoft.com/windows/nanoserver
+
+# Mount current directory in Command Prompt  
+docker run -v %cd%:C:\app mcr.microsoft.com/windows/nanoserver
+
+# Environment variables in PowerShell
+docker run -e "MY_VAR=HelloWindows" mcr.microsoft.com/windows/nanoserver
+
+# Windows-style port mapping
+docker run -p 127.0.0.1:8080:80 -d nginx
+
+# Check running containers with PowerShell formatting
+docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}" | Format-Table</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Windows-specific Docker command syntax and path handling for both PowerShell and Command Prompt.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Docker Architecture on Windows</div>
+                                </div>
+                                <div class="command-description">
+                                    <strong>Windows Docker Architecture:</strong><br><br>
+                                    
+                                    <strong>Docker Desktop Components:</strong><br>
+                                    • <strong>Docker Engine:</strong> Runs in a Linux VM (via WSL2) or Hyper-V<br>
+                                    • <strong>Docker Desktop:</strong> GUI application for managing Docker<br>
+                                    • <strong>Docker CLI:</strong> Command-line interface accessible from Windows<br>
+                                    • <strong>Container Runtime:</strong> containerd for Linux containers, Windows containers for Windows<br><br>
+                                    
+                                    <strong>Two Container Types on Windows:</strong><br>
+                                    • <strong>Linux Containers:</strong> Run via WSL2 or Hyper-V (default)<br>
+                                    • <strong>Windows Containers:</strong> Native Windows containers using Windows kernel<br><br>
+                                    
+                                    <strong>Backend Options:</strong><br>
+                                    • <strong>WSL2 Backend:</strong> Recommended, better performance, file sharing<br>
+                                    • <strong>Hyper-V Backend:</strong> Traditional virtualization, more isolated<br><br>
+                                    
+                                    <strong>File System Integration:</strong><br>
+                                    • Windows drives mounted in WSL2 at /mnt/c, /mnt/d, etc.<br>
+                                    • Linux filesystem accessible from Windows at \\wsl$\
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Switching Between Linux and Windows Containers</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Check current container mode
+docker version
+
+# PowerShell - Switch to Windows containers (requires Windows containers feature)
+& "C:\Program Files\Docker\Docker\DockerCli.exe" -SwitchDaemon
+
+# Switch back to Linux containers  
+& "C:\Program Files\Docker\Docker\DockerCli.exe" -SwitchDaemon
+
+# Alternative method via Docker Desktop system tray
+# Right-click Docker icon → "Switch to Windows containers..."
+# Right-click Docker icon → "Switch to Linux containers..."
+
+# Verify current mode
+docker system info | findstr "OSType"
+
+# PowerShell method to check
+(docker system info | ConvertFrom-Json).OSType</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Switch between Linux and Windows container modes in Docker Desktop for Windows.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Image Management Section -->
+                        <section class="section" id="images">
+                            <h2><i class="fas fa-layer-group me-2"></i>Image Management</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">List and Search Images</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># List all local images
+docker images
+docker image ls
+
+# List images with specific format
+docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"
+
+# Search for images on Docker Hub
+docker search nginx
+docker search --limit 10 python</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Commands to list local images and search for images on Docker Hub.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Pull and Push Images</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Pull an image from registry
+docker pull nginx
+docker pull nginx:latest
+docker pull nginx:1.21
+
+# Pull specific architecture
+docker pull --platform linux/amd64 nginx
+
+# Push image to registry
+docker push myuser/myapp:latest
+
+# Pull all tags of an image
+docker pull -a nginx</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Download images from registries and upload your own images.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Build Images</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Build image from Dockerfile
+docker build -t myapp:latest .
+
+# Build with specific Dockerfile
+docker build -f Dockerfile.prod -t myapp:prod .
+
+# Build with build arguments
+docker build --build-arg VERSION=1.0 -t myapp:1.0 .
+
+# Build without cache
+docker build --no-cache -t myapp:latest .
+
+# Build and tag multiple times
+docker build -t myapp:latest -t myapp:1.0 .</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Build Docker images from Dockerfiles with various options and configurations.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Tag and Remove Images</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Tag an image
+docker tag myapp:latest myuser/myapp:latest
+docker tag myapp:latest myuser/myapp:v1.0
+
+# Remove an image
+docker rmi myapp:latest
+docker image rm myapp:latest
+
+# Remove multiple images
+docker rmi image1 image2 image3
+
+# Remove all unused images
+docker image prune
+docker image prune -a  # Remove all unused images, not just dangling</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Manage image tags and clean up unused images to save disk space.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Inspect and History</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Inspect image details
+docker inspect nginx:latest
+
+# View image layers and history
+docker history nginx:latest
+
+# View image creation history with sizes
+docker history --human nginx:latest
+
+# Export image to tar file
+docker save nginx:latest > nginx.tar
+
+# Import image from tar file
+docker load < nginx.tar</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Examine image details, layer history, and handle image export/import.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Container Management Section -->
+                        <section class="section" id="containers">
+                            <h2><i class="fas fa-cube me-2"></i>Container Management</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">List and Status</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># List running containers
+docker ps
+
+# List all containers (including stopped)
+docker ps -a
+
+# List containers with custom format
+docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}"
+
+# List only container IDs
+docker ps -q
+
+# List last created container
+docker ps -l</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    View running and stopped containers with various formatting options.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Start, Stop, and Restart</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Start a stopped container
+docker start container_name
+docker start container_id
+
+# Stop a running container
+docker stop container_name
+docker stop container_id
+
+# Restart a container
+docker restart container_name
+
+# Force stop (kill) a container
+docker kill container_name
+
+# Pause and unpause container
+docker pause container_name
+docker unpause container_name</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Control container lifecycle with start, stop, restart, and pause operations.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Execute Commands in Containers</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Execute command in running container
+docker exec container_name ls -la
+
+# Execute interactive bash session
+docker exec -it container_name bash
+docker exec -it container_name sh
+
+# Execute command as different user
+docker exec -u root -it container_name bash
+
+# Execute command in background
+docker exec -d container_name touch /tmp/newfile
+
+# Execute command with environment variables
+docker exec -e VAR=value container_name env</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Run commands inside running containers interactively or in background.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Container Creation with Options</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Run with custom name
+docker run --name mycontainer nginx
+
+# Run with port mapping
+docker run -p 8080:80 -d nginx
+
+# Run with volume mount
+docker run -v /host/path:/container/path nginx
+
+# Run with environment variables
+docker run -e ENV_VAR=value -e DB_HOST=localhost nginx
+
+# Run with resource limits
+docker run --memory="256m" --cpus="1.5" nginx
+
+# Run with restart policy
+docker run --restart=always nginx</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Create containers with specific configurations including ports, volumes, and resource limits.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Copy Files and Inspect</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Copy file from host to container
+docker cp /host/file.txt container_name:/path/file.txt
+
+# Copy file from container to host
+docker cp container_name:/path/file.txt /host/file.txt
+
+# Copy entire directory
+docker cp /host/dir container_name:/path/
+
+# Inspect container details
+docker inspect container_name
+
+# View container logs
+docker logs container_name
+docker logs -f container_name  # Follow logs</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Transfer files between host and containers, and inspect container configuration.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Remove Containers</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Remove a stopped container
+docker rm container_name
+
+# Force remove running container
+docker rm -f container_name
+
+# Remove multiple containers
+docker rm container1 container2
+
+# Remove all stopped containers
+docker container prune
+
+# Remove container automatically after exit
+docker run --rm nginx
+
+# Remove all containers (stopped and running)
+docker rm -f $(docker ps -aq)</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Clean up containers and manage container lifecycle with removal options.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Windows Containers Section -->
+                        <section class="section" id="windows-containers">
+                            <h2><i class="fab fa-microsoft me-2"></i>Windows Containers</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Windows Container Images</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Pull Windows base images
+docker pull mcr.microsoft.com/windows/nanoserver:ltsc2022
+docker pull mcr.microsoft.com/windows/servercore:ltsc2019
+docker pull mcr.microsoft.com/windows/server:ltsc2022
+
+# Pull Windows application images
+docker pull mcr.microsoft.com/windows/servercore/iis:windowsservercore
+docker pull mcr.microsoft.com/dotnet/framework/aspnet:4.8-windowsservercore-ltsc2019
+docker pull mcr.microsoft.com/dotnet/aspnet:6.0-nanoserver-ltsc2022
+
+# List Windows images
+docker images mcr.microsoft.com/windows/*
+
+# Search for Windows images on Docker Hub
+docker search microsoft/nanoserver</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Work with official Microsoft Windows container base images and application images.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Running Windows Containers</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Run Windows Server Core container
+docker run -it mcr.microsoft.com/windows/servercore:ltsc2019 cmd
+
+# Run PowerShell in Windows container
+docker run -it mcr.microsoft.com/windows/servercore:ltsc2019 powershell
+
+# Run IIS web server
+docker run -d -p 8080:80 --name iis-server mcr.microsoft.com/windows/servercore/iis
+
+# Run .NET Framework application
+docker run -d -p 8081:80 mcr.microsoft.com/dotnet/framework/aspnet:4.8-windowsservercore-ltsc2019
+
+# Mount Windows directory
+docker run -v C:\HostData:C:\ContainerData mcr.microsoft.com/windows/nanoserver cmd
+
+# Set Windows environment variables
+docker run -e "ASPNETCORE_ENVIRONMENT=Production" mcr.microsoft.com/dotnet/aspnet:6.0-nanoserver</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Execute and manage native Windows containers for Windows-based applications.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Windows Container Networking</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Create Windows container network
+docker network create -d nat mywindowsnet
+
+# Run container on specific network
+docker run -d --network mywindowsnet --name web mcr.microsoft.com/windows/servercore/iis
+
+# Windows container with port publishing
+docker run -d -p 8080:80 --name iis-web mcr.microsoft.com/windows/servercore/iis
+
+# Check Windows container networking
+docker exec web ipconfig
+docker exec web netstat -an
+
+# Connect Windows container to multiple networks
+docker network connect bridge web</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Configure networking for Windows containers using Windows-specific network drivers.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Windows Container Dockerfile</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Sample Windows Dockerfile
+FROM mcr.microsoft.com/windows/servercore:ltsc2019
+
+# Set up IIS
+RUN powershell -Command \
+    Add-WindowsFeature Web-Server; \
+    Add-WindowsFeature Web-Common-Http; \
+    Remove-Item -Recurse C:\inetpub\wwwroot\*
+
+# Copy application files
+COPY . C:\inetpub\wwwroot
+
+# Set working directory
+WORKDIR C:\inetpub\wwwroot
+
+# Expose port
+EXPOSE 80
+
+# Start IIS
+CMD ["powershell", "-Command", "Start-Service W3SVC; while ($true) { Start-Sleep 60 }"]
+
+# Build Windows image
+# docker build -t mywindowsapp:latest .</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Create Dockerfiles specifically for Windows containers with Windows-specific commands.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Windows Container Management</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># List Windows containers
+docker ps --filter "label=com.microsoft.os.type=windows"
+
+# Execute Windows commands in container
+docker exec -it container_name cmd
+docker exec -it container_name powershell
+
+# Check Windows container processes
+docker exec container_name tasklist
+
+# Windows container logs
+docker logs container_name
+
+# Copy files to/from Windows container
+docker cp C:\localfile.txt container_name:C:\containerpath\
+docker cp container_name:C:\containerfile.txt C:\localpath\
+
+# Stop Windows container gracefully
+docker stop container_name</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Manage Windows containers with Windows-specific commands and file operations.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Dockerfile Section -->
+                        <section class="section" id="dockerfile">
+                            <h2><i class="fas fa-file-code me-2"></i>Dockerfile</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Basic Dockerfile Structure</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Basic Dockerfile example
+FROM ubuntu:20.04
+
+# Set maintainer information
+LABEL maintainer="your-email@example.com"
+
+# Set environment variables
+ENV APP_HOME=/app
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Set working directory
+WORKDIR $APP_HOME
+
+# Install packages
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy application files
+COPY . $APP_HOME
+
+# Install Python dependencies
+RUN pip3 install -r requirements.txt
+
+# Expose port
+EXPOSE 8000
+
+# Set default command
+CMD ["python3", "app.py"]</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Basic Dockerfile structure with common instructions for building images.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Dockerfile Instructions</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># FROM - Base image
+FROM node:16-alpine
+
+# LABEL - Metadata
+LABEL version="1.0" description="My Node.js app"
+
+# ENV - Environment variables
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# WORKDIR - Working directory
+WORKDIR /usr/src/app
+
+# COPY vs ADD
+COPY package*.json ./        # Copy specific files
+ADD https://example.com/file.tar.gz /tmp/  # Can download and extract
+
+# RUN - Execute commands during build
+RUN npm install --only=production
+
+# USER - Switch user
+USER node
+
+# VOLUME - Mount points
+VOLUME ["/data"]
+
+# EXPOSE - Document ports
+EXPOSE $PORT
+
+# CMD vs ENTRYPOINT
+CMD ["node", "server.js"]    # Can be overridden
+ENTRYPOINT ["node"]          # Always executed
+CMD ["server.js"]            # Default arguments for ENTRYPOINT</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Comprehensive overview of Dockerfile instructions with usage examples.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Multi-stage Build</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Multi-stage Dockerfile example
+# Build stage
+FROM node:16-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Production stage
+FROM node:16-alpine AS production
+WORKDIR /app
+COPY --from=builder /app/node_modules ./node_modules
+COPY . .
+EXPOSE 3000
+USER node
+CMD ["npm", "start"]
+
+# Build specific stage
+# docker build --target builder -t myapp:build .
+# docker build --target production -t myapp:prod .</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Multi-stage builds for optimizing image size and separating build/runtime environments.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Dockerfile Best Practices</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Optimized Dockerfile with best practices
+FROM python:3.9-slim
+
+# Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies in one layer
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        gcc \
+        && rm -rf /var/lib/apt/lists/* \
+        && apt-get purge -y --auto-remove gcc
+
+# Copy requirements first for better caching
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY --chown=appuser:appuser . .
+
+# Use non-root user
+USER appuser
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+EXPOSE 8000
+CMD ["python", "app.py"]</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Optimized Dockerfile following security and efficiency best practices.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">.dockerignore File</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># .dockerignore example
+# Version control
+.git
+.gitignore
+
+# Dependencies
+node_modules/
+npm-debug.log*
+
+# Testing
+coverage/
+.nyc_output
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# Documentation
+README.md
+docs/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist/
+build/
+*.tar.gz</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Example .dockerignore file to exclude unnecessary files from build context.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Volumes Section -->
+                        <section class="section" id="volumes">
+                            <h2><i class="fas fa-hdd me-2"></i>Windows Storage & Volumes</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Volume Management</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Create a volume
+docker volume create myvolume
+
+# List all volumes
+docker volume ls
+
+# Inspect volume details
+docker volume inspect myvolume
+
+# Remove a volume
+docker volume rm myvolume
+
+# Remove all unused volumes
+docker volume prune
+
+# Remove all volumes
+docker volume rm $(docker volume ls -q)</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Manage Docker volumes for persistent data storage.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Windows Volume Mounting</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell - Mount Windows drive
+docker run -v C:\HostData:C:\ContainerData mcr.microsoft.com/windows/nanoserver
+
+# Mount current directory in PowerShell
+docker run -v ${PWD}:/app nginx
+docker run -v ${PWD}:C:\app mcr.microsoft.com/windows/nanoserver
+
+# Command Prompt - Mount current directory
+docker run -v %cd%:/app nginx
+docker run -v %cd%:C:\app mcr.microsoft.com/windows/nanoserver
+
+# Mount with read-only flag
+docker run -v C:\ReadOnlyData:C:\Data:ro mcr.microsoft.com/windows/nanoserver
+
+# Mount multiple Windows drives
+docker run -v C:\Data1:C:\ContainerData1 -v D:\Data2:C:\ContainerData2 mcr.microsoft.com/windows/nanoserver
+
+# Use --mount syntax (preferred for Windows)
+docker run --mount type=bind,source=C:\HostPath,target=C:\ContainerPath mcr.microsoft.com/windows/nanoserver
+docker run --mount source=myvolume,target=/data nginx</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Mount Windows drives and directories using proper Windows path syntax in both PowerShell and Command Prompt.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Windows File Sharing Configuration</div>
+                                </div>
+                                <div class="command-description">
+                                    <strong>Docker Desktop File Sharing Settings:</strong><br><br>
+                                    
+                                    <strong>Configuring Drive Access:</strong><br>
+                                    1. Open Docker Desktop → Settings → Resources → File Sharing<br>
+                                    2. Add drives/paths you want to share with containers<br>
+                                    3. Common paths: C:\, D:\, C:\Users\, C:\Development\<br>
+                                    4. Apply & Restart Docker Desktop<br><br>
+                                    
+                                    <strong>WSL2 File Sharing:</strong><br>
+                                    • Windows drives automatically mounted at /mnt/c, /mnt/d<br>
+                                    • Better performance for Linux containers<br>
+                                    • Access WSL2 files from Windows: \\wsl$\Ubuntu\home\user\<br><br>
+                                    
+                                    <strong>Performance Considerations:</strong><br>
+                                    • Cross-OS file access (Windows↔Linux) is slower<br>
+                                    • Store files in WSL2 filesystem for Linux containers<br>
+                                    • Use Windows filesystem for Windows containers
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Windows Path Examples</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell - Various Windows path mounting examples
+# Mount C: drive root
+docker run -v C:\:C:\HostDrive nginx
+
+# Mount user profile directory
+docker run -v $env:USERPROFILE:C:\UserProfile mcr.microsoft.com/windows/nanoserver
+
+# Mount Documents folder
+docker run -v "$env:USERPROFILE\Documents:/documents" nginx
+
+# Mount with spaces in path (use quotes)
+docker run -v "C:\Program Files\MyApp:/app" nginx
+
+# Mount Windows temp directory
+docker run -v $env:TEMP:C:\Temp mcr.microsoft.com/windows/nanoserver
+
+# Command Prompt equivalents
+docker run -v %USERPROFILE%:C:\UserProfile mcr.microsoft.com/windows/nanoserver
+docker run -v "%USERPROFILE%\Documents":/documents nginx</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Handle various Windows path scenarios including environment variables and paths with spaces.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Backup and Restore Volumes</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Backup volume to tar file
+docker run --rm -v myvolume:/data -v $(pwd):/backup ubuntu tar czf /backup/backup.tar.gz -C /data .
+
+# Restore volume from tar file
+docker run --rm -v myvolume:/data -v $(pwd):/backup ubuntu tar xzf /backup/backup.tar.gz -C /data
+
+# Copy data between volumes
+docker run --rm -v oldvolume:/from -v newvolume:/to alpine ash -c "cd /from && cp -av . /to"
+
+# Backup database volume
+docker exec database-container mysqldump -u root -p database_name > backup.sql
+docker cp database-container:/backup.sql ./backup.sql</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Backup and restore Docker volumes and transfer data between volumes.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Storage Types Comparison</div>
+                                </div>
+                                <div class="command-description">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Type</th>
+                                                    <th>Use Case</th>
+                                                    <th>Performance</th>
+                                                    <th>Portability</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><strong>Named Volumes</strong></td>
+                                                    <td>Persistent data, databases</td>
+                                                    <td>High</td>
+                                                    <td>High</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Bind Mounts</strong></td>
+                                                    <td>Development, config files</td>
+                                                    <td>High</td>
+                                                    <td>Low</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>tmpfs Mounts</strong></td>
+                                                    <td>Temporary data, secrets</td>
+                                                    <td>Very High</td>
+                                                    <td>None</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Networking Section -->
+                        <section class="section" id="networks">
+                            <h2><i class="fas fa-network-wired me-2"></i>Windows Networking</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Network Management</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># List all networks
+docker network ls
+
+# Create a network
+docker network create mynetwork
+
+# Create network with specific driver
+docker network create --driver bridge mybridge
+
+# Create network with subnet
+docker network create --subnet=172.20.0.0/16 mynetwork
+
+# Inspect network details
+docker network inspect mynetwork
+
+# Remove a network
+docker network rm mynetwork
+
+# Remove all unused networks
+docker network prune</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Manage Docker networks for container communication.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Connect Containers to Networks</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Run container on specific network
+docker run --network mynetwork --name web nginx
+
+# Connect running container to network
+docker network connect mynetwork container_name
+
+# Disconnect container from network
+docker network disconnect mynetwork container_name
+
+# Run with custom hostname
+docker run --network mynetwork --hostname webserver nginx
+
+# Assign static IP
+docker run --network mynetwork --ip 172.20.0.10 nginx
+
+# Create network alias
+docker run --network mynetwork --network-alias db mysql</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Connect containers to custom networks with various configuration options.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Network Types</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Bridge network (default)
+docker network create --driver bridge mybridgenet
+
+# Host network (use host's networking)
+docker run --network host nginx
+
+# None network (no networking)
+docker run --network none alpine
+
+# Overlay network (multi-host)
+docker network create --driver overlay --attachable myoverlay
+
+# Macvlan network (assign MAC address)
+docker network create -d macvlan \
+    --subnet=192.168.1.0/24 \
+    --gateway=192.168.1.1 \
+    -o parent=eth0 mymacvlan</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Create different types of networks for various use cases.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Port Mapping and Exposure</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Map single port
+docker run -p 8080:80 nginx
+
+# Map multiple ports
+docker run -p 8080:80 -p 8443:443 nginx
+
+# Map to specific interface
+docker run -p 127.0.0.1:8080:80 nginx
+
+# Map random port
+docker run -P nginx
+
+# UDP port mapping
+docker run -p 53:53/udp bind
+
+# View port mappings
+docker port container_name</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Configure port mapping between host and containers.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Docker Compose Section -->
+                        <section class="section" id="compose">
+                            <h2><i class="fas fa-layer-group me-2"></i>Docker Compose</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Basic Docker Compose Commands</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Start services
+docker-compose up
+docker-compose up -d  # Detached mode
+
+# Stop services
+docker-compose down
+
+# Stop and remove volumes
+docker-compose down -v
+
+# Build and start
+docker-compose up --build
+
+# Scale services
+docker-compose up --scale web=3
+
+# View running services
+docker-compose ps
+
+# View logs
+docker-compose logs
+docker-compose logs -f web  # Follow logs for specific service</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Essential Docker Compose commands for managing multi-container applications.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Sample docker-compose.yml</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code>version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/code
+    environment:
+      - DEBUG=1
+      - DATABASE_URL=postgres://user:pass@db:5432/myapp
+    depends_on:
+      - db
+      - redis
+    networks:
+      - frontend
+      - backend
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=myapp
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+    networks:
+      - backend
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+
+volumes:
+  postgres_data:
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Complete docker-compose.yml example with web app, database, and caching service.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Advanced Compose Features</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Use environment file
+docker-compose --env-file .env up
+
+# Override compose file
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
+
+# Execute command in service
+docker-compose exec web bash
+docker-compose exec db psql -U user myapp
+
+# Run one-time command
+docker-compose run web python manage.py migrate
+
+# View configuration
+docker-compose config
+
+# Restart services
+docker-compose restart
+docker-compose restart web
+
+# Pull latest images
+docker-compose pull</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Advanced Docker Compose operations and configuration management.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Production Compose Configuration</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># docker-compose.prod.yml
+version: '3.8'
+
+services:
+  web:
+    image: myapp:latest
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Production-ready Docker Compose configuration with health checks and resource limits.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- PowerShell Scripts Section -->
+                        <section class="section" id="powershell">
+                            <h2><i class="fas fa-terminal me-2"></i>PowerShell Scripts for Docker</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Docker Management PowerShell Scripts</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell script to stop all containers
+Get-Process docker -ErrorAction SilentlyContinue | Stop-Process
+docker ps -q | ForEach-Object { docker stop $_ }
+
+# PowerShell script to remove all containers
+docker ps -aq | ForEach-Object { docker rm $_ }
+
+# PowerShell script to remove all images
+docker images -q | ForEach-Object { docker rmi $_ -f }
+
+# Function to clean up Docker resources
+function Cleanup-Docker {
+    Write-Host "Stopping all containers..." -ForegroundColor Yellow
+    docker ps -q | ForEach-Object { docker stop $_ }
+    
+    Write-Host "Removing all containers..." -ForegroundColor Yellow
+    docker ps -aq | ForEach-Object { docker rm $_ }
+    
+    Write-Host "Removing unused images..." -ForegroundColor Yellow
+    docker image prune -f
+    
+    Write-Host "Docker cleanup completed!" -ForegroundColor Green
+}
+
+# Call the function
+Cleanup-Docker</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    PowerShell scripts for managing Docker containers, images, and cleanup operations on Windows.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">PowerShell Docker Automation</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell script for Docker health monitoring
+function Check-DockerHealth {
+    param(
+        [string]$ContainerName
+    )
+    
+    $containerStatus = docker inspect $ContainerName --format '{{.State.Health.Status}}' 2>$null
+    
+    if ($containerStatus -eq "healthy") {
+        Write-Host "$ContainerName is healthy" -ForegroundColor Green
+    } elseif ($containerStatus -eq "unhealthy") {
+        Write-Host "$ContainerName is unhealthy" -ForegroundColor Red
+        docker logs $ContainerName --tail 10
+    } else {
+        Write-Host "$ContainerName health status unknown" -ForegroundColor Yellow
+    }
+}
+
+# PowerShell script to deploy multiple containers
+$containers = @(
+    @{ Name = "nginx"; Image = "nginx:latest"; Port = "8080:80" },
+    @{ Name = "redis"; Image = "redis:alpine"; Port = "6379:6379" }
+)
+
+foreach ($container in $containers) {
+    Write-Host "Starting container: $($container.Name)" -ForegroundColor Cyan
+    docker run -d --name $container.Name -p $container.Port $container.Image
+}
+
+# Check deployment status
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Advanced PowerShell scripts for Docker health monitoring and automated container deployment.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">PowerShell Docker Functions</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell Docker utility functions
+
+# Function to build and tag Docker image
+function Build-DockerImage {
+    param(
+        [string]$ImageName,
+        [string]$Tag = "latest",
+        [string]$DockerfilePath = "."
+    )
+    
+    $fullImageName = "${ImageName}:${Tag}"
+    Write-Host "Building Docker image: $fullImageName" -ForegroundColor Cyan
+    
+    docker build -t $fullImageName $DockerfilePath
+    
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "Build successful: $fullImageName" -ForegroundColor Green
+    } else {
+        Write-Host "Build failed!" -ForegroundColor Red
+    }
+}
+
+# Function to run container with common options
+function Run-DockerContainer {
+    param(
+        [string]$ImageName,
+        [string]$ContainerName,
+        [hashtable]$Ports = @{},
+        [hashtable]$Volumes = @{},
+        [hashtable]$Environment = @{}
+    )
+    
+    $dockerArgs = @("run", "-d", "--name", $ContainerName)
+    
+    # Add port mappings
+    foreach ($port in $Ports.GetEnumerator()) {
+        $dockerArgs += "-p", "$($port.Key):$($port.Value)"
+    }
+    
+    # Add volume mounts
+    foreach ($volume in $Volumes.GetEnumerator()) {
+        $dockerArgs += "-v", "$($volume.Key):$($volume.Value)"
+    }
+    
+    # Add environment variables
+    foreach ($env in $Environment.GetEnumerator()) {
+        $dockerArgs += "-e", "$($env.Key)=$($env.Value)"
+    }
+    
+    $dockerArgs += $ImageName
+    
+    Write-Host "Running: docker $($dockerArgs -join ' ')" -ForegroundColor Cyan
+    & docker @dockerArgs
+}
+
+# Example usage
+Run-DockerContainer -ImageName "nginx:latest" -ContainerName "my-nginx" -Ports @{"8080"="80"}</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Reusable PowerShell functions for common Docker operations with parameter handling.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Windows Scheduled Tasks for Docker</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell script to create scheduled task for Docker cleanup
+$TaskName = "DockerCleanup"
+$ScriptPath = "C:\Scripts\Docker-Cleanup.ps1"
+
+# Create the cleanup script
+$CleanupScript = @"
+# Docker cleanup script
+Write-Output "Starting Docker cleanup at $(Get-Date)"
+
+# Remove stopped containers
+docker container prune -f
+
+# Remove unused images
+docker image prune -f
+
+# Remove unused volumes
+docker volume prune -f
+
+# Remove unused networks
+docker network prune -f
+
+Write-Output "Docker cleanup completed at $(Get-Date)"
+"@
+
+# Save the script
+$CleanupScript | Out-File -FilePath $ScriptPath -Encoding UTF8
+
+# Create scheduled task to run daily at 2 AM
+$Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-File `"$ScriptPath`""
+$Trigger = New-ScheduledTaskTrigger -Daily -At "2:00AM"
+$Settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+
+Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Settings $Settings -Description "Daily Docker cleanup"
+
+Write-Host "Scheduled task '$TaskName' created successfully!" -ForegroundColor Green</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Set up automated Docker maintenance tasks using Windows Task Scheduler and PowerShell.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Development Setup Section -->
+                        <section class="section" id="development">
+                            <h2><i class="fas fa-code me-2"></i>Windows Development Setup</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Development Environment Configuration</div>
+                                </div>
+                                <div class="command-description">
+                                    <strong>Optimal Windows Development Setup:</strong><br><br>
+                                    
+                                    <strong>IDE Integration:</strong><br>
+                                    • <strong>Visual Studio:</strong> Docker tools extension for .NET projects<br>
+                                    • <strong>Visual Studio Code:</strong> Docker extension for container management<br>
+                                    • <strong>JetBrains IDEs:</strong> Built-in Docker support<br><br>
+                                    
+                                    <strong>Windows Terminal Configuration:</strong><br>
+                                    • Install Windows Terminal from Microsoft Store<br>
+                                    • Add PowerShell and WSL2 profiles<br>
+                                    • Configure Docker context switching<br><br>
+                                    
+                                    <strong>File System Best Practices:</strong><br>
+                                    • Store source code in WSL2 filesystem for Linux containers<br>
+                                    • Use Windows filesystem for Windows container projects<br>
+                                    • Enable "Use cross-platform line endings" in IDEs
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Docker Development Workflow</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell development workflow
+# Set up development directory
+$DevPath = "C:\Development\MyProject"
+New-Item -Path $DevPath -ItemType Directory -Force
+Set-Location $DevPath
+
+# Initialize git repository
+git init
+git remote add origin https://github.com/user/repo.git
+
+# Create development docker-compose file
+$ComposeContent = @"
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    environment:
+      - NODE_ENV=development
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=myapp_dev
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  node_modules:
+  postgres_data:
+"@
+
+$ComposeContent | Out-File -FilePath "docker-compose.dev.yml" -Encoding UTF8
+
+# Start development environment
+docker-compose -f docker-compose.dev.yml up -d
+
+# Watch logs
+docker-compose -f docker-compose.dev.yml logs -f app</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Set up a complete development workflow with Docker on Windows including project initialization and development services.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Cross-Platform Development</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell script for cross-platform Docker builds
+function Build-MultiPlatform {
+    param(
+        [string]$ImageName,
+        [string]$Tag = "latest"
+    )
+    
+    # Create buildx builder if it doesn't exist
+    $builderName = "multiplatform"
+    $existingBuilder = docker buildx ls | Select-String $builderName
+    
+    if (-not $existingBuilder) {
+        Write-Host "Creating multi-platform builder..." -ForegroundColor Cyan
+        docker buildx create --name $builderName --use
+        docker buildx inspect --bootstrap
+    } else {
+        docker buildx use $builderName
+    }
+    
+    # Build for multiple platforms
+    $platforms = "linux/amd64,linux/arm64,windows/amd64"
+    Write-Host "Building for platforms: $platforms" -ForegroundColor Cyan
+    
+    docker buildx build --platform $platforms -t "${ImageName}:${Tag}" --push .
+}
+
+# Example: Build multi-platform image
+Build-MultiPlatform -ImageName "myregistry/myapp" -Tag "v1.0"
+
+# Alternative: Build specific platform
+docker buildx build --platform linux/amd64 -t myapp:linux-amd64 .</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Set up cross-platform Docker builds for deploying to different architectures from Windows development environment.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Registry & Hub Section -->
+                        <section class="section" id="registry">
+                            <h2><i class="fas fa-cloud me-2"></i>Registry & Hub</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Docker Hub Operations</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Login to Docker Hub
+docker login
+docker login --username myuser
+
+# Tag image for Docker Hub
+docker tag myapp:latest myuser/myapp:latest
+docker tag myapp:latest myuser/myapp:v1.0
+
+# Push image to Docker Hub
+docker push myuser/myapp:latest
+docker push myuser/myapp:v1.0
+
+# Pull image from Docker Hub
+docker pull myuser/myapp:latest
+
+# Logout from Docker Hub
+docker logout</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Manage images on Docker Hub including login, push, and pull operations.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Private Registry</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Run local registry
+docker run -d -p 5000:5000 --name registry registry:2
+
+# Tag image for private registry
+docker tag myapp:latest localhost:5000/myapp:latest
+
+# Push to private registry
+docker push localhost:5000/myapp:latest
+
+# Pull from private registry
+docker pull localhost:5000/myapp:latest
+
+# Login to private registry
+docker login myregistry.com:5000
+
+# Run registry with persistent storage
+docker run -d -p 5000:5000 \
+  -v registry-data:/var/lib/registry \
+  --name registry registry:2</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Set up and use private Docker registries for internal image storage.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Registry API and Management</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># List repositories in registry
+curl -X GET http://localhost:5000/v2/_catalog
+
+# List tags for repository
+curl -X GET http://localhost:5000/v2/myapp/tags/list
+
+# Get image manifest
+curl -X GET http://localhost:5000/v2/myapp/manifests/latest
+
+# Delete image from registry
+curl -X DELETE http://localhost:5000/v2/myapp/manifests/sha256:digest
+
+# Registry garbage collection
+docker exec registry bin/registry garbage-collect /etc/docker/registry/config.yml</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Use Registry HTTP API for advanced registry management and maintenance.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Alternative Registries</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Amazon ECR
+aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 123456789012.dkr.ecr.us-west-2.amazonaws.com
+docker tag myapp:latest 123456789012.dkr.ecr.us-west-2.amazonaws.com/myapp:latest
+docker push 123456789012.dkr.ecr.us-west-2.amazonaws.com/myapp:latest
+
+# Google Container Registry
+docker tag myapp:latest gcr.io/my-project/myapp:latest
+docker push gcr.io/my-project/myapp:latest
+
+# Azure Container Registry
+docker tag myapp:latest myregistry.azurecr.io/myapp:latest
+docker push myregistry.azurecr.io/myapp:latest
+
+# GitHub Container Registry
+docker tag myapp:latest ghcr.io/myuser/myapp:latest
+docker push ghcr.io/myuser/myapp:latest</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Work with popular cloud-based container registries.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Monitoring & Logs Section -->
+                        <section class="section" id="monitoring">
+                            <h2><i class="fas fa-chart-line me-2"></i>Monitoring & Logs</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Container Logs</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># View container logs
+docker logs container_name
+
+# Follow logs in real-time
+docker logs -f container_name
+
+# Show last N lines
+docker logs --tail 50 container_name
+
+# Show logs since timestamp
+docker logs --since 2023-01-01 container_name
+docker logs --since "2023-01-01T10:30:00" container_name
+
+# Show logs with timestamps
+docker logs -t container_name
+
+# Filter logs
+docker logs container_name 2>&1 | grep ERROR</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    View and filter container logs with various options.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Container Statistics</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Real-time statistics for all containers
+docker stats
+
+# Statistics for specific container
+docker stats container_name
+
+# One-time statistics (no streaming)
+docker stats --no-stream
+
+# Statistics with custom format
+docker stats --format "table {{.Container}}\t{{.CPUPerc}}\t{{.MemUsage}}"
+
+# System-wide Docker information
+docker system df
+docker system info
+
+# Events monitoring
+docker events
+docker events --since "2023-01-01"
+docker events --filter container=mycontainer</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Monitor container resource usage and system events.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Resource Usage and Limits</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Run container with resource limits
+docker run --memory="256m" --cpus="1.5" nginx
+
+# Set memory limit and swap
+docker run --memory="256m" --memory-swap="512m" nginx
+
+# CPU shares (relative weight)
+docker run --cpu-shares=512 nginx
+
+# CPU quota and period
+docker run --cpu-quota=50000 --cpu-period=100000 nginx
+
+# Block I/O limits
+docker run --device-read-bps /dev/sda:1mb nginx
+docker run --device-write-bps /dev/sda:1mb nginx
+
+# Update container resources
+docker update --memory="512m" --cpus="2" container_name</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Set and manage resource limits for containers.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Health Checks</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Dockerfile health check
+FROM nginx
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost/ || exit 1
+
+# Run container with health check
+docker run -d \
+  --health-cmd="curl -f http://localhost:8000/health || exit 1" \
+  --health-interval=30s \
+  --health-timeout=10s \
+  --health-retries=3 \
+  myapp:latest
+
+# Check container health status
+docker inspect --format='{{.State.Health.Status}}' container_name
+
+# View health check history
+docker inspect container_name | jq '.[] | .State.Health'</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Implement and monitor container health checks.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Security Section -->
+                        <section class="section" id="security">
+                            <h2><i class="fas fa-shield-alt me-2"></i>Security</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">User and Security Context</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Run container as non-root user
+docker run --user 1000:1000 nginx
+
+# Run with specific user name
+docker run --user myuser nginx
+
+# Drop capabilities
+docker run --cap-drop ALL --cap-add NET_BIND_SERVICE nginx
+
+# Add capabilities
+docker run --cap-add SYS_ADMIN nginx
+
+# Run in read-only mode
+docker run --read-only nginx
+
+# Set security options
+docker run --security-opt no-new-privileges nginx
+
+# Disable privileged mode (default)
+docker run --privileged=false nginx</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Configure security context and user permissions for containers.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Secrets Management</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Using environment files
+docker run --env-file .env myapp
+
+# Mount secrets as files
+docker run -v /host/secrets:/run/secrets:ro myapp
+
+# Docker Swarm secrets
+docker secret create my_secret secret.txt
+docker service create --secret my_secret nginx
+
+# Use tmpfs for sensitive data
+docker run --tmpfs /tmp:rw,noexec,nosuid,size=100m nginx
+
+# Remove environment variables from process list
+docker run -e SECRET_KEY=value --security-opt no-new-privileges myapp</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Manage sensitive data and secrets in containers securely.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Image Security Scanning</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Scan image with Docker Desktop
+docker scan myapp:latest
+
+# Use Trivy for scanning
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+  aquasec/trivy image myapp:latest
+
+# Scan with Clair
+docker run -d --name clair-db postgres:latest
+docker run -d --name clair --link clair-db:postgres \
+  quay.io/coreos/clair:latest
+
+# Use Anchore for scanning
+docker run -d --name anchore-engine anchore/anchore-engine:latest
+anchore-cli image add myapp:latest
+anchore-cli image vuln myapp:latest os</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Scan Docker images for security vulnerabilities using various tools.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Network Security</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Create isolated network
+docker network create --internal isolated-net
+
+# Disable inter-container communication
+docker network create --internal --icc=false secure-net
+
+# Use custom DNS
+docker run --dns 8.8.8.8 --dns 1.1.1.1 nginx
+
+# Limit network access
+docker run --network none nginx
+
+# Use host firewall rules
+iptables -I DOCKER-USER -s 192.168.1.0/24 -j DROP
+
+# TLS encryption for Docker daemon
+dockerd --tls --tlscert=server-cert.pem --tlskey=server-key.pem</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Implement network security measures and isolate container communications.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Advanced Topics Section -->
+                        <section class="section" id="advanced">
+                            <h2><i class="fas fa-cogs me-2"></i>Advanced Topics</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Docker Swarm</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Initialize swarm
+docker swarm init --advertise-addr 192.168.1.100
+
+# Join swarm as worker
+docker swarm join --token TOKEN 192.168.1.100:2377
+
+# Join swarm as manager
+docker swarm join-token manager
+
+# List nodes
+docker node ls
+
+# Create service
+docker service create --replicas 3 --name web nginx
+
+# Scale service
+docker service scale web=5
+
+# Update service
+docker service update --image nginx:1.21 web
+
+# List services
+docker service ls
+docker service ps web</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Docker Swarm orchestration for managing multi-node container clusters.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Docker Contexts</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># List contexts
+docker context ls
+
+# Create new context
+docker context create mycontext --docker "host=ssh://user@host"
+
+# Use specific context
+docker context use mycontext
+
+# Create context for remote Docker
+docker context create remote --docker "host=tcp://192.168.1.100:2376"
+
+# Export context
+docker context export mycontext
+
+# Import context
+docker context import mycontext mycontext.tar
+
+# Remove context
+docker context rm mycontext</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Manage Docker contexts for connecting to different Docker environments.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">BuildKit and Advanced Builds</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Enable BuildKit
+export DOCKER_BUILDKIT=1
+
+# Use buildx for advanced builds
+docker buildx create --use
+docker buildx build --platform linux/amd64,linux/arm64 -t myapp:latest .
+
+# Build with cache from registry
+docker buildx build --cache-from type=registry,ref=myapp:cache .
+
+# Build with inline cache
+docker buildx build --cache-to type=inline --push -t myapp:latest .
+
+# Multi-platform build and push
+docker buildx build --platform linux/amd64,linux/arm64 \
+  --push -t myapp:latest .
+
+# Build with secrets
+docker buildx build --secret id=mypassword,src=./password.txt .</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Advanced Docker build features using BuildKit and buildx.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Plugin System</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># List plugins
+docker plugin ls
+
+# Install plugin
+docker plugin install store/sumologic/docker-logging-driver:1.0.0
+
+# Enable plugin
+docker plugin enable store/sumologic/docker-logging-driver:1.0.0
+
+# Configure plugin
+docker plugin set store/sumologic/docker-logging-driver:1.0.0 SUMOLOGIC_URL=...
+
+# Use plugin in container
+docker run --log-driver=store/sumologic/docker-logging-driver:1.0.0 nginx
+
+# Remove plugin
+docker plugin rm store/sumologic/docker-logging-driver:1.0.0</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Manage Docker plugins for extending Docker functionality.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Windows Troubleshooting Section -->
+                        <section class="section" id="troubleshooting">
+                            <h2><i class="fas fa-tools me-2"></i>Windows Troubleshooting</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Common Windows Docker Issues</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell - Check Docker Desktop status
+Get-Process | Where-Object {$_.ProcessName -eq "Docker Desktop"}
+
+# Check Docker service status
+Get-Service | Where-Object {$_.Name -like "*docker*"}
+
+# Restart Docker Desktop service
+Restart-Service -Name "com.docker.service"
+
+# Check Windows features required for Docker
+Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All
+Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform
+
+# Check WSL2 status
+wsl --status
+wsl --list --verbose
+
+# Fix WSL2 issues
+wsl --shutdown
+wsl --unregister Ubuntu
+wsl --install -d Ubuntu</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Diagnose and fix common Docker Desktop and WSL2 issues on Windows.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Windows Container Debugging</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># Debug Windows containers
+docker exec container_name cmd /c "tasklist"
+docker exec container_name powershell "Get-Process"
+
+# Check Windows container network
+docker exec container_name ipconfig /all
+docker exec container_name netstat -an
+
+# Check Windows container file system
+docker exec container_name dir C:\
+docker exec container_name powershell "Get-ChildItem C:\ -Recurse | Measure-Object -Property Length -Sum"
+
+# Check Windows container services
+docker exec container_name sc query
+docker exec container_name powershell "Get-Service"
+
+# Check Windows container environment
+docker exec container_name set
+docker exec container_name powershell "Get-ChildItem Env:"
+
+# Windows container logs
+docker logs container_name</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Debug Windows containers using Windows-specific commands and tools.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Docker Desktop Reset and Repair</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell - Reset Docker Desktop to factory defaults
+& "C:\Program Files\Docker\Docker\Docker Desktop.exe" --factory-reset
+
+# Uninstall Docker Desktop
+$dockerPath = "C:\Program Files\Docker\Docker\Docker Desktop.exe"
+if (Test-Path $dockerPath) {
+    & $dockerPath --uninstall
+}
+
+# Clean Docker data directories
+Remove-Item -Path "$env:APPDATA\Docker" -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item -Path "$env:LOCALAPPDATA\Docker" -Recurse -Force -ErrorAction SilentlyContinue
+
+# Reset WSL2 distributions
+wsl --shutdown
+wsl --unregister docker-desktop
+wsl --unregister docker-desktop-data
+
+# Restart required Windows services
+Restart-Service -Name "Hyper-V Host Compute Service" -Force
+Restart-Service -Name "Host Network Service" -Force
+
+# Re-enable Windows features if needed
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All -All -NoRestart
+Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -All -NoRestart</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Complete Docker Desktop reset and repair procedures for Windows.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Performance Issues on Windows</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell - Check system resources
+Get-ComputerInfo | Select-Object TotalPhysicalMemory, CsProcessors
+Get-Counter "\Memory\Available MBytes"
+Get-Counter "\Processor(_Total)\% Processor Time"
+
+# Check Docker resource allocation
+docker system info | findstr "CPUs\|Total Memory"
+
+# Optimize WSL2 memory usage (create .wslconfig in user profile)
+$wslConfig = @"
+[wsl2]
+memory=4GB
+processors=2
+swap=2GB
+localhostForwarding=true
+"@
+$wslConfig | Out-File -FilePath "$env:USERPROFILE\.wslconfig" -Encoding utf8
+
+# Restart WSL2 to apply changes
+wsl --shutdown
+Start-Sleep 5
+wsl
+
+# Check disk space and cleanup
+docker system df
+docker system prune -a --volumes
+
+# Move Docker data to different drive (if needed)
+# Stop Docker Desktop first, then:
+# mklink /J "C:\Users\%USERNAME%\AppData\Local\Docker" "D:\Docker"</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Diagnose and fix Docker performance issues specific to Windows environment.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Network and Firewall Issues</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell - Check Windows Firewall
+Get-NetFirewallRule | Where-Object {$_.DisplayName -like "*Docker*"}
+
+# Allow Docker through Windows Firewall
+New-NetFirewallRule -DisplayName "Docker Desktop" -Direction Inbound -Action Allow -Program "C:\Program Files\Docker\Docker\Docker Desktop.exe"
+
+# Check port conflicts
+netstat -ano | findstr ":80"
+netstat -ano | findstr ":443"
+
+# Test Docker networking
+docker run --rm -p 8080:80 nginx
+# Then test: curl http://localhost:8080
+
+# Reset Windows network stack
+netsh int ip reset
+netsh winsock reset
+ipconfig /flushdns
+
+# Check Hyper-V network adapters
+Get-VMSwitch
+Get-NetAdapter | Where-Object {$_.InterfaceDescription -like "*Hyper-V*"}
+
+# Recreate Docker networks
+docker network prune -f
+docker network create test-network
+docker network ls</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Resolve network-related issues including firewall, port conflicts, and Hyper-V networking problems.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Windows Event Logs and Diagnostics</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell - Check Windows Event Logs for Docker errors
+Get-EventLog -LogName Application -Source "Docker" -Newest 20
+Get-EventLog -LogName System | Where-Object {$_.Source -like "*Hyper-V*"} | Select-Object -First 10
+
+# Check Docker Desktop logs location
+$dockerLogs = "$env:LOCALAPPDATA\Docker\log\*"
+Get-ChildItem $dockerLogs | Sort-Object LastWriteTime | Select-Object -Last 5
+
+# Export Docker diagnostics
+& "C:\Program Files\Docker\Docker\Docker Desktop.exe" --collect-diagnostics
+
+# Check Windows containers event logs (if using Windows containers)
+Get-WinEvent -LogName "Microsoft-Windows-Containers-Wcifs/Operational" -MaxEvents 10
+
+# System diagnostics
+dxdiag /t C:\docker-system-info.txt
+msinfo32 /report C:\docker-system-report.txt
+
+# PowerShell diagnostic script
+function Get-DockerDiagnostics {
+    Write-Output "=== Docker Diagnostics Report ==="
+    Write-Output "Date: $(Get-Date)"
+    Write-Output ""
+    
+    Write-Output "Docker Version:"
+    docker --version
+    
+    Write-Output "`nDocker System Info:"
+    docker system info
+    
+    Write-Output "`nWindows Version:"
+    Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion
+    
+    Write-Output "`nWSL Status:"
+    wsl --status
+    
+    Write-Output "`nHyper-V Status:"
+    Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All | Select-Object State
+}
+
+Get-DockerDiagnostics | Out-File -FilePath "C:\docker-diagnostics.txt"</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Collect comprehensive diagnostic information for Docker issues on Windows.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Performance Section -->
+                        <section class="section" id="performance">
+                            <h2><i class="fas fa-tachometer-alt me-2"></i>Windows Performance Tuning</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Docker Desktop Performance Settings</div>
+                                </div>
+                                <div class="command-description">
+                                    <strong>Optimal Performance Configuration:</strong><br><br>
+                                    
+                                    <strong>Resource Allocation (Docker Desktop → Settings → Resources):</strong><br>
+                                    • <strong>Memory:</strong> Allocate 50-70% of available RAM (minimum 4GB recommended)<br>
+                                    • <strong>CPUs:</strong> Use 50-75% of available CPU cores<br>
+                                    • <strong>Disk image size:</strong> Set based on project needs (default: 64GB)<br>
+                                    • <strong>Swap:</strong> Set to 1-2GB for memory overflow<br><br>
+                                    
+                                    <strong>WSL2 Optimization:</strong><br>
+                                    • Enable WSL2 backend for better performance<br>
+                                    • Store Linux container files in WSL2 filesystem<br>
+                                    • Configure .wslconfig for resource limits<br><br>
+                                    
+                                    <strong>File Sharing Performance:</strong><br>
+                                    • Limit shared directories to necessary paths only<br>
+                                    • Use bind mounts sparingly for cross-OS access<br>
+                                    • Consider volume mounts for better performance
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">WSL2 Performance Configuration</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell - Create optimized .wslconfig
+$wslConfig = @"
+[wsl2]
+# Set memory limit (adjust based on your system)
+memory=6GB
+
+# Set CPU count (adjust based on your system)
+processors=4
+
+# Set swap size
+swap=2GB
+
+# Enable localhost forwarding
+localhostForwarding=true
+
+# Set swap file location (optional)
+swapfile=C:\temp\wsl-swap.vhdx
+
+# Enable nested virtualization (if needed)
+nestedVirtualization=true
+
+# Kernel command line options for performance
+kernelCommandLine=vsyscall=emulate
+"@
+
+# Save configuration
+$wslConfig | Out-File -FilePath "$env:USERPROFILE\.wslconfig" -Encoding UTF8
+
+# Apply changes by restarting WSL2
+wsl --shutdown
+Start-Sleep 3
+wsl
+
+# Verify WSL2 resource usage
+wsl -d Ubuntu -e free -h
+wsl -d Ubuntu -e nproc</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Configure WSL2 for optimal Docker performance with proper resource allocation.
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Windows System Optimization</div>
+                                </div>
+                                <div class="command-code">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                                    <pre><code># PowerShell (Run as Administrator) - System optimization for Docker
+
+# Disable Windows Search indexing for Docker directories
+$dockerPaths = @(
+    "$env:LOCALAPPDATA\Docker",
+    "$env:APPDATA\Docker",
+    "C:\ProgramData\Docker"
+)
+
+foreach ($path in $dockerPaths) {
+    if (Test-Path $path) {
+        attrib +H "$path" /S /D
+        Write-Host "Excluded $path from Windows Search indexing"
+    }
+}
+
+# Set Windows visual effects for performance
+$regPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects"
+Set-ItemProperty -Path $regPath -Name "VisualFXSetting" -Value 2
+
+# Disable Windows Defender real-time scanning for Docker directories (optional)
+Add-MpPreference -ExclusionPath "$env:LOCALAPPDATA\Docker"
+Add-MpPreference -ExclusionPath "C:\ProgramData\Docker"
+
+# Set high-performance power plan
+powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
+
+# Disable hibernation to free disk space
+powercfg /hibernate off
+
+# Increase virtual memory if needed
+$computerSystem = Get-WmiObject Win32_ComputerSystem -EnableAllPrivileges
+$computerSystem.AutomaticManagedPagefile = $False
+$computerSystem.Put()
+
+# Check current page file settings
+Get-WmiObject -Class Win32_PageFileUsage | Select-Object Name, AllocatedBaseSize, CurrentUsage</code></pre>
+                                </div>
+                                <div class="command-description">
+                                    Optimize Windows system settings for better Docker performance and resource utilization.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Best Practices Section -->
+                        <section class="section" id="best-practices">
+                            <h2><i class="fas fa-star me-2"></i>Windows Best Practices</h2>
+                            
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Windows Docker Development Best Practices</div>
+                                </div>
+                                <div class="command-description">
+                                    <strong>1. Choose the Right Backend:</strong><br>
+                                    • <strong>WSL2:</strong> Recommended for most scenarios, better performance<br>
+                                    • <strong>Hyper-V:</strong> Use when isolation is critical or WSL2 unavailable<br>
+                                    • Keep source code in WSL2 filesystem for Linux containers<br><br>
+                                    
+                                    <strong>2. File System Optimization:</strong><br>
+                                    • Store project files in WSL2 for Linux containers<br>
+                                    • Use Windows filesystem for Windows containers<br>
+                                    • Minimize cross-filesystem operations (Windows↔Linux)<br>
+                                    • Configure proper line endings (LF for Linux, CRLF for Windows)<br><br>
+                                    
+                                    <strong>3. Resource Management:</strong><br>
+                                    • Allocate sufficient memory (4-8GB recommended)<br>
+                                    • Use 50-75% of available CPU cores<br>
+                                    • Configure WSL2 resource limits via .wslconfig<br>
+                                    • Monitor resource usage regularly<br><br>
+                                    
+                                    <strong>4. Security Considerations:</strong><br>
+                                    • Use Windows containers for Windows-specific applications<br>
+                                    • Keep Docker Desktop updated<br>
+                                    • Configure Windows Firewall properly<br>
+                                    • Use official Microsoft base images for Windows containers
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Windows Container Best Practices</div>
+                                </div>
+                                <div class="command-description">
+                                    <strong>1. Base Image Selection:</strong><br>
+                                    • <strong>Nano Server:</strong> Smallest footprint, minimal API surface<br>
+                                    • <strong>Server Core:</strong> Full .NET Framework support, more features<br>
+                                    • <strong>Windows:</strong> Full Windows API, largest size<br>
+                                    • Always use specific version tags, avoid 'latest'<br><br>
+                                    
+                                    <strong>2. Layer Optimization:</strong><br>
+                                    • Combine PowerShell commands using semicolons<br>
+                                    • Clean up downloads and temp files in same layer<br>
+                                    • Use multi-stage builds for compilation<br>
+                                    • Minimize the number of RUN instructions<br><br>
+                                    
+                                    <strong>3. Windows-Specific Dockerfile Tips:</strong><br>
+                                    • Use PowerShell for complex operations<br>
+                                    • Set proper working directories with Windows paths<br>
+                                    • Handle Windows services correctly<br>
+                                    • Use appropriate health checks for Windows apps<br><br>
+                                    
+                                    <strong>4. Performance Optimization:</strong><br>
+                                    • Disable unnecessary Windows features<br>
+                                    • Optimize PowerShell execution policies<br>
+                                    • Use appropriate process isolation mode<br>
+                                    • Configure proper startup commands
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Windows Development Workflow</div>
+                                </div>
+                                <div class="command-description">
+                                    <strong>1. IDE Integration:</strong><br>
+                                    • Use Visual Studio with Docker Tools for .NET projects<br>
+                                    • Configure VS Code with Docker extension<br>
+                                    • Set up Windows Terminal with Docker context<br>
+                                    • Use PowerShell profiles for Docker aliases<br><br>
+                                    
+                                    <strong>2. Version Control:</strong><br>
+                                    • Configure Git for proper line endings (.gitattributes)<br>
+                                    • Include .dockerignore in repository<br>
+                                    • Store environment-specific settings separately<br>
+                                    • Use PowerShell scripts for build automation<br><br>
+                                    
+                                    <strong>3. Testing Strategy:</strong><br>
+                                    • Test on both Windows and Linux containers if targeting both<br>
+                                    • Use Docker Compose for multi-service testing<br>
+                                    • Implement health checks for all services<br>
+                                    • Test file permission scenarios across platforms<br><br>
+                                    
+                                    <strong>4. CI/CD on Windows:</strong><br>
+                                    • Use Azure DevOps or GitHub Actions with Windows runners<br>
+                                    • Build multi-platform images when possible<br>
+                                    • Cache layers effectively in build pipelines<br>
+                                    • Implement proper secret management
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Production Deployment from Windows</div>
+                                </div>
+                                <div class="command-description">
+                                    <strong>1. Container Orchestration:</strong><br>
+                                    • Consider Azure Container Instances for simple deployments<br>
+                                    • Use Azure Kubernetes Service (AKS) for complex applications<br>
+                                    • Docker Swarm for simpler orchestration needs<br>
+                                    • AWS ECS/Fargate for multi-cloud strategies<br><br>
+                                    
+                                    <strong>2. Registry Management:</strong><br>
+                                    • Use Azure Container Registry for enterprise scenarios<br>
+                                    • Configure proper authentication and RBAC<br>
+                                    • Implement image scanning and vulnerability assessment<br>
+                                    • Tag images with semantic versioning<br><br>
+                                    
+                                    <strong>3. Monitoring and Logging:</strong><br>
+                                    • Integrate with Azure Monitor or Application Insights<br>
+                                    • Configure structured logging for containers<br>
+                                    • Set up health check endpoints<br>
+                                    • Monitor resource utilization and scaling needs<br><br>
+                                    
+                                    <strong>4. Security Best Practices:</strong><br>
+                                    • Use managed identities where possible<br>
+                                    • Implement network security groups<br>
+                                    • Regular security updates for base images<br>
+                                    • Principle of least privilege for container permissions
+                                </div>
+                            </div>
+
+                            <div class="command-card">
+                                <div class="command-header">
+                                    <div class="command-title">Common Windows Docker Pitfalls to Avoid</div>
+                                </div>
+                                <div class="command-description">
+                                    <strong>1. File System Issues:</strong><br>
+                                    • ❌ Don't store Linux container files on Windows filesystem<br>
+                                    • ❌ Avoid frequent bind mounts between Windows and WSL2<br>
+                                    • ❌ Don't ignore line ending differences<br>
+                                    • ✅ Use appropriate filesystem for container type<br><br>
+                                    
+                                    <strong>2. Resource Allocation:</strong><br>
+                                    • ❌ Don't allocate all available memory to Docker<br>
+                                    • ❌ Don't ignore WSL2 memory limits<br>
+                                    • ❌ Don't run too many concurrent builds<br>
+                                    • ✅ Monitor and adjust resource allocation regularly<br><br>
+                                    
+                                    <strong>3. Development Practices:</strong><br>
+                                    • ❌ Don't mix Windows and Linux paths in Dockerfiles<br>
+                                    • ❌ Don't ignore Docker context switching<br>
+                                    • ❌ Don't use 'latest' tags in production<br>
+                                    • ✅ Test containers on target deployment platform<br><br>
+                                    
+                                    <strong>4. Troubleshooting:</strong><br>
+                                    • ❌ Don't ignore Windows Event Logs<br>
+                                    • ❌ Don't skip Docker Desktop diagnostic tools<br>
+                                    • ❌ Don't overlook network and firewall issues<br>
+                                    • ✅ Keep comprehensive logs and monitoring
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        // Copy code functionality
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling.textContent;
+            navigator.clipboard.writeText(codeBlock).then(() => {
+                button.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => {
+                    button.innerHTML = '<i class="fas fa-copy"></i>';
+                }, 2000);
+            });
+        }
+
+        // Search functionality
+        function searchCommands() {
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            const commandCards = document.querySelectorAll('.command-card');
+            
+            commandCards.forEach(card => {
+                const title = card.querySelector('.command-title').textContent.toLowerCase();
+                const description = card.querySelector('.command-description').textContent.toLowerCase();
+                const code = card.querySelector('.command-code').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm) || code.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    card.classList.remove('highlight');
+                    if (searchTerm) {
+                        card.classList.add('highlight');
+                    }
+                } else {
+                    card.style.display = searchTerm ? 'none' : 'block';
+                }
+            });
+        }
+
+        // Sidebar toggle for mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.overlay');
+            
+            sidebar.classList.toggle('show');
+            overlay.classList.toggle('show');
+        }
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    
+                    // Update active nav link
+                    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Close mobile sidebar
+                    if (window.innerWidth <= 768) {
+                        toggleSidebar();
+                    }
+                }
+            });
+        });
+
+        // Update active navigation on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Live Satta Matka Results - Real-time updates from all major markets">
+    <title>🔴 Live Satta Matka Results | Real-Time Updates | All Markets</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
+    
+    <!-- CSS Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader-container">
+            <div class="dice-loader">
+                <div class="dice">
+                    <div class="face front">🎲</div>
+                    <div class="face back">🎲</div>
+                    <div class="face right">🎲</div>
+                    <div class="face left">🎲</div>
+                    <div class="face top">🎲</div>
+                    <div class="face bottom">🎲</div>
+                </div>
+            </div>
+            <h3 class="loading-text">Loading<span class="dots"></span></h3>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div class="floating-actions">
+        <button class="fab-main" id="fabMain">
+            <i class="fas fa-plus"></i>
+        </button>
+        <div class="fab-options" id="fabOptions">
+            <button class="fab-option" data-tooltip="Refresh Results">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+            <button class="fab-option" data-tooltip="Notifications">
+                <i class="fas fa-bell"></i>
+            </button>
+            <button class="fab-option" data-tooltip="Share">
+                <i class="fas fa-share-alt"></i>
+            </button>
+            <button class="fab-option" data-tooltip="Settings">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollTopBtn" class="scroll-top-btn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Modern Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-glass sticky-top">
+        <div class="container">
+            <a class="navbar-brand logo-animated" href="index.html">
+                <span class="logo-icon">🎲</span>
+                <span class="logo-text">
+                    <span class="logo-main">SATTA MATKA</span>
+                    <span class="logo-sub">LIVE RESULTS</span>
+                </span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon">
+                    <i class="fas fa-bars"></i>
+                </span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="live-results.html">
+                            <i class="fas fa-broadcast-tower"></i> Live Results
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="recent-results.html">
+                            <i class="fas fa-history"></i> Recent Results
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="kalyan-matka.html">
+                            <i class="fas fa-crown"></i> Kalyan Matka
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="information.html">
+                            <i class="fas fa-info-circle"></i> Information
+                        </a>
+                    </li>
+                </ul>
+                <div class="ms-3 d-flex align-items-center gap-2">
+                    <button class="btn btn-glow btn-sm">
+                        <i class="fas fa-bell"></i> Subscribe
+                    </button>
+                    <button class="btn btn-glass btn-sm theme-toggle" id="themeToggle" title="Switch theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Live Ticker -->
+    <div class="live-ticker">
+        <div class="ticker-label">
+            <i class="fas fa-circle pulse-dot"></i> LIVE NOW
+        </div>
+        <div class="ticker-content">
+            <div class="ticker-wrapper">
+                <span>🔴 Kalyan Result Updated</span>
+                <span>💰 Milan Day: 127-69-***</span>
+                <span>⚡ Rajdhani Day Live</span>
+                <span>🎯 Time Bazar Opening Soon</span>
+                <span>🔴 Kalyan Result Updated</span>
+                <span>💰 Milan Day: 127-69-***</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="page-hero-section">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-8" data-aos="fade-up">
+                    <div class="badge-container mb-4">
+                        <span class="hero-badge">
+                            <i class="fas fa-broadcast-tower"></i> REAL-TIME UPDATES
+                        </span>
+                    </div>
+                    <h1 class="hero-title">
+                        <span class="gradient-text">Live Satta Matka</span>
+                        <span class="d-block">Results</span>
+                    </h1>
+                    <p class="hero-subtitle">Get instant updates from all major markets • Updated every 30 seconds • 100% Accurate</p>
+                    <div class="live-status-bar mt-4">
+                        <div class="status-item">
+                            <i class="fas fa-signal text-success"></i>
+                            <span>All Systems Operational</span>
+                        </div>
+                        <div class="status-item">
+                            <i class="fas fa-clock text-warning"></i>
+                            <span>Last Updated: <strong id="lastUpdated">--:--:--</strong></span>
+                        </div>
+                        <div class="status-item">
+                            <i class="fas fa-users text-info"></i>
+                            <span><strong>1,247</strong> Users Online</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Stats -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stats-card-modern text-center">
+                        <div class="stats-icon mx-auto">
+                            <i class="fas fa-signal"></i>
+                        </div>
+                        <h3 class="stats-number">LIVE</h3>
+                        <p class="stats-label">Real-Time Results</p>
+                        <div class="stats-trend up">
+                            <i class="fas fa-circle pulse-dot"></i> Active Now
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stats-card-modern text-center">
+                        <div class="stats-icon bg-success mx-auto">
+                            <i class="fas fa-check-double"></i>
+                        </div>
+                        <h3 class="stats-number">100%</h3>
+                        <p class="stats-label">Accuracy Rate</p>
+                        <div class="stats-trend up">
+                            <i class="fas fa-shield-alt"></i> Verified
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stats-card-modern text-center">
+                        <div class="stats-icon bg-warning mx-auto">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <h3 class="stats-number">24+</h3>
+                        <p class="stats-label">Markets Live</p>
+                        <div class="stats-trend up">
+                            <i class="fas fa-arrow-up"></i> All Active
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="stats-card-modern text-center">
+                        <div class="stats-icon bg-info mx-auto">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3 class="stats-number">30s</h3>
+                        <p class="stats-label">Update Interval</p>
+                        <div class="stats-trend up">
+                            <i class="fas fa-sync-alt"></i> Auto Refresh
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Premium Markets Section -->
+    <section class="py-5 bg-dark-gradient">
+        <div class="container">
+            <div class="section-header text-center mb-5" data-aos="fade-up">
+                <div class="section-badge">
+                    <i class="fas fa-crown"></i> PREMIUM MARKETS
+                </div>
+                <h2 class="section-title text-white">
+                    <span class="gradient-text">Most Popular</span> Markets
+                </h2>
+                <p class="section-subtitle text-white-50">Top trending markets with highest user activity</p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Kalyan Matka -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="result-card-modern premium-card">
+                        <div class="card-glow"></div>
+                        <div class="premium-badge">
+                            <i class="fas fa-star"></i> MOST POPULAR
+                        </div>
+                        <div class="card-header-modern">
+                            <div class="market-icon">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <div class="market-info">
+                                <h3 class="market-name">Kalyan Matka</h3>
+                                <span class="market-subtitle">Main Market • Est. 1962</span>
+                            </div>
+                            <div class="live-indicator">
+                                <span class="pulse-ring"></span>
+                                <span class="live-dot"></span>
+                            </div>
+                        </div>
+                        <div class="card-body-modern">
+                            <div class="result-display-modern">
+                                <div class="result-item">
+                                    <span class="result-label">OPEN</span>
+                                    <div class="result-value neon-text open-result">
+                                        <span class="digit">2</span>
+                                        <span class="digit">3</span>
+                                        <span class="digit">9</span>
+                                    </div>
+                                </div>
+                                <div class="result-item jodi-center">
+                                    <span class="result-label">JODI</span>
+                                    <div class="result-value neon-text-green jodi-result">
+                                        <span class="digit">4</span>
+                                        <span class="digit">5</span>
+                                    </div>
+                                </div>
+                                <div class="result-item">
+                                    <span class="result-label">CLOSE</span>
+                                    <div class="result-value neon-text-red close-result">
+                                        <span class="digit">*</span>
+                                        <span class="digit">*</span>
+                                        <span class="digit">*</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timing-bar">
+                                <div class="timing-info">
+                                    <i class="far fa-clock"></i>
+                                    <span>Next Result: <strong>09:30 PM</strong></span>
+                                </div>
+                                <div class="progress-bar-modern">
+                                    <div class="progress-fill" style="width: 60%;"></div>
+                                </div>
+                                <div class="countdown-timer">
+                                    <span class="time-unit"><strong>03</strong> hrs</span>
+                                    <span class="time-unit"><strong>24</strong> min</span>
+                                    <span class="time-unit"><strong>45</strong> sec</span>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="action-btn">
+                                    <i class="fas fa-chart-line"></i> Chart
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-history"></i> History
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-share-nodes"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-footer-modern">
+                            <div class="status-badge success">
+                                <i class="fas fa-check-circle"></i> Verified
+                            </div>
+                            <div class="view-count">
+                                <i class="fas fa-eye"></i> 15.2K views today
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Milan Day -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="result-card-modern">
+                        <div class="card-glow"></div>
+                        <div class="card-header-modern">
+                            <div class="market-icon bg-success">
+                                <i class="fas fa-sun"></i>
+                            </div>
+                            <div class="market-info">
+                                <h3 class="market-name">Milan Day</h3>
+                                <span class="market-subtitle">Day Market • Fast Results</span>
+                            </div>
+                            <div class="live-indicator">
+                                <span class="pulse-ring"></span>
+                                <span class="live-dot"></span>
+                            </div>
+                        </div>
+                        <div class="card-body-modern">
+                            <div class="result-display-modern">
+                                <div class="result-item">
+                                    <span class="result-label">OPEN</span>
+                                    <div class="result-value neon-text open-result">
+                                        <span class="digit">1</span>
+                                        <span class="digit">2</span>
+                                        <span class="digit">7</span>
+                                    </div>
+                                </div>
+                                <div class="result-item jodi-center">
+                                    <span class="result-label">JODI</span>
+                                    <div class="result-value neon-text-green jodi-result">
+                                        <span class="digit">6</span>
+                                        <span class="digit">9</span>
+                                    </div>
+                                </div>
+                                <div class="result-item">
+                                    <span class="result-label">CLOSE</span>
+                                    <div class="result-value neon-text-red close-result">
+                                        <span class="digit">*</span>
+                                        <span class="digit">*</span>
+                                        <span class="digit">*</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timing-bar">
+                                <div class="timing-info">
+                                    <i class="far fa-clock"></i>
+                                    <span>Next Result: <strong>03:30 PM</strong></span>
+                                </div>
+                                <div class="progress-bar-modern">
+                                    <div class="progress-fill" style="width: 75%;"></div>
+                                </div>
+                                <div class="countdown-timer">
+                                    <span class="time-unit"><strong>00</strong> hrs</span>
+                                    <span class="time-unit"><strong>45</strong> min</span>
+                                    <span class="time-unit"><strong>12</strong> sec</span>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="action-btn">
+                                    <i class="fas fa-chart-line"></i> Chart
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-history"></i> History
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-share-nodes"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-footer-modern">
+                            <div class="status-badge success">
+                                <i class="fas fa-check-circle"></i> Verified
+                            </div>
+                            <div class="view-count">
+                                <i class="fas fa-eye"></i> 9.8K views today
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rajdhani Day -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="result-card-modern">
+                        <div class="card-glow"></div>
+                        <div class="card-header-modern">
+                            <div class="market-icon bg-info">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="market-info">
+                                <h3 class="market-name">Rajdhani Day</h3>
+                                <span class="market-subtitle">Popular Market</span>
+                            </div>
+                            <div class="live-indicator">
+                                <span class="pulse-ring"></span>
+                                <span class="live-dot"></span>
+                            </div>
+                        </div>
+                        <div class="card-body-modern">
+                            <div class="result-display-modern">
+                                <div class="result-item">
+                                    <span class="result-label">OPEN</span>
+                                    <div class="result-value neon-text open-result">
+                                        <span class="digit">2</span>
+                                        <span class="digit">3</span>
+                                        <span class="digit">4</span>
+                                    </div>
+                                </div>
+                                <div class="result-item jodi-center">
+                                    <span class="result-label">JODI</span>
+                                    <div class="result-value neon-text-green jodi-result">
+                                        <span class="digit">4</span>
+                                        <span class="digit">5</span>
+                                    </div>
+                                </div>
+                                <div class="result-item">
+                                    <span class="result-label">CLOSE</span>
+                                    <div class="result-value neon-text-red close-result">
+                                        <span class="digit">*</span>
+                                        <span class="digit">*</span>
+                                        <span class="digit">*</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timing-bar">
+                                <div class="timing-info">
+                                    <i class="far fa-clock"></i>
+                                    <span>Next Result: <strong>04:30 PM</strong></span>
+                                </div>
+                                <div class="progress-bar-modern">
+                                    <div class="progress-fill" style="width: 50%;"></div>
+                                </div>
+                                <div class="countdown-timer">
+                                    <span class="time-unit"><strong>01</strong> hrs</span>
+                                    <span class="time-unit"><strong>15</strong> min</span>
+                                    <span class="time-unit"><strong>30</strong> sec</span>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="action-btn">
+                                    <i class="fas fa-chart-line"></i> Chart
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-history"></i> History
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-share-nodes"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-footer-modern">
+                            <div class="status-badge success">
+                                <i class="fas fa-check-circle"></i> Verified
+                            </div>
+                            <div class="view-count">
+                                <i class="fas fa-eye"></i> 11.3K views today
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- All Markets Grid -->
+    <section class="py-5">
+        <div class="container">
+            <div class="section-header text-center mb-5" data-aos="fade-up">
+                <div class="section-badge">
+                    <i class="fas fa-th-large"></i> ALL MARKETS
+                </div>
+                <h2 class="section-title">
+                    Complete <span class="gradient-text">Market List</span>
+                </h2>
+                <p class="section-subtitle">Browse all available satta matka markets</p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Continue with more markets... -->
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="compact-result-card-modern">
+                        <div class="compact-header">
+                            <div class="market-icon-small bg-purple">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-0">Time Bazar</h5>
+                                <small class="text-muted">Fast Market</small>
+                            </div>
+                            <span class="live-dot-small"></span>
+                        </div>
+                        <div class="compact-body">
+                            <div class="result-row">
+                                <span class="label">Open:</span>
+                                <span class="value text-primary">156</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="label">Jodi:</span>
+                                <span class="value text-success">23</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="label">Close:</span>
+                                <span class="value text-danger">***</span>
+                            </div>
+                        </div>
+                        <div class="compact-footer">
+                            <small><i class="far fa-clock"></i> 02:00 PM</small>
+                            <button class="btn-sm-action"><i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add similar compact cards for other markets -->
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="compact-result-card-modern">
+                        <div class="compact-header">
+                            <div class="market-icon-small bg-dark">
+                                <i class="fas fa-store"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-0">Main Bazar</h5>
+                                <small class="text-muted">Evening Market</small>
+                            </div>
+                        </div>
+                        <div class="compact-body">
+                            <div class="result-row">
+                                <span class="label">Open:</span>
+                                <span class="value text-primary">***</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="label">Jodi:</span>
+                                <span class="value text-success">**</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="label">Close:</span>
+                                <span class="value text-danger">***</span>
+                            </div>
+                        </div>
+                        <div class="compact-footer">
+                            <small><i class="far fa-clock"></i> 07:00 PM</small>
+                            <button class="btn-sm-action"><i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="compact-result-card-modern">
+                        <div class="compact-header">
+                            <div class="market-icon-small bg-warning">
+                                <i class="fas fa-moon"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-0">Milan Night</h5>
+                                <small class="text-muted">Night Market</small>
+                            </div>
+                        </div>
+                        <div class="compact-body">
+                            <div class="result-row">
+                                <span class="label">Open:</span>
+                                <span class="value text-primary">***</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="label">Jodi:</span>
+                                <span class="value text-success">**</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="label">Close:</span>
+                                <span class="value text-danger">***</span>
+                            </div>
+                        </div>
+                        <div class="compact-footer">
+                            <small><i class="far fa-clock"></i> 12:30 AM</small>
+                            <button class="btn-sm-action"><i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="compact-result-card-modern">
+                        <div class="compact-header">
+                            <div class="market-icon-small bg-danger">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-0">Madhur Day</h5>
+                                <small class="text-muted">Popular Choice</small>
+                            </div>
+                            <span class="live-dot-small"></span>
+                        </div>
+                        <div class="compact-body">
+                            <div class="result-row">
+                                <span class="label">Open:</span>
+                                <span class="value text-primary">345</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="label">Jodi:</span>
+                                <span class="value text-success">78</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="label">Close:</span>
+                                <span class="value text-danger">***</span>
+                            </div>
+                        </div>
+                        <div class="compact-footer">
+                            <small><i class="far fa-clock"></i> 01:00 PM</small>
+                            <button class="btn-sm-action"><i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add more compact cards as needed -->
+            </div>
+
+            <div class="text-center mt-5" data-aos="fade-up">
+                <button class="btn btn-glow-primary btn-lg">
+                    <i class="fas fa-sync-alt"></i> Refresh All Results
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter-section py-5 bg-dark-gradient">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8" data-aos="zoom-in">
+                    <div class="newsletter-card">
+                        <div class="newsletter-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <h3>Never Miss a Result</h3>
+                        <p>Get instant notifications when results are declared</p>
+                        <form class="newsletter-form">
+                            <div class="input-group-modern">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" placeholder="Enter your email address" required>
+                                <button type="submit" class="btn btn-glow-primary">
+                                    Subscribe <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </form>
+                        <p class="newsletter-note">
+                            <i class="fas fa-lock"></i> We respect your privacy. Unsubscribe anytime.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-modern">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="footer-widget">
+                            <div class="footer-logo">
+                                <span class="logo-icon">🎲</span>
+                                <span class="logo-text">SATTA MATKA LIVE</span>
+                            </div>
+                            <p class="footer-description">Your most trusted source for real-time satta matka results. We provide accurate and instant updates from all major markets 24/7.</p>
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="footer-widget">
+                            <h5 class="footer-title">Quick Links</h5>
+                            <ul class="footer-links">
+                                <li><a href="index.html">Home</a></li>
+                                <li><a href="live-results.html">Live Results</a></li>
+                                <li><a href="recent-results.html">Recent Results</a></li>
+                                <li><a href="kalyan-matka.html">Kalyan Matka</a></li>
+                                <li><a href="information.html">Information</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-widget">
+                            <h5 class="footer-title">Popular Markets</h5>
+                            <ul class="footer-links">
+                                <li><a href="kalyan-matka.html">Kalyan Matka</a></li>
+                                <li><a href="#">Milan Day</a></li>
+                                <li><a href="#">Milan Night</a></li>
+                                <li><a href="#">Rajdhani Day</a></li>
+                                <li><a href="#">Time Bazar</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-widget">
+                            <h5 class="footer-title">Contact Info</h5>
+                            <ul class="footer-contact">
+                                <li>
+                                    <i class="fas fa-envelope"></i>
+                                    <span>info@sattamatkalive.com</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-phone"></i>
+                                    <span>+91 98765 43210</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-clock"></i>
+                                    <span>24/7 Support</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="copyright">© 2024 Satta Matka Live. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <div class="footer-bottom-links">
+                            <a href="#">Privacy Policy</a>
+                            <a href="#">Terms of Service</a>
+                            <a href="#">Disclaimer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-wave">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#0a0e27" fill-opacity="0.3" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,101.3C1248,85,1344,75,1392,69.3L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+            </svg>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+    
+    <style>
+        /* Additional page-specific styles */
+        .page-hero-section {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            padding: 6rem 0 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .live-status-bar {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+        
+        .premium-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            z-index: 10;
+            letter-spacing: 0.5px;
+        }
+        
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 0.75rem;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .time-unit {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .time-unit strong {
+            color: white;
+            font-size: 1.1rem;
+        }
+        
+        .compact-result-card-modern {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .compact-result-card-modern:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        }
+        
+        .compact-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        
+        .compact-header h5 {
+            color: white;
+            font-size: 1rem;
+            margin: 0;
+        }
+        
+        .market-icon-small {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .live-dot-small {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #10b981;
+            animation: pulse 2s infinite;
+        }
+        
+        .compact-body {
+            padding: 1rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .result-row .label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+        
+        .result-row .value {
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .compact-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+        
+        .compact-footer small {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .btn-sm-action {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.5);
+            color: #6366f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-sm-action:hover {
+            background: #6366f1;
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        @media (max-width: 768px) {
+            .live-status-bar {
+                gap: 1rem;
+            }
+            
+            .countdown-timer {
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</body>
+</html>
