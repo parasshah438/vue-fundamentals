@@ -1,0 +1,714 @@
+<!-- ============================================ -->
+<!-- FILE: index.php -->
+<!-- ============================================ -->
+<?php
+// Database configuration
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'ecommerce');
+
+// Create database connection
+$conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+mysqli_set_charset($conn, 'utf8mb4');
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Category Dropdown</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        
+        .location-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .location-dropdown {
+            position: relative;
+        }
+        
+        .dropdown-panel {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: none;
+            min-width: 320px;
+        }
+        
+        .dropdown-panel.show {
+            display: block;
+        }
+        
+        .left-panel {
+            width: 320px;
+            max-height: 400px;
+            overflow-y: auto;
+            background-color: white;
+            position: relative;
+        }
+        
+        .back-header {
+            padding: 12px 16px;
+            background-color: #e7f3ff;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .select-item {
+            padding: 11px 16px;
+            margin: 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .select-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .select-item.selected {
+            background-color: #e7f3ff;
+            font-weight: 500;
+        }
+        
+        .select-item-label {
+            flex: 1;
+            user-select: none;
+        }
+        
+        .chevron-icon {
+            color: #6c757d;
+            font-size: 14px;
+            margin-left: auto;
+        }
+        
+        .right-panel {
+            position: fixed;
+            width: 280px;
+            background-color: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.15);
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1002;
+        }
+        
+        .right-panel.show {
+            display: block;
+        }
+        
+        .right-panel-header {
+            padding: 12px 16px;
+            background-color: #f8f9fa;
+            color: #333;
+            border-bottom: 1px solid #dee2e6;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .option-item {
+            padding: 11px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            background-color: white;
+            position: relative;
+        }
+        
+        .option-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .option-item.selected {
+            background-color: #e7f3ff;
+            font-weight: 500;
+        }
+        
+        .option-item-label {
+            flex: 1;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .selected-info {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .selected-info .info-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+        
+        .selected-info .info-label {
+            font-weight: 600;
+            width: 150px;
+            color: #495057;
+        }
+        
+        .selected-info .info-value {
+            color: #0d6efd;
+            flex: 1;
+        }
+        
+        .location-input {
+            cursor: pointer;
+        }
+        
+        .db-preview {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f1f3f5;
+            border-radius: 4px;
+            border: 1px dashed #6c757d;
+        }
+        
+        .db-preview h6 {
+            margin-bottom: 10px;
+            color: #495057;
+        }
+        
+        .db-preview pre {
+            background-color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 0;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="location-container">
+        <h5 class="mb-4">Dynamic Category Selection (3-Level Hierarchy)</h5>
+        
+        <div class="mb-3 location-dropdown">
+            <label class="form-label">Select Category</label>
+            <input type="text" 
+                   class="form-control location-input" 
+                   id="categoryInput" 
+                   placeholder="Click to select category"
+                   readonly>
+            
+            <div class="dropdown-panel" id="dropdownPanel">
+                <div class="left-panel" id="mainPanel">
+                    <div class="back-header">
+                        <i class="bi bi-grid-3x3"></i>
+                        <span>Main Categories</span>
+                    </div>
+                    <!-- Main categories will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- Selected Information Display -->
+            <div class="selected-info" id="selectedInfo" style="display: none;">
+                <div class="info-row">
+                    <span class="info-label">Main Category:</span>
+                    <span class="info-value" id="displayMainCat">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Sub Category:</span>
+                    <span class="info-value" id="displaySubCat">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Sub-Sub Category:</span>
+                    <span class="info-value" id="displaySubSubCat">-</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Database Preview -->
+        <div class="db-preview">
+            <h6><i class="bi bi-database"></i> Database Structure (Ready to Save)</h6>
+            <pre id="dbPreview">{
+  "category_id_1": null,
+  "category_id_2": null,
+  "category_id_3": null,
+  "category_name_1": null,
+  "category_name_2": null,
+  "category_name_3": null
+}</pre>
+        </div>
+        
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary flex-fill" onclick="clearSelection()">Clear</button>
+            <button type="button" class="btn btn-primary flex-fill" onclick="saveToDatabase()">Save to Database</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let selectedCategories = {
+            level1: { id: null, name: null },
+            level2: { id: null, name: null },
+            level3: { id: null, name: null }
+        };
+        
+        const input = document.getElementById('categoryInput');
+        const panel = document.getElementById('dropdownPanel');
+        
+        // Load main categories on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCategories(null, 'mainPanel', 1);
+        });
+        
+        // Toggle dropdown on input click
+        input.addEventListener('click', function(e) {
+            e.stopPropagation();
+            panel.classList.toggle('show');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!panel.contains(e.target) && e.target !== input) {
+                panel.classList.remove('show');
+                document.querySelectorAll('.right-panel').forEach(p => p.remove());
+            }
+        });
+        
+        panel.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+        
+        function loadCategories(parentId, targetElementId, level) {
+            const formData = new FormData();
+            formData.append('action', 'get_categories');
+            formData.append('parent_id', parentId || '');
+            
+            fetch('ajax_handler.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    renderCategories(data.categories, targetElementId, level);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        
+        function renderCategories(categories, targetElementId, level) {
+            const targetElement = document.getElementById(targetElementId);
+            if (!targetElement) return;
+            
+            // Clear existing items except header
+            const existingItems = targetElement.querySelectorAll('.select-item, .option-item');
+            existingItems.forEach(item => item.remove());
+            
+            categories.forEach(category => {
+                const item = document.createElement('div');
+                
+                if (level === 1) {
+                    item.className = 'select-item';
+                    item.innerHTML = `
+                        <span class="select-item-label">${category.name}</span>
+                        ${category.has_children ? '<i class="bi bi-chevron-right chevron-icon"></i>' : ''}
+                    `;
+                } else {
+                    item.className = 'option-item';
+                    item.innerHTML = `
+                        <span class="option-item-label">${category.name}</span>
+                        ${category.has_children ? '<i class="bi bi-chevron-right chevron-icon"></i>' : ''}
+                    `;
+                }
+                
+                item.setAttribute('data-id', category.id);
+                item.setAttribute('data-name', category.name);
+                item.setAttribute('data-has-children', category.has_children);
+                item.setAttribute('data-level', level);
+                
+                // Hover event for items with children
+                if (category.has_children) {
+                    item.addEventListener('mouseenter', function() {
+                        const panelId = 'panel_' + category.id;
+                        showSubPanel(this, category.id, category.name, level, panelId);
+                    });
+                    
+                    item.addEventListener('mouseleave', function() {
+                        const panelId = 'panel_' + category.id;
+                        const subPanel = document.getElementById(panelId);
+                        setTimeout(() => {
+                            if (subPanel && !subPanel.matches(':hover')) {
+                                subPanel.remove();
+                            }
+                        }, 100);
+                    });
+                }
+                
+                // Click event
+                item.addEventListener('click', function() {
+                    handleCategorySelection(category.id, category.name, level, category.has_children);
+                });
+                
+                targetElement.appendChild(item);
+            });
+        }
+        
+        function showSubPanel(item, categoryId, categoryName, parentLevel, panelId) {
+            // Remove other panels at the same or deeper level
+            document.querySelectorAll('.right-panel').forEach(p => {
+                const pLevel = parseInt(p.getAttribute('data-level') || 0);
+                if (pLevel >= parentLevel + 1) {
+                    p.remove();
+                }
+            });
+            
+            // Check if panel already exists
+            let subPanel = document.getElementById(panelId);
+            if (!subPanel) {
+                subPanel = document.createElement('div');
+                subPanel.id = panelId;
+                subPanel.className = 'right-panel';
+                subPanel.setAttribute('data-level', parentLevel + 1);
+                
+                const header = document.createElement('div');
+                header.className = 'right-panel-header';
+                header.textContent = categoryName + ' - Subcategories';
+                
+                subPanel.appendChild(header);
+                document.body.appendChild(subPanel);
+                
+                // Load subcategories
+                loadCategories(categoryId, panelId, parentLevel + 1);
+                
+                // Keep panel visible on hover
+                subPanel.addEventListener('mouseenter', function() {
+                    this.classList.add('show');
+                });
+                
+                subPanel.addEventListener('mouseleave', function() {
+                    this.remove();
+                });
+            }
+            
+            // Position the panel
+            const itemRect = item.getBoundingClientRect();
+            let leftPos;
+            
+            if (parentLevel === 1) {
+                const mainPanelRect = panel.getBoundingClientRect();
+                leftPos = mainPanelRect.right + 5;
+            } else {
+                const parentPanel = item.closest('.right-panel');
+                const parentRect = parentPanel.getBoundingClientRect();
+                leftPos = parentRect.right + 5;
+            }
+            
+            subPanel.style.left = leftPos + 'px';
+            subPanel.style.top = itemRect.top + 'px';
+            subPanel.classList.add('show');
+        }
+        
+        function handleCategorySelection(id, name, level, hasChildren) {
+            // Store selected category at appropriate level
+            if (level === 1) {
+                selectedCategories.level1 = { id, name };
+                selectedCategories.level2 = { id: null, name: null };
+                selectedCategories.level3 = { id: null, name: null };
+            } else if (level === 2) {
+                selectedCategories.level2 = { id, name };
+                selectedCategories.level3 = { id: null, name: null };
+            } else if (level === 3) {
+                selectedCategories.level3 = { id, name };
+            }
+            
+            // Update selected class
+            document.querySelectorAll('.select-item, .option-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            document.querySelectorAll(`[data-id="${id}"][data-level="${level}"]`).forEach(item => {
+                item.classList.add('selected');
+            });
+            
+            updateDisplay();
+            
+            // Close dropdown if no children or if it's level 3
+            if (!hasChildren || level === 3) {
+                setTimeout(() => {
+                    panel.classList.remove('show');
+                    document.querySelectorAll('.right-panel').forEach(p => p.remove());
+                }, 200);
+            }
+        }
+        
+        function updateDisplay() {
+            const selectedInfo = document.getElementById('selectedInfo');
+            
+            if (selectedCategories.level1.id) {
+                selectedInfo.style.display = 'block';
+                document.getElementById('displayMainCat').textContent = selectedCategories.level1.name || '-';
+                document.getElementById('displaySubCat').textContent = selectedCategories.level2.name || '-';
+                document.getElementById('displaySubSubCat').textContent = selectedCategories.level3.name || '-';
+                
+                let displayText = selectedCategories.level1.name;
+                if (selectedCategories.level2.name) displayText += ' > ' + selectedCategories.level2.name;
+                if (selectedCategories.level3.name) displayText += ' > ' + selectedCategories.level3.name;
+                input.value = displayText;
+            } else {
+                selectedInfo.style.display = 'none';
+                input.value = '';
+            }
+            
+            updateDBPreview();
+        }
+        
+        function updateDBPreview() {
+            const dbData = {
+                category_id_1: selectedCategories.level1.id,
+                category_id_2: selectedCategories.level2.id,
+                category_id_3: selectedCategories.level3.id,
+                category_name_1: selectedCategories.level1.name,
+                category_name_2: selectedCategories.level2.name,
+                category_name_3: selectedCategories.level3.name
+            };
+            document.getElementById('dbPreview').textContent = JSON.stringify(dbData, null, 2);
+        }
+        
+        function clearSelection() {
+            selectedCategories = {
+                level1: { id: null, name: null },
+                level2: { id: null, name: null },
+                level3: { id: null, name: null }
+            };
+            
+            document.querySelectorAll('.select-item, .option-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            updateDisplay();
+        }
+        
+        function saveToDatabase() {
+            if (!selectedCategories.level1.id) {
+                alert('Please select at least a main category!');
+                return;
+            }
+            
+            const dataToSave = {
+                category_id_1: selectedCategories.level1.id,
+                category_id_2: selectedCategories.level2.id,
+                category_id_3: selectedCategories.level3.id,
+                category_name_1: selectedCategories.level1.name,
+                category_name_2: selectedCategories.level2.name,
+                category_name_3: selectedCategories.level3.name
+            };
+            
+            const formData = new FormData();
+            formData.append('action', 'save_selection');
+            formData.append('data', JSON.stringify(dataToSave));
+            
+            fetch('ajax_handler.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert('Selection saved successfully!');
+                } else {
+                    alert('Error saving: ' + result.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error saving selection');
+            });
+        }
+    </script>
+</body>
+</html>
+<?php mysqli_close($conn); ?>
+
+
+<!-- ============================================ -->
+<!-- FILE: ajax_handler.php -->
+<!-- ============================================ -->
+<?php
+// Database configuration
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'ecommerce');
+
+// Create database connection
+$conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+if (!$conn) {
+    die(json_encode(['success' => false, 'message' => 'Connection failed']));
+}
+
+mysqli_set_charset($conn, 'utf8mb4');
+
+header('Content-Type: application/json');
+
+$action = $_POST['action'] ?? '';
+
+if ($action === 'get_categories') {
+    $parent_id = $_POST['parent_id'] ?? '';
+    
+    // Build query based on parent_id
+    if ($parent_id === '') {
+        // Get main categories (parent_id IS NULL)
+        $query = "SELECT id, name, parent_id FROM categories WHERE parent_id IS NULL ORDER BY name ASC";
+    } else {
+        // Get subcategories
+        $query = "SELECT id, name, parent_id FROM categories WHERE parent_id = ? ORDER BY name ASC";
+    }
+    
+    $stmt = mysqli_prepare($conn, $query);
+    
+    if ($parent_id !== '') {
+        mysqli_stmt_bind_param($stmt, 'i', $parent_id);
+    }
+    
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    
+    $categories = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        // Check if this category has children
+        $check_query = "SELECT COUNT(*) as count FROM categories WHERE parent_id = ?";
+        $check_stmt = mysqli_prepare($conn, $check_query);
+        mysqli_stmt_bind_param($check_stmt, 'i', $row['id']);
+        mysqli_stmt_execute($check_stmt);
+        $check_result = mysqli_stmt_get_result($check_stmt);
+        $check_row = mysqli_fetch_assoc($check_result);
+        
+        $categories[] = [
+            'id' => $row['id'],
+            'name' => $row['name'],
+            'parent_id' => $row['parent_id'],
+            'has_children' => $check_row['count'] > 0
+        ];
+        
+        mysqli_stmt_close($check_stmt);
+    }
+    
+    mysqli_stmt_close($stmt);
+    
+    echo json_encode([
+        'success' => true,
+        'categories' => $categories
+    ]);
+    
+} elseif ($action === 'save_selection') {
+    $data = json_decode($_POST['data'], true);
+    
+    // Here you can save to your database
+    // Example: INSERT INTO user_selections (category_id_1, category_id_2, category_id_3, ...) VALUES (?, ?, ?, ...)
+    
+    // For demonstration, just return success
+    echo json_encode([
+        'success' => true,
+        'message' => 'Selection saved successfully',
+        'data' => $data
+    ]);
+    
+} else {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Invalid action'
+    ]);
+}
+
+mysqli_close($conn);
+?>
+
+
+<!-- ============================================ -->
+<!-- FILE: database_setup.sql -->
+<!-- SQL to create the categories table -->
+<!-- ============================================ -->
+
+-- Create database
+CREATE DATABASE IF NOT EXISTS ecommerce;
+USE ecommerce;
+
+-- Create categories table
+CREATE TABLE IF NOT EXISTS categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    parent_id INT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_parent_id (parent_id),
+    FOREIGN KEY (parent_id) REFERENCES categories(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Insert sample data
+
+-- Level 1: Main Categories (parent_id = NULL)
+INSERT INTO categories (name, parent_id) VALUES
+('Electronics', NULL),
+('Clothing', NULL),
+('Home & Kitchen', NULL),
+('Books', NULL);
+
+-- Level 2: Sub Categories
+INSERT INTO categories (name, parent_id) VALUES
+-- Electronics subcategories
+('Mobile Phones', 1),
+('Laptops', 1),
+('Cameras', 1),
+-- Clothing subcategories
+('Men', 2),
+('Women', 2),
+('Kids', 2),
+-- Home & Kitchen subcategories
+('Furniture', 3),
+('Appliances', 3);
+
+-- Level 3: Sub-Sub Categories
+INSERT INTO categories (name, parent_id) VALUES
+-- Mobile Phones subcategories
+('Smartphones', 5),
+('Feature Phones', 5),
+-- Laptops subcategories
+('Gaming Laptops', 6),
+('Business Laptops', 6),
+-- Men's Clothing subcategories
+('Shirts', 8),
+('Pants', 8),
+-- Women's Clothing subcategories
+('Dresses', 9),
+('Tops', 9),
+-- Furniture subcategories
+('Beds', 11),
+('Sofas', 11);

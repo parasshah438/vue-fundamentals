@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React.js Complete Guide - A to Z Reference</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #61dafb 0%, #0e7490 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #61dafb 0%, #0e7490 100%);
+            color: #fff;
+            padding: 2rem 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        .nav-toggle {
+            display: block;
+            background: #61dafb;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1051;
+            border-radius: 6px;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #1e293b;
+            color: #fff;
+            overflow-y: auto;
+            z-index: 1050;
+            transform: translateX(-280px);
+            transition: transform 0.3s ease;
+            padding-top: 80px;
+        }
+
+        .sidebar.active { transform: translateX(0); }
+
+        .sidebar ul { list-style: none; padding: 0; margin: 0; }
+
+        .sidebar li { border-bottom: 1px solid #334155; }
+
+        .sidebar a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 14px 18px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .sidebar a:hover {
+            background: #334155;
+            padding-left: 28px;
+            color: #fff;
+        }
+
+        .sidebar a.active {
+            background: #61dafb;
+            border-left: 4px solid #0e7490;
+            color: #0b2230;
+            font-weight: 700;
+        }
+
+        .search-container {
+            padding: 18px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 25px;
+            background: #334155;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .search-box::placeholder { color: #94a3b8; }
+
+        .search-box:focus { background: #475569; }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1040;
+            display: none;
+        }
+
+        .overlay.active { display: block; }
+
+        .main-content {
+            margin-left: 0;
+            padding: 2rem;
+            transition: margin-left 0.3s ease;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+            scroll-margin-top: 110px;
+        }
+
+        .section h2 {
+            color: #1e293b;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #61dafb;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 {
+            color: #334155;
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem;
+            padding-left: 10px;
+            border-left: 4px solid #61dafb;
+        }
+
+        pre {
+            background: #1e293b !important;
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow-x: auto;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        code {
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 0.9rem;
+        }
+
+        .inline-code {
+            background: #f1f5f9;
+            color: #0e7490;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.25rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .feature-card h4 {
+            color: #0e7490;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #61dafb;
+            color: #0b2230;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 2px;
+        }
+
+        .badge.new { background: #10b981; color: #fff; }
+        .badge.advanced { background: #f59e0b; color: #fff; }
+        .badge.important { background: #ef4444; color: #fff; }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+        }
+
+        .alert.info { background: #e0f2fe; border-color: #0369a1; color: #0c4a6e; }
+        .alert.warning { background: #fef3c7; border-color: #d97706; color: #92400e; }
+        .alert.success { background: #d1fae5; border-color: #059669; color: #065f46; }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: #61dafb;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .back-to-top:hover {
+            background: #0e7490;
+            transform: translateY(-2px);
+        }
+
+        .back-to-top.visible { display: flex; }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8rem; }
+            .header p { font-size: 1rem; }
+
+            .nav-toggle { padding: 8px 12px; font-size: 1rem; }
+
+            .sidebar {
+                width: 100vw;
+                transform: translateX(-100%);
+                max-width: 100vw;
+            }
+
+            .main-content {
+                padding: 1rem;
+                padding-top: 70px;
+                margin-left: 0;
+                width: 100%;
+                max-width: 100vw;
+                overflow-x: hidden;
+            }
+
+            .section {
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+                border-radius: 8px;
+                background: #fff;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                width: 100%;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+
+            .section h2 {
+                font-size: 1.4rem;
+                margin-bottom: 0.75rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .section h3 { font-size: 1.2rem; margin: 1rem 0 0.5rem; }
+
+            code { font-size: 0.82rem; }
+
+            .feature-grid { grid-template-columns: 1fr; }
+
+            .back-to-top {
+                width: 45px;
+                height: 45px;
+                bottom: 15px;
+                right: 15px;
+                font-size: 1rem;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 100vw;
+                margin: 0;
+                padding: 0;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .nav-toggle { display: none; }
+            .sidebar { transform: translateX(0); position: fixed; padding-top: 0; }
+            .main-content { margin-left: 280px; padding: 2rem; }
+            .overlay { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <button class="nav-toggle" id="nav-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="search-container">
+            <input type="text" class="search-box" placeholder="Search React topics..." onkeyup="searchContent(this.value)" />
+        </div>
+        <ul>
+            <li><a href="#introduction" onclick="closeSidebar()"><i class="fab fa-react"></i> Introduction</a></li>
+            <li><a href="#setup" onclick="closeSidebar()"><i class="fas fa-play"></i> Setup</a></li>
+            <li><a href="#components" onclick="closeSidebar()"><i class="fas fa-cube"></i> Components</a></li>
+            <li><a href="#jsx" onclick="closeSidebar()"><i class="fas fa-code"></i> JSX</a></li>
+            <li><a href="#props" onclick="closeSidebar()"><i class="fas fa-share-alt"></i> Props</a></li>
+            <li><a href="#state" onclick="closeSidebar()"><i class="fas fa-database"></i> State</a></li>
+            <li><a href="#hooks" onclick="closeSidebar()"><i class="fas fa-anchor"></i> Hooks</a></li>
+            <li><a href="#events" onclick="closeSidebar()"><i class="fas fa-mouse-pointer"></i> Events</a></li>
+            <li><a href="#forms" onclick="closeSidebar()"><i class="fas fa-wpforms"></i> Forms</a></li>
+            <li><a href="#lists" onclick="closeSidebar()"><i class="fas fa-list"></i> Lists & Keys</a></li>
+            <li><a href="#context" onclick="closeSidebar()"><i class="fas fa-share-nodes"></i> Context API</a></li>
+            <li><a href="#routing" onclick="closeSidebar()"><i class="fas fa-route"></i> Routing</a></li>
+            <li><a href="#refs" onclick="closeSidebar()"><i class="fas fa-link"></i> Refs</a></li>
+            <li><a href="#performance" onclick="closeSidebar()"><i class="fas fa-tachometer-alt"></i> Performance</a></li>
+            <li><a href="#lazy" onclick="closeSidebar()"><i class="fas fa-spinner"></i> Lazy Loading</a></li>
+            <li><a href="#errors" onclick="closeSidebar()"><i class="fas fa-shield-halved"></i> Error Boundaries</a></li>
+            <li><a href="#api" onclick="closeSidebar()"><i class="fas fa-globe"></i> API Calls</a></li>
+            <li><a href="#testing" onclick="closeSidebar()"><i class="fas fa-flask"></i> Testing</a></li>
+            <li><a href="#deployment" onclick="closeSidebar()"><i class="fas fa-rocket"></i> Deployment</a></li>
+            <li><a href="#best-practices" onclick="closeSidebar()"><i class="fas fa-star"></i> Best Practices</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header class="header">
+            <h1><i class="fab fa-react"></i> React.js A to Z Guide</h1>
+            <p>Features + small syntax code examples (React flow)</p>
+        </header>
+
+        <main class="main-content" id="main-content">
+            <section class="section" id="introduction">
+                <h2><i class="fab fa-react"></i> Introduction</h2>
+                <div class="alert info">
+                    <strong>React</strong> is a JavaScript library for building UI using <span class="inline-code">components</span>, <span class="inline-code">props</span>, and <span class="inline-code">state</span>.
+                </div>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-cube"></i> Component-Based</h4>
+                        <p>Split UI into reusable pieces.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-sync"></i> Declarative</h4>
+                        <p>UI is a function of state.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-bolt"></i> Fast Updates</h4>
+                        <p>Efficient re-rendering via reconciliation.</p>
+                    </div>
+                </div>
+
+                <h3>Minimal Component</h3>
+                <pre><code class="language-jsx">function App() {
+  return &lt;h1&gt;Hello React&lt;/h1&gt;;
+}
+export default App;</code></pre>
+            </section>
+
+            <section class="section" id="setup">
+                <h2><i class="fas fa-play"></i> Setup</h2>
+
+                <h3>Create app (Vite) <span class="badge new">Recommended</span></h3>
+                <pre><code class="language-bash">npm create vite@latest my-app -- --template react
+cd my-app
+npm install
+npm run dev</code></pre>
+
+                <h3>Create app (CRA) <span class="badge advanced">Legacy</span></h3>
+                <pre><code class="language-bash">npx create-react-app my-app
+cd my-app
+npm start</code></pre>
+            </section>
+
+            <section class="section" id="components">
+                <h2><i class="fas fa-cube"></i> Components</h2>
+
+                <h3>Function Component</h3>
+                <pre><code class="language-jsx">const Welcome = ({ name }) =&gt; {
+  return &lt;h2&gt;Hello, {name}!&lt;/h2&gt;;
+};</code></pre>
+
+                <h3>Composition</h3>
+                <pre><code class="language-jsx">function App() {
+  return (
+    &lt;div&gt;
+      &lt;Header /&gt;
+      &lt;Main /&gt;
+      &lt;Footer /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+            </section>
+
+            <section class="section" id="jsx">
+                <h2><i class="fas fa-code"></i> JSX</h2>
+
+                <h3>Rules</h3>
+                <div class="alert warning">
+                    <strong>JSX basics:</strong>
+                    <ul>
+                        <li>Return one parent element (or Fragment).</li>
+                        <li>Use <span class="inline-code">className</span> not <span class="inline-code">class</span>.</li>
+                        <li>Use <span class="inline-code">{ }</span> for JS expressions.</li>
+                    </ul>
+                </div>
+
+                <pre><code class="language-jsx">const user = { name: 'Aisha' };
+
+function Hello() {
+  return (
+    &lt;&gt;
+      &lt;h1 className="title"&gt;Hi {user.name}&lt;/h1&gt;
+      &lt;p&gt;2 + 2 = {2 + 2}&lt;/p&gt;
+    &lt;/&gt;
+  );
+}</code></pre>
+            </section>
+
+            <section class="section" id="props">
+                <h2><i class="fas fa-share-alt"></i> Props</h2>
+
+                <h3>Passing + Destructuring</h3>
+                <pre><code class="language-jsx">function UserCard({ name, role }) {
+  return &lt;div&gt;{name} - {role}&lt;/div&gt;;
+}
+
+function App() {
+  return &lt;UserCard name="Sara" role="Admin" /&gt;;
+}</code></pre>
+
+                <h3>Children</h3>
+                <pre><code class="language-jsx">function Card({ title, children }) {
+  return (
+    &lt;section&gt;
+      &lt;h3&gt;{title}&lt;/h3&gt;
+      &lt;div&gt;{children}&lt;/div&gt;
+    &lt;/section&gt;
+  );
+}
+
+&lt;Card title="Info"&gt;
+  &lt;p&gt;Inside&lt;/p&gt;
+&lt;/Card&gt;;</code></pre>
+            </section>
+
+            <section class="section" id="state">
+                <h2><i class="fas fa-database"></i> State</h2>
+
+                <h3>useState</h3>
+                <pre><code class="language-jsx">import { useState } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;
+      Count: {count}
+    &lt;/button&gt;
+  );
+}</code></pre>
+
+                <h3>State (object) update</h3>
+                <pre><code class="language-jsx">const [user, setUser] = useState({ name: '', email: '' });
+
+setUser(prev =&gt; ({ ...prev, email: 'a@b.com' }));</code></pre>
+            </section>
+
+            <section class="section" id="hooks">
+                <h2><i class="fas fa-anchor"></i> Hooks</h2>
+
+                <h3>useEffect (fetch / side effects)</h3>
+                <pre><code class="language-jsx">import { useEffect, useState } from 'react';
+
+function Users() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() =&gt; {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then(r =&gt; r.json())
+      .then(setUsers);
+  }, []);
+
+  return users.map(u =&gt; &lt;div key={u.id}&gt;{u.name}&lt;/div&gt;);
+}</code></pre>
+
+                <h3>Custom Hook</h3>
+                <pre><code class="language-jsx">function useToggle(initial = false) {
+  const [value, setValue] = useState(initial);
+  const toggle = () =&gt; setValue(v =&gt; !v);
+  return [value, toggle];
+}</code></pre>
+            </section>
+
+            <section class="section" id="events">
+                <h2><i class="fas fa-mouse-pointer"></i> Events</h2>
+
+                <h3>Click + input</h3>
+                <pre><code class="language-jsx">function Example() {
+  const [text, setText] = useState('');
+
+  return (
+    &lt;div&gt;
+      &lt;input value={text} onChange={e =&gt; setText(e.target.value)} /&gt;
+      &lt;button onClick={() =&gt; alert(text)}&gt;Show&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+            </section>
+
+            <section class="section" id="forms">
+                <h2><i class="fas fa-wpforms"></i> Forms</h2>
+
+                <h3>Controlled Form</h3>
+                <pre><code class="language-jsx">function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const submit = (e) =&gt; {
+    e.preventDefault();
+    console.log({ email, password });
+  };
+
+  return (
+    &lt;form onSubmit={submit}&gt;
+      &lt;input value={email} onChange={e =&gt; setEmail(e.target.value)} /&gt;
+      &lt;input type="password" value={password} onChange={e =&gt; setPassword(e.target.value)} /&gt;
+      &lt;button type="submit"&gt;Login&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+            </section>
+
+            <section class="section" id="lists">
+                <h2><i class="fas fa-list"></i> Lists & Keys</h2>
+
+                <h3>Map + key</h3>
+                <pre><code class="language-jsx">const items = [{ id: 1, name: 'A' }, { id: 2, name: 'B' }];
+
+function List() {
+  return (
+    &lt;ul&gt;
+      {items.map(i =&gt; (
+        &lt;li key={i.id}&gt;{i.name}&lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}</code></pre>
+
+                <div class="alert warning">
+                    <strong>Key rule:</strong> prefer stable unique IDs; avoid array index as key for dynamic lists.
+                </div>
+            </section>
+
+            <section class="section" id="context">
+                <h2><i class="fas fa-share-nodes"></i> Context API</h2>
+
+                <h3>Provider + useContext</h3>
+                <pre><code class="language-jsx">import { createContext, useContext, useState } from 'react';
+
+const ThemeContext = createContext(null);
+
+function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState('light');
+  return (
+    &lt;ThemeContext.Provider value={{ theme, setTheme }}&gt;
+      {children}
+    &lt;/ThemeContext.Provider&gt;
+  );
+}
+
+function ToggleTheme() {
+  const { theme, setTheme } = useContext(ThemeContext);
+  return (
+    &lt;button onClick={() =&gt; setTheme(t =&gt; (t === 'light' ? 'dark' : 'light'))}&gt;
+      Theme: {theme}
+    &lt;/button&gt;
+  );
+}</code></pre>
+            </section>
+
+            <section class="section" id="routing">
+                <h2><i class="fas fa-route"></i> Routing</h2>
+
+                <h3>React Router basics</h3>
+                <pre><code class="language-jsx">import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+
+function App() {
+  return (
+    &lt;BrowserRouter&gt;
+      &lt;nav&gt;
+        &lt;Link to="/"&gt;Home&lt;/Link&gt;
+        &lt;Link to="/about"&gt;About&lt;/Link&gt;
+      &lt;/nav&gt;
+
+      &lt;Routes&gt;
+        &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
+        &lt;Route path="/about" element={&lt;About /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/BrowserRouter&gt;
+  );
+}</code></pre>
+            </section>
+
+            <section class="section" id="refs">
+                <h2><i class="fas fa-link"></i> Refs</h2>
+
+                <h3>useRef for DOM</h3>
+                <pre><code class="language-jsx">import { useEffect, useRef } from 'react';
+
+function FocusInput() {
+  const inputRef = useRef(null);
+
+  useEffect(() =&gt; {
+    inputRef.current?.focus();
+  }, []);
+
+  return &lt;input ref={inputRef} placeholder="Auto focus" /&gt;;
+}</code></pre>
+            </section>
+
+            <section class="section" id="performance">
+                <h2><i class="fas fa-tachometer-alt"></i> Performance</h2>
+
+                <h3>React.memo + useCallback <span class="badge important">Common</span></h3>
+                <pre><code class="language-jsx">import { memo, useCallback, useState } from 'react';
+
+const Child = memo(function Child({ onClick }) {
+  return &lt;button onClick={onClick}&gt;Child&lt;/button&gt;;
+});
+
+function Parent() {
+  const [count, setCount] = useState(0);
+  const onClick = useCallback(() =&gt; setCount(c =&gt; c + 1), []);
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Count: {count}&lt;/p&gt;
+      &lt;Child onClick={onClick} /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+            </section>
+
+            <section class="section" id="lazy">
+                <h2><i class="fas fa-spinner"></i> Lazy Loading</h2>
+
+                <h3>Code splitting with React.lazy</h3>
+                <pre><code class="language-jsx">import { lazy, Suspense } from 'react';
+
+const Settings = lazy(() =&gt; import('./Settings'));
+
+function App() {
+  return (
+    &lt;Suspense fallback={&lt;div&gt;Loading...&lt;/div&gt;}&gt;
+      &lt;Settings /&gt;
+    &lt;/Suspense&gt;
+  );
+}</code></pre>
+            </section>
+
+            <section class="section" id="errors">
+                <h2><i class="fas fa-shield-halved"></i> Error Boundaries</h2>
+
+                <h3>Class Error Boundary</h3>
+                <pre><code class="language-jsx">class ErrorBoundary extends React.Component {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, info) {
+    console.error(error, info);
+  }
+
+  render() {
+    if (this.state.hasError) return &lt;h2&gt;Something went wrong&lt;/h2&gt;;
+    return this.props.children;
+  }
+}
+
+// Usage
+// &lt;ErrorBoundary&gt;&lt;App /&gt;&lt;/ErrorBoundary&gt;</code></pre>
+            </section>
+
+            <section class="section" id="api">
+                <h2><i class="fas fa-globe"></i> API Calls</h2>
+
+                <h3>Fetch with loading/error</h3>
+                <pre><code class="language-jsx">function Posts() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() =&gt; {
+    setLoading(true);
+    fetch('https://jsonplaceholder.typicode.com/posts')
+      .then(r =&gt; r.json())
+      .then(setData)
+      .catch(e =&gt; setError(String(e)))
+      .finally(() =&gt; setLoading(false));
+  }, []);
+
+  if (loading) return &lt;div&gt;Loading...&lt;/div&gt;;
+  if (error) return &lt;div&gt;Error: {error}&lt;/div&gt;;
+
+  return data.slice(0, 5).map(p =&gt; &lt;div key={p.id}&gt;{p.title}&lt;/div&gt;);
+}</code></pre>
+            </section>
+
+            <section class="section" id="testing">
+                <h2><i class="fas fa-flask"></i> Testing</h2>
+
+                <h3>React Testing Library</h3>
+                <pre><code class="language-jsx">import { render, screen, fireEvent } from '@testing-library/react';
+
+test('increments', () =&gt; {
+  render(&lt;Counter /&gt;);
+  fireEvent.click(screen.getByRole('button'));
+  expect(screen.getByText(/Count: 1/i)).toBeInTheDocument();
+});</code></pre>
+            </section>
+
+            <section class="section" id="deployment">
+                <h2><i class="fas fa-rocket"></i> Deployment</h2>
+
+                <h3>Build</h3>
+                <pre><code class="language-bash">npm run build
+
+# Test locally
+npx serve -s dist   # Vite
+npx serve -s build  # CRA</code></pre>
+
+                <div class="alert info">
+                    <strong>Common deploy targets:</strong> Netlify, Vercel, GitHub Pages, AWS S3/CloudFront.
+                </div>
+            </section>
+
+            <section class="section" id="best-practices">
+                <h2><i class="fas fa-star"></i> Best Practices</h2>
+
+                <div class="alert success">
+                    <strong>Recommended:</strong>
+                    <ul>
+                        <li>Keep components small and reusable.</li>
+                        <li>Don’t mutate state; use immutable updates.</li>
+                        <li>Use stable keys in lists.</li>
+                        <li>Clean up effects (timers/subscriptions) in <span class="inline-code">useEffect</span>.</li>
+                        <li>Measure before optimizing (Profiler / DevTools).</li>
+                    </ul>
+                </div>
+
+                <h3>Folder structure</h3>
+                <pre><code class="language-bash">src/
+  components/
+  pages/
+  hooks/
+  services/
+  utils/
+  styles/</code></pre>
+            </section>
+
+            <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
+                <i class="fas fa-chevron-up"></i>
+            </button>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        function searchContent(query) {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.sidebar a');
+
+            if (!query) {
+                sections.forEach(s => (s.style.display = 'block'));
+                navLinks.forEach(l => (l.parentElement.style.display = 'block'));
+                return;
+            }
+
+            const term = query.toLowerCase();
+
+            sections.forEach(section => {
+                const content = section.textContent.toLowerCase();
+                section.style.display = content.includes(term) ? 'block' : 'none';
+            });
+
+            navLinks.forEach(link => {
+                const text = link.textContent.toLowerCase();
+                link.parentElement.style.display = text.includes(term) ? 'block' : 'none';
+            });
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.addEventListener('scroll', function () {
+            const backToTop = document.getElementById('backToTop');
+            if (window.pageYOffset > 300) backToTop.classList.add('visible');
+            else backToTop.classList.remove('visible');
+        });
+
+        window.addEventListener('scroll', function () {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.sidebar a');
+
+            let current = '';
+            sections.forEach(section => {
+                if (scrollY >= section.offsetTop - 200) current = section.getAttribute('id');
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+            });
+        });
+
+        window.addEventListener('resize', function () {
+            if (window.innerWidth > 768) closeSidebar();
+        });
+    </script>
+</body>
+</html>

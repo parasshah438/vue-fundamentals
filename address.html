@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Dropdown - Single Selection</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        
+        .location-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .location-dropdown {
+            position: relative;
+        }
+        
+        .dropdown-panel {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: none;
+            min-width: 320px;
+        }
+        
+        .dropdown-panel.show {
+            display: block;
+        }
+        
+        .left-panel {
+            width: 320px;
+            max-height: 400px;
+            overflow-y: auto;
+            background-color: white;
+            position: relative;
+        }
+        
+        .back-header {
+            padding: 12px 16px;
+            background-color: #e7f3ff;
+            border-bottom: 1px solid #dee2e6;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .back-header:hover {
+            background-color: #d0e7ff;
+        }
+        
+        .form-check-item {
+            padding: 11px 16px;
+            margin: 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .form-check-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .form-check-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        
+        .form-check-item.has-submenu {
+            position: relative;
+        }
+        
+        .form-check-input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            cursor: pointer;
+            flex-shrink: 0;
+            border: 2px solid #6c757d;
+        }
+        
+        .form-check-input[type="radio"]:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        
+        .form-check-label {
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-left: 10px;
+            margin-bottom: 0;
+            user-select: none;
+        }
+        
+        .chevron-icon {
+            color: #6c757d;
+            font-size: 14px;
+            margin-left: auto;
+        }
+        
+        .right-panel {
+            position: fixed;
+            width: 280px;
+            background-color: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.15);
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1002;
+        }
+        
+        .right-panel.show {
+            display: block;
+        }
+        
+        .right-panel-header {
+            padding: 12px 16px;
+            background-color: #f8f9fa;
+            color: #333;
+            border-bottom: 1px solid #dee2e6;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .option-item {
+            padding: 11px 16px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            background-color: white;
+            position: relative;
+        }
+        
+        .option-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .option-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        
+        .option-item.has-cities {
+            position: relative;
+        }
+        
+        .option-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            margin-right: 10px;
+            cursor: pointer;
+            flex-shrink: 0;
+            border: 2px solid #6c757d;
+        }
+        
+        .option-item input[type="radio"]:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        
+        .option-item label {
+            cursor: pointer;
+            margin: 0;
+            color: #333;
+            font-size: 14px;
+            flex: 1;
+        }
+        
+        .city-panel {
+            position: fixed;
+            width: 280px;
+            background-color: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.15);
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1003;
+        }
+        
+        .city-panel.show {
+            display: block;
+        }
+        
+        .selected-info {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .selected-info .info-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+        
+        .selected-info .info-label {
+            font-weight: 600;
+            width: 100px;
+            color: #495057;
+        }
+        
+        .selected-info .info-value {
+            color: #0d6efd;
+            flex: 1;
+        }
+        
+        .location-input {
+            cursor: pointer;
+        }
+        
+        .db-preview {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f1f3f5;
+            border-radius: 4px;
+            border: 1px dashed #6c757d;
+        }
+        
+        .db-preview h6 {
+            margin-bottom: 10px;
+            color: #495057;
+        }
+        
+        .db-preview pre {
+            background-color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 0;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="location-container">
+        <h5 class="mb-4">User Address Selection</h5>
+        
+        <div class="mb-3 location-dropdown">
+            <label class="form-label">Select Location (Single Selection)</label>
+            <input type="text" 
+                   class="form-control location-input" 
+                   id="locationInput" 
+                   placeholder="Click to select country, state and city"
+                   readonly>
+            
+            <div class="dropdown-panel" id="dropdownPanel">
+                <div class="left-panel">
+                    <div class="back-header">
+                        <i class="bi bi-globe"></i>
+                        <span>Countries</span>
+                    </div>
+                    
+                    <div class="form-check-item has-submenu" data-target="indiaPanel" data-country="India">
+                        <input class="form-check-input" type="radio" name="country" id="india" onchange="handleCountrySelection(this, 'India')">
+                        <label class="form-check-label" for="india">
+                            <span>India</span>
+                            <i class="bi bi-chevron-right chevron-icon"></i>
+                        </label>
+                    </div>
+                    
+                    <div class="form-check-item has-submenu" data-target="usaPanel" data-country="USA">
+                        <input class="form-check-input" type="radio" name="country" id="usa" onchange="handleCountrySelection(this, 'USA')">
+                        <label class="form-check-label" for="usa">
+                            <span>USA</span>
+                            <i class="bi bi-chevron-right chevron-icon"></i>
+                        </label>
+                    </div>
+                    
+                    <div class="form-check-item has-submenu" data-target="ukPanel" data-country="UK">
+                        <input class="form-check-input" type="radio" name="country" id="uk" onchange="handleCountrySelection(this, 'UK')">
+                        <label class="form-check-label" for="uk">
+                            <span>UK</span>
+                            <i class="bi bi-chevron-right chevron-icon"></i>
+                        </label>
+                    </div>
+                    
+                    <div class="form-check-item has-submenu" data-target="canadaPanel" data-country="Canada">
+                        <input class="form-check-input" type="radio" name="country" id="canada" onchange="handleCountrySelection(this, 'Canada')">
+                        <label class="form-check-label" for="canada">
+                            <span>Canada</span>
+                            <i class="bi bi-chevron-right chevron-icon"></i>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- INDIA STATES PANEL -->
+            <div class="right-panel" id="indiaPanel">
+                <div class="right-panel-header">India - States</div>
+                
+                <div class="option-item has-cities" data-city-target="maharashtraCities" data-state="Maharashtra">
+                    <input type="radio" name="state" id="maharashtra" onchange="handleStateSelection(this, 'Maharashtra')" onclick="event.stopPropagation()">
+                    <label for="maharashtra">Maharashtra</label>
+                    <i class="bi bi-chevron-right chevron-icon"></i>
+                </div>
+                
+                <div class="option-item has-cities" data-city-target="delhiCities" data-state="Delhi">
+                    <input type="radio" name="state" id="delhi" onchange="handleStateSelection(this, 'Delhi')" onclick="event.stopPropagation()">
+                    <label for="delhi">Delhi</label>
+                    <i class="bi bi-chevron-right chevron-icon"></i>
+                </div>
+                
+                <div class="option-item has-cities" data-city-target="karnatakaCities" data-state="Karnataka">
+                    <input type="radio" name="state" id="karnataka" onchange="handleStateSelection(this, 'Karnataka')" onclick="event.stopPropagation()">
+                    <label for="karnataka">Karnataka</label>
+                    <i class="bi bi-chevron-right chevron-icon"></i>
+                </div>
+                
+                <div class="option-item has-cities" data-city-target="tamilnaduCities" data-state="Tamil Nadu">
+                    <input type="radio" name="state" id="tamilnadu" onchange="handleStateSelection(this, 'Tamil Nadu')" onclick="event.stopPropagation()">
+                    <label for="tamilnadu">Tamil Nadu</label>
+                    <i class="bi bi-chevron-right chevron-icon"></i>
+                </div>
+            </div>
+            
+            <!-- MAHARASHTRA CITIES -->
+            <div class="city-panel" id="maharashtraCities">
+                <div class="right-panel-header">Maharashtra - Cities</div>
+                <div class="option-item">
+                    <input type="radio" name="city" id="mumbai" onchange="handleCitySelection(this, 'Mumbai')">
+                    <label for="mumbai">Mumbai</label>
+                </div>
+                <div class="option-item">
+                    <input type="radio" name="city" id="pune" onchange="handleCitySelection(this, 'Pune')">
+                    <label for="pune">Pune</label>
+                </div>
+                <div class="option-item">
+                    <input type="radio" name="city" id="nagpur" onchange="handleCitySelection(this, 'Nagpur')">
+                    <label for="nagpur">Nagpur</label>
+                </div>
+            </div>
+            
+            <!-- DELHI CITIES -->
+            <div class="city-panel" id="delhiCities">
+                <div class="right-panel-header">Delhi - Cities</div>
+                <div class="option-item">
+                    <input type="radio" name="city" id="newdelhi" onchange="handleCitySelection(this, 'New Delhi')">
+                    <label for="newdelhi">New Delhi</label>
+                </div>
+                <div class="option-item">
+                    <input type="radio" name="city" id="dwarka" onchange="handleCitySelection(this, 'Dwarka')">
+                    <label for="dwarka">Dwarka</label>
+                </div>
+            </div>
+            
+            <!-- KARNATAKA CITIES -->
+            <div class="city-panel" id="karnatakaCities">
+                <div class="right-panel-header">Karnataka - Cities</div>
+                <div class="option-item">
+                    <input type="radio" name="city" id="bangalore" onchange="handleCitySelection(this, 'Bangalore')">
+                    <label for="bangalore">Bangalore</label>
+                </div>
+                <div class="option-item">
+                    <input type="radio" name="city" id="mysore" onchange="handleCitySelection(this, 'Mysore')">
+                    <label for="mysore">Mysore</label>
+                </div>
+            </div>
+            
+            <!-- TAMIL NADU CITIES -->
+            <div class="city-panel" id="tamilnaduCities">
+                <div class="right-panel-header">Tamil Nadu - Cities</div>
+                <div class="option-item">
+                    <input type="radio" name="city" id="chennai" onchange="handleCitySelection(this, 'Chennai')">
+                    <label for="chennai">Chennai</label>
+                </div>
+                <div class="option-item">
+                    <input type="radio" name="city" id="coimbatore" onchange="handleCitySelection(this, 'Coimbatore')">
+                    <label for="coimbatore">Coimbatore</label>
+                </div>
+            </div>
+            
+            <!-- USA STATES PANEL -->
+            <div class="right-panel" id="usaPanel">
+                <div class="right-panel-header">USA - States</div>
+                
+                <div class="option-item has-cities" data-city-target="californiaCities" data-state="California">
+                    <input type="radio" name="state" id="california" onchange="handleStateSelection(this, 'California')" onclick="event.stopPropagation()">
+                    <label for="california">California</label>
+                    <i class="bi bi-chevron-right chevron-icon"></i>
+                </div>
+                
+                <div class="option-item has-cities" data-city-target="texasCities" data-state="Texas">
+                    <input type="radio" name="state" id="texas" onchange="handleStateSelection(this, 'Texas')" onclick="event.stopPropagation()">
+                    <label for="texas">Texas</label>
+                    <i class="bi bi-chevron-right chevron-icon"></i>
+                </div>
+            </div>
+            
+            <!-- CALIFORNIA CITIES -->
+            <div class="city-panel" id="californiaCities">
+                <div class="right-panel-header">California - Cities</div>
+                <div class="option-item">
+                    <input type="radio" name="city" id="losangeles" onchange="handleCitySelection(this, 'Los Angeles')">
+                    <label for="losangeles">Los Angeles</label>
+                </div>
+                <div class="option-item">
+                    <input type="radio" name="city" id="sanfrancisco" onchange="handleCitySelection(this, 'San Francisco')">
+                    <label for="sanfrancisco">San Francisco</label>
+                </div>
+            </div>
+            
+            <!-- TEXAS CITIES -->
+            <div class="city-panel" id="texasCities">
+                <div class="right-panel-header">Texas - Cities</div>
+                <div class="option-item">
+                    <input type="radio" name="city" id="houston" onchange="handleCitySelection(this, 'Houston')">
+                    <label for="houston">Houston</label>
+                </div>
+                <div class="option-item">
+                    <input type="radio" name="city" id="dallas" onchange="handleCitySelection(this, 'Dallas')">
+                    <label for="dallas">Dallas</label>
+                </div>
+            </div>
+            
+            <!-- UK PANEL -->
+            <div class="right-panel" id="ukPanel">
+                <div class="right-panel-header">UK - Regions</div>
+                <div class="option-item">
+                    <input type="radio" name="state" id="london" onchange="handleStateSelection(this, 'London')">
+                    <label for="london">London</label>
+                </div>
+            </div>
+            
+            <!-- CANADA PANEL -->
+            <div class="right-panel" id="canadaPanel">
+                <div class="right-panel-header">Canada - Provinces</div>
+                <div class="option-item">
+                    <input type="radio" name="state" id="ontario" onchange="handleStateSelection(this, 'Ontario')">
+                    <label for="ontario">Ontario</label>
+                </div>
+            </div>
+            
+            <!-- Selected Information Display -->
+            <div class="selected-info" id="selectedInfo" style="display: none;">
+                <div class="info-row">
+                    <span class="info-label">Country:</span>
+                    <span class="info-value" id="displayCountry">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">State:</span>
+                    <span class="info-value" id="displayState">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">City:</span>
+                    <span class="info-value" id="displayCity">-</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Database Preview -->
+        <div class="db-preview">
+            <h6><i class="bi bi-database"></i> Database Structure (Ready to Save)</h6>
+            <pre id="dbPreview">{
+  "country": null,
+  "state": null,
+  "city": null
+}</pre>
+        </div>
+        
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary flex-fill" onclick="clearSelection()">Clear</button>
+            <button type="button" class="btn btn-primary flex-fill" onclick="saveToDatabase()">Save to Database</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let selectedCountry = null;
+        let selectedState = null;
+        let selectedCity = null;
+        
+        const input = document.getElementById('locationInput');
+        const panel = document.getElementById('dropdownPanel');
+        
+        input.addEventListener('click', function(e) {
+            e.stopPropagation();
+            panel.classList.toggle('show');
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!panel.contains(e.target) && e.target !== input) {
+                panel.classList.remove('show');
+                document.querySelectorAll('.right-panel, .city-panel').forEach(p => p.classList.remove('show'));
+            }
+        });
+        
+        panel.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+        
+        function showRightPanel(item, panelId) {
+            const rightPanel = document.getElementById(panelId);
+            if (!rightPanel) return;
+            
+            const itemRect = item.getBoundingClientRect();
+            const panelRect = panel.getBoundingClientRect();
+            
+            rightPanel.style.left = (panelRect.right + 5) + 'px';
+            rightPanel.style.top = itemRect.top + 'px';
+            
+            document.querySelectorAll('.right-panel, .city-panel').forEach(p => p.classList.remove('show'));
+            rightPanel.classList.add('show');
+        }
+        
+        function showCityPanel(item, cityPanelId) {
+            const cityPanel = document.getElementById(cityPanelId);
+            if (!cityPanel) return;
+            
+            const itemRect = item.getBoundingClientRect();
+            const parentPanel = item.closest('.right-panel');
+            const parentRect = parentPanel.getBoundingClientRect();
+            
+            cityPanel.style.left = (parentRect.right + 5) + 'px';
+            cityPanel.style.top = itemRect.top + 'px';
+            
+            document.querySelectorAll('.city-panel').forEach(p => p.classList.remove('show'));
+            cityPanel.classList.add('show');
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const countryItems = document.querySelectorAll('.left-panel .has-submenu');
+            countryItems.forEach(item => {
+                const targetId = item.getAttribute('data-target');
+                
+                item.addEventListener('mouseenter', function() {
+                    showRightPanel(this, targetId);
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    const rightPanel = document.getElementById(targetId);
+                    setTimeout(() => {
+                        if (!rightPanel.matches(':hover')) {
+                            rightPanel.classList.remove('show');
+                        }
+                    }, 100);
+                });
+            });
+            
+            document.querySelectorAll('.option-item.has-cities').forEach(item => {
+                const cityTargetId = item.getAttribute('data-city-target');
+                const cityPanel = document.getElementById(cityTargetId);
+                
+                item.addEventListener('mouseenter', function() {
+                    showCityPanel(this, cityTargetId);
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    setTimeout(() => {
+                        if (!cityPanel.matches(':hover')) {
+                            cityPanel.classList.remove('show');
+                        }
+                    }, 100);
+                });
+                
+                // Keep city panel visible when hovering over it
+                if (cityPanel) {
+                    cityPanel.addEventListener('mouseenter', function() {
+                        this.classList.add('show');
+                    });
+                    
+                    cityPanel.addEventListener('mouseleave', function() {
+                        this.classList.remove('show');
+                    });
+                }
+            });
+            
+            // Keep state panels visible when hovering over them or their city panels
+            document.querySelectorAll('.right-panel').forEach(statePanel => {
+                statePanel.addEventListener('mouseenter', function() {
+                    this.classList.add('show');
+                });
+                
+                statePanel.addEventListener('mouseleave', function() {
+                    const statePanelId = this.id;
+                    setTimeout(() => {
+                        // Check if any city panel from this state is being hovered
+                        const cityPanels = this.querySelectorAll('.option-item.has-cities');
+                        let anyCityPanelHovered = false;
+                        
+                        cityPanels.forEach(item => {
+                            const cityTargetId = item.getAttribute('data-city-target');
+                            const cityPanel = document.getElementById(cityTargetId);
+                            if (cityPanel && cityPanel.matches(':hover')) {
+                                anyCityPanelHovered = true;
+                            }
+                        });
+                        
+                        if (!this.matches(':hover') && !anyCityPanelHovered) {
+                            this.classList.remove('show');
+                        }
+                    }, 100);
+                });
+            });
+        });
+        
+        function handleCountrySelection(radio, country) {
+            selectedCountry = country;
+            selectedState = null;
+            selectedCity = null;
+            
+            // Uncheck all state and city radios
+            document.querySelectorAll('input[name="state"], input[name="city"]').forEach(r => r.checked = false);
+            updateDisplay();
+        }
+        
+        function handleStateSelection(radio, state) {
+            // First ensure country is selected
+            if (!selectedCountry) {
+                alert('Please select a country first!');
+                radio.checked = false;
+                return;
+            }
+            
+            selectedState = state;
+            selectedCity = null;
+            
+            // Uncheck all city radios
+            document.querySelectorAll('input[name="city"]').forEach(r => r.checked = false);
+            updateDisplay();
+        }
+        
+        function handleCitySelection(radio, city) {
+            // Ensure both country and state are selected
+            if (!selectedCountry || !selectedState) {
+                alert('Please select Country and State first!');
+                radio.checked = false;
+                return;
+            }
+            
+            selectedCity = city;
+            updateDisplay();
+            
+            // Close all panels after city selection
+            setTimeout(() => {
+                panel.classList.remove('show');
+                document.querySelectorAll('.right-panel, .city-panel').forEach(p => p.classList.remove('show'));
+            }, 200);
+        }
+        
+        function updateDisplay() {
+            const selectedInfo = document.getElementById('selectedInfo');
+            
+            if (selectedCountry) {
+                selectedInfo.style.display = 'block';
+                document.getElementById('displayCountry').textContent = selectedCountry || '-';
+                document.getElementById('displayState').textContent = selectedState || '-';
+                document.getElementById('displayCity').textContent = selectedCity || '-';
+                
+                let displayText = selectedCountry;
+                if (selectedState) displayText += ', ' + selectedState;
+                if (selectedCity) displayText += ', ' + selectedCity;
+                input.value = displayText;
+            } else {
+                selectedInfo.style.display = 'none';
+                input.value = '';
+            }
+            
+            updateDBPreview();
+        }
+        
+        function updateDBPreview() {
+            const dbData = {
+                country: selectedCountry,
+                state: selectedState,
+                city: selectedCity
+            };
+            document.getElementById('dbPreview').textContent = JSON.stringify(dbData, null, 2);
+        }
+        
+        function clearSelection() {
+            selectedCountry = null;
+            selectedState = null;
+            selectedCity = null;
+            
+            document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+            updateDisplay();
+        }
+        
+        function saveToDatabase() {
+            if (!selectedCountry || !selectedState || !selectedCity) {
+                alert('Please select Country, State and City before saving!');
+                return;
+            }
+            
+            const dataToSave = {
+                country: selectedCountry,
+                state: selectedState,
+                city: selectedCity
+            };
+            
+            console.log('Saving to database:', dataToSave);
+            
+            // Example: Send to server
+            // fetch('/api/save-address', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify(dataToSave)
+            // });
+            
+            alert('Data ready to save:\n\n' + 
+                  'Country: ' + dataToSave.country + '\n' +
+                  'State: ' + dataToSave.state + '\n' +
+                  'City: ' + dataToSave.city);
+        }
+    </script>
+</body>
+</html>

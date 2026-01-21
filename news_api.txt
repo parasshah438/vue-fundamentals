@@ -1,0 +1,116 @@
+news
+
+https://newsapi.org
+key 8bd867b88bec406d9aea9e3488a925f9
+
+
+
+## Best Free News APIs
+
+### 1. **NewsAPI** ⭐ (Most Recommended)
+- **Link**: https://newsapi.org/
+- **Free tier**: 1,000 requests/day
+- **Languages**: 14+ languages
+- **Coverage**: 80,000+ sources from 54 countries
+
+### 2. **GNews API**
+- **Link**: https://gnews.io/
+- **Free tier**: 100 requests/day
+- **Languages**: Multiple languages
+- **Features**: Real-time news
+
+### 3. **Currents API**
+- **Link**: https://currentsapi.services/
+- **Free tier**: 600 requests/day
+- **Languages**: Multiple languages
+- **Features**: Latest & historical news
+
+### 4. **NewsData.io**
+- **Link**: https://newsdata.io/
+- **Free tier**: 200 requests/day
+- **Languages**: 30+ languages
+- **Features**: Live & archive news
+
+### 5. **The Guardian API**
+- **Link**: https://open-platform.theguardian.com/
+- **Free tier**: 5,000 requests/day
+- **Language**: Primarily English
+- **Quality**: High-quality journalism
+
+
+## Free News APIs Specifically for India
+
+### 1. **NewsAPI (India Focus)** ⭐ (Best Option)
+- **Link**: https://newsapi.org/
+- **India sources**: Times of India, Hindustan Times, The Hindu, Indian Express, etc.
+- **Languages**: English + Hindi support
+- **Free tier**: 1,000 requests/day
+
+### 2. **Inshorts API** 
+- **Link**: https://github.com/cyberboysumanjay/Inshorts-News-API
+- **Focus**: Indian news in 60 words
+- **Language**: English & Hindi
+- **Free**: Completely free (unofficial)
+
+### 3. **NewsData.io (India)**
+- **Link**: https://newsdata.io/
+- **India coverage**: Good Indian news sources
+- **Languages**: English, Hindi, and regional languages
+- **Free tier**: 200 requests/day
+
+### 4. **GNews API (India)**
+- **Link**: https://gnews.io/
+- **India sources**: Major Indian publications
+- **Languages**: English & Hindi
+- **Free tier**: 100 requests/day
+
+### 5. **News API India (Unofficial)**
+- **Link**: https://github.com/SauravKanchan/NewsAPI
+- **Focus**: Specifically for Indian news
+- **Free**: Open source
+- **Sources**: Multiple Indian news websites
+
+
+## Best Free World News APIs with Language & Category Support
+
+### 1. **NewsAPI** ⭐ (Most Popular)
+- **Link**: https://newsapi.org/
+- **Categories**: Business, Entertainment, General, Health, Science, Sports, Technology
+- **Languages**: 14+ (en, ar, de, es, fr, he, it, nl, no, pt, ru, sv, ud, zh)
+- **Countries**: 54+ countries
+- **Free**: 1,000 requests/day
+
+### 2. **NewsData.io**
+- **Link**: https://newsdata.io/
+- **Categories**: Business, Entertainment, Environment, Food, Health, Politics, Science, Sports, Technology, Top, Tourism, World
+- **Languages**: 30+ languages including major world languages
+- **Countries**: 150+ countries
+- **Free**: 200 requests/day
+
+### 3. **GNews API**
+- **Link**: https://gnews.io/
+- **Categories**: General, World, Nation, Business, Technology, Entertainment, Sports, Science, Health
+- **Languages**: Multiple world languages
+- **Countries**: Global coverage
+- **Free**: 100 requests/day
+
+### 4. **Currents API**
+- **Link**: https://currentsapi.services/
+- **Categories**: Regional, Technology, Lifestyle, Business, General, Programming, Science, Entertainment, World, Sports, Finance, Academia, Politics
+- **Languages**: Multiple languages
+- **Countries**: Global
+- **Free**: 600 requests/day
+
+### 5. **MediaStack API**
+- **Link**: https://mediastack.com/
+- **Categories**: General, Business, Entertainment, Health, Science, Sports, Technology
+- **Languages**: 14+ languages
+- **Countries**: Global coverage
+- **Free**: 500 requests/month
+
+### 6. **WorldNewsAPI**
+- **Link**: https://worldnewsapi.com/
+- **Categories**: Politics, Sports, Technology, Entertainment, Health, Science, Business
+- **Languages**: 95+ languages
+- **Countries**: Worldwide
+- **Free**: 100 requests/day
