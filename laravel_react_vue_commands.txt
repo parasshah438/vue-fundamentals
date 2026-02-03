@@ -1,0 +1,80 @@
+laravel & react
+.................................
+
+Laravel Breeze (React) — Starter Kit
+
+composer require laravel/breeze --dev
+php artisan breeze:install react
+npm install
+npm run dev
+php artisan migrate
+
+
+Laravel Jetstream (React) — Advanced Starter Kit
+
+composer require laravel/jetstream
+php artisan jetstream:install inertia --react
+npm install
+npm run dev
+php artisan migrate
+
+
+Laravel + React using Vite (Pure React)
+
+npm install react react-dom
+npm install -D @vitejs/plugin-react
+
+
+Laravel + React using Inertia.js
+
+composer require inertiajs/inertia-laravel
+npm install @inertiajs/react
+
+
+Laravel API + Separate React App
+npx create-react-app frontend
+
+
+
+Laravel & vue
+........................
+
+Laravel Breeze (Vue) — Starter Kit (Auth only)
+
+composer require laravel/breeze --dev
+php artisan breeze:install vue
+npm install
+npm run dev
+php artisan migrate
+
+
+Laravel Jetstream (Vue) — Advanced Starter Kit
+
+composer require laravel/jetstream
+php artisan jetstream:install inertia
+npm install
+npm run dev
+php artisan migrate
+
+
+Laravel + Vue using Vite (Pure Vue 3)
+
+npm install vue
+npm install -D @vitejs/plugin-vue
+npm run dev
+
+
+Laravel + Vue using Inertia.js (SPA without API)
+
+composer require inertiajs/inertia-laravel
+npm install @inertiajs/vue3
+php artisan inertia:middleware
+npm run dev
+
+
+Laravel API + Separate Vue App (Decoupled)
+
+npm create vite@latest frontend -- --template vue
+cd frontend
+npm install
+npm run dev

@@ -39,7 +39,7 @@ mysqli_set_charset($conn, 'utf8mb4');
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        .location-dropdown {
+        .custom-location-dropdown {
             position: relative;
         }
         
@@ -51,7 +51,7 @@ mysqli_set_charset($conn, 'utf8mb4');
             border: 1px solid #dee2e6;
             border-radius: 4px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            z-index: 1000;
+            z-index: 10000;
             display: none;
             min-width: 320px;
         }
@@ -120,7 +120,7 @@ mysqli_set_charset($conn, 'utf8mb4');
             max-height: 400px;
             overflow-y: auto;
             display: none;
-            z-index: 1002;
+            z-index: 10001;
         }
         
         .right-panel.show {
@@ -216,16 +216,16 @@ mysqli_set_charset($conn, 'utf8mb4');
     <div class="location-container">
         <h5 class="mb-4">Dynamic Category Selection (3-Level Hierarchy)</h5>
         
-        <div class="mb-3 location-dropdown">
+        <div class="mb-3 custom-location-dropdown">
             <label class="form-label">Select Category</label>
             <input type="text" 
                    class="form-control location-input" 
-                   id="categoryInput" 
+                   id="customCategoryInput" 
                    placeholder="Click to select category"
                    readonly>
             
-            <div class="dropdown-panel" id="dropdownPanel">
-                <div class="left-panel" id="mainPanel">
+            <div class="dropdown-panel" id="customDropdownPanel">
+                <div class="left-panel" id="customMainPanel">
                     <div class="back-header">
                         <i class="bi bi-grid-3x3"></i>
                         <span>Main Categories</span>
@@ -285,12 +285,15 @@ mysqli_set_charset($conn, 'utf8mb4');
             level3: { id: null, name: null }
         };
         
-        const input = document.getElementById('categoryInput');
-        const panel = document.getElementById('dropdownPanel');
+        const input = document.getElementById('customCategoryInput');
+        const panel = document.getElementById('customDropdownPanel');
         
-        // Load main categories on page load
+        // Load main categories on page load with Select2 compatibility check
         document.addEventListener('DOMContentLoaded', function() {
-            loadCategories(null, 'mainPanel', 1);
+            // Small delay to ensure Select2 is fully initialized if present
+            setTimeout(function() {
+                loadCategories(null, 'customMainPanel', 1);
+            }, 100);
         });
         
         // Toggle dropdown on input click
@@ -299,8 +302,15 @@ mysqli_set_charset($conn, 'utf8mb4');
             panel.classList.toggle('show');
         });
         
-        // Close dropdown when clicking outside
+        // Close dropdown when clicking outside (avoid Select2 conflicts)
         document.addEventListener('click', function(e) {
+            // Check if click is on Select2 elements
+            if (e.target.closest('.select2-container') || 
+                e.target.closest('.select2-dropdown') ||
+                e.target.classList.contains('select2-search__field')) {
+                return; // Don't interfere with Select2
+            }
+            
             if (!panel.contains(e.target) && e.target !== input) {
                 panel.classList.remove('show');
                 document.querySelectorAll('.right-panel').forEach(p => p.remove());
@@ -363,14 +373,14 @@ mysqli_set_charset($conn, 'utf8mb4');
                 // Hover event for items with children
                 if (category.has_children) {
                     item.addEventListener('mouseenter', function() {
-                        const panelId = 'panel_' + category.id;
+                        const panelId = 'custom_panel_' + category.id;
                         // Track hover path
                         updateHoverPath(category.id, category.name, level);
                         showSubPanel(this, category.id, category.name, level, panelId);
                     });
                     
                     item.addEventListener('mouseleave', function() {
-                        const panelId = 'panel_' + category.id;
+                        const panelId = 'custom_panel_' + category.id;
                         setTimeout(() => {
                             hideSubPanelIfNotHovered(panelId, level);
                         }, 150);
