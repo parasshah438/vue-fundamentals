@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laravel + React & Vue.js — Installation Commands</title>
+
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --gradient-react: linear-gradient(135deg, #61DAFB 0%, #0078D4 100%);
+            --gradient-vue: linear-gradient(135deg, #42b883 0%, #35495e 100%);
+            --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            --card-hover-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== LIGHT THEME ===== */
+        [data-bs-theme="light"] {
+            --bg-primary: #f8f9fc;
+            --bg-card: #ffffff;
+            --bg-code: #1e1e2e;
+            --text-primary: #1a1a2e;
+            --text-secondary: #6b7280;
+            --text-code: #cdd6f4;
+            --border-color: #e5e7eb;
+            --badge-bg: rgba(99, 102, 241, 0.1);
+            --badge-text: #6366f1;
+            --copy-btn-bg: rgba(255,255,255,0.1);
+            --copy-btn-hover: rgba(255,255,255,0.2);
+            --hero-overlay: rgba(255,255,255,0.05);
+            --navbar-bg: rgba(255,255,255,0.85);
+            --step-num-bg: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+
+        /* ===== DARK THEME ===== */
+        [data-bs-theme="dark"] {
+            --bg-primary: #0f0f1a;
+            --bg-card: #1a1a2e;
+            --bg-code: #11111b;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-code: #cdd6f4;
+            --border-color: #2d2d44;
+            --badge-bg: rgba(99, 102, 241, 0.2);
+            --badge-text: #a5b4fc;
+            --copy-btn-bg: rgba(255,255,255,0.05);
+            --copy-btn-hover: rgba(255,255,255,0.12);
+            --hero-overlay: rgba(0,0,0,0.3);
+            --navbar-bg: rgba(15,15,26,0.9);
+            --step-num-bg: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar-custom {
+            background: var(--navbar-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.8rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1050;
+            transition: var(--transition);
+        }
+
+        .navbar-brand-custom {
+            font-weight: 800;
+            font-size: 1.3rem;
+            color: var(--text-primary) !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .navbar-brand-custom i {
+            font-size: 1.5rem;
+            background: var(--gradient-hero);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-link-custom {
+            color: var(--text-secondary) !important;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .nav-link-custom:hover, .nav-link-custom.active {
+            color: var(--text-primary) !important;
+            background: var(--badge-bg);
+        }
+
+        /* ===== THEME TOGGLE ===== */
+        .theme-toggle {
+            width: 52px;
+            height: 28px;
+            border-radius: 50px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-card);
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            padding: 0 4px;
+        }
+
+        .theme-toggle:hover {
+            border-color: #6366f1;
+        }
+
+        .theme-toggle .toggle-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--step-num-bg);
+            position: absolute;
+            left: 3px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        [data-bs-theme="dark"] .theme-toggle .toggle-thumb {
+            left: 27px;
+        }
+
+        .theme-toggle .toggle-thumb i {
+            font-size: 11px;
+            color: #fff;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero-section {
+            background: var(--gradient-hero);
+            padding: 5rem 0 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.03);
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(5deg); }
+        }
+
+        .hero-title {
+            font-weight: 900;
+            font-size: 3rem;
+            color: #fff;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: rgba(255,255,255,0.8);
+            font-weight: 400;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-num {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .hero-stat-label {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== TAB NAVIGATION ===== */
+        .tab-section {
+            margin-top: -2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .framework-tabs {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 6px;
+            display: inline-flex;
+            gap: 6px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .framework-tab {
+            padding: 0.7rem 1.8rem;
+            border-radius: 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-main);
+        }
+
+        .framework-tab:hover {
+            color: var(--text-primary);
+            background: var(--badge-bg);
+        }
+
+        .framework-tab.active {
+            background: var(--gradient-hero);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .framework-tab img {
+            width: 22px;
+            height: 22px;
+        }
+
+        /* ===== COMMAND CARDS ===== */
+        .command-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: var(--card-shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .command-card:hover {
+            box-shadow: var(--card-hover-shadow);
+            transform: translateY(-4px);
+            border-color: #6366f1;
+        }
+
+        .card-header-custom {
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .card-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .card-icon.react { background: var(--gradient-react); }
+        .card-icon.vue { background: var(--gradient-vue); }
+        .card-icon.laravel { background: linear-gradient(135deg, #FF2D20, #E3342F); }
+        .card-icon.vite { background: linear-gradient(135deg, #BD34FE, #41D1FF); }
+        .card-icon.inertia { background: linear-gradient(135deg, #9553E9, #6C63FF); }
+        .card-icon.api { background: linear-gradient(135deg, #F59E0B, #D97706); }
+
+        .card-title-custom {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .card-subtitle-custom {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .difficulty-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-beginner { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+        .badge-intermediate { background: rgba(249, 115, 22, 0.1); color: #f97316; }
+        .badge-advanced { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+        /* ===== CODE BLOCK ===== */
+        .code-block-wrapper {
+            position: relative;
+        }
+
+        .code-block {
+            background: var(--bg-code);
+            padding: 1.2rem 1.5rem;
+            margin: 0;
+            font-family: var(--font-mono);
+            font-size: 0.88rem;
+            line-height: 1.9;
+            color: var(--text-code);
+            overflow-x: auto;
+        }
+
+        .code-block::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .code-block::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .code-block::-webkit-scrollbar-thumb {
+            background: #45475a;
+            border-radius: 3px;
+        }
+
+        .code-line {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .line-num {
+            color: #585b70;
+            user-select: none;
+            min-width: 20px;
+            text-align: right;
+            font-size: 0.8rem;
+            padding-top: 1px;
+        }
+
+        .line-content {
+            flex: 1;
+        }
+
+        .cmd-prefix {
+            color: #a6e3a1;
+        }
+
+        .cmd-tool {
+            color: #89b4fa;
+        }
+
+        .cmd-action {
+            color: #f9e2af;
+        }
+
+        .cmd-package {
+            color: #f5c2e7;
+        }
+
+        .cmd-flag {
+            color: #94e2d5;
+        }
+
+        .cmd-comment {
+            color: #6c7086;
+            font-style: italic;
+        }
+
+        /* ===== COPY BUTTON ===== */
+        .copy-btn {
+            position: absolute;
+            top: 0.8rem;
+            right: 0.8rem;
+            background: var(--copy-btn-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #cdd6f4;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: var(--font-main);
+            font-weight: 500;
+            z-index: 5;
+            backdrop-filter: blur(8px);
+        }
+
+        .copy-btn:hover {
+            background: var(--copy-btn-hover);
+            color: #fff;
+        }
+
+        .copy-btn.copied {
+            background: rgba(34, 197, 94, 0.3);
+            border-color: rgba(34, 197, 94, 0.5);
+            color: #22c55e;
+        }
+
+        /* ===== STEP NUMBERS ===== */
+        .card-description {
+            padding: 1rem 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            line-height: 1.6;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 1rem 1.5rem;
+            margin: 0;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            padding: 0.5rem 0;
+        }
+
+        .step-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--step-num-bg);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .step-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ===== SECTION HEADER ===== */
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: var(--badge-bg);
+            color: var(--badge-text);
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+        }
+
+        .section-title {
+            font-weight: 800;
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            max-width: 600px;
+        }
+
+        /* ===== QUICK REFERENCE TABLE ===== */
+        .quick-ref-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .quick-ref-header {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .quick-ref-header h5 {
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ref-table {
+            width: 100%;
+            font-size: 0.88rem;
+        }
+
+        .ref-table th {
+            background: var(--badge-bg);
+            color: var(--badge-text);
+            font-weight: 600;
+            padding: 0.8rem 1.2rem;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .ref-table td {
+            padding: 0.8rem 1.2rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            vertical-align: middle;
+        }
+
+        .ref-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ref-table code {
+            font-family: var(--font-mono);
+            background: var(--bg-code);
+            color: #89b4fa;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.82rem;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer-section {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 2.5rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: #6366f1;
+        }
+
+        /* ===== SCROLL TO TOP ===== */
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--gradient-hero);
+            color: #fff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            transition: var(--transition);
+            opacity: 0;
+            visibility: hidden;
+            z-index: 999;
+        }
+
+        .scroll-top-btn.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        /* ===== TAB CONTENT ===== */
+        .tab-content-section {
+            display: none;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        .tab-content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 991.98px) {
+            .hero-title { font-size: 2.2rem; }
+            .hero-stats { gap: 1.5rem; }
+            .section-title { font-size: 1.6rem; }
+        }
+
+        @media (max-width: 767.98px) {
+            .hero-section { padding: 3rem 0 2.5rem; }
+            .hero-title { font-size: 1.8rem; }
+            .hero-subtitle { font-size: 1rem; }
+            .hero-stats { flex-wrap: wrap; gap: 1rem; }
+            .hero-stat-num { font-size: 1.4rem; }
+            .framework-tabs { flex-wrap: wrap; width: 100%; }
+            .framework-tab { flex: 1; justify-content: center; padding: 0.6rem 1rem; font-size: 0.85rem; }
+            .card-header-custom { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+            .code-block { font-size: 0.8rem; padding: 1rem; }
+            .section-title { font-size: 1.4rem; }
+            .ref-table { font-size: 0.8rem; }
+            .ref-table th, .ref-table td { padding: 0.6rem 0.8rem; }
+        }
+
+        @media (max-width: 575.98px) {
+            .hero-title { font-size: 1.5rem; }
+            .framework-tab { font-size: 0.8rem; padding: 0.5rem 0.8rem; }
+            .navbar-brand-custom { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar-custom">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between">
+                <a href="#" class="navbar-brand-custom">
+                    <i class="bi bi-terminal-fill"></i>
+                    DevCommands
+                </a>
+
+                <div class="d-flex align-items-center gap-3">
+                    <div class="d-none d-md-flex gap-1">
+                        <a href="#react-section" class="nav-link-custom active">React</a>
+                        <a href="#vue-section" class="nav-link-custom">Vue</a>
+                        <a href="#quick-ref" class="nav-link-custom">Quick Ref</a>
+                    </div>
+
+                    <!-- Theme Toggle -->
+                    <div class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode" role="button" tabindex="0" aria-label="Toggle theme">
+                        <div class="toggle-thumb">
+                            <i class="bi bi-sun-fill" id="themeIcon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== HERO SECTION ===== -->
+    <section class="hero-section">
+        <div class="container position-relative" style="z-index: 2;">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <div class="hero-badge">
+                        <i class="bi bi-stars"></i> Updated for Laravel 11 + Vite
+                    </div>
+                    <h1 class="hero-title">
+                        Laravel + React & Vue.js<br>
+                        <span style="opacity: 0.85;">Installation Commands</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Your complete cheat sheet for integrating React and Vue.js with Laravel.
+                        From starter kits to custom setups — every command you need in one place.
+                    </p>
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <div class="hero-stat-num">10+</div>
+                            <div class="hero-stat-label">Methods</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-num">2</div>
+                            <div class="hero-stat-label">Frameworks</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-num">50+</div>
+                            <div class="hero-stat-label">Commands</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 d-none d-lg-flex justify-content-center align-items-center">
+                    <div style="font-size: 8rem; opacity: 0.15; color: #fff;">
+                        <i class="bi bi-code-slash"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TAB NAVIGATION ===== -->
+    <section class="tab-section">
+        <div class="container text-center">
+            <div class="framework-tabs">
+                <button class="framework-tab active" data-tab="react" onclick="switchTab('react')">
+                    <i class="bi bi-filetype-jsx" style="color: #61DAFB; font-size: 1.1rem;"></i>
+                    React.js
+                </button>
+                <button class="framework-tab" data-tab="vue" onclick="switchTab('vue')">
+                    <i class="bi bi-filetype-vue" style="color: #42b883; font-size: 1.1rem;"></i>
+                    Vue.js
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="container py-5">
+
+        <!-- ==================== REACT TAB ==================== -->
+        <div class="tab-content-section active" id="react-tab">
+
+            <div class="section-header" id="react-section">
+                <div class="section-tag">
+                    <i class="bi bi-filetype-jsx"></i> React.js
+                </div>
+                <h2 class="section-title">React + Laravel Setup</h2>
+                <p class="section-desc">Choose your preferred method to integrate React with Laravel.</p>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+
+                    <!-- Card 1: Laravel Breeze React -->
+                    <div class="command-card">
+                        <div class="card-header-custom">
+                            <div class="card-header-left">
+                                <div class="card-icon react"><i class="bi bi-wind"></i></div>
+                                <div>
+                                    <h5 class="card-title-custom">Laravel Breeze (React)</h5>
+                                    <p class="card-subtitle-custom">Starter Kit — Authentication Scaffolding</p>
+                                </div>
+                            </div>
+                            <span class="difficulty-badge badge-beginner">Beginner</span>
+                        </div>
+                        <div class="card-description">
+                            <p class="mb-0">The simplest way to get started with React in Laravel. Breeze provides minimal authentication views using Inertia.js and React.</p>
+                        </div>
+                        <ol class="step-list">
+                            <li class="step-item"><span class="step-num">1</span><span class="step-text">Install Breeze via Composer as a dev dependency</span></li>
+                            <li class="step-item"><span class="step-num">2</span><span class="step-text">Scaffold React + Inertia authentication</span></li>
+                            <li class="step-item"><span class="step-num">3</span><span class="step-text">Install NPM dependencies and compile assets</span></li>
+                            <li class="step-item"><span class="step-num">4</span><span class="step-text">Run database migrations</span></li>
+                        </ol>
+                        <div class="code-block-wrapper">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                            <pre class="code-block"><div class="code-line"><span class="line-num">1</span><span class="line-content"><span class="cmd-comment"># Install Breeze package</span></span></div><div class="code-line"><span class="line-num">2</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">composer</span> <span class="cmd-action">require</span> <span class="cmd-package">laravel/breeze</span> <span class="cmd-flag">--dev</span></span></div><div class="code-line"><span class="line-num">3</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">4</span><span class="line-content"><span class="cmd-comment"># Scaffold React authentication</span></span></div><div class="code-line"><span class="line-num">5</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">php artisan</span> <span class="cmd-action">breeze:install</span> <span class="cmd-package">react</span></span></div><div class="code-line"><span class="line-num">6</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">7</span><span class="line-content"><span class="cmd-comment"># Install dependencies & build</span></span></div><div class="code-line"><span class="line-num">8</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npm</span> <span class="cmd-action">install</span></span></div><div class="code-line"><span class="line-num">9</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npm</span> <span class="cmd-action">run dev</span></span></div><div class="code-line"><span class="line-num">10</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">11</span><span class="line-content"><span class="cmd-comment"># Run migrations</span></span></div><div class="code-line"><span class="line-num">12</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">php artisan</span> <span class="cmd-action">migrate</span></span></div></pre>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Laravel Jetstream React -->
+                    <div class="command-card">
+                        <div class="card-header-custom">
+                            <div class="card-header-left">
+                                <div class="card-icon laravel"><i class="bi bi-rocket-takeoff"></i></div>
+                                <div>
+                                    <h5 class="card-title-custom">Laravel Jetstream (React)</h5>
+                                    <p class="card-subtitle-custom">Advanced Kit — Teams, 2FA, API Tokens</p>
+                                </div>
+                            </div>
+                            <span class="difficulty-badge badge-advanced">Advanced</span>
+                        </div>
+                        <div class="card-description">
+                            <p class="mb-0">Full-featured starter kit with team management, two-factor authentication, session management, API support via Sanctum, and profile management.</p>
+                        </div>
+                        <ol class="step-list">
+                            <li class="step-item"><span class="step-num">1</span><span class="step-text">Install Jetstream via Composer</span></li>
+                            <li class="step-item"><span class="step-num">2</span><span class="step-text">Scaffold Inertia.js stack with React</span></li>
+                            <li class="step-item"><span class="step-num">3</span><span class="step-text">Install frontend dependencies and build assets</span></li>
+                            <li class="step-item"><span class="step-num">4</span><span class="step-text">Run database migrations</span></li>
+                        </ol>
+                        <div class="code-block-wrapper">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                            <pre class="code-block"><div class="code-line"><span class="line-num">1</span><span class="line-content"><span class="cmd-comment"># Install Jetstream</span></span></div><div class="code-line"><span class="line-num">2</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">composer</span> <span class="cmd-action">require</span> <span class="cmd-package">laravel/jetstream</span></span></div><div class="code-line"><span class="line-num">3</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">4</span><span class="line-content"><span class="cmd-comment"># Scaffold with Inertia + React</span></span></div><div class="code-line"><span class="line-num">5</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">php artisan</span> <span class="cmd-action">jetstream:install</span> <span class="cmd-package">inertia</span> <span class="cmd-flag">--react</span></span></div><div class="code-line"><span class="line-num">6</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">7</span><span class="line-content"><span class="cmd-comment"># Install & build</span></span></div><div class="code-line"><span class="line-num">8</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npm</span> <span class="cmd-action">install</span></span></div><div class="code-line"><span class="line-num">9</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npm</span> <span class="cmd-action">run dev</span></span></div><div class="code-line"><span class="line-num">10</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">11</span><span class="line-content"><span class="cmd-comment"># Run migrations</span></span></div><div class="code-line"><span class="line-num">12</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">php artisan</span> <span class="cmd-action">migrate</span></span></div></pre>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Vite + React -->
+                    <div class="command-card">
+                        <div class="card-header-custom">
+                            <div class="card-header-left">
+                                <div class="card-icon vite"><i class="bi bi-lightning-fill"></i></div>
+                                <div>
+                                    <h5 class="card-title-custom">Laravel + React via Vite</h5>
+                                    <p class="card-subtitle-custom">Pure React — Custom Setup with Vite</p>
+                                </div>
+                            </div>
+                            <span class="difficulty-badge badge-intermediate">Intermediate</span>
+                        </div>
+                        <div class="card-description">
+                            <p class="mb-0">Set up React manually with Vite for full control over your frontend. Best for custom apps without starter kit scaffolding.</p>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                            <pre class="code-block"><div class="code-line"><span class="line-num">1</span><span class="line-content"><span class="cmd-comment"># Install React core packages</span></span></div><div class="code-line"><span class="line-num">2</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npm</span> <span class="cmd-action">install</span> <span class="cmd-package">react react-dom</span></span></div><div class="code-line"><span class="line-num">3</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">4</span><span class="line-content"><span class="cmd-comment"># Install Vite React plugin (dev dependency)</span></span></div><div class="code-line"><span class="line-num">5</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npm</span> <span class="cmd-action">install</span> <span class="cmd-flag">-D</span> <span class="cmd-package">@vitejs/plugin-react</span></span></div><div class="code-line"><span class="line-num">6</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">7</span><span class="line-content"><span class="cmd-comment"># (Optional) Install Babel preset + Vite plugin</span></span></div><div class="code-line"><span class="line-num">8</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npm</span> <span class="cmd-action">install</span> <span class="cmd-flag">--save-dev</span> <span class="cmd-package">@babel/preset-react @vitejs/plugin-react vite</span></span></div></pre>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Inertia.js -->
+                    <div class="command-card">
+                        <div class="card-header-custom">
+                            <div class="card-header-left">
+                                <div class="card-icon inertia"><i class="bi bi-arrow-left-right"></i></div>
+                                <div>
+                                    <h5 class="card-title-custom">Laravel + React via Inertia.js</h5>
+                                    <p class="card-subtitle-custom">Modern Monolith — SPA without API</p>
+                                </div>
+                            </div>
+                            <span class="difficulty-badge badge-intermediate">Intermediate</span>
+                        </div>
+                        <div class="card-description">
+                            <p class="mb-0">Inertia.js lets you build SPAs using classic server-side routing. No need to build a separate API — works seamlessly with Laravel controllers.</p>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                            <pre class="code-block"><div class="code-line"><span class="line-num">1</span><span class="line-content"><span class="cmd-comment"># Install server-side adapter</span></span></div><div class="code-line"><span class="line-num">2</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">composer</span> <span class="cmd-action">require</span> <span class="cmd-package">inertiajs/inertia-laravel</span></span></div><div class="code-line"><span class="line-num">3</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">4</span><span class="line-content"><span class="cmd-comment"># Install React client-side adapter</span></span></div><div class="code-line"><span class="line-num">5</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npm</span> <span class="cmd-action">install</span> <span class="cmd-package">@inertiajs/react</span></span></div></pre>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: Separate React App -->
+                    <div class="command-card">
+                        <div class="card-header-custom">
+                            <div class="card-header-left">
+                                <div class="card-icon api"><i class="bi bi-diagram-3"></i></div>
+                                <div>
+                                    <h5 class="card-title-custom">Laravel API + Separate React App</h5>
+                                    <p class="card-subtitle-custom">Decoupled — API Backend + React Frontend</p>
+                                </div>
+                            </div>
+                            <span class="difficulty-badge badge-advanced">Advanced</span>
+                        </div>
+                        <div class="card-description">
+                            <p class="mb-0">Build Laravel as a pure REST API and create a completely separate React frontend. Best for microservices architecture and team separation.</p>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                            <pre class="code-block"><div class="code-line"><span class="line-num">1</span><span class="line-content"><span class="cmd-comment"># Create a separate React frontend app</span></span></div><div class="code-line"><span class="line-num">2</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npx</span> <span class="cmd-action">create-react-app</span> <span class="cmd-package">frontend</span></span></div><div class="code-line"><span class="line-num">3</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">4</span><span class="line-content"><span class="cmd-comment"># Or use Vite (recommended)</span></span></div><div class="code-line"><span class="line-num">5</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npm</span> <span class="cmd-action">create</span> <span class="cmd-package">vite@latest frontend</span> <span class="cmd-flag">-- --template react</span></span></div></pre>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== VUE TAB ==================== -->
+        <div class="tab-content-section" id="vue-tab">
+
+            <div class="section-header" id="vue-section">
+                <div class="section-tag">
+                    <i class="bi bi-filetype-vue"></i> Vue.js
+                </div>
+                <h2 class="section-title">Vue + Laravel Setup</h2>
+                <p class="section-desc">Choose your preferred method to integrate Vue.js with Laravel.</p>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+
+                    <!-- Vue Card 1: Breeze -->
+                    <div class="command-card">
+                        <div class="card-header-custom">
+                            <div class="card-header-left">
+                                <div class="card-icon vue"><i class="bi bi-wind"></i></div>
+                                <div>
+                                    <h5 class="card-title-custom">Laravel Breeze (Vue)</h5>
+                                    <p class="card-subtitle-custom">Starter Kit — Authentication Scaffolding</p>
+                                </div>
+                            </div>
+                            <span class="difficulty-badge badge-beginner">Beginner</span>
+                        </div>
+                        <div class="card-description">
+                            <p class="mb-0">The simplest way to get started with Vue in Laravel. Breeze provides minimal authentication views using Inertia.js and Vue 3.</p>
+                        </div>
+                        <ol class="step-list">
+                            <li class="step-item"><span class="step-num">1</span><span class="step-text">Install Breeze via Composer as a dev dependency</span></li>
+                            <li class="step-item"><span class="step-num">2</span><span class="step-text">Scaffold Vue + Inertia authentication</span></li>
+                            <li class="step-item"><span class="step-num">3</span><span class="step-text">Install NPM dependencies and compile assets</span></li>
+                            <li class="step-item"><span class="step-num">4</span><span class="step-text">Run database migrations</span></li>
+                        </ol>
+                        <div class="code-block-wrapper">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                            <pre class="code-block"><div class="code-line"><span class="line-num">1</span><span class="line-content"><span class="cmd-comment"># Install Breeze package</span></span></div><div class="code-line"><span class="line-num">2</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">composer</span> <span class="cmd-action">require</span> <span class="cmd-package">laravel/breeze</span> <span class="cmd-flag">--dev</span></span></div><div class="code-line"><span class="line-num">3</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">4</span><span class="line-content"><span class="cmd-comment"># Scaffold Vue authentication</span></span></div><div class="code-line"><span class="line-num">5</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">php artisan</span> <span class="cmd-action">breeze:install</span> <span class="cmd-package">vue</span></span></div><div class="code-line"><span class="line-num">6</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">7</span><span class="line-content"><span class="cmd-comment"># Install dependencies & build</span></span></div><div class="code-line"><span class="line-num">8</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npm</span> <span class="cmd-action">install</span></span></div><div class="code-line"><span class="line-num">9</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npm</span> <span class="cmd-action">run dev</span></span></div><div class="code-line"><span class="line-num">10</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">11</span><span class="line-content"><span class="cmd-comment"># Run migrations</span></span></div><div class="code-line"><span class="line-num">12</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">php artisan</span> <span class="cmd-action">migrate</span></span></div></pre>
+                        </div>
+                    </div>
+
+                    <!-- Vue Card 2: Jetstream -->
+                    <div class="command-card">
+                        <div class="card-header-custom">
+                            <div class="card-header-left">
+                                <div class="card-icon laravel"><i class="bi bi-rocket-takeoff"></i></div>
+                                <div>
+                                    <h5 class="card-title-custom">Laravel Jetstream (Vue)</h5>
+                                    <p class="card-subtitle-custom">Advanced Kit — Teams, 2FA, API Tokens</p>
+                                </div>
+                            </div>
+                            <span class="difficulty-badge badge-advanced">Advanced</span>
+                        </div>
+                        <div class="card-description">
+                            <p class="mb-0">Full-featured starter kit with Inertia.js + Vue 3. Includes team management, two-factor authentication, session management, and API support.</p>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                            <pre class="code-block"><div class="code-line"><span class="line-num">1</span><span class="line-content"><span class="cmd-comment"># Install Jetstream</span></span></div><div class="code-line"><span class="line-num">2</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">composer</span> <span class="cmd-action">require</span> <span class="cmd-package">laravel/jetstream</span></span></div><div class="code-line"><span class="line-num">3</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">4</span><span class="line-content"><span class="cmd-comment"># Scaffold with Inertia (Vue is default)</span></span></div><div class="code-line"><span class="line-num">5</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">php artisan</span> <span class="cmd-action">jetstream:install</span> <span class="cmd-package">inertia</span></span></div><div class="code-line"><span class="line-num">6</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">7</span><span class="line-content"><span class="cmd-comment"># Install & build</span></span></div><div class="code-line"><span class="line-num">8</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npm</span> <span class="cmd-action">install</span></span></div><div class="code-line"><span class="line-num">9</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npm</span> <span class="cmd-action">run dev</span></span></div><div class="code-line"><span class="line-num">10</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">11</span><span class="line-content"><span class="cmd-comment"># Run migrations</span></span></div><div class="code-line"><span class="line-num">12</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">php artisan</span> <span class="cmd-action">migrate</span></span></div></pre>
+                        </div>
+                    </div>
+
+                    <!-- Vue Card 3: Vite -->
+                    <div class="command-card">
+                        <div class="card-header-custom">
+                            <div class="card-header-left">
+                                <div class="card-icon vite"><i class="bi bi-lightning-fill"></i></div>
+                                <div>
+                                    <h5 class="card-title-custom">Laravel + Vue via Vite</h5>
+                                    <p class="card-subtitle-custom">Pure Vue — Custom Setup with Vite</p>
+                                </div>
+                            </div>
+                            <span class="difficulty-badge badge-intermediate">Intermediate</span>
+                        </div>
+                        <div class="card-description">
+                            <p class="mb-0">Set up Vue 3 manually with Vite for full control. Laravel ships with Vite support by default — just add Vue!</p>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                            <pre class="code-block"><div class="code-line"><span class="line-num">1</span><span class="line-content"><span class="cmd-comment"># Install Vue 3</span></span></div><div class="code-line"><span class="line-num">2</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npm</span> <span class="cmd-action">install</span> <span class="cmd-package">vue@latest</span></span></div><div class="code-line"><span class="line-num">3</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">4</span><span class="line-content"><span class="cmd-comment"># Install Vite Vue plugin</span></span></div><div class="code-line"><span class="line-num">5</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npm</span> <span class="cmd-action">install</span> <span class="cmd-flag">-D</span> <span class="cmd-package">@vitejs/plugin-vue</span></span></div><div class="code-line"><span class="line-num">6</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">7</span><span class="line-content"><span class="cmd-comment"># (Optional) Vue SFC compiler</span></span></div><div class="code-line"><span class="line-num">8</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npm</span> <span class="cmd-action">install</span> <span class="cmd-flag">-D</span> <span class="cmd-package">vue-loader @vue/compiler-sfc</span></span></div></pre>
+                        </div>
+                    </div>
+
+                    <!-- Vue Card 4: Inertia.js -->
+                    <div class="command-card">
+                        <div class="card-header-custom">
+                            <div class="card-header-left">
+                                <div class="card-icon inertia"><i class="bi bi-arrow-left-right"></i></div>
+                                <div>
+                                    <h5 class="card-title-custom">Laravel + Vue via Inertia.js</h5>
+                                    <p class="card-subtitle-custom">Modern Monolith — SPA without API</p>
+                                </div>
+                            </div>
+                            <span class="difficulty-badge badge-intermediate">Intermediate</span>
+                        </div>
+                        <div class="card-description">
+                            <p class="mb-0">Build a Vue SPA with server-side routing using Inertia.js. No REST API needed — connect Vue pages directly to Laravel controllers.</p>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                            <pre class="code-block"><div class="code-line"><span class="line-num">1</span><span class="line-content"><span class="cmd-comment"># Install server-side adapter</span></span></div><div class="code-line"><span class="line-num">2</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">composer</span> <span class="cmd-action">require</span> <span class="cmd-package">inertiajs/inertia-laravel</span></span></div><div class="code-line"><span class="line-num">3</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">4</span><span class="line-content"><span class="cmd-comment"># Install Vue client-side adapter</span></span></div><div class="code-line"><span class="line-num">5</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npm</span> <span class="cmd-action">install</span> <span class="cmd-package">@inertiajs/vue3</span></span></div></pre>
+                        </div>
+                    </div>
+
+                    <!-- Vue Card 5: Separate Vue App -->
+                    <div class="command-card">
+                        <div class="card-header-custom">
+                            <div class="card-header-left">
+                                <div class="card-icon api"><i class="bi bi-diagram-3"></i></div>
+                                <div>
+                                    <h5 class="card-title-custom">Laravel API + Separate Vue App</h5>
+                                    <p class="card-subtitle-custom">Decoupled — API Backend + Vue Frontend</p>
+                                </div>
+                            </div>
+                            <span class="difficulty-badge badge-advanced">Advanced</span>
+                        </div>
+                        <div class="card-description">
+                            <p class="mb-0">Build Laravel as a REST API and create a standalone Vue 3 frontend using Vite. Ideal for large-scale or microservices projects.</p>
+                        </div>
+                        <div class="code-block-wrapper">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                            <pre class="code-block"><div class="code-line"><span class="line-num">1</span><span class="line-content"><span class="cmd-comment"># Create a separate Vue frontend with Vite</span></span></div><div class="code-line"><span class="line-num">2</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npm</span> <span class="cmd-action">create</span> <span class="cmd-package">vite@latest frontend</span> <span class="cmd-flag">-- --template vue</span></span></div><div class="code-line"><span class="line-num">3</span><span class="line-content"></span></div><div class="code-line"><span class="line-num">4</span><span class="line-content"><span class="cmd-comment"># Or using Vue CLI</span></span></div><div class="code-line"><span class="line-num">5</span><span class="line-content"><span class="cmd-prefix">$</span> <span class="cmd-tool">npx</span> <span class="cmd-action">@vue/cli create</span> <span class="cmd-package">frontend</span></span></div></pre>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== QUICK REFERENCE TABLE ==================== -->
+        <section class="mt-5" id="quick-ref">
+            <div class="section-header">
+                <div class="section-tag">
+                    <i class="bi bi-table"></i> Reference
+                </div>
+                <h2 class="section-title">Quick Reference</h2>
+                <p class="section-desc">Side-by-side comparison of all Laravel frontend integration methods.</p>
+            </div>
+
+            <div class="quick-ref-card">
+                <div class="quick-ref-header">
+                    <h5><i class="bi bi-bookmark-star-fill" style="color: #6366f1;"></i> Method Comparison</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="ref-table">
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Framework</th>
+                                <th>Key Command</th>
+                                <th>Difficulty</th>
+                                <th>Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Breeze</strong></td>
+                                <td>React / Vue</td>
+                                <td><code>breeze:install react|vue</code></td>
+                                <td><span class="difficulty-badge badge-beginner">Beginner</span></td>
+                                <td>Quick auth scaffolding</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Jetstream</strong></td>
+                                <td>React / Vue</td>
+                                <td><code>jetstream:install inertia</code></td>
+                                <td><span class="difficulty-badge badge-advanced">Advanced</span></td>
+                                <td>Full-featured with teams</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Vite (Manual)</strong></td>
+                                <td>React / Vue</td>
+                                <td><code>npm install react|vue</code></td>
+                                <td><span class="difficulty-badge badge-intermediate">Intermediate</span></td>
+                                <td>Custom, no scaffolding</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Inertia.js</strong></td>
+                                <td>React / Vue</td>
+                                <td><code>require inertiajs/inertia-laravel</code></td>
+                                <td><span class="difficulty-badge badge-intermediate">Intermediate</span></td>
+                                <td>SPA without API</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Separate App</strong></td>
+                                <td>React / Vue</td>
+                                <td><code>npm create vite@latest</code></td>
+                                <td><span class="difficulty-badge badge-advanced">Advanced</span></td>
+                                <td>Decoupled architecture</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <p class="footer-text mb-0">
+                        <i class="bi bi-terminal-fill" style="color: #6366f1;"></i>
+                        <strong>DevCommands</strong> — Laravel + React & Vue Cheat Sheet
+                    </p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="footer-links d-flex justify-content-center justify-content-md-end gap-3">
+                        <a href="https://laravel.com/docs" target="_blank"><i class="bi bi-box-arrow-up-right"></i> Laravel Docs</a>
+                        <a href="https://react.dev" target="_blank"><i class="bi bi-box-arrow-up-right"></i> React Docs</a>
+                        <a href="https://vuejs.org" target="_blank"><i class="bi bi-box-arrow-up-right"></i> Vue Docs</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== SCROLL TO TOP ===== -->
+    <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <!-- Bootstrap 5.3 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ===== THEME TOGGLE =====
+        const html = document.documentElement;
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-bs-theme', savedTheme);
+        updateIcon(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const current = html.getAttribute('data-bs-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-bs-theme', next);
+            localStorage.setItem('theme', next);
+            updateIcon(next);
+        });
+
+        // Keyboard support
+        themeToggle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                themeToggle.click();
+            }
+        });
+
+        function updateIcon(theme) {
+            themeIcon.className = theme === 'light' ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+        }
+
+        // ===== TAB SWITCHING =====
+        function switchTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.framework-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(`${tab}-tab`).classList.add('active');
+        }
+
+        // ===== COPY TO CLIPBOARD =====
+        function copyCode(btn) {
+            const codeBlock = btn.closest('.code-block-wrapper').querySelector('.code-block');
+            const lines = codeBlock.querySelectorAll('.line-content');
+            let text = '';
+            lines.forEach(line => {
+                const content = line.textContent.trim();
+                // Skip empty lines and comments, only copy actual commands
+                if (content && !content.startsWith('#')) {
+                    text += content.replace(/^\$\s*/, '') + '\n';
+                }
+            });
+
+            navigator.clipboard.writeText(text.trim()).then(() => {
+                const icon = btn.querySelector('i');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="bi bi-check2"></i> Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // ===== SCROLL TO TOP BUTTON =====
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('scrollTopBtn');
+            if (window.scrollY > 400) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+
+        // ===== SMOOTH SCROLL FOR NAV LINKS =====
+        document.querySelectorAll('.nav-link-custom').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        // If clicking Vue, switch to Vue tab
+                        if (href === '#vue-section') {
+                            switchTab('vue');
+                        } else if (href === '#react-section') {
+                            switchTab('react');
+                        }
+                        setTimeout(() => {
+                            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 100);
+                    }
+
+                    // Update active nav
+                    document.querySelectorAll('.nav-link-custom').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
