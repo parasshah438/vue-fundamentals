@@ -1,0 +1,330 @@
+Next js Tutorial
+...........................
+
+What is Next.js?
+
+Next.js is a React framework for building full-stack web applications. You use React Components to build user interfaces, and Next.js for additional features and optimizations.
+It also automatically configures lower-level tools like bundlers and compilers. You can instead focus on building your product and shipping quickly.
+Whether you're an individual developer or part of a larger team, Next.js can help you build interactive, dynamic, and fast React applications
+
+Next.js is a powerful React framework for building fast, scalable, and SEO-friendly web applications. It provides built-in features like server-side rendering, static site generation, routing, and API handling to make development easier and production-ready.
+
+Built on React, making it easier to create modern, component-driven UIs.
+Server-Side Rendering (SSR) & Static Site Generation (SSG) improves SEO and performance by pre-rendering pages.
+Offers automatic bundling, code splitting, and asset optimization.
+Suitable for both small projects and enterprise-grade applications with full-stack support.
+
+
+Think of it this way:
+.........................
+
+React = a library for building UI components (like buttons, forms, lists)
+Next.js = React + a full web framework around it
+
+
+As a Laravel developer, here's the analogy:
+..................................................
+Laravel
+..........
+Full framework with routing, views, etc.
+routes/web.php defines routes	
+Blade templates render HTML	
+php artisan serve	
+Server-side rendering by default
+
+Next.js
+..........
+Full framework with routing, rendering, etc.
+Files in src/app/ are the routes
+React components render JSX
+npm run dev
+Server-side rendering by default
+
+
+Why Next.js is Popular
+.........................
+Short answer: It solves the biggest real-world problems with plain React — out of the box, with zero config.
+
+
+1. SEO — React's biggest weakness, fixed
+Plain React renders pages in the browser (client-side). Google struggles to index that.
+Next.js renders HTML on the server first, so search engines see full content immediately.
+
+Laravel dev analogy: Like the difference between a Blade page (SEO-friendly) vs a pure Vue SPA (not SEO-friendly).
+
+2. No routing library to set up
+React has no built-in router. You need to install and configure react-router.
+Next.js routing is just folders and files — no config needed.
+
+3. Full-stack in one project
+You can write both the frontend UI and backend API in the same codebase.
+No need for a separate Express server.
+
+4. Performance by default
+Images auto-compressed and lazy-loaded
+Fonts load with zero layout shift
+Code split automatically per page
+Static pages served from CDN
+
+5. Vercel deployment is instant
+Push to GitHub → live in 60 seconds. No server config, free SSL, global CDN.
+
+6. Backed by Vercel, used by big companies
+Netflix, TikTok, Twitch, GitHub, Nike — all use Next.js. It has strong long-term support.
+
+Bottom line: Next.js lets a solo developer or small team ship a production-quality, SEO-friendly, fast web app — without assembling 10 different libraries. That's why it dominates.
+
+
+
+Working flow
+.............
+Next.js works as a bridge between the server and the browser. It decides how pages are rendered and delivered, ensuring speed, SEO, and a smooth user experience.
+
+Node.js
+Next.js runs on top of Node.js, which acts as the backend environment to execute JavaScript outside the browser.
+It handles server requests and responses efficiently.
+
+Next.js Framework
+Provides Routing (file-based system for pages).
+Supports Server-Side Rendering (SSR), Static Site Generation (SSG), and Incremental Static Regeneration (ISR) to improve performance and SEO.
+Works as the bridge between backend logic and frontend rendering.
+
+React Components
+Next.js uses React to build the UI components of the application.
+These components are rendered on the server (SSR) or pre-generated (SSG) before being sent to the browser.
+
+Browser (Client-Side)
+The final HTML, CSS, and JavaScript are delivered to the user’s browser.
+Thanks to Next.js optimizations and CDN support, users see a fast, SEO-friendly, and interactive web app.
+
+A React-based framework that supports SSR (Server-Side Rendering) and SSG (Static Site Generation).
+Provides built-in routing, SEO optimization, and full-stack capabilities out of the box.
+
+
+Features of Next.js
+....................
+Next.js comes with powerful built-in features like SSR, SSG, API routes, and file-based routing that make development faster and easier.
+
+Server-Side Rendering (SSR): Next.js allows developers to pre-render pages on the server at request time, providing better performance and SEO compared to traditional client-side rendering.
+Static Site Generation (SSG): Next.js offers static site generation for pages that don’t change frequently. This process involves generating HTML pages at build time, which are then served to users directly from a CDN.
+API Routes: Next.js provides a simple way to create API endpoints within your application, eliminating the need for a separate backend server.
+File-Based Routing: Next.js uses a file-based routing system where routes are created by simply adding files and folders to the pages directory. This makes it easy to organize and manage your application’s structure.
+Automatic Code Splitting: Next.js automatically splits your code into smaller chunks, ensuring that only the necessary JavaScript is loaded for each page.
+Hot Module Replacement (HMR): HMR allows developers to see changes in real-time without needing to refresh the browser, significantly speeding up the development process.
+Built-In CSS and Sass Support: Next.js includes support for importing CSS and Sass files directly into your components, making it easy to style your application without additional configuration.
+Image Optimization: Next.js 15 introduced built-in Image Optimization, which automatically serves images in the best format and size, improving performance across devices.
+Streaming Metadata (Next.js 15): Streaming Metadata allows asynchronous metadata fetching without blocking page rendering or client-side transitions, improving the performance of your application.
+Turbopack Performance Enhancements (Next.js 15): The Turbopack bundler has been optimized for faster compile times and reduced memory usage, enabling a better development experience.
+
+
+Next.js Installation
+.......................
+
+next-js-command
+................
+
+Create new Next.js project
+
+-> npx create-next-app@latest my-app
+
+Create with all options preset
+
+-> npx create-next-app@latest my-app --typescript --tailwind --eslint --app --yes
+
+Create in current folder
+
+-> npx create-next-app@latest . --typescript --tailwind --eslint --app --yes
+
+Add typescript
+npm install --save-dev typescript @types/react @types/node
+
+Install Bootstrap Instead of Tailwind
+
+-> npx create-next-app@latest my-app --typescript --eslint --app --yes
+-> npm install bootstrap
+-> npm install @popperjs/core
+
+Recommended options:
+
+1 TypeScript → Yes
+2 ESLint → Yes
+3 Tailwind → Optional
+4 src directory → Yes
+5 App Router → Yes
+6 Turbopack → Yes
+
+
+Start the development server:
+npm run dev
+http://localhost:3000
+
+
+Important Commands and library
+.............
+
+Install dependency
+npm install axios
+
+Install UI library
+npm install bootstrap
+
+Install icons
+npm install react-icons
+
+Install Zustand (state management)
+npm install zustand
+
+Build project
+npm run build
+
+Start production server
+npm start
+
+
+file name
+.............
+
+# Laravel — filename doesn't matter, route is defined in code:
+Route::get('/about', [PageController::class, 'about']);
+
+# Next.js — filename IS the route definition:
+src/app/about/page.tsx   →  /about   (file name is fixed, folder name is the URL)
+
+The folder name = URL segment (you choose this)
+The file name = always page.tsx (fixed by Next.js)
+
+
+Next.js Folder Structure
+..........................
+
+my-next-app
+│
+├ app
+│   ├ layout.tsx
+│   ├ page.tsx
+│   ├ globals.css
+│
+├ components
+│   ├ Header.tsx
+│   ├ Footer.tsx
+│
+├ lib
+│   ├ api.ts
+│
+├ public
+│
+└ package.json
+
+
+1 app/ or pages/ : Contains route-based pages; each file automatically becomes a route in the application.
+2 components/ : Stores reusable UI components used across multiple pages.
+3 public/ : Holds static assets like images, fonts, and icons accessible directly via URL.
+4 styles/ : Includes global CSS, module CSS, or styling files for the application.
+5 public/ – Stores static assets like images and icons.
+6 src/ – Contains the main application source code.
+7 assets/ – Holds reusable static files (images, fonts, etc.).
+8 components/ – Reusable UI components.
+9 hooks/ – Custom React hooks.
+10 layouts/ – Common layout components for pages.
+11 lib/ – Helper libraries or third-party integrations.
+12 pages/ – Next.js routing files and API routes.
+13 services/ – API calls and service logic.
+14 styles/ – Global styles and CSS modules.
+15 utils/ – Utility and helper functions.
+
+Next.js Routing
+................
+
+Routing in Next.js is a built-in, file-based system that automatically maps URLs to files and folders, making navigation simple, fast, and efficient without extra libraries.
+
+Uses file-based routing via the pages/ or app/ directory with no extra setup.
+Supports dynamic and nested routes through folder and file naming.
+Provides fast navigation using the built-in Link component with preloading.
+Allows redirects, SEO-friendly URLs, and optimized performance by default.
+
+Routing = which page/code runs when a user visits a URL.
+
+
+Types of Routes in Next.js
+..........................
+
+1. Static Route — Fixed URL
+
+src/app/about/page.tsx        →  /about
+
+2. Nested Route — URL with sub-pages
+
+Just keep creating folders inside folders
+src/app/dashboard/page.tsx           →  /dashboard
+src/app/dashboard/settings/page.tsx  →  /dashboard/settings
+src/app/dashboard/profile/page.tsx   →  /dashboard/profile
+
+3. Dynamic Route — Variable in URL
+
+src/app/blog/[slug]/page.tsx     →  /blog/hello-world
+                                 →  /blog/my-post
+                                 →  /blog/anything
+
+src/app/users/[id]/page.tsx      →  /users/1
+                                 →  /users/42
+                                 →  /users/999
+
+4. Catch-all Route — Multiple URL segments
+
+src/app/docs/[...slug]/page.tsx   →  /docs/intro
+                                  →  /docs/react/hooks
+                                  →  /docs/a/b/c/d
+
+
+5. Optional Catch-all — With or without segments
+
+src/app/shop/[[...filters]]/page.tsx  →  /shop             (no filters)
+                                      →  /shop/men
+                                      →  /shop/men/shoes
+
+
+6. Route Groups — Organise without affecting URL
+
+Wrap folder name in (parentheses) — no URL segment added:
+
+src/app/(marketing)/page.tsx          →  /
+src/app/(marketing)/about/page.tsx    →  /about
+src/app/(dashboard)/home/page.tsx     →  /home
+src/app/(dashboard)/settings/page.tsx →  /settings
+
+
+7. API Route — Backend endpoint (no UI)
+File must be named route.ts (not page.tsx):
+
+
+src/app/api/users/route.ts          →  /api/users
+src/app/api/users/[id]/route.ts     →  /api/users/42
+src/app/api/posts/route.ts          →  /api/posts                                      
+
+
+Version
+..............
+
+npx next --version
+
+Install / upgrade to latest
+
+npm install next@latest react@latest react-dom@latest
+
+Check outdated packages:
+
+npm outdated
+
+Upgrade if needed:
+
+Next.js Commands
+.....................
+
+| Command                      | Description                         |
+| ---------------------------- | ----------------------------------- |
+| `npm run dev`                | Start dev server (`localhost:3000`) |
+| `npm run build`              | Build production app                |
+| `npm start`                  | Start production server             |
+| `npx next lint`              | Lint project                        |
+| `npx next info`              | Show environment & package info     |
+| `npx next telemetry disable` | Disable telemetry (optional)        |
