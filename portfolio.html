@@ -3317,6 +3317,7 @@
                 itemsToShow.forEach((item, index) => {
                     setTimeout(() => {
                         item.style.display = 'block';
+                        item.classList.remove('hidden');
                         item.classList.add('fade-in', 'visible');
                     }, index * 150);
                 });
