@@ -1,0 +1,3501 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React.js Basic to Advanced Complete Guide</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link id="hljs-theme-dark" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css" />
+  <link id="hljs-theme-light" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css" disabled />
+
+  <style>
+    :root {
+      --sidebar-width: 290px;
+      --header-h: 64px;
+      --react-primary: #61dafb;
+      --react-secondary: #0ea5e9;
+      --react-dark: #0f172a;
+    }
+
+    body { font-size: .95rem; scroll-behavior: smooth; }
+
+    #topbar {
+      height: var(--header-h);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1050;
+    }
+
+    [data-bs-theme="dark"] #topbar {
+      background: rgba(13, 17, 23, .88);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    [data-bs-theme="light"] #topbar {
+      background: rgba(255,255,255,.92);
+      border-bottom: 1px solid rgba(0,0,0,.08);
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, var(--react-primary), var(--react-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+
+    #sidebar {
+      width: var(--sidebar-width);
+      top: var(--header-h);
+      height: calc(100vh - var(--header-h));
+      overflow-y: auto;
+      z-index: 1040;
+      scrollbar-width: thin;
+    }
+
+    [data-bs-theme="dark"] #sidebar {
+      background: #0d1117;
+      border-right: 1px solid rgba(255,255,255,.08);
+    }
+
+    [data-bs-theme="light"] #sidebar {
+      background: #f8f9fa;
+      border-right: 1px solid #dee2e6;
+    }
+
+    #sidebar .nav-link {
+      color: inherit;
+      font-size: .85rem;
+      border-radius: 8px;
+      padding: .4rem 1rem;
+      transition: all .15s ease;
+    }
+
+    #sidebar .nav-link:hover {
+      background: rgba(97,218,251,.12);
+      color: var(--react-primary);
+      padding-left: 1.3rem;
+    }
+
+    #sidebar .nav-link.active {
+      background: rgba(97,218,251,.18);
+      color: var(--react-primary);
+      font-weight: 600;
+    }
+
+    #sidebar .nav-section {
+      font-size: .7rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: .8rem 1rem .35rem;
+      opacity: .55;
+    }
+
+    #main-content {
+      margin-left: var(--sidebar-width);
+      min-height: calc(100vh - var(--header-h));
+      padding-top: var(--header-h);
+    }
+
+    @media (max-width: 991.98px) {
+      #sidebar { display: none !important; }
+      #main-content { margin-left: 0 !important; }
+    }
+
+    #hero {
+      background: linear-gradient(135deg, #61dafb 0%, #0ea5e9 50%, #1d4ed8 100%);
+      padding: 3.2rem 0 3rem;
+      clip-path: ellipse(120% 100% at 50% 0%);
+    }
+
+    #hero h1 {
+      color: #fff;
+      font-size: 2.35rem;
+      font-weight: 800;
+    }
+
+    #hero p {
+      color: rgba(255,255,255,.9);
+      font-size: 1.02rem;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      border-left: 4px solid var(--react-primary);
+      padding-left: .75rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .sub-title {
+      font-size: 1.12rem;
+      font-weight: 600;
+      border-left: 3px solid var(--react-secondary);
+      padding-left: .55rem;
+      margin: 1.4rem 0 .75rem;
+    }
+
+    .feature-card {
+      border-radius: 12px;
+      transition: transform .2s, box-shadow .2s, border-color .2s;
+      border: 1px solid transparent;
+      height: 100%;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(14,165,233,.18);
+      border-color: rgba(97,218,251,.25);
+    }
+
+    [data-bs-theme="dark"] .feature-card { background: #161b22; }
+    [data-bs-theme="light"] .feature-card {
+      background: #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    }
+
+    .icon-box {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--react-primary), var(--react-secondary));
+      color: #0b2230;
+      font-weight: 800;
+      font-size: .8rem;
+      flex-shrink: 0;
+    }
+
+    .note-box {
+      border-left: 4px solid var(--react-primary);
+      padding: .8rem 1rem;
+      border-radius: 0 8px 8px 0;
+    }
+
+    [data-bs-theme="dark"] .note-box { background: rgba(97,218,251,.08); }
+    [data-bs-theme="light"] .note-box { background: rgba(97,218,251,.08); }
+
+    .divider {
+      height: 1px;
+      opacity: .1;
+      margin: 2.4rem 0;
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, var(--react-primary), var(--react-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .code-wrapper {
+      position: relative;
+      margin: .75rem 0 1.15rem;
+    }
+
+    pre {
+      border-radius: 10px;
+      margin: 0;
+      font-size: .83rem;
+    }
+
+    pre code.hljs {
+      border-radius: 10px;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: .5rem;
+      right: .5rem;
+      z-index: 2;
+      font-size: .75rem;
+      padding: .2rem .55rem;
+      opacity: .75;
+    }
+
+    .copy-btn:hover { opacity: 1; }
+
+    #backTop {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--react-secondary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(14,165,233,.45);
+      opacity: 0;
+      transition: opacity .25s ease;
+      z-index: 9999;
+    }
+
+    #backTop.show { opacity: 1; }
+
+    .table code { font-size: .82rem; }
+    #themeToggle i { font-size: 1.05rem; }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    [data-bs-theme="dark"] ::-webkit-scrollbar-track { background: #161b22; }
+    [data-bs-theme="dark"] ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+    [data-bs-theme="light"] ::-webkit-scrollbar-track { background: #f1f1f1; }
+    [data-bs-theme="light"] ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <nav id="topbar" class="navbar fixed-top px-3 px-md-4 d-flex justify-content-between align-items-center">
+    <a href="#top" class="text-decoration-none d-flex align-items-center gap-2">
+      <div style="background:linear-gradient(135deg,#61dafb,#0ea5e9);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+        <i class="bi bi-boxes text-dark"></i>
+      </div>
+      <span class="brand-badge">React.js</span>
+      <span class="fw-light opacity-50 d-none d-sm-inline">Basic to Advanced</span>
+    </a>
+
+    <div class="d-flex align-items-center gap-2">
+      <button class="btn btn-sm btn-outline-secondary d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+        <i class="bi bi-list"></i>
+      </button>
+      <button id="themeToggle" class="btn btn-sm btn-outline-secondary" title="Toggle Dark / Light mode">
+        <i class="bi bi-sun-fill"></i>
+      </button>
+      <span class="badge rounded-pill" style="background:rgba(97,218,251,.18);color:#61dafb;border:1px solid rgba(97,218,251,.25);">React 19</span>
+    </div>
+  </nav>
+
+  <aside id="sidebar" class="position-fixed d-none d-lg-block py-3 px-2">
+    <nav class="nav flex-column gap-1">
+      <div class="nav-section">Basics</div>
+      <a class="nav-link active" href="#sec-what"><i class="bi bi-info-circle me-2"></i>What is React?</a>
+      <a class="nav-link" href="#sec-why"><i class="bi bi-stars me-2"></i>Why React?</a>
+      <a class="nav-link" href="#sec-virtualdom"><i class="bi bi-diagram-2 me-2"></i>Virtual DOM</a>
+      <a class="nav-link" href="#sec-setup"><i class="bi bi-download me-2"></i>Setup</a>
+      <a class="nav-link" href="#sec-strictmode"><i class="bi bi-shield-lock me-2"></i>StrictMode</a>
+      <a class="nav-link" href="#sec-structure"><i class="bi bi-folder me-2"></i>Project Structure</a>
+      <a class="nav-link" href="#sec-jsx"><i class="bi bi-code-square me-2"></i>JSX</a>
+      <a class="nav-link" href="#sec-components"><i class="bi bi-box me-2"></i>Components</a>
+      <a class="nav-link" href="#sec-css"><i class="bi bi-palette me-2"></i>CSS in React</a>
+      <a class="nav-link" href="#sec-props"><i class="bi bi-arrow-left-right me-2"></i>Props</a>
+      <a class="nav-link" href="#sec-proptypes"><i class="bi bi-shield-check me-2"></i>PropTypes</a>
+      <a class="nav-link" href="#sec-events"><i class="bi bi-cursor-fill me-2"></i>Events</a>
+      <a class="nav-link" href="#sec-conditional"><i class="bi bi-sign-turn-right me-2"></i>Conditional Rendering</a>
+      <a class="nav-link" href="#sec-lists"><i class="bi bi-list-ul me-2"></i>Lists & Keys</a>
+
+      <div class="nav-section">State & Forms</div>
+      <a class="nav-link" href="#sec-state"><i class="bi bi-database me-2"></i>State</a>
+      <a class="nav-link" href="#sec-forms"><i class="bi bi-ui-checks me-2"></i>Forms</a>
+      <a class="nav-link" href="#sec-lifecycle"><i class="bi bi-arrow-repeat me-2"></i>Lifecycle Thinking</a>
+
+      <div class="nav-section">Hooks</div>
+      <a class="nav-link" href="#sec-hooks-core"><i class="bi bi-lightning-charge me-2"></i>Core Hooks</a>
+      <a class="nav-link" href="#sec-hooks-extra"><i class="bi bi-tools me-2"></i>More Hooks</a>
+      <a class="nav-link" href="#sec-custom-hooks"><i class="bi bi-diagram-3 me-2"></i>Custom Hooks</a>
+
+      <div class="nav-section">Advanced</div>
+      <a class="nav-link" href="#sec-context"><i class="bi bi-share me-2"></i>Context API</a>
+      <a class="nav-link" href="#sec-routing"><i class="bi bi-signpost-split me-2"></i>Routing</a>
+      <a class="nav-link" href="#sec-api"><i class="bi bi-cloud-arrow-down me-2"></i>API Calls</a>
+      <a class="nav-link" href="#sec-performance"><i class="bi bi-speedometer2 me-2"></i>Performance</a>
+      <a class="nav-link" href="#sec-refs"><i class="bi bi-bullseye me-2"></i>Refs & Portals</a>
+      <a class="nav-link" href="#sec-forwardref"><i class="bi bi-link me-2"></i>forwardRef & useImperativeHandle</a>
+      <a class="nav-link" href="#sec-lazy"><i class="bi bi-hourglass-split me-2"></i>Lazy Loading</a>
+      <a class="nav-link" href="#sec-errors"><i class="bi bi-bug me-2"></i>Error Boundaries</a>
+      <a class="nav-link" href="#sec-patterns"><i class="bi bi-grid me-2"></i>Patterns</a>
+      <a class="nav-link" href="#sec-concurrent"><i class="bi bi-layers me-2"></i>Concurrent Features</a>
+      <a class="nav-link" href="#sec-state-mgmt"><i class="bi bi-box-seam me-2"></i>State Management</a>
+      <a class="nav-link" href="#sec-tanstack"><i class="bi bi-cloud-haze2 me-2"></i>TanStack Query</a>
+      <a class="nav-link" href="#sec-typescript"><i class="bi bi-braces me-2"></i>TypeScript + React</a>
+      <a class="nav-link" href="#sec-react19"><i class="bi bi-stars me-2"></i>React 19</a>
+
+      <div class="nav-section">Frameworks</div>
+      <a class="nav-link" href="#sec-nextjs"><i class="bi bi-triangle me-2"></i>Next.js</a>
+
+      <div class="nav-section">Production</div>
+      <a class="nav-link" href="#sec-testing"><i class="bi bi-check2-circle me-2"></i>Testing</a>
+      <a class="nav-link" href="#sec-best"><i class="bi bi-patch-check me-2"></i>Best Practices</a>
+      <a class="nav-link" href="#sec-envvars"><i class="bi bi-key me-2"></i>Env Variables</a>
+      <a class="nav-link" href="#sec-deploy"><i class="bi bi-rocket-takeoff me-2"></i>Deployment</a>
+
+      <div class="nav-section">Ecosystem</div>
+      <a class="nav-link" href="#sec-a11y"><i class="bi bi-universal-access me-2"></i>Accessibility</a>
+      <a class="nav-link" href="#sec-animations"><i class="bi bi-stars me-2"></i>Animations</a>
+      <a class="nav-link" href="#sec-reactnative"><i class="bi bi-phone me-2"></i>React Native</a>
+    </nav>
+  </aside>
+
+  <div class="offcanvas offcanvas-start d-lg-none" id="mobileSidebar" tabindex="-1">
+    <div class="offcanvas-header">
+      <h6 class="offcanvas-title fw-bold">React.js Guide</h6>
+      <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body p-2">
+      <nav class="nav flex-column gap-1">
+        <a class="nav-link" href="#sec-what" data-bs-dismiss="offcanvas">What is React?</a>
+        <a class="nav-link" href="#sec-why" data-bs-dismiss="offcanvas">Why React?</a>
+        <a class="nav-link" href="#sec-virtualdom" data-bs-dismiss="offcanvas">Virtual DOM</a>
+        <a class="nav-link" href="#sec-setup" data-bs-dismiss="offcanvas">Setup</a>
+        <a class="nav-link" href="#sec-strictmode" data-bs-dismiss="offcanvas">StrictMode</a>
+        <a class="nav-link" href="#sec-structure" data-bs-dismiss="offcanvas">Project Structure</a>
+        <a class="nav-link" href="#sec-jsx" data-bs-dismiss="offcanvas">JSX</a>
+        <a class="nav-link" href="#sec-components" data-bs-dismiss="offcanvas">Components</a>
+        <a class="nav-link" href="#sec-css" data-bs-dismiss="offcanvas">CSS in React</a>
+        <a class="nav-link" href="#sec-props" data-bs-dismiss="offcanvas">Props</a>
+        <a class="nav-link" href="#sec-proptypes" data-bs-dismiss="offcanvas">PropTypes</a>
+        <a class="nav-link" href="#sec-events" data-bs-dismiss="offcanvas">Events</a>
+        <a class="nav-link" href="#sec-conditional" data-bs-dismiss="offcanvas">Conditional Rendering</a>
+        <a class="nav-link" href="#sec-lists" data-bs-dismiss="offcanvas">Lists & Keys</a>
+        <a class="nav-link" href="#sec-state" data-bs-dismiss="offcanvas">State</a>
+        <a class="nav-link" href="#sec-forms" data-bs-dismiss="offcanvas">Forms</a>
+        <a class="nav-link" href="#sec-lifecycle" data-bs-dismiss="offcanvas">Lifecycle Thinking</a>
+        <a class="nav-link" href="#sec-hooks-core" data-bs-dismiss="offcanvas">Core Hooks</a>
+        <a class="nav-link" href="#sec-hooks-extra" data-bs-dismiss="offcanvas">More Hooks</a>
+        <a class="nav-link" href="#sec-custom-hooks" data-bs-dismiss="offcanvas">Custom Hooks</a>
+        <a class="nav-link" href="#sec-context" data-bs-dismiss="offcanvas">Context API</a>
+        <a class="nav-link" href="#sec-routing" data-bs-dismiss="offcanvas">Routing</a>
+        <a class="nav-link" href="#sec-api" data-bs-dismiss="offcanvas">API Calls</a>
+        <a class="nav-link" href="#sec-performance" data-bs-dismiss="offcanvas">Performance</a>
+        <a class="nav-link" href="#sec-refs" data-bs-dismiss="offcanvas">Refs & Portals</a>
+        <a class="nav-link" href="#sec-forwardref" data-bs-dismiss="offcanvas">forwardRef & useImperativeHandle</a>
+        <a class="nav-link" href="#sec-lazy" data-bs-dismiss="offcanvas">Lazy Loading</a>
+        <a class="nav-link" href="#sec-errors" data-bs-dismiss="offcanvas">Error Boundaries</a>
+        <a class="nav-link" href="#sec-patterns" data-bs-dismiss="offcanvas">Patterns</a>
+        <a class="nav-link" href="#sec-concurrent" data-bs-dismiss="offcanvas">Concurrent Features</a>
+        <a class="nav-link" href="#sec-state-mgmt" data-bs-dismiss="offcanvas">State Management</a>
+        <a class="nav-link" href="#sec-tanstack" data-bs-dismiss="offcanvas">TanStack Query</a>
+        <a class="nav-link" href="#sec-typescript" data-bs-dismiss="offcanvas">TypeScript + React</a>
+        <a class="nav-link" href="#sec-react19" data-bs-dismiss="offcanvas">React 19</a>
+        <a class="nav-link" href="#sec-nextjs" data-bs-dismiss="offcanvas">Next.js</a>
+        <a class="nav-link" href="#sec-testing" data-bs-dismiss="offcanvas">Testing</a>
+        <a class="nav-link" href="#sec-best" data-bs-dismiss="offcanvas">Best Practices</a>
+        <a class="nav-link" href="#sec-envvars" data-bs-dismiss="offcanvas">Env Variables</a>
+        <a class="nav-link" href="#sec-a11y" data-bs-dismiss="offcanvas">Accessibility</a>
+        <a class="nav-link" href="#sec-animations" data-bs-dismiss="offcanvas">Animations</a>
+        <a class="nav-link" href="#sec-reactnative" data-bs-dismiss="offcanvas">React Native</a>
+        <a class="nav-link" href="#sec-deploy" data-bs-dismiss="offcanvas">Deployment</a>
+      </nav>
+    </div>
+  </div>
+
+  <main id="main-content">
+    <section id="top">
+      <div id="hero">
+        <div class="container py-2">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div style="background:rgba(255,255,255,.2);width:60px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);">
+              <i class="bi bi-boxes text-white" style="font-size:1.7rem;"></i>
+            </div>
+            <div>
+              <h1 class="mb-0">React.js Basic to Advanced</h1>
+              <p class="mb-0 mt-1">Complete practical guide with examples, hooks, routing, API, testing, and production tips.</p>
+            </div>
+          </div>
+          <div class="d-flex flex-wrap gap-2 mt-3">
+            <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">JSX</span>
+            <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">Hooks</span>
+            <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">React Router</span>
+            <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">TypeScript</span>
+            <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">TanStack Query</span>
+            <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">Next.js</span>
+            <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">React 19</span>
+            <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">Accessibility</span>
+            <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">Animations</span>
+            <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">React Native</span>
+            <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">Production Ready</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container py-4 px-3 px-md-4">
+      <section id="sec-what" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-info-circle-fill me-2 text-info"></i>What is React?</h2>
+        <div class="note-box mb-4">
+          <p class="mb-0"><strong>React</strong> is a JavaScript library for building user interfaces using reusable components. You describe the UI for each state of your app, and React updates the DOM efficiently when data changes.</p>
+        </div>
+
+        <p>React is popular because it lets you build UI in small pieces, reuse those pieces, and manage changing data in a predictable way. It is maintained by Meta and widely used in dashboards, admin panels, SPAs, e-commerce apps, and mobile apps through React Native.</p>
+
+        <div class="row g-3 mt-1">
+          <div class="col-sm-6 col-xl-3">
+            <div class="feature-card p-3">
+              <div class="icon-box mb-2" style="background:rgba(97,218,251,.15);color:#61dafb;"><i class="bi bi-box"></i></div>
+              <h6 class="fw-semibold mb-1">Component Based</h6>
+              <p class="small opacity-75 mb-0">Split complex UI into reusable components like buttons, cards, forms, and layouts.</p>
+            </div>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <div class="feature-card p-3">
+              <div class="icon-box mb-2" style="background:rgba(14,165,233,.15);color:#0ea5e9;"><i class="bi bi-arrow-repeat"></i></div>
+              <h6 class="fw-semibold mb-1">Reactive UI</h6>
+              <p class="small opacity-75 mb-0">When state changes, React recalculates the UI and updates only what changed.</p>
+            </div>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <div class="feature-card p-3">
+              <div class="icon-box mb-2" style="background:rgba(34,197,94,.15);color:#22c55e;"><i class="bi bi-code-square"></i></div>
+              <h6 class="fw-semibold mb-1">JSX Syntax</h6>
+              <p class="small opacity-75 mb-0">Write HTML-like UI together with JavaScript logic in one place.</p>
+            </div>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <div class="feature-card p-3">
+              <div class="icon-box mb-2" style="background:rgba(168,85,247,.15);color:#a855f7;"><i class="bi bi-globe2"></i></div>
+              <h6 class="fw-semibold mb-1">Huge Ecosystem</h6>
+              <p class="small opacity-75 mb-0">Works with Vite, Next.js, React Router, Zustand, Redux, testing tools, and more.</p>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><i class="bi bi-lightbulb-fill me-2 text-warning"></i>Think of React like this</h5>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="feature-card p-3 text-center">
+              <span class="badge fs-6 mb-2" style="background:#f59e0b;color:#fff;">HTML + JS + CSS</span>
+              <p class="small mb-0 opacity-75">Traditional pages often mix DOM selection, manual updates, and event handling all over the place.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-3 text-center">
+              <span class="badge fs-6 mb-2" style="background:#61dafb;color:#0b2230;">React</span>
+              <p class="small mb-0 opacity-75">You define UI as components and let React manage re-rendering when data changes.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-why" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-stars me-2 text-warning"></i>Why React Is Popular</h2>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="feature-card p-4">
+              <div class="d-flex gap-3 align-items-center mb-2">
+                <div class="step-num">1</div>
+                <h6 class="fw-bold mb-0">Reusable Components</h6>
+              </div>
+              <p class="small opacity-75 mb-0">Build once and reuse many times. This reduces duplication and improves maintainability.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-4">
+              <div class="d-flex gap-3 align-items-center mb-2">
+                <div class="step-num">2</div>
+                <h6 class="fw-bold mb-0">Fast Development</h6>
+              </div>
+              <p class="small opacity-75 mb-0">Hot reloading, DevTools, and a strong ecosystem help you build faster.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-4">
+              <div class="d-flex gap-3 align-items-center mb-2">
+                <div class="step-num">3</div>
+                <h6 class="fw-bold mb-0">Easy State-Driven UI</h6>
+              </div>
+              <p class="small opacity-75 mb-0">React makes changing UI based on data simpler than manual DOM manipulation.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-4">
+              <div class="d-flex gap-3 align-items-center mb-2">
+                <div class="step-num">4</div>
+                <h6 class="fw-bold mb-0">Career Demand</h6>
+              </div>
+              <p class="small opacity-75 mb-0">React is one of the most requested frontend skills in jobs and freelance work.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-virtualdom" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-diagram-2 me-2 text-info"></i>Virtual DOM & Reconciliation</h2>
+        <div class="note-box mb-4">
+          <p class="mb-0">The <strong>Virtual DOM</strong> is a lightweight JavaScript copy of the real DOM that React maintains in memory. When state changes, React compares the new Virtual DOM with the previous one (called <strong>diffing</strong>) and applies only the minimum required changes to the real DOM — this process is called <strong>Reconciliation</strong>.</p>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-4">
+            <div class="feature-card p-4 text-center">
+              <div class="icon-box mx-auto mb-2" style="background:rgba(97,218,251,.15);color:#61dafb;"><i class="bi bi-1-circle-fill"></i></div>
+              <h6 class="fw-semibold">State Changes</h6>
+              <p class="small opacity-75 mb-0">You call <code>setState</code> or a hook updates. React creates a new Virtual DOM tree.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card p-4 text-center">
+              <div class="icon-box mx-auto mb-2" style="background:rgba(14,165,233,.15);color:#0ea5e9;"><i class="bi bi-2-circle-fill"></i></div>
+              <h6 class="fw-semibold">Diffing (Reconciliation)</h6>
+              <p class="small opacity-75 mb-0">React compares the new Virtual DOM tree with the previous snapshot and finds what changed.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card p-4 text-center">
+              <div class="icon-box mx-auto mb-2" style="background:rgba(34,197,94,.15);color:#22c55e;"><i class="bi bi-3-circle-fill"></i></div>
+              <h6 class="fw-semibold">Minimal DOM Update</h6>
+              <p class="small opacity-75 mb-0">Only the changed nodes are updated in the real DOM. This makes React very fast.</p>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><i class="bi bi-lightbulb-fill me-2 text-warning"></i>Why Keys Matter in Reconciliation</h5>
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="feature-card p-3">
+              <h6 class="small text-danger fw-semibold mb-2">&#10060; Bad — index as key</h6>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">{items.map((item, index) => (
+  &lt;li key={index}&gt;{item}&lt;/li&gt;  // React gets confused on reorder
+))}</code></pre></div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="feature-card p-3">
+              <h6 class="small text-success fw-semibold mb-2">&#10004; Good — stable unique ID</h6>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">{items.map((item) => (
+  &lt;li key={item.id}&gt;{item.name}&lt;/li&gt;  // React tracks correctly
+))}</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive mt-3">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>Concept</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Virtual DOM</strong></td><td>In-memory JS object tree — cheap to create and compare</td></tr>
+              <tr><td><strong>Diffing</strong></td><td>Algorithm that finds minimum changes between old and new Virtual DOM</td></tr>
+              <tr><td><strong>Reconciliation</strong></td><td>Process of applying those minimal changes to the real DOM</td></tr>
+              <tr><td><strong>Fiber</strong></td><td>React 16+ internal engine that makes reconciliation interruptible (enables Concurrent Mode)</td></tr>
+              <tr><td><strong>Keys</strong></td><td>Help React match old and new elements in lists during diffing</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-setup" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-download me-2 text-primary"></i>Setup & Installation</h2>
+
+        <h5 class="sub-title"><i class="bi bi-terminal-fill me-2"></i>Recommended: Vite + React</h5>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="feature-card p-3">
+              <h6 class="small opacity-60 mb-2">JavaScript template</h6>
+              <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">npm create vite@latest my-react-app -- --template react
+cd my-react-app
+npm install
+npm run dev</code></pre></div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-3">
+              <h6 class="small opacity-60 mb-2">TypeScript template</h6>
+              <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">npm create vite@latest my-react-app -- --template react-ts
+cd my-react-app
+npm install
+npm run dev</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><i class="bi bi-box-seam me-2 text-success"></i>Common Packages</h5>
+        <div class="row g-2">
+          <div class="col-sm-6 col-md-4 col-xl-3"><div class="feature-card p-3"><code>npm install react-router-dom</code><p class="small opacity-60 mt-1 mb-0">Routing</p></div></div>
+          <div class="col-sm-6 col-md-4 col-xl-3"><div class="feature-card p-3"><code>npm install axios</code><p class="small opacity-60 mt-1 mb-0">HTTP requests</p></div></div>
+          <div class="col-sm-6 col-md-4 col-xl-3"><div class="feature-card p-3"><code>npm install bootstrap</code><p class="small opacity-60 mt-1 mb-0">UI framework</p></div></div>
+          <div class="col-sm-6 col-md-4 col-xl-3"><div class="feature-card p-3"><code>npm install zustand</code><p class="small opacity-60 mt-1 mb-0">State management</p></div></div>
+          <div class="col-sm-6 col-md-4 col-xl-3"><div class="feature-card p-3"><code>npm install react-hook-form zod</code><p class="small opacity-60 mt-1 mb-0">Forms + validation</p></div></div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-strictmode" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-shield-lock me-2 text-warning"></i>React StrictMode</h2>
+        <div class="note-box mb-3">
+          <p class="mb-0"><strong>StrictMode</strong> is a development-only wrapper that intentionally double-invokes certain functions to help you detect side effects, deprecated APIs, and potential bugs early. It has <strong>zero impact on production builds</strong>.</p>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>How to Enable</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">// main.jsx — wraps your entire app
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App';
+
+createRoot(document.getElementById('root')).render(
+  &lt;StrictMode&gt;
+    &lt;App /&gt;
+  &lt;/StrictMode&gt;
+);</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>What StrictMode Detects</h5>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="feature-card p-3">
+              <h6 class="fw-semibold mb-1"><i class="bi bi-exclamation-triangle-fill text-warning me-1"></i>Double-invokes render</h6>
+              <p class="small opacity-75 mb-0">Renders components twice in dev to detect side effects in the render phase (render itself must be pure).</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-3">
+              <h6 class="fw-semibold mb-1"><i class="bi bi-exclamation-triangle-fill text-warning me-1"></i>Double-fires effects</h6>
+              <p class="small opacity-75 mb-0">Runs <code>useEffect</code> setup + cleanup + setup again to verify your cleanup is correct.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-3">
+              <h6 class="fw-semibold mb-1"><i class="bi bi-exclamation-triangle-fill text-warning me-1"></i>Deprecated API warnings</h6>
+              <p class="small opacity-75 mb-0">Warns about legacy React APIs and patterns that will be removed in future versions.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-3">
+              <h6 class="fw-semibold mb-1"><i class="bi bi-check-circle-fill text-success me-1"></i>Production safe</h6>
+              <p class="small opacity-75 mb-0">StrictMode is stripped out in production builds — your app runs normally for users.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-structure" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-folder-fill me-2 text-warning"></i>Project Structure</h2>
+        <div class="row g-3">
+          <div class="col-lg-5">
+            <div class="code-wrapper"><pre><code class="language-text">src/
+├── assets/
+├── components/
+├── pages/
+├── hooks/
+├── services/
+├── store/
+├── utils/
+├── App.jsx
+├── main.jsx
+└── index.css</code></pre></div>
+          </div>
+          <div class="col-lg-7">
+            <div class="row g-2">
+              <div class="col-sm-6"><div class="feature-card p-3"><code>components/</code><p class="small opacity-75 mt-1 mb-0">Reusable UI pieces</p></div></div>
+              <div class="col-sm-6"><div class="feature-card p-3"><code>pages/</code><p class="small opacity-75 mt-1 mb-0">Route-level screens</p></div></div>
+              <div class="col-sm-6"><div class="feature-card p-3"><code>hooks/</code><p class="small opacity-75 mt-1 mb-0">Custom React hooks</p></div></div>
+              <div class="col-sm-6"><div class="feature-card p-3"><code>services/</code><p class="small opacity-75 mt-1 mb-0">API calls and business logic</p></div></div>
+              <div class="col-sm-6"><div class="feature-card p-3"><code>store/</code><p class="small opacity-75 mt-1 mb-0">Global state</p></div></div>
+              <div class="col-sm-6"><div class="feature-card p-3"><code>utils/</code><p class="small opacity-75 mt-1 mb-0">Helper functions</p></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-jsx" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-code-square me-2 text-info"></i>JSX Basics</h2>
+        <div class="note-box mb-3">
+          <p class="mb-0">JSX looks like HTML, but it is actually JavaScript syntax that React converts into function calls.</p>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>Basic JSX</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">const name = 'Paras';
+const isAdmin = true;
+
+function App() {
+  return (
+    <div>
+      <h1>Hello, {name}</h1>
+      <p>Role: {isAdmin ? 'Admin' : 'User'}</p>
+    </div>
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>Important JSX Rules</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>Rule</th><th>Wrong</th><th>Correct</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Use <code>className</code> not <code>class</code></td><td><code>&lt;div class="box"&gt;</code></td><td><code>&lt;div className="box"&gt;</code></td></tr>
+              <tr><td>Use <code>htmlFor</code> not <code>for</code></td><td><code>&lt;label for="email"&gt;</code></td><td><code>&lt;label htmlFor="email"&gt;</code></td></tr>
+              <tr><td>Wrap JS expressions in braces</td><td><code>count + 1</code></td><td><code>{count + 1}</code></td></tr>
+              <tr><td>Return one root element</td><td>Two sibling elements</td><td><code>&lt;&gt;...&lt;/&gt;</code> Fragment</td></tr>
+              <tr><td>Self-close empty tags</td><td><code>&lt;input&gt;&lt;/input&gt;</code></td><td><code>&lt;input /&gt;</code></td></tr>
+              <tr><td>Inline styles use objects</td><td><code>style="color:red"</code></td><td><code>style={{ color: 'red', fontSize: 14 }}</code></td></tr>
+              <tr><td>Boolean attributes</td><td><code>disabled="true"</code></td><td><code>disabled</code> or <code>disabled={true}</code></td></tr>
+              <tr><td>camelCase event names</td><td><code>onclick</code></td><td><code>onClick</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>JSX is JavaScript</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">// JSX compiles to React.createElement() calls
+const el = &lt;h1 className="title"&gt;Hello&lt;/h1&gt;;
+// is exactly the same as:
+const el = React.createElement('h1', { className: 'title' }, 'Hello');
+
+// Inline style — double braces: outer = JSX expression, inner = JS object
+&lt;div style={{ backgroundColor: '#61dafb', padding: '12px', borderRadius: '8px' }}&gt;
+  Styled
+&lt;/div&gt;
+
+// Self-closing tags for elements with no children
+&lt;input type="text" /&gt;
+&lt;img src="logo.png" alt="Logo" /&gt;
+&lt;br /&gt;</code></pre></div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-components" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-box me-2 text-success"></i>Components</h2>
+        <p>Components are functions that return JSX. Use them to organize UI into small reusable units.</p>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>Simple Component</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">function Welcome() {
+  return <h2>Welcome to React</h2>;
+}
+
+export default Welcome;</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>Component Composition</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">function Header() {
+  return <header>Header</header>;
+}
+
+function Footer() {
+  return <footer>Footer</footer>;
+}
+
+function App() {
+  return (
+    <>
+      <Header />
+      <main>Content</main>
+      <Footer />
+    </>
+  );
+}</code></pre></div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-css" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-palette me-2 text-info"></i>CSS in React</h2>
+        <div class="note-box mb-4">
+          <p class="mb-0">React supports multiple ways to style components. Each approach has different trade-offs for scoping, maintainability, and tooling.</p>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>Inline Styles</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">// Use an object with camelCase property names
+function Alert({ type }) {
+  const style = {
+    backgroundColor: type === 'error' ? '#fee2e2' : '#d1fae5',
+    color: type === 'error' ? '#991b1b' : '#065f46',
+    padding: '12px 16px',
+    borderRadius: '8px',
+  };
+
+  return &lt;div style={style}&gt;Alert message&lt;/div&gt;;
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>CSS Modules (Scoped CSS)</h5>
+        <p class="small opacity-75 mb-2">CSS Modules automatically scope class names to the component, preventing conflicts.</p>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-css">/* Button.module.css */
+.btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  background: #61dafb;
+  color: #0b2230;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #0ea5e9;
+}</code></pre></div>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import styles from './Button.module.css';
+
+function Button({ children }) {
+  return &lt;button className={styles.btn}&gt;{children}&lt;/button&gt;;
+  // Renders as: class="Button_btn__xK92a" — unique, scoped
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>Tailwind CSS</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">npm install tailwindcss @tailwindcss/vite
+# Then add @import "tailwindcss" to your index.css</code></pre></div>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">function Card({ title, children }) {
+  return (
+    &lt;div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition"&gt;
+      &lt;h3 className="text-xl font-bold text-gray-800 mb-2"&gt;{title}&lt;/h3&gt;
+      &lt;p className="text-gray-600"&gt;{children}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">4</span>Conditional Classes</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">function Button({ variant = 'primary', disabled }) {
+  // Build class string conditionally
+  const classes = [
+    'btn',
+    `btn-${variant}`,
+    disabled ? 'opacity-50 cursor-not-allowed' : '',
+  ].filter(Boolean).join(' ');
+
+  return &lt;button className={classes} disabled={disabled}&gt;Click&lt;/button&gt;;
+}
+
+// Or use the popular 'clsx' library:
+import clsx from 'clsx';
+const classes = clsx('btn', `btn-${variant}`, { 'opacity-50': disabled });</code></pre></div>
+
+        <div class="table-responsive mt-3">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>Method</th><th>Scoped</th><th>Dynamic</th><th>Best For</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Inline styles</td><td>Yes</td><td>Yes</td><td>Dynamic computed styles</td></tr>
+              <tr><td>CSS Modules</td><td>Yes</td><td>Partial</td><td>Component-scoped styles</td></tr>
+              <tr><td>Tailwind CSS</td><td>No</td><td>Yes</td><td>Rapid utility-class styling</td></tr>
+              <tr><td>Global CSS</td><td>No</td><td>No</td><td>Resets, typography, themes</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-props" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-arrow-left-right me-2 text-primary"></i>Props</h2>
+        <p>Props are inputs passed from parent component to child component.</p>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>Passing Props</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">function UserCard({ name, role }) {
+  return <div>{name} - {role}</div>;
+}
+
+function App() {
+  return <UserCard name="Aman" role="Developer" />;
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>children Prop</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">function Card({ title, children }) {
+  return (
+    <section className="card">
+      <h3>{title}</h3>
+      <div>{children}</div>
+    </section>
+  );
+}
+
+<Card title="Info">
+  <p>Inside card body</p>
+</Card></code></pre></div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-proptypes" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-shield-check me-2 text-success"></i>PropTypes & Default Props</h2>
+        <div class="note-box mb-3">
+          <p class="mb-0"><strong>PropTypes</strong> validates the type of props passed to a component at runtime (development only). For production-grade projects, prefer <strong>TypeScript</strong> instead.</p>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>Install & Basic Usage</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">npm install prop-types</code></pre></div>
+
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import PropTypes from 'prop-types';
+
+function UserCard({ name, age, isAdmin }) {
+  return (
+    &lt;div&gt;
+      &lt;h3&gt;{name}&lt;/h3&gt;
+      &lt;p&gt;Age: {age}&lt;/p&gt;
+      {isAdmin &amp;&amp; &lt;span className="badge bg-danger"&gt;Admin&lt;/span&gt;}
+    &lt;/div&gt;
+  );
+}
+
+UserCard.propTypes = {
+  name: PropTypes.string.isRequired,
+  age: PropTypes.number,
+  isAdmin: PropTypes.bool,
+};
+
+// Default values when prop is not provided
+UserCard.defaultProps = {
+  age: 18,
+  isAdmin: false,
+};</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>Common PropTypes</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>Type</th><th>Validator</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>String</td><td><code>PropTypes.string</code></td></tr>
+              <tr><td>Number</td><td><code>PropTypes.number</code></td></tr>
+              <tr><td>Boolean</td><td><code>PropTypes.bool</code></td></tr>
+              <tr><td>Function</td><td><code>PropTypes.func</code></td></tr>
+              <tr><td>Array</td><td><code>PropTypes.array</code></td></tr>
+              <tr><td>Object</td><td><code>PropTypes.object</code></td></tr>
+              <tr><td>Any of types</td><td><code>PropTypes.oneOfType([PropTypes.string, PropTypes.number])</code></td></tr>
+              <tr><td>Array of shape</td><td><code>PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.number }))</code></td></tr>
+              <tr><td>React node</td><td><code>PropTypes.node</code></td></tr>
+              <tr><td>Required</td><td><code>PropTypes.string.isRequired</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>Spread Props Pattern</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">// Spread all extra props to the DOM element
+function Button({ children, variant = 'primary', ...rest }) {
+  return (
+    &lt;button className={`btn btn-${variant}`} {...rest}&gt;
+      {children}
+    &lt;/button&gt;
+  );
+}
+
+// Usage
+&lt;Button variant="danger" onClick={handleDelete} disabled={loading}&gt;
+  Delete
+&lt;/Button&gt;</code></pre></div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-events" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-cursor-fill me-2 text-warning"></i>Event Handling</h2>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>Basic Event Handler</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useState } from 'react';
+
+function SearchBox() {
+  const [text, setText] = useState('');
+
+  function handleClick() {
+    alert(text);
+  }
+
+  return (
+    &lt;div&gt;
+      &lt;input
+        value={text}
+        onChange={(e) =&gt; setText(e.target.value)}
+        placeholder="Type something"
+      /&gt;
+      &lt;button onClick={handleClick}&gt;Show&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>preventDefault & stopPropagation</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">// preventDefault — stops default browser action (e.g. form reload, link navigate)
+function LoginForm() {
+  function handleSubmit(e) {
+    e.preventDefault();  // stops page reload
+    console.log('form submitted');
+  }
+  return &lt;form onSubmit={handleSubmit}&gt;&lt;button type="submit"&gt;Login&lt;/button&gt;&lt;/form&gt;;
+}
+
+// stopPropagation — stops event bubbling up to parent
+function Card() {
+  return (
+    &lt;div onClick={() =&gt; console.log('card clicked')}&gt;
+      &lt;button onClick={(e) =&gt; {
+        e.stopPropagation(); // parent onClick will NOT fire
+        console.log('button clicked');
+      }}&gt;
+        Click Me
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>Reading e.target</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">function Form() {
+  function handleChange(e) {
+    console.log(e.target.name);    // input name attribute
+    console.log(e.target.value);   // current value
+    console.log(e.target.checked); // for checkboxes
+    console.log(e.target.type);    // 'text', 'checkbox', etc.
+  }
+
+  return (
+    &lt;input name="username" type="text" onChange={handleChange} /&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">4</span>Common React Events</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>Event</th><th>Handler Prop</th><th>Common Use</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Click</td><td><code>onClick</code></td><td>Buttons, links, cards</td></tr>
+              <tr><td>Input change</td><td><code>onChange</code></td><td>Text inputs, select, checkbox</td></tr>
+              <tr><td>Form submit</td><td><code>onSubmit</code></td><td>Form submission</td></tr>
+              <tr><td>Key press</td><td><code>onKeyDown</code> / <code>onKeyUp</code></td><td>Shortcuts, Enter key submit</td></tr>
+              <tr><td>Focus / Blur</td><td><code>onFocus</code> / <code>onBlur</code></td><td>Validation, tooltips</td></tr>
+              <tr><td>Mouse enter/leave</td><td><code>onMouseEnter</code> / <code>onMouseLeave</code></td><td>Hover effects</td></tr>
+              <tr><td>Scroll</td><td><code>onScroll</code></td><td>Infinite scroll, sticky nav</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">5</span>Passing Arguments to Handlers</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">function ItemList({ items }) {
+  function handleDelete(id) {
+    console.log('Delete item', id);
+  }
+
+  return (
+    &lt;ul&gt;
+      {items.map((item) =&gt; (
+        &lt;li key={item.id}&gt;
+          {item.name}
+          {/* Use arrow function to pass argument */}
+          &lt;button onClick={() =&gt; handleDelete(item.id)}&gt;Delete&lt;/button&gt;
+        &lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}</code></pre></div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-conditional" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-sign-turn-right me-2 text-info"></i>Conditional Rendering</h2>
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="feature-card p-3">
+              <h6 class="fw-semibold mb-2">Using ternary</h6>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">function Status({ loggedIn }) {
+  return (
+    <h3>{loggedIn ? 'Welcome back' : 'Please login'}</h3>
+  );
+}</code></pre></div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="feature-card p-3">
+              <h6 class="fw-semibold mb-2">Using &&</h6>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">function Cart({ items }) {
+  return (
+    <div>
+      {items.length > 0 && <p>Items in cart: {items.length}</p>}
+    </div>
+  );
+}</code></pre></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-lists" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-list-ul me-2 text-success"></i>Lists & Keys</h2>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">const users = [
+  { id: 1, name: 'Asha' },
+  { id: 2, name: 'Ravi' },
+];
+
+function UserList() {
+  return (
+    <ul>
+      {users.map((user) => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
+  );
+}</code></pre></div>
+        <div class="alert alert-warning border-0 rounded-3 mt-3">
+          <strong>Rule:</strong> Use stable unique keys like database IDs. Avoid array index as key when items can reorder, add, or remove.
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-state" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-database me-2 text-primary"></i>State Management with useState</h2>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>Counter Example</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useState } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <button onClick={() => setCount((prev) => prev + 1)}>
+      Count: {count}
+    </button>
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>Object State Update</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">const [user, setUser] = useState({
+  name: '',
+  email: ''
+});
+
+setUser((prev) => ({
+  ...prev,
+  email: 'hello@example.com'
+}));</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>Array State Updates</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">const [items, setItems] = useState(['Apple', 'Banana']);
+
+// Add item
+setItems((prev) => [...prev, 'Cherry']);
+
+// Remove item
+setItems((prev) => prev.filter((item) => item !== 'Banana'));
+
+// Update item
+setItems((prev) =>
+  prev.map((item) => (item === 'Apple' ? 'Avocado' : item))
+);</code></pre></div>
+
+        <div class="alert alert-warning border-0 rounded-3 mt-2">
+          <strong>Rule:</strong> Never mutate state directly (e.g. <code>items.push()</code>). Always return a new array using spread, <code>filter</code>, or <code>map</code>.
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-forms" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-ui-checks me-2 text-warning"></i>Forms</h2>
+        <h5 class="sub-title"><span class="step-num me-2">1</span>Controlled Form</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useState } from 'react';
+
+function LoginForm() {
+  const [form, setForm] = useState({
+    email: '',
+    password: ''
+  });
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    console.log(form);
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input name="email" value={form.email} onChange={handleChange} />
+      <input name="password" type="password" value={form.password} onChange={handleChange} />
+      <button type="submit">Login</button>
+    </form>
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>Checkbox, Radio & Select</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useState } from 'react';
+
+function PreferencesForm() {
+  const [agreed, setAgreed] = useState(false);         // checkbox
+  const [gender, setGender] = useState('male');        // radio
+  const [country, setCountry] = useState('india');     // select
+
+  return (
+    &lt;form&gt;
+      {/* Checkbox */}
+      &lt;label&gt;
+        &lt;input
+          type="checkbox"
+          checked={agreed}
+          onChange={(e) =&gt; setAgreed(e.target.checked)}
+        /&gt;
+        I agree to the terms
+      &lt;/label&gt;
+
+      {/* Radio */}
+      &lt;label&gt;
+        &lt;input type="radio" value="male" checked={gender === 'male'}
+          onChange={(e) =&gt; setGender(e.target.value)} /&gt; Male
+      &lt;/label&gt;
+      &lt;label&gt;
+        &lt;input type="radio" value="female" checked={gender === 'female'}
+          onChange={(e) =&gt; setGender(e.target.value)} /&gt; Female
+      &lt;/label&gt;
+
+      {/* Select */}
+      &lt;select value={country} onChange={(e) =&gt; setCountry(e.target.value)}&gt;
+        &lt;option value="india"&gt;India&lt;/option&gt;
+        &lt;option value="usa"&gt;USA&lt;/option&gt;
+        &lt;option value="uk"&gt;UK&lt;/option&gt;
+      &lt;/select&gt;
+
+      &lt;p&gt;Agreed: {agreed.toString()} | Gender: {gender} | Country: {country}&lt;/p&gt;
+    &lt;/form&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>React Hook Form + Zod</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+const schema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+
+function SignupForm() {
+  const { register, handleSubmit } = useForm();
+
+  const onSubmit = (data) => {
+    const result = schema.safeParse(data);
+    if (!result.success) return console.log(result.error.flatten());
+    console.log(result.data);
+  };
+
+  return (
+    &lt;form onSubmit={handleSubmit(onSubmit)}&gt;
+      &lt;input {...register('email')} /&gt;
+      &lt;input type="password" {...register('password')} /&gt;
+      &lt;button&gt;Submit&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre></div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-lifecycle" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-arrow-repeat me-2 text-info"></i>Lifecycle Thinking in Functional Components</h2>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>Concept</th><th>Equivalent in Hooks</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Component mounts</td><td><code>useEffect(() => {}, [])</code></td></tr>
+              <tr><td>Component updates</td><td><code>useEffect(() => {}, [dependency])</code></td></tr>
+              <tr><td>Component unmounts</td><td>cleanup inside <code>useEffect</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">useEffect(() => {
+  const timer = setInterval(() => {
+    console.log('running...');
+  }, 1000);
+
+  return () => {
+    clearInterval(timer); // cleanup
+  };
+}, []);</code></pre></div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-hooks-core" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-lightning-charge me-2 text-success"></i>Core Hooks</h2>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>useEffect</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useEffect, useState } from 'react';
+
+function Users() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then((res) => res.json())
+      .then(setUsers);
+  }, []);
+
+  return users.map((user) => <p key={user.id}>{user.name}</p>);
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>useMemo</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useMemo, useState } from 'react';
+
+function Total({ items }) {
+  const total = useMemo(() => {
+    return items.reduce((sum, item) => sum + item.price, 0);
+  }, [items]);
+
+  return <h3>Total: {total}</h3>;
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>useCallback</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useCallback, useState } from 'react';
+
+function Parent() {
+  const [count, setCount] = useState(0);
+
+  const increment = useCallback(() => {
+    setCount((prev) => prev + 1);
+  }, []);
+
+  return <button onClick={increment}>{count}</button>;
+}</code></pre></div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-hooks-extra" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-tools me-2 text-warning"></i>More Useful Hooks</h2>
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="feature-card p-4">
+              <h6 class="fw-bold">useRef</h6>
+              <p class="small opacity-75">Access DOM nodes or store mutable values without re-rendering.</p>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">const inputRef = useRef(null);
+
+useEffect(() => {
+  inputRef.current?.focus();
+}, []);</code></pre></div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="feature-card p-4">
+              <h6 class="fw-bold">useReducer</h6>
+              <p class="small opacity-75">Useful for complex state logic and predictable action-based updates.</p>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">import { useReducer } from 'react';
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'increment':
+      return { count: state.count + 1 };
+    case 'decrement':
+      return { count: state.count - 1 };
+    case 'reset':
+      return { count: 0 };
+    default:
+      return state;
+  }
+}
+
+function Counter() {
+  const [state, dispatch] = useReducer(reducer, { count: 0 });
+
+  return (
+    &lt;&gt;
+      &lt;p&gt;Count: {state.count}&lt;/p&gt;
+      &lt;button onClick={() =&gt; dispatch({ type: 'increment' })}&gt;+&lt;/button&gt;
+      &lt;button onClick={() =&gt; dispatch({ type: 'decrement' })}&gt;-&lt;/button&gt;
+      &lt;button onClick={() =&gt; dispatch({ type: 'reset' })}&gt;Reset&lt;/button&gt;
+    &lt;/&gt;
+  );
+}</code></pre></div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="feature-card p-4">
+              <h6 class="fw-bold">useContext</h6>
+              <p class="small opacity-75">Read shared values from a provider without prop drilling.</p>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">const ThemeContext = createContext('light');
+
+function App() {
+  return (
+    &lt;ThemeContext.Provider value="dark"&gt;
+      &lt;Toolbar /&gt;
+    &lt;/ThemeContext.Provider&gt;
+  );
+}
+
+function Toolbar() {
+  const theme = useContext(ThemeContext);
+  return &lt;p&gt;Theme: {theme}&lt;/p&gt;;
+}</code></pre></div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="feature-card p-4">
+              <h6 class="fw-bold">useId</h6>
+              <p class="small opacity-75">Generate stable unique IDs for accessibility-friendly form fields.</p>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">import { useId } from 'react';
+
+function EmailField() {
+  const id = useId();
+  return (
+    &lt;div&gt;
+      &lt;label htmlFor={id}&gt;Email&lt;/label&gt;
+      &lt;input id={id} type="email" /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-custom-hooks" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-diagram-3 me-2 text-primary"></i>Custom Hooks</h2>
+        <div class="note-box mb-4">
+          <p class="mb-0">A custom hook is any function prefixed with <code>use</code> that calls built-in React hooks. They let you extract and reuse stateful logic across multiple components without duplicating code.</p>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>useToggle</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useState } from 'react';
+
+function useToggle(initial = false) {
+  const [value, setValue] = useState(initial);
+  const toggle = () => setValue((prev) => !prev);
+  return [value, toggle];
+}
+
+// Usage
+function Demo() {
+  const [open, toggleOpen] = useToggle();
+  return &lt;button onClick={toggleOpen}&gt;{open ? 'Open' : 'Closed'}&lt;/button&gt;;
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>useFetch — Reusable API Fetching</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useState, useEffect } from 'react';
+
+function useFetch(url) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    setLoading(true);
+    fetch(url, { signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then(setData)
+      .catch((err) => {
+        if (err.name !== 'AbortError') setError(err.message);
+      })
+      .finally(() => setLoading(false));
+
+    return () => controller.abort();
+  }, [url]);
+
+  return { data, loading, error };
+}
+
+// Usage — replaces repetitive useEffect + useState boilerplate
+function Users() {
+  const { data, loading, error } = useFetch('https://jsonplaceholder.typicode.com/users');
+
+  if (loading) return &lt;p&gt;Loading...&lt;/p&gt;;
+  if (error) return &lt;p className="text-danger"&gt;{error}&lt;/p&gt;;
+
+  return (
+    &lt;ul&gt;
+      {data.map((u) =&gt; &lt;li key={u.id}&gt;{u.name}&lt;/li&gt;)}
+    &lt;/ul&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>useLocalStorage — Persistent State</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useState } from 'react';
+
+function useLocalStorage(key, initialValue) {
+  const [stored, setStored] = useState(() => {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch {
+      return initialValue;
+    }
+  });
+
+  function setValue(value) {
+    const valueToStore = value instanceof Function ? value(stored) : value;
+    setStored(valueToStore);
+    localStorage.setItem(key, JSON.stringify(valueToStore));
+  }
+
+  return [stored, setValue];
+}
+
+// Usage — survives page refresh
+function Settings() {
+  const [theme, setTheme] = useLocalStorage('theme', 'dark');
+
+  return (
+    &lt;button onClick={() =&gt; setTheme(theme === 'dark' ? 'light' : 'dark')}&gt;
+      Current theme: {theme}
+    &lt;/button&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">4</span>useDebounce — Delay Fast Updates</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useState, useEffect } from 'react';
+
+function useDebounce(value, delay = 500) {
+  const [debounced, setDebounced] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(timer); // reset timer on every value change
+  }, [value, delay]);
+
+  return debounced;
+}
+
+// Usage — API call fires only 500ms after user stops typing
+function SearchPage() {
+  const [query, setQuery] = useState('');
+  const debouncedQuery = useDebounce(query, 500);
+
+  useEffect(() => {
+    if (debouncedQuery) {
+      fetchResults(debouncedQuery); // only calls API when user pauses
+    }
+  }, [debouncedQuery]);
+
+  return &lt;input value={query} onChange={(e) =&gt; setQuery(e.target.value)} placeholder="Search..." /&gt;;
+}</code></pre></div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-context" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-share me-2 text-info"></i>Context API</h2>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { createContext, useContext, useState } from 'react';
+
+const ThemeContext = createContext(null);
+
+function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState('dark');
+
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+function ThemeButton() {
+  const { theme, setTheme } = useContext(ThemeContext);
+
+  return (
+    <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+      Theme: {theme}
+    </button>
+  );
+}</code></pre></div>
+
+        <div class="alert alert-primary border-0 rounded-3">
+          <strong>Use Context for:</strong> theme, auth session, locale, app settings. Avoid putting all app state in one huge context.
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-routing" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-signpost-split me-2 text-success"></i>Routing with React Router</h2>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>Basic Setup</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import {
+  BrowserRouter, Routes, Route, Link, useNavigate, useParams, useLocation
+} from 'react-router-dom';
+
+function Home() { return &lt;h2&gt;Home&lt;/h2&gt;; }
+
+function User() {
+  const { id } = useParams();
+  return &lt;h2&gt;User ID: {id}&lt;/h2&gt;;
+}
+
+function App() {
+  return (
+    &lt;BrowserRouter&gt;
+      &lt;nav&gt;
+        &lt;Link to="/"&gt;Home&lt;/Link&gt;
+        &lt;Link to="/user/10"&gt;User&lt;/Link&gt;
+      &lt;/nav&gt;
+      &lt;Routes&gt;
+        &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
+        &lt;Route path="/user/:id" element={&lt;User /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/BrowserRouter&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>useNavigate & useLocation</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useNavigate, useLocation } from 'react-router-dom';
+
+function LoginPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  async function handleLogin() {
+    await loginUser();
+    // Programmatic navigation after login
+    navigate('/dashboard');       // go to route
+    navigate(-1);                 // go back
+    navigate('/dashboard', { replace: true }); // replace history entry
+  }
+
+  console.log(location.pathname); // e.g. '/login'
+  console.log(location.search);   // e.g. '?redirect=/settings'
+  console.log(location.state);    // passed state from previous route
+
+  return &lt;button onClick={handleLogin}&gt;Login&lt;/button&gt;;
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>Nested Routes</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { Outlet } from 'react-router-dom';
+
+// Dashboard Layout — renders nested children via &lt;Outlet /&gt;
+function DashboardLayout() {
+  return (
+    &lt;div&gt;
+      &lt;aside&gt;Sidebar&lt;/aside&gt;
+      &lt;main&gt;&lt;Outlet /&gt;&lt;/main&gt;  {/* child routes render here */}
+    &lt;/div&gt;
+  );
+}
+
+function App() {
+  return (
+    &lt;Routes&gt;
+      &lt;Route path="/dashboard" element={&lt;DashboardLayout /&gt;}&gt;
+        &lt;Route index element={&lt;DashboardHome /&gt;} /&gt;     {/* /dashboard */}
+        &lt;Route path="users" element={&lt;Users /&gt;} /&gt;      {/* /dashboard/users */}
+        &lt;Route path="settings" element={&lt;Settings /&gt;} /&gt; {/* /dashboard/settings */}
+      &lt;/Route&gt;
+    &lt;/Routes&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">4</span>Protected Routes (Auth Guard)</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { Navigate, Outlet } from 'react-router-dom';
+
+// Wrapper that checks auth before rendering children
+function ProtectedRoute() {
+  const isLoggedIn = !!localStorage.getItem('token');
+
+  if (!isLoggedIn) {
+    return &lt;Navigate to="/login" replace /&gt;;  // redirect to login
+  }
+
+  return &lt;Outlet /&gt;;  // render the protected page
+}
+
+function App() {
+  return (
+    &lt;Routes&gt;
+      &lt;Route path="/login" element={&lt;LoginPage /&gt;} /&gt;
+
+      {/* All routes inside are protected */}
+      &lt;Route element={&lt;ProtectedRoute /&gt;}&gt;
+        &lt;Route path="/dashboard" element={&lt;Dashboard /&gt;} /&gt;
+        &lt;Route path="/settings" element={&lt;Settings /&gt;} /&gt;
+      &lt;/Route&gt;
+    &lt;/Routes&gt;
+  );
+}</code></pre></div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-api" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-cloud-arrow-down me-2 text-warning"></i>API Calls</h2>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>fetch()</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useEffect, useState } from 'react';
+
+function Posts() {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/posts')
+      .then((res) => res.json())
+      .then((data) => setPosts(data.slice(0, 5)))
+      .catch(() => setError('Failed to fetch posts'))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
+
+  return posts.map((post) => <div key={post.id}>{post.title}</div>);
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>Axios</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import axios from 'axios';
+
+async function getUsers() {
+  const response = await axios.get('/api/users');
+  return response.data;
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>AbortController — Cleanup on Unmount</h5>
+        <p class="small opacity-75 mb-2">When a component unmounts before a fetch completes (e.g. user navigates away), you must cancel the request to avoid setting state on an unmounted component.</p>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useEffect, useState } from 'react';
+
+function Posts() {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const controller = new AbortController(); // create controller
+
+    fetch('https://jsonplaceholder.typicode.com/posts', {
+      signal: controller.signal,              // attach signal to fetch
+    })
+      .then((res) => res.json())
+      .then(setPosts)
+      .catch((err) => {
+        if (err.name === 'AbortError') return; // ignore intentional abort
+        console.error(err);
+      });
+
+    return () => controller.abort(); // cancel fetch when component unmounts
+  }, []);
+
+  return posts.map((p) => &lt;p key={p.id}&gt;{p.title}&lt;/p&gt;);
+}</code></pre></div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-performance" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-speedometer2 me-2 text-danger"></i>Performance Optimization</h2>
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="feature-card p-4">
+              <h6 class="fw-bold">React.memo</h6>
+              <p class="small opacity-75">Prevents re-render if props haven't changed.</p>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">import { memo } from 'react';
+
+const ProductCard = memo(function ProductCard({ title }) {
+  return &lt;div&gt;{title}&lt;/div&gt;;
+});</code></pre></div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="feature-card p-4">
+              <h6 class="fw-bold">When to optimize</h6>
+              <ul class="small mb-0 ps-3">
+                <li>Large lists</li>
+                <li>Expensive calculations</li>
+                <li>Heavy child components</li>
+                <li>Frequent re-renders</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>List Virtualization</h5>
+        <p class="small opacity-75 mb-2">Rendering thousands of DOM nodes is slow. Virtualization renders only the rows visible in the viewport — drastically improving performance for large lists.</p>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">npm install @tanstack/react-virtual</code></pre></div>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useVirtualizer } from '@tanstack/react-virtual';
+import { useRef } from 'react';
+
+const allItems = Array.from({ length: 10000 }, (_, i) => `Item ${i + 1}`);
+
+function VirtualList() {
+  const parentRef = useRef(null);
+
+  const virtualizer = useVirtualizer({
+    count: allItems.length,
+    getScrollElement: () =&gt; parentRef.current,
+    estimateSize: () =&gt; 40,  // estimated row height in px
+  });
+
+  return (
+    &lt;div ref={parentRef} style={{ height: '400px', overflow: 'auto' }}&gt;
+      &lt;div style={{ height: virtualizer.getTotalSize() + 'px', position: 'relative' }}&gt;
+        {virtualizer.getVirtualItems().map((virtualRow) =&gt; (
+          &lt;div
+            key={virtualRow.index}
+            style={{
+              position: 'absolute',
+              top: virtualRow.start + 'px',
+              height: virtualRow.size + 'px',
+              width: '100%',
+            }}
+          &gt;
+            {allItems[virtualRow.index]}
+          &lt;/div&gt;
+        ))}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}</code></pre></div>
+
+        <div class="note-box mt-2">
+          <strong>Important:</strong> Do not use <code>useMemo</code> and <code>useCallback</code> everywhere. <strong>Measure first, optimize second.</strong> Use React DevTools Profiler to find actual bottlenecks.
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-refs" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-bullseye me-2 text-primary"></i>Refs & Portals</h2>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>useRef for DOM</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useEffect, useRef } from 'react';
+
+function FocusInput() {
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  return <input ref={inputRef} placeholder="Auto focus" />;
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>Portal Example</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { createPortal } from 'react-dom';
+
+function Modal({ children }) {
+  return createPortal(
+    <div className="modal-backdrop">{children}</div>,
+    document.getElementById('modal-root')
+  );
+}</code></pre></div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-forwardref" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-link me-2 text-warning"></i>forwardRef & useImperativeHandle</h2>
+        <div class="note-box mb-3">
+          <p class="mb-0"><strong>forwardRef</strong> lets a parent component pass a ref down to a child's DOM node. <strong>useImperativeHandle</strong> lets you customize what the parent can do with that ref.</p>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>forwardRef — Pass Ref to Child</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { forwardRef, useRef } from 'react';
+
+// Child accepts ref from parent
+const FancyInput = forwardRef(function FancyInput(props, ref) {
+  return &lt;input ref={ref} className="fancy-input" {...props} /&gt;;
+});
+
+// Parent uses the ref to focus the child input
+function Form() {
+  const inputRef = useRef(null);
+
+  function handleFocus() {
+    inputRef.current?.focus();
+  }
+
+  return (
+    &lt;&gt;
+      &lt;FancyInput ref={inputRef} placeholder="Type here..." /&gt;
+      &lt;button onClick={handleFocus}&gt;Focus Input&lt;/button&gt;
+    &lt;/&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>useImperativeHandle — Custom Ref API</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { forwardRef, useImperativeHandle, useRef } from 'react';
+
+const VideoPlayer = forwardRef(function VideoPlayer(props, ref) {
+  const videoRef = useRef(null);
+
+  // Expose only specific methods to parent
+  useImperativeHandle(ref, () => ({
+    play() { videoRef.current.play(); },
+    pause() { videoRef.current.pause(); },
+  }));
+
+  return &lt;video ref={videoRef} src={props.src} /&gt;;
+});
+
+function App() {
+  const playerRef = useRef(null);
+
+  return (
+    &lt;&gt;
+      &lt;VideoPlayer ref={playerRef} src="/video.mp4" /&gt;
+      &lt;button onClick={() =&gt; playerRef.current.play()}&gt;Play&lt;/button&gt;
+      &lt;button onClick={() =&gt; playerRef.current.pause()}&gt;Pause&lt;/button&gt;
+    &lt;/&gt;
+  );
+}</code></pre></div>
+
+        <div class="alert alert-info border-0 rounded-3 mt-2">
+          <strong>React 19 Note:</strong> In React 19, you can pass <code>ref</code> as a regular prop — <code>forwardRef</code> is no longer required for new components.
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-lazy" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-hourglass-split me-2 text-success"></i>Lazy Loading & Code Splitting</h2>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { lazy, Suspense } from 'react';
+
+const SettingsPage = lazy(() => import('./SettingsPage'));
+
+function App() {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <SettingsPage />
+    </Suspense>
+  );
+}</code></pre></div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-errors" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-bug me-2 text-warning"></i>Error Boundaries</h2>
+        <p>Error boundaries catch rendering errors in the component tree. They must still be class components.</p>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import React from 'react';
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, info) {
+    console.error(error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <h2>Something went wrong.</h2>;
+    }
+
+    return this.props.children;
+  }
+}</code></pre></div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-patterns" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-grid me-2 text-info"></i>Advanced Patterns</h2>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="feature-card p-4">
+              <h6 class="fw-bold">Container / Presentational</h6>
+              <p class="small opacity-75 mb-2">Keep data-fetching logic separate from pure UI rendering components.</p>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">// Container: fetches data
+function UserContainer() {
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    fetch('/api/user').then(r => r.json()).then(setUser);
+  }, []);
+  return user ? &lt;UserCard name={user.name} /&gt; : &lt;p&gt;Loading...&lt;/p&gt;;
+}
+
+// Presentational: only renders
+function UserCard({ name }) {
+  return &lt;div className="card"&gt;{name}&lt;/div&gt;;
+}</code></pre></div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-4">
+              <h6 class="fw-bold">Compound Components</h6>
+              <p class="small opacity-75 mb-2">Useful for tabs, accordions, and flexible component APIs.</p>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">function Tabs({ children }) {
+  const [active, setActive] = useState(0);
+  return (
+    &lt;TabContext.Provider value={{ active, setActive }}&gt;
+      {children}
+    &lt;/TabContext.Provider&gt;
+  );
+}
+
+Tabs.Tab = function Tab({ index, label }) {
+  const { active, setActive } = useContext(TabContext);
+  return (
+    &lt;button
+      onClick={() =&gt; setActive(index)}
+      style={{ fontWeight: active === index ? 'bold' : 'normal' }}
+    &gt;{label}&lt;/button&gt;
+  );
+};</code></pre></div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-4">
+              <h6 class="fw-bold">Higher Order Component (HOC)</h6>
+              <p class="small opacity-75 mb-2">A function that wraps a component to add extra behavior.</p>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">function withAuth(Component) {
+  return function AuthGuard(props) {
+    const isLoggedIn = !!localStorage.getItem('token');
+    if (!isLoggedIn) return &lt;p&gt;Please login first.&lt;/p&gt;;
+    return &lt;Component {...props} /&gt;;
+  };
+}
+
+const ProtectedDashboard = withAuth(Dashboard);</code></pre></div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-4">
+              <h6 class="fw-bold">Controlled vs Uncontrolled</h6>
+              <p class="small opacity-75 mb-2">Controlled components use state; uncontrolled use refs or browser state.</p>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">// Controlled
+function Controlled() {
+  const [val, setVal] = useState('');
+  return &lt;input value={val} onChange={e =&gt; setVal(e.target.value)} /&gt;;
+}
+
+// Uncontrolled
+function Uncontrolled() {
+  const ref = useRef(null);
+  const submit = () =&gt; console.log(ref.current.value);
+  return &lt;&gt;&lt;input ref={ref} /&gt;&lt;button onClick={submit}&gt;Submit&lt;/button&gt;&lt;/&gt;;
+}</code></pre></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-state-mgmt" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-box-seam me-2 text-primary"></i>State Management Beyond useState</h2>
+
+        <div class="table-responsive mb-3">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>Tool</th><th>Use Case</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>useState</code></td><td>Local component state</td></tr>
+              <tr><td><code>useReducer</code></td><td>Complex local state with actions</td></tr>
+              <tr><td><code>Context API</code></td><td>Small shared app state</td></tr>
+              <tr><td><code>Zustand</code></td><td>Simple global store</td></tr>
+              <tr><td><code>Redux Toolkit</code></td><td>Large predictable app state</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h5 class="sub-title"><i class="bi bi-box me-2"></i>Zustand Example</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { create } from 'zustand';
+
+const useCartStore = create((set) => ({
+  items: [],
+  addItem: (item) => set((state) => ({ items: [...state.items, item] })),
+  clearCart: () => set({ items: [] }),
+}));
+
+function CartButton() {
+  const addItem = useCartStore((state) => state.addItem);
+
+  return (
+    <button onClick={() => addItem({ id: 1, name: 'Phone' })}>
+      Add
+    </button>
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><i class="bi bi-archive me-2 text-danger"></i>Redux Toolkit Example</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">npm install @reduxjs/toolkit react-redux</code></pre></div>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">// store/counterSlice.js
+import { createSlice } from '@reduxjs/toolkit';
+
+const counterSlice = createSlice({
+  name: 'counter',
+  initialState: { value: 0 },
+  reducers: {
+    increment: (state) => { state.value += 1; },
+    decrement: (state) => { state.value -= 1; },
+    incrementByAmount: (state, action) => { state.value += action.payload; },
+  },
+});
+
+export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+export default counterSlice.reducer;</code></pre></div>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">// store/store.js
+import { configureStore } from '@reduxjs/toolkit';
+import counterReducer from './counterSlice';
+
+export const store = configureStore({
+  reducer: { counter: counterReducer },
+});</code></pre></div>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">// main.jsx — wrap with Provider
+import { Provider } from 'react-redux';
+import { store } from './store/store';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  &lt;Provider store={store}&gt;
+    &lt;App /&gt;
+  &lt;/Provider&gt;
+);
+
+// Component using Redux state
+import { useSelector, useDispatch } from 'react-redux';
+import { increment, decrement } from './store/counterSlice';
+
+function Counter() {
+  const count = useSelector((state) =&gt; state.counter.value);
+  const dispatch = useDispatch();
+
+  return (
+    &lt;&gt;
+      &lt;p&gt;Count: {count}&lt;/p&gt;
+      &lt;button onClick={() =&gt; dispatch(increment())}&gt;+&lt;/button&gt;
+      &lt;button onClick={() =&gt; dispatch(decrement())}&gt;-&lt;/button&gt;
+    &lt;/&gt;
+  );
+}</code></pre></div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-concurrent" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-layers me-2 text-info"></i>React 18 Concurrent Features</h2>
+        <div class="note-box mb-4">
+          <p class="mb-0">React 18 introduced <strong>Concurrent Mode</strong> — React can now pause, resume, and interrupt rendering to keep the UI responsive. These hooks let you mark certain state updates as lower priority.</p>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>useTransition — Non-Urgent Updates</h5>
+        <p class="small opacity-75 mb-2">Use <code>useTransition</code> to mark state updates as non-urgent so React can keep the UI responsive during slow re-renders (e.g., filtering a large list).</p>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useState, useTransition } from 'react';
+
+function SearchResults({ query }) {
+  // Imagine 10,000 items being filtered here
+  const results = hugeList.filter(item => item.includes(query));
+  return results.map(r => &lt;p key={r}&gt;{r}&lt;/p&gt;);
+}
+
+function SearchPage() {
+  const [query, setQuery] = useState('');
+  const [deferredQuery, setDeferredQuery] = useState('');
+  const [isPending, startTransition] = useTransition();
+
+  function handleChange(e) {
+    setQuery(e.target.value); // urgent update — input responds instantly
+
+    startTransition(() => {
+      setDeferredQuery(e.target.value); // non-urgent — list updates when free
+    });
+  }
+
+  return (
+    &lt;&gt;
+      &lt;input value={query} onChange={handleChange} placeholder="Search..." /&gt;
+      {isPending &amp;&amp; &lt;p className="text-muted"&gt;Updating results...&lt;/p&gt;}
+      &lt;SearchResults query={deferredQuery} /&gt;
+    &lt;/&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>useDeferredValue — Defer a Value</h5>
+        <p class="small opacity-75 mb-2">Similar to <code>useTransition</code> but used when you don't control the state update (e.g., a value passed as a prop).</p>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useDeferredValue, useState } from 'react';
+
+function App() {
+  const [text, setText] = useState('');
+  const deferredText = useDeferredValue(text); // lags behind 'text' when busy
+
+  return (
+    &lt;&gt;
+      &lt;input value={text} onChange={e =&gt; setText(e.target.value)} /&gt;
+      &lt;SlowList query={deferredText} /&gt; {/* renders with deferred value */}
+    &lt;/&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>useLayoutEffect</h5>
+        <p class="small opacity-75 mb-2">Fires synchronously after all DOM mutations but before paint. Use only when you need to measure DOM layout before the browser paints.</p>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useLayoutEffect, useRef, useState } from 'react';
+
+function Tooltip({ text }) {
+  const ref = useRef(null);
+  const [width, setWidth] = useState(0);
+
+  useLayoutEffect(() => {
+    // Measure DOM before browser paints to avoid flicker
+    setWidth(ref.current.getBoundingClientRect().width);
+  }, []);
+
+  return &lt;span ref={ref}&gt;{text} (width: {width}px)&lt;/span&gt;;
+}</code></pre></div>
+
+        <div class="table-responsive mt-3">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>Hook</th><th>When to Use</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>useTransition</code></td><td>You control the state update; mark it non-urgent</td></tr>
+              <tr><td><code>useDeferredValue</code></td><td>You receive a value as prop; defer its usage</td></tr>
+              <tr><td><code>useLayoutEffect</code></td><td>Must measure DOM before browser paint</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-tanstack" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-cloud-haze2 me-2 text-warning"></i>TanStack Query (React Query)</h2>
+        <div class="note-box mb-4">
+          <p class="mb-0"><strong>TanStack Query</strong> is the most popular data-fetching library for React. It handles caching, background refetching, loading/error states, pagination, and mutations — so you don't have to manage them manually with <code>useEffect</code>.</p>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>Install & Setup</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">npm install @tanstack/react-query</code></pre></div>
+
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">// main.jsx — wrap app with QueryClientProvider
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  &lt;QueryClientProvider client={queryClient}&gt;
+    &lt;App /&gt;
+  &lt;/QueryClientProvider&gt;
+);</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>useQuery — Fetch Data</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+
+async function fetchUsers() {
+  const res = await axios.get('/api/users');
+  return res.data;
+}
+
+function Users() {
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['users'],     // unique cache key
+    queryFn: fetchUsers,
+    staleTime: 1000 * 60,   // cache for 1 minute
+  });
+
+  if (isLoading) return &lt;p&gt;Loading...&lt;/p&gt;;
+  if (isError) return &lt;p&gt;Error: {error.message}&lt;/p&gt;;
+
+  return (
+    &lt;ul&gt;
+      {data.map((user) =&gt; (
+        &lt;li key={user.id}&gt;{user.name}&lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>useMutation — Create / Update / Delete</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+
+function AddUser() {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (newUser) => axios.post('/api/users', newUser),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] }); // refetch list
+    },
+  });
+
+  function handleAdd() {
+    mutation.mutate({ name: 'New User', email: 'new@example.com' });
+  }
+
+  return (
+    &lt;button onClick={handleAdd} disabled={mutation.isPending}&gt;
+      {mutation.isPending ? 'Adding...' : 'Add User'}
+    &lt;/button&gt;
+  );
+}</code></pre></div>
+
+        <div class="table-responsive mt-3">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>Feature</th><th>Manual useEffect</th><th>TanStack Query</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Caching</td><td>Manual</td><td>Automatic</td></tr>
+              <tr><td>Background refetch</td><td>Manual</td><td>Automatic</td></tr>
+              <tr><td>Loading/error state</td><td>Manual useState</td><td>Built-in</td></tr>
+              <tr><td>Stale data detection</td><td>Not available</td><td>Automatic</td></tr>
+              <tr><td>Pagination</td><td>Complex</td><td>useInfiniteQuery</td></tr>
+              <tr><td>Mutations + cache sync</td><td>Complex</td><td>useMutation + invalidate</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-typescript" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-braces me-2 text-primary"></i>TypeScript with React</h2>
+        <div class="note-box mb-4">
+          <p class="mb-0"><strong>TypeScript</strong> adds static type checking to React. It catches bugs at compile time, provides better IDE autocomplete, and makes your codebase easier to maintain. It is the recommended choice over PropTypes for new projects.</p>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>Setup with Vite</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">npm create vite@latest my-app -- --template react-ts
+cd my-app
+npm install
+npm run dev</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>Typing Props</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-tsx">// Define a type or interface for props
+type UserCardProps = {
+  name: string;
+  age: number;
+  isAdmin?: boolean;       // optional prop
+  onClick: () =&gt; void;
+};
+
+function UserCard({ name, age, isAdmin = false, onClick }: UserCardProps) {
+  return (
+    &lt;div onClick={onClick}&gt;
+      &lt;h3&gt;{name} (age {age})&lt;/h3&gt;
+      {isAdmin &amp;&amp; &lt;span&gt;Admin&lt;/span&gt;}
+    &lt;/div&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>Typing useState</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-tsx">import { useState } from 'react';
+
+type User = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+function App() {
+  const [user, setUser] = useState&lt;User | null&gt;(null);
+  const [count, setCount] = useState&lt;number&gt;(0);
+  const [tags, setTags] = useState&lt;string[]&gt;([]);
+
+  return &lt;div&gt;{user?.name ?? 'No user'}&lt;/div&gt;;
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">4</span>Typing Events</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-tsx">function Form() {
+  function handleChange(e: React.ChangeEvent&lt;HTMLInputElement&gt;) {
+    console.log(e.target.value);
+  }
+
+  function handleSubmit(e: React.FormEvent&lt;HTMLFormElement&gt;) {
+    e.preventDefault();
+  }
+
+  function handleClick(e: React.MouseEvent&lt;HTMLButtonElement&gt;) {
+    console.log('clicked');
+  }
+
+  return (
+    &lt;form onSubmit={handleSubmit}&gt;
+      &lt;input onChange={handleChange} /&gt;
+      &lt;button type="submit" onClick={handleClick}&gt;Submit&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">5</span>Typing useRef & children</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-tsx">import { useRef } from 'react';
+
+// useRef with DOM element type
+function FocusInput() {
+  const inputRef = useRef&lt;HTMLInputElement&gt;(null);
+
+  function focusIt() {
+    inputRef.current?.focus();
+  }
+
+  return &lt;input ref={inputRef} /&gt;;
+}
+
+// Typing children prop
+type CardProps = {
+  title: string;
+  children: React.ReactNode; // any valid JSX
+};
+
+function Card({ title, children }: CardProps) {
+  return (
+    &lt;div&gt;
+      &lt;h4&gt;{title}&lt;/h4&gt;
+      {children}
+    &lt;/div&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">6</span>Common TypeScript Event Types</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>Event</th><th>Type</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Input change</td><td><code>React.ChangeEvent&lt;HTMLInputElement&gt;</code></td></tr>
+              <tr><td>Form submit</td><td><code>React.FormEvent&lt;HTMLFormElement&gt;</code></td></tr>
+              <tr><td>Button click</td><td><code>React.MouseEvent&lt;HTMLButtonElement&gt;</code></td></tr>
+              <tr><td>Keyboard</td><td><code>React.KeyboardEvent&lt;HTMLInputElement&gt;</code></td></tr>
+              <tr><td>Select change</td><td><code>React.ChangeEvent&lt;HTMLSelectElement&gt;</code></td></tr>
+              <tr><td>Focus / Blur</td><td><code>React.FocusEvent&lt;HTMLInputElement&gt;</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr class="divider" />
+        <h2 class="section-title"><i class="bi bi-stars me-2" style="color:#facc15;"></i>React 19 Highlights</h2>
+        <div class="note-box mb-4">
+          <p class="mb-0">React 19 (stable Dec 2024) introduces major improvements: Actions, new hooks for async UI, ref-as-prop, and better integration with frameworks like Next.js via React Server Components.</p>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <div class="feature-card p-4">
+              <h6 class="fw-bold">useActionState</h6>
+              <p class="small opacity-75 mb-2">Manage async form state and responses more cleanly.</p>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">import { useActionState } from 'react';
+
+async function submitAction(prevState, formData) {
+  const name = formData.get('name');
+  if (!name) return { error: 'Name is required' };
+  await saveName(name);
+  return { success: true };
+}
+
+function NameForm() {
+  const [state, action, isPending] = useActionState(submitAction, {});
+
+  return (
+    &lt;form action={action}&gt;
+      &lt;input name="name" /&gt;
+      &lt;button disabled={isPending}&gt;
+        {isPending ? 'Saving...' : 'Save'}
+      &lt;/button&gt;
+      {state.error &amp;&amp; &lt;p className="text-danger"&gt;{state.error}&lt;/p&gt;}
+      {state.success &amp;&amp; &lt;p className="text-success"&gt;Saved!&lt;/p&gt;}
+    &lt;/form&gt;
+  );
+}</code></pre></div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-4">
+              <h6 class="fw-bold">useOptimistic</h6>
+              <p class="small opacity-75 mb-2">Show instant UI updates while waiting for the server response.</p>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">import { useOptimistic } from 'react';
+
+function Comments({ initialComments, submitComment }) {
+  const [optimisticComments, addOptimisticComment] = useOptimistic(
+    initialComments,
+    (state, newComment) => [...state, newComment]
+  );
+
+  async function handleSubmit(text) {
+    addOptimisticComment({ id: Date.now(), text, pending: true });
+    await submitComment(text);
+  }
+
+  return (
+    &lt;&gt;
+      {optimisticComments.map((c) => (
+        &lt;p key={c.id} style={{ opacity: c.pending ? 0.5 : 1 }}&gt;{c.text}&lt;/p&gt;
+      ))}
+    &lt;/&gt;
+  );
+}</code></pre></div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-4">
+              <h6 class="fw-bold">useFormStatus</h6>
+              <p class="small opacity-75 mb-2">Read the pending state of the parent form's submission inside a child component.</p>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">import { useFormStatus } from 'react-dom';
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    &lt;button type="submit" disabled={pending}&gt;
+      {pending ? 'Submitting...' : 'Submit'}
+    &lt;/button&gt;
+  );
+}
+
+function MyForm() {
+  return (
+    &lt;form action={serverAction}&gt;
+      &lt;input name="email" type="email" /&gt;
+      &lt;SubmitButton /&gt;  {/* reads form pending state */}
+    &lt;/form&gt;
+  );
+}</code></pre></div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-4">
+              <h6 class="fw-bold">ref as a Prop (No forwardRef needed)</h6>
+              <p class="small opacity-75 mb-2">In React 19, function components can accept <code>ref</code> directly as a normal prop.</p>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">// React 19 — no forwardRef required
+function MyInput({ ref, ...props }) {
+  return &lt;input ref={ref} {...props} /&gt;;
+}
+
+function Form() {
+  const inputRef = useRef(null);
+  return &lt;MyInput ref={inputRef} placeholder="Name" /&gt;;
+}</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><i class="bi bi-server me-2 text-info"></i>React Server Components (RSC)</h5>
+        <div class="note-box mb-3">
+          <p class="mb-0">Server Components run <strong>only on the server</strong> — zero client JS bundle cost. They can directly access databases, file systems, and APIs without exposing secrets to the browser. They are used through frameworks like Next.js 13+.</p>
+        </div>
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">// app/users/page.jsx — Server Component (Next.js)
+// Runs on server — can use DB directly
+async function UsersPage() {
+  const users = await db.query('SELECT * FROM users');
+
+  return (
+    &lt;ul&gt;
+      {users.map((u) => (
+        &lt;li key={u.id}&gt;{u.name}&lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}
+
+export default UsersPage;</code></pre></div>
+          </div>
+          <div class="col-lg-6">
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">// Client Component — add 'use client' directive
+'use client';
+import { useState } from 'react';
+
+export function LikeButton({ postId }) {
+  const [liked, setLiked] = useState(false);
+  return (
+    &lt;button onClick={() =&gt; setLiked(!liked)}&gt;
+      {liked ? '❤️ Liked' : '🤍 Like'}
+    &lt;/button&gt;
+  );
+}</code></pre></div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><i class="bi bi-send me-2 text-success"></i>Server Actions</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">// actions.js — Server Action
+'use server';
+
+export async function createPost(formData) {
+  const title = formData.get('title');
+  await db.insert({ title }); // runs on server
+}
+
+// Component using the Server Action directly in form
+import { createPost } from './actions';
+
+export default function NewPost() {
+  return (
+    &lt;form action={createPost}&gt;
+      &lt;input name="title" placeholder="Post title" /&gt;
+      &lt;button type="submit"&gt;Create&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre></div>
+
+        <div class="table-responsive mt-3">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>Feature</th><th>React 19</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>useActionState</code></td><td>Async form state + pending + result</td></tr>
+              <tr><td><code>useOptimistic</code></td><td>Instant optimistic UI updates</td></tr>
+              <tr><td><code>useFormStatus</code></td><td>Read parent form pending state</td></tr>
+              <tr><td><code>use(promise)</code></td><td>Read promise in render (with Suspense)</td></tr>
+              <tr><td>ref as prop</td><td>No more forwardRef for new components</td></tr>
+              <tr><td>Server Components</td><td>Zero-bundle server-rendered components</td></tr>
+              <tr><td>Server Actions</td><td>Server functions called from forms/client</td></tr>
+              <tr><td>Document Metadata</td><td>Use &lt;title&gt;, &lt;meta&gt; directly in JSX</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-nextjs" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-triangle me-2 text-light"></i>Next.js — React Framework</h2>
+        <div class="note-box mb-4">
+          <p class="mb-0"><strong>Next.js</strong> is the most popular React framework (by Vercel). It adds Server Side Rendering (SSR), Static Site Generation (SSG), file-based routing, API routes, image optimization, and React Server Components on top of React.</p>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>Create & Run</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">npx create-next-app@latest my-app
+cd my-app
+npm run dev   # http://localhost:3000</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>App Router — File-Based Routing</h5>
+        <div class="row g-3">
+          <div class="col-lg-5">
+            <div class="code-wrapper"><pre><code class="language-text">app/
+├── layout.jsx        → root layout
+├── page.jsx          → / route
+├── about/
+│   └── page.jsx      → /about route
+├── blog/
+│   ├── page.jsx      → /blog
+│   └── [slug]/
+│       └── page.jsx  → /blog/my-post
+└── api/
+    └── users/
+        └── route.js  → /api/users</code></pre></div>
+          </div>
+          <div class="col-lg-7">
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">// app/blog/[slug]/page.jsx
+export default async function BlogPost({ params }) {
+  const { slug } = await params;
+  const post = await fetchPost(slug); // server-side fetch
+
+  return (
+    &lt;article&gt;
+      &lt;h1&gt;{post.title}&lt;/h1&gt;
+      &lt;p&gt;{post.body}&lt;/p&gt;
+    &lt;/article&gt;
+  );
+}
+
+// Optional: generate static params at build time
+export async function generateStaticParams() {
+  const posts = await fetchAllPosts();
+  return posts.map((p) =&gt; ({ slug: p.slug }));
+}</code></pre></div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>Root Layout</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">// app/layout.jsx — wraps every page
+export const metadata = {
+  title: 'My App',
+  description: 'Built with Next.js',
+};
+
+export default function RootLayout({ children }) {
+  return (
+    &lt;html lang="en"&gt;
+      &lt;body&gt;
+        &lt;header&gt;My Nav&lt;/header&gt;
+        {children}
+        &lt;footer&gt;Footer&lt;/footer&gt;
+      &lt;/body&gt;
+    &lt;/html&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">4</span>API Routes</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">// app/api/users/route.js
+import { NextResponse } from 'next/server';
+
+export async function GET() {
+  const users = await db.query('SELECT * FROM users');
+  return NextResponse.json(users);
+}
+
+export async function POST(request) {
+  const body = await request.json();
+  const newUser = await db.insert(body);
+  return NextResponse.json(newUser, { status: 201 });
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">5</span>Data Fetching Patterns</h5>
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="feature-card p-3">
+              <h6 class="fw-semibold mb-2">Server-Side (SSR) — fresh every request</h6>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">// Server Component — fetches on each request
+export default async function Page() {
+  const data = await fetch('/api/data', {
+    cache: 'no-store' // SSR
+  }).then(r => r.json());
+
+  return &lt;div&gt;{data.title}&lt;/div&gt;;
+}</code></pre></div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="feature-card p-3">
+              <h6 class="fw-semibold mb-2">Static (SSG) — cached at build time</h6>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">// Server Component — cached by default (SSG)
+export default async function Page() {
+  const data = await fetch('/api/data', {
+    next: { revalidate: 3600 } // ISR: refresh every 1h
+  }).then(r => r.json());
+
+  return &lt;div&gt;{data.title}&lt;/div&gt;;
+}</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">6</span>next/link & next/image</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import Link from 'next/link';
+import Image from 'next/image';
+
+export default function Home() {
+  return (
+    &lt;div&gt;
+      {/* Client-side navigation — no full page reload */}
+      &lt;Link href="/about"&gt;About Us&lt;/Link&gt;
+
+      {/* Automatically optimized image — lazy loaded, WebP format */}
+      &lt;Image
+        src="/banner.jpg"
+        alt="Banner"
+        width={1200}
+        height={400}
+        priority
+      /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre></div>
+
+        <div class="table-responsive mt-3">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>Feature</th><th>React (Vite)</th><th>Next.js</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Routing</td><td>React Router (manual)</td><td>File-based (automatic)</td></tr>
+              <tr><td>SSR / SSG</td><td>Not built-in</td><td>Built-in</td></tr>
+              <tr><td>API Routes</td><td>Need separate backend</td><td>Built-in (/api/)</td></tr>
+              <tr><td>SEO</td><td>Client-rendered only</td><td>Server-rendered HTML</td></tr>
+              <tr><td>Image optimization</td><td>Manual</td><td>next/image automatic</td></tr>
+              <tr><td>Server Components</td><td>Not supported</td><td>Native (App Router)</td></tr>
+              <tr><td>Deployment</td><td>Any static host</td><td>Vercel (best) or any</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-testing" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-check2-circle me-2 text-success"></i>Testing</h2>
+        <div class="note-box mb-4">
+          <p class="mb-0">Common stack: <strong>Vitest</strong> (or Jest) + <strong>React Testing Library</strong>. Write tests that simulate what users actually do — click buttons, fill forms, read text.</p>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>Install (Vite + Vitest)</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">npm install -D vitest @testing-library/react @testing-library/jest-dom @testing-library/user-event jsdom</code></pre></div>
+
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-js">// vite.config.js — add test config
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/setupTests.js',
+  },
+});</code></pre></div>
+
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-js">// src/setupTests.js
+import '@testing-library/jest-dom';</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>Component Render Test</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { render, screen } from '@testing-library/react';
+import UserCard from './UserCard';
+
+test('renders user name', () => {
+  render(&lt;UserCard name="Aman" role="Developer" /&gt;);
+  expect(screen.getByText('Aman')).toBeInTheDocument();
+  expect(screen.getByText('Developer')).toBeInTheDocument();
+});</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>User Interaction Test</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { render, screen, fireEvent } from '@testing-library/react';
+import Counter from './Counter';
+
+test('increments counter on click', () => {
+  render(&lt;Counter /&gt;);
+  const button = screen.getByRole('button', { name: /count/i });
+
+  fireEvent.click(button);
+  expect(screen.getByText(/Count: 1/i)).toBeInTheDocument();
+
+  fireEvent.click(button);
+  expect(screen.getByText(/Count: 2/i)).toBeInTheDocument();
+});</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">4</span>Mock API with vi.fn()</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { render, screen, waitFor } from '@testing-library/react';
+import { vi } from 'vitest';
+import Users from './Users';
+
+// Mock fetch globally
+vi.stubGlobal('fetch', vi.fn(() =>
+  Promise.resolve({
+    json: () => Promise.resolve([{ id: 1, name: 'Aman' }]),
+  })
+));
+
+test('displays fetched users', async () => {
+  render(&lt;Users /&gt;);
+  await waitFor(() => {
+    expect(screen.getByText('Aman')).toBeInTheDocument();
+  });
+});</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">5</span>Run Tests</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">npx vitest          # watch mode
+npx vitest run      # run once
+npx vitest --ui     # visual UI dashboard</code></pre></div>
+
+        <div class="row g-3 mt-1">
+          <div class="col-md-4">
+            <div class="feature-card p-3">
+              <h6 class="fw-bold mb-1">Unit Tests</h6>
+              <p class="small opacity-75 mb-0">Test one component or function in isolation. Fast and focused.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card p-3">
+              <h6 class="fw-bold mb-1">Integration Tests</h6>
+              <p class="small opacity-75 mb-0">Test multiple components working together (e.g., form + validation + submit).</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card p-3">
+              <h6 class="fw-bold mb-1">E2E Tests</h6>
+              <p class="small opacity-75 mb-0">Use <strong>Playwright</strong> or <strong>Cypress</strong> to test full user flows in the browser.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-best" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-patch-check me-2 text-primary"></i>Best Practices</h2>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <div class="feature-card p-4">
+              <h6 class="fw-bold mb-2"><i class="bi bi-box text-info me-2"></i>Component Design</h6>
+              <ul class="small mb-0 ps-3">
+                <li>Keep components small and focused on one job.</li>
+                <li>Name components with <strong>PascalCase</strong>: <code>UserCard</code>, not <code>userCard</code>.</li>
+                <li>Name hooks with <strong>use prefix</strong>: <code>useFetch</code>, not <code>fetchData</code>.</li>
+                <li>Use <strong>named exports</strong> for components, default for pages.</li>
+                <li>Prefer composition over deeply nested prop drilling.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-4">
+              <h6 class="fw-bold mb-2"><i class="bi bi-database text-warning me-2"></i>State & Data</h6>
+              <ul class="small mb-0 ps-3">
+                <li>Never mutate state directly — always return new values.</li>
+                <li>Use stable unique keys (not index) in lists.</li>
+                <li>Keep state as close to where it's used as possible.</li>
+                <li>Use TanStack Query for server state, Zustand for client global state.</li>
+                <li>Clean up effects: timers, subscriptions, AbortControllers.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-4">
+              <h6 class="fw-bold mb-2"><i class="bi bi-speedometer2 text-danger me-2"></i>Performance</h6>
+              <ul class="small mb-0 ps-3">
+                <li>Measure before optimizing — use React DevTools Profiler.</li>
+                <li>Use <code>React.memo</code> only for expensive components that re-render often.</li>
+                <li>Virtualize large lists with <code>@tanstack/react-virtual</code>.</li>
+                <li>Use <code>lazy()</code> + <code>Suspense</code> to split large page bundles.</li>
+                <li>Use <code>useTransition</code> for non-urgent UI updates.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-4">
+              <h6 class="fw-bold mb-2"><i class="bi bi-shield-check text-success me-2"></i>Security & Quality</h6>
+              <ul class="small mb-0 ps-3">
+                <li>Never store secrets in <code>VITE_</code> env vars — they're public.</li>
+                <li>Sanitize any user content rendered as HTML (avoid <code>dangerouslySetInnerHTML</code>).</li>
+                <li>Validate all form inputs and API responses.</li>
+                <li>Use ESLint + Prettier for consistent code style.</li>
+                <li>Use TypeScript for type safety in team projects.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><i class="bi bi-folder me-2 text-info"></i>File & Folder Naming Conventions</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-text">src/
+├── components/
+│   ├── UserCard.jsx          ← PascalCase for components
+│   └── UserCard.module.css   ← same name as component
+├── pages/
+│   ├── HomePage.jsx
+│   └── DashboardPage.jsx
+├── hooks/
+│   ├── useFetch.js           ← camelCase with use prefix
+│   └── useLocalStorage.js
+├── services/
+│   └── userService.js        ← camelCase for utilities/services
+└── utils/
+    └── formatDate.js</code></pre></div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-envvars" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-key me-2 text-warning"></i>Environment Variables</h2>
+        <div class="note-box mb-3">
+          <p class="mb-0">Environment variables let you store configuration like API URLs and keys outside your source code. In Vite-based React projects, variables must start with <code>VITE_</code> to be exposed to the browser.</p>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>Create .env Files</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-bash"># .env  — loaded in all environments
+VITE_API_URL=https://api.example.com
+VITE_APP_NAME=MyApp
+
+# .env.development  — only in dev (npm run dev)
+VITE_API_URL=http://localhost:8000
+
+# .env.production  — only in prod (npm run build)
+VITE_API_URL=https://api.example.com</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>Read in Code</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">// Access via import.meta.env in Vite
+const apiUrl = import.meta.env.VITE_API_URL;
+const appName = import.meta.env.VITE_APP_NAME;
+
+async function getUsers() {
+  const res = await fetch(`${apiUrl}/users`);
+  return res.json();
+}
+
+function App() {
+  return &lt;h1&gt;{appName}&lt;/h1&gt;;
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>Built-in Vite Env Variables</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>Variable</th><th>Value</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>import.meta.env.MODE</code></td><td><code>"development"</code> or <code>"production"</code></td></tr>
+              <tr><td><code>import.meta.env.DEV</code></td><td><code>true</code> in dev mode</td></tr>
+              <tr><td><code>import.meta.env.PROD</code></td><td><code>true</code> in production</td></tr>
+              <tr><td><code>import.meta.env.BASE_URL</code></td><td>The base URL of the app</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="alert alert-danger border-0 rounded-3 mt-2">
+          <strong>Security:</strong> Never put secret keys (API private keys, DB passwords) in <code>VITE_</code> variables — they are bundled into the client JS and visible to anyone. Use a backend proxy for sensitive calls.
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-a11y" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-universal-access me-2 text-info"></i>Accessibility (a11y)</h2>
+        <div class="note-box mb-4">
+          <p class="mb-0"><strong>Accessibility</strong> ensures your React app can be used by everyone — including people using screen readers, keyboard-only navigation, or assistive technology. React renders standard HTML, so standard HTML accessibility rules apply.</p>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>Semantic HTML</h5>
+        <div class="row g-3 mb-3">
+          <div class="col-lg-6">
+            <div class="feature-card p-3">
+              <h6 class="small text-danger fw-semibold mb-2">&#10060; Non-semantic</h6>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">&lt;div onClick={submit}&gt;Submit&lt;/div&gt;
+&lt;div className="nav"&gt;...&lt;/div&gt;
+&lt;div className="header"&gt;...&lt;/div&gt;</code></pre></div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="feature-card p-3">
+              <h6 class="small text-success fw-semibold mb-2">&#10004; Semantic</h6>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">&lt;button onClick={submit}&gt;Submit&lt;/button&gt;
+&lt;nav&gt;...&lt;/nav&gt;
+&lt;header&gt;...&lt;/header&gt;</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>ARIA Attributes</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">// aria-label — describes element when visible text is absent
+&lt;button aria-label="Close modal"&gt;&lt;i className="bi bi-x" /&gt;&lt;/button&gt;
+
+// aria-hidden — hides decorative elements from screen readers
+&lt;i className="bi bi-heart" aria-hidden="true" /&gt;
+&lt;span&gt;Like&lt;/span&gt;
+
+// aria-live — announces dynamic content changes
+&lt;div aria-live="polite"&gt;
+  {loading ? 'Loading...' : `${results.length} results found`}
+&lt;/div&gt;
+
+// aria-expanded — for accordion/dropdown state
+&lt;button aria-expanded={isOpen} onClick={toggle}&gt;
+  {isOpen ? 'Collapse' : 'Expand'}
+&lt;/button&gt;
+
+// role — when semantic tag isn't appropriate
+&lt;div role="alert" className="error"&gt;{errorMessage}&lt;/div&gt;</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>Form Labels & Focus Management</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { useId, useRef, useEffect } from 'react';
+
+function AccessibleForm() {
+  const emailId = useId();
+  const modalRef = useRef(null);
+
+  // Move focus to modal when it opens
+  useEffect(() =&gt; {
+    modalRef.current?.focus();
+  }, []);
+
+  return (
+    &lt;form&gt;
+      {/* Always link labels to inputs */}
+      &lt;label htmlFor={emailId}&gt;Email address&lt;/label&gt;
+      &lt;input
+        id={emailId}
+        type="email"
+        aria-required="true"
+        aria-describedby="email-hint"
+      /&gt;
+      &lt;p id="email-hint" className="text-muted small"&gt;We'll never share your email.&lt;/p&gt;
+
+      {/* Skip link for keyboard users */}
+      &lt;a href="#main-content" className="visually-hidden-focusable"&gt;
+        Skip to main content
+      &lt;/a&gt;
+
+      {/* Focus trap container (tabIndex makes div focusable) */}
+      &lt;div ref={modalRef} tabIndex={-1}&gt;
+        Modal content here
+      &lt;/div&gt;
+    &lt;/form&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">4</span>Keyboard Navigation</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">// Handle Enter/Space key on custom interactive elements
+function CustomButton({ onClick, children }) {
+  function handleKeyDown(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick();
+    }
+  }
+
+  return (
+    &lt;div
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+    &gt;
+      {children}
+    &lt;/div&gt;
+  );
+}</code></pre></div>
+
+        <div class="table-responsive mt-3">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>Rule</th><th>Why</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Use semantic HTML tags</td><td>Screen readers understand <code>&lt;button&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code> correctly</td></tr>
+              <tr><td>Always link <code>&lt;label&gt;</code> to inputs</td><td>Screen readers announce the label when input is focused</td></tr>
+              <tr><td>Provide <code>alt</code> text for images</td><td>Describes images to visually impaired users</td></tr>
+              <tr><td>Ensure color contrast ratio &ge; 4.5:1</td><td>Text readable by people with low vision</td></tr>
+              <tr><td>Never remove focus outline</td><td>Keyboard users need to see which element is focused</td></tr>
+              <tr><td>Manage focus when modals open</td><td>Screen reader cursor should move into the modal</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-animations" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-stars me-2 text-warning"></i>Animations with Framer Motion</h2>
+        <div class="note-box mb-4">
+          <p class="mb-0"><strong>Framer Motion</strong> is the most popular React animation library. It lets you add smooth animations, transitions, layout animations, and gestures with a declarative API — no CSS keyframes needed.</p>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>Install</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">npm install motion</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>Basic Animate</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { motion } from 'motion/react';
+
+// Fade in + slide up on mount
+function Card() {
+  return (
+    &lt;motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="card p-4"
+    &gt;
+      Hello, I animated in!
+    &lt;/motion.div&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>Exit Animations with AnimatePresence</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { motion, AnimatePresence } from 'motion/react';
+import { useState } from 'react';
+
+function Toast({ message }) {
+  const [visible, setVisible] = useState(true);
+
+  return (
+    &lt;AnimatePresence&gt;
+      {visible &amp;&amp; (
+        &lt;motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 50 }}   {/* plays on unmount */}
+          transition={{ duration: 0.3 }}
+          className="alert alert-success"
+        &gt;
+          {message}
+          &lt;button onClick={() =&gt; setVisible(false)}&gt;&times;&lt;/button&gt;
+        &lt;/motion.div&gt;
+      )}
+    &lt;/AnimatePresence&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">4</span>Hover & Tap Gestures</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { motion } from 'motion/react';
+
+function AnimatedButton({ children, onClick }) {
+  return (
+    &lt;motion.button
+      whileHover={{ scale: 1.05, backgroundColor: '#0ea5e9' }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ type: 'spring', stiffness: 400 }}
+      onClick={onClick}
+      className="btn btn-primary"
+    &gt;
+      {children}
+    &lt;/motion.button&gt;
+  );
+}</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">5</span>Layout Animations</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-jsx">import { motion } from 'motion/react';
+import { useState } from 'react';
+
+function ExpandableCard() {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    &lt;motion.div
+      layout  // automatically animates layout changes
+      onClick={() =&gt; setExpanded(!expanded)}
+      style={{ cursor: 'pointer', padding: '16px', borderRadius: '12px', background: '#1e293b' }}
+    &gt;
+      &lt;motion.h4 layout&gt;Click to {expanded ? 'collapse' : 'expand'}&lt;/motion.h4&gt;
+      {expanded &amp;&amp; (
+        &lt;motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        &gt;
+          Extra content revealed with smooth layout animation.
+        &lt;/motion.p&gt;
+      )}
+    &lt;/motion.div&gt;
+  );
+}</code></pre></div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-reactnative" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-phone me-2 text-success"></i>React Native — Mobile with React</h2>
+        <div class="note-box mb-4">
+          <p class="mb-0"><strong>React Native</strong> lets you build native iOS and Android apps using React and JavaScript. You use the same component model, hooks, and state management — but instead of HTML tags, you use React Native's built-in components (<code>View</code>, <code>Text</code>, <code>TouchableOpacity</code>).</p>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-4">
+            <div class="feature-card p-3 text-center">
+              <div class="icon-box mx-auto mb-2" style="background:rgba(97,218,251,.15);color:#61dafb;"><i class="bi bi-phone"></i></div>
+              <h6 class="fw-semibold">iOS &amp; Android</h6>
+              <p class="small opacity-75 mb-0">One codebase for both platforms using native components.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card p-3 text-center">
+              <div class="icon-box mx-auto mb-2" style="background:rgba(34,197,94,.15);color:#22c55e;"><i class="bi bi-lightning-charge"></i></div>
+              <h6 class="fw-semibold">Same React Skills</h6>
+              <p class="small opacity-75 mb-0">Hooks, state, props, context — all the same as React web.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card p-3 text-center">
+              <div class="icon-box mx-auto mb-2" style="background:rgba(168,85,247,.15);color:#a855f7;"><i class="bi bi-tools"></i></div>
+              <h6 class="fw-semibold">Expo (Recommended)</h6>
+              <p class="small opacity-75 mb-0">Expo simplifies setup, build, and deployment for React Native.</p>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">1</span>Start with Expo</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">npx create-expo-app@latest my-app
+cd my-app
+npx expo start   # scan QR with Expo Go app on your phone</code></pre></div>
+
+        <h5 class="sub-title"><span class="step-num me-2">2</span>React vs React Native Syntax</h5>
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="feature-card p-3">
+              <h6 class="small fw-semibold mb-2">React (Web)</h6>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">function App() {
+  return (
+    &lt;div className="container"&gt;
+      &lt;h1&gt;Hello Web&lt;/h1&gt;
+      &lt;p&gt;Welcome&lt;/p&gt;
+      &lt;button onClick={fn}&gt;Press&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre></div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="feature-card p-3">
+              <h6 class="small fw-semibold mb-2">React Native (Mobile)</h6>
+              <div class="code-wrapper mb-0"><pre><code class="language-jsx">import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+
+function App() {
+  return (
+    &lt;View style={styles.container}&gt;
+      &lt;Text style={styles.title}&gt;Hello Mobile&lt;/Text&gt;
+      &lt;Text&gt;Welcome&lt;/Text&gt;
+      &lt;TouchableOpacity onPress={fn}&gt;
+        &lt;Text&gt;Press&lt;/Text&gt;
+      &lt;/TouchableOpacity&gt;
+    &lt;/View&gt;
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 20 },
+  title: { fontSize: 24, fontWeight: 'bold' },
+});</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive mt-3">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>React Web</th><th>React Native Equivalent</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>&lt;div&gt;</code></td><td><code>&lt;View&gt;</code></td></tr>
+              <tr><td><code>&lt;p&gt;</code>, <code>&lt;span&gt;</code>, <code>&lt;h1&gt;</code></td><td><code>&lt;Text&gt;</code></td></tr>
+              <tr><td><code>&lt;img&gt;</code></td><td><code>&lt;Image&gt;</code></td></tr>
+              <tr><td><code>&lt;input&gt;</code></td><td><code>&lt;TextInput&gt;</code></td></tr>
+              <tr><td><code>&lt;button&gt;</code></td><td><code>&lt;TouchableOpacity&gt;</code> / <code>&lt;Pressable&gt;</code></td></tr>
+              <tr><td><code>&lt;ul&gt;</code> / <code>&lt;li&gt;</code></td><td><code>&lt;FlatList&gt;</code></td></tr>
+              <tr><td>CSS classes</td><td><code>StyleSheet.create({})</code></td></tr>
+              <tr><td>React Router</td><td>Expo Router / React Navigation</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-deploy" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-rocket-takeoff me-2 text-warning"></i>Build &amp; Deployment</h2>
+
+        <h5 class="sub-title"><i class="bi bi-terminal me-2"></i>Build Commands</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">npm run build    # outputs to /dist folder
+npm run preview  # preview production build locally (Vite)</code></pre></div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-4">
+            <div class="feature-card p-3">
+              <h6 class="fw-bold mb-1">Vercel</h6>
+              <p class="small opacity-75 mb-2">Best for React/Next.js. Git push = auto deploy. Zero config.</p>
+              <div class="code-wrapper mb-0"><pre><code class="language-bash">npm install -g vercel
+vercel          # deploy from CLI
+vercel --prod   # deploy to production</code></pre></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card p-3">
+              <h6 class="fw-bold mb-1">Netlify</h6>
+              <p class="small opacity-75 mb-2">Great for static apps. Add <code>_redirects</code> for SPA routing.</p>
+              <div class="code-wrapper mb-0"><pre><code class="language-bash"># public/_redirects file — fixes 404 on page refresh
+/*    /index.html   200</code></pre></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card p-3">
+              <h6 class="fw-bold mb-1">GitHub Pages</h6>
+              <p class="small opacity-75 mb-2">Free static hosting direct from your GitHub repo.</p>
+              <div class="code-wrapper mb-0"><pre><code class="language-bash">npm install -D gh-pages
+# package.json: "homepage": "https://user.github.io/repo"
+npm run build
+npx gh-pages -d dist</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><i class="bi bi-gear me-2 text-info"></i>Vercel Config (vercel.json)</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-json">{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}</code></pre></div>
+
+        <h5 class="sub-title"><i class="bi bi-github me-2"></i>GitHub Actions CI/CD</h5>
+        <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)">Copy</button><pre><code class="language-yaml"># .github/workflows/deploy.yml
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install &amp; Build
+        run: |
+          npm install
+          npm run build
+
+      - name: Deploy to Vercel
+        run: npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }}</code></pre></div>
+      </section>
+
+      <footer class="text-center py-4 mt-4" style="border-top:1px solid rgba(128,128,128,.15);">
+        <p class="small opacity-50 mb-0"><i class="bi bi-boxes text-info me-1"></i>React.js Basic to Advanced Guide — Bootstrap 5 + Dark Mode</p>
+      </footer>
+    </div>
+  </main>
+
+  <div id="backTop" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+    <i class="bi bi-arrow-up"></i>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/highlight.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('pre code').forEach((el) => hljs.highlightElement(el));
+    });
+
+    const html = document.documentElement;
+    const toggleBtn = document.getElementById('themeToggle');
+    const hljsDark = document.getElementById('hljs-theme-dark');
+    const hljsLight = document.getElementById('hljs-theme-light');
+
+    function applyTheme(theme) {
+      html.setAttribute('data-bs-theme', theme);
+      toggleBtn.innerHTML = theme === 'dark'
+        ? '<i class="bi bi-sun-fill"></i>'
+        : '<i class="bi bi-moon-fill"></i>';
+      hljsDark.disabled = theme !== 'dark';
+      hljsLight.disabled = theme !== 'light';
+      localStorage.setItem('react-guide-theme', theme);
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      applyTheme(html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
+    });
+
+    const savedTheme = localStorage.getItem('react-guide-theme');
+    if (savedTheme) applyTheme(savedTheme);
+
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('#sidebar .nav-link');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          navLinks.forEach((link) => link.classList.remove('active'));
+          const active = document.querySelector(`#sidebar a[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+
+    sections.forEach((section) => observer.observe(section));
+
+    const backTop = document.getElementById('backTop');
+    window.addEventListener('scroll', () => {
+      backTop.classList.toggle('show', window.scrollY > 400);
+    });
+
+    function copyCode(btn) {
+      const code = btn.closest('.code-wrapper').querySelector('code');
+      navigator.clipboard.writeText(code.innerText).then(() => {
+        btn.innerHTML = 'Copied!';
+        setTimeout(() => {
+          btn.innerHTML = 'Copy';
+        }, 1500);
+      });
+    }
+  </script>
+</body>
+</html>
