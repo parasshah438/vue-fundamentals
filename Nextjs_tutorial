@@ -12,7 +12,7 @@ Next.js is a powerful React framework for building fast, scalable, and SEO-frien
 Built on React, making it easier to create modern, component-driven UIs.
 Server-Side Rendering (SSR) & Static Site Generation (SSG) improves SEO and performance by pre-rendering pages.
 Offers automatic bundling, code splitting, and asset optimization.
-Suitable for both small projects and enterprise-grade applications with full-stack support.
+Suitable for both small projects and enter e-grade applications with full-stack support.
 
 
 Think of it this way:
@@ -215,7 +215,7 @@ my-next-app
 │
 └ package.json
 
-
+now which are js lib and framework now trending in 2026-2027 and must be learn and popular and mostly used
 1 app/ or pages/ : Contains route-based pages; each file automatically becomes a route in the application.
 2 components/ : Stores reusable UI components used across multiple pages.
 3 public/ : Holds static assets like images, fonts, and icons accessible directly via URL.

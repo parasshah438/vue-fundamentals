@@ -1,0 +1,2317 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advanced JavaScript and ES6 Complete Guide</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link id="hljs-theme-dark" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css" />
+  <link id="hljs-theme-light" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css" disabled />
+
+  <style>
+    :root {
+      --sidebar-width: 280px;
+      --header-h: 64px;
+      --accent: #f7df1e;
+      --accent-2: #ffb703;
+      --accent-3: #fb8500;
+      --accent-rgb: 247, 223, 30;
+      --accent2-rgb: 255, 183, 3;
+    }
+
+    body { font-size: .95rem; scroll-behavior: smooth; }
+
+    #topbar {
+      height: var(--header-h);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1050;
+    }
+    [data-bs-theme="dark"] #topbar { background: rgba(13,17,23,.85); border-bottom: 1px solid rgba(255,255,255,.08); }
+    [data-bs-theme="light"] #topbar { background: rgba(255,255,255,.9); border-bottom: 1px solid rgba(0,0,0,.1); }
+
+    .brand-badge {
+      background: linear-gradient(135deg, var(--accent), var(--accent-3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+
+    #sidebar {
+      width: var(--sidebar-width);
+      top: var(--header-h);
+      height: calc(100vh - var(--header-h));
+      overflow-y: auto;
+      scrollbar-width: thin;
+      z-index: 1040;
+    }
+    [data-bs-theme="dark"] #sidebar { background: #0d1117; border-right: 1px solid rgba(255,255,255,.08); }
+    [data-bs-theme="light"] #sidebar { background: #f8f9fa; border-right: 1px solid #dee2e6; }
+
+    #sidebar .nav-link {
+      font-size: .85rem;
+      padding: .38rem 1rem;
+      border-radius: 8px;
+      color: inherit;
+      transition: background .15s, color .15s, padding-left .15s;
+    }
+    #sidebar .nav-link:hover,
+    #mobileSidebar .nav-link:hover {
+      background: rgba(var(--accent-rgb), .14);
+      color: var(--accent-2);
+      padding-left: 1.3rem;
+    }
+    #sidebar .nav-link.active,
+    #mobileSidebar .nav-link.active {
+      background: rgba(var(--accent-rgb), .2);
+      color: var(--accent-3);
+      font-weight: 600;
+    }
+
+    #sidebar .nav-section,
+    #mobileSidebar .nav-section {
+      font-size: .7rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: .75rem 1rem .3rem;
+      opacity: .55;
+    }
+
+    #main-content {
+      margin-left: var(--sidebar-width);
+      min-height: calc(100vh - var(--header-h));
+      padding-top: var(--header-h);
+    }
+    @media (max-width: 991.98px) {
+      #sidebar { display: none !important; }
+      #main-content { margin-left: 0 !important; }
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      border-left: 4px solid var(--accent-2);
+      padding-left: .75rem;
+      margin-bottom: 1.25rem;
+    }
+    .sub-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      padding-left: .5rem;
+      border-left: 3px solid var(--accent-3);
+      margin: 1.5rem 0 .75rem;
+    }
+
+    .feature-card {
+      border-radius: 12px;
+      transition: transform .2s, box-shadow .2s;
+      border: 1px solid transparent;
+    }
+    .feature-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(var(--accent2-rgb), .18);
+      border-color: rgba(var(--accent2-rgb), .28);
+    }
+    [data-bs-theme="dark"] .feature-card { background: #161b22; }
+    [data-bs-theme="light"] .feature-card { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.07); }
+
+    .icon-box {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      flex-shrink: 0;
+    }
+
+    pre {
+      border-radius: 10px;
+      position: relative;
+      font-size: .83rem;
+      margin: 0;
+    }
+    pre code.hljs { border-radius: 10px; }
+
+    .code-wrapper {
+      position: relative;
+      margin: .75rem 0 1.25rem;
+    }
+    .copy-btn {
+      position: absolute;
+      top: .5rem;
+      right: .5rem;
+      font-size: .75rem;
+      padding: .2rem .55rem;
+      opacity: .8;
+      z-index: 2;
+    }
+    .copy-btn:hover { opacity: 1; }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-2), var(--accent-3));
+      color: #1a1a1a;
+      font-weight: 700;
+      font-size: .8rem;
+      flex-shrink: 0;
+    }
+
+    #hero-banner {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 48%, var(--accent-3) 100%);
+      padding: 3.5rem 0 3rem;
+      clip-path: ellipse(120% 100% at 50% 0%);
+    }
+    #hero-banner h1 { font-size: 2.4rem; font-weight: 800; color: #171717; }
+    #hero-banner p { color: rgba(23,23,23,.82); font-size: 1.05rem; }
+
+    #themeToggle i { font-size: 1.1rem; }
+
+    #backTop {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--accent-2);
+      color: #171717;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(var(--accent2-rgb), .45);
+      opacity: 0;
+      transition: opacity .25s;
+      z-index: 9999;
+    }
+    #backTop.show { opacity: 1; }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    [data-bs-theme="dark"] ::-webkit-scrollbar-track { background: #161b22; }
+    [data-bs-theme="dark"] ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+    [data-bs-theme="light"] ::-webkit-scrollbar-track { background: #f1f1f1; }
+    [data-bs-theme="light"] ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+
+    .text-gradient {
+      background: linear-gradient(135deg, var(--accent-2), var(--accent-3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .divider { height: 1px; opacity: .1; margin: 2.5rem 0; }
+    .note-box {
+      border-left: 4px solid var(--accent-2);
+      padding: .75rem 1rem;
+      border-radius: 0 8px 8px 0;
+    }
+    [data-bs-theme="dark"] .note-box { background: rgba(var(--accent-rgb), .08); }
+    [data-bs-theme="light"] .note-box { background: rgba(var(--accent-rgb), .07); }
+
+    .coverage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: .75rem;
+    }
+    .coverage-item {
+      border-radius: 12px;
+      padding: .9rem;
+      border: 1px solid rgba(var(--accent2-rgb), .18);
+    }
+    [data-bs-theme="dark"] .coverage-item { background: #11161d; }
+    [data-bs-theme="light"] .coverage-item { background: #fffdf4; }
+
+    .topic-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      border-radius: 999px;
+      padding: .35rem .7rem;
+      font-size: .8rem;
+      margin: .2rem;
+      border: 1px solid rgba(var(--accent2-rgb), .25);
+    }
+    [data-bs-theme="dark"] .topic-pill { background: rgba(var(--accent2-rgb), .08); }
+    [data-bs-theme="light"] .topic-pill { background: rgba(var(--accent-rgb), .08); }
+
+    .cmd-table th { white-space: nowrap; }
+    .cmd-table code { font-size: .8rem; }
+  </style>
+</head>
+
+<body>
+
+<nav id="topbar" class="navbar fixed-top px-3 px-md-4 d-flex justify-content-between align-items-center">
+  <a href="#top" class="text-decoration-none d-flex align-items-center gap-2">
+    <div style="background:linear-gradient(135deg,#f7df1e,#fb8500);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+      <i class="bi bi-filetype-js" style="font-size:1rem;color:#111;"></i>
+    </div>
+    <span class="brand-badge">JavaScript</span>
+    <span class="fw-light opacity-50 d-none d-sm-inline">Advanced ES6 Guide</span>
+  </a>
+
+  <div class="d-flex align-items-center gap-2">
+    <button class="btn btn-sm btn-outline-secondary d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-label="Open navigation">
+      <i class="bi bi-list"></i>
+    </button>
+    <button id="themeToggle" class="btn btn-sm btn-outline-secondary" title="Toggle Dark / Light mode">
+      <i class="bi bi-sun-fill"></i>
+    </button>
+    <span class="badge rounded-pill" style="background:#ffb703;color:#111;">ES6+</span>
+  </div>
+</nav>
+
+<aside id="sidebar" class="position-fixed d-none d-lg-block py-3 px-2">
+  <nav class="nav flex-column gap-1">
+    <div class="nav-section">Introduction</div>
+    <a class="nav-link active" href="#sec-what"><i class="bi bi-info-circle me-2"></i>What is JavaScript?</a>
+    <a class="nav-link" href="#sec-why"><i class="bi bi-stars me-2"></i>Why Modern JS?</a>
+    <a class="nav-link" href="#sec-execution"><i class="bi bi-diagram-3 me-2"></i>Execution Model</a>
+    <a class="nav-link" href="#sec-setup"><i class="bi bi-terminal me-2"></i>Setup and Run</a>
+
+    <div class="nav-section">Fundamentals</div>
+    <a class="nav-link" href="#sec-variables"><i class="bi bi-box me-2"></i>Variables and Types</a>
+    <a class="nav-link" href="#sec-operators"><i class="bi bi-sliders me-2"></i>Operators and Flow</a>
+    <a class="nav-link" href="#sec-functions"><i class="bi bi-braces me-2"></i>Functions</a>
+    <a class="nav-link" href="#sec-scope"><i class="bi bi-bounding-box me-2"></i>Scope and Closures</a>
+
+    <div class="nav-section">Core Data</div>
+    <a class="nav-link" href="#sec-arrays"><i class="bi bi-list-ul me-2"></i>Arrays</a>
+    <a class="nav-link" href="#sec-objects"><i class="bi bi-diagram-2 me-2"></i>Objects</a>
+    <a class="nav-link" href="#sec-modern"><i class="bi bi-lightning-charge me-2"></i>Modern Syntax</a>
+    <a class="nav-link" href="#sec-this"><i class="bi bi-arrow-repeat me-2"></i>this and Bind</a>
+
+    <div class="nav-section">Architecture</div>
+    <a class="nav-link" href="#sec-classes"><i class="bi bi-mortarboard me-2"></i>Classes and Prototypes</a>
+    <a class="nav-link" href="#sec-modules"><i class="bi bi-box-arrow-in-right me-2"></i>Modules</a>
+    <a class="nav-link" href="#sec-dom"><i class="bi bi-window me-2"></i>DOM Basics</a>
+    <a class="nav-link" href="#sec-events"><i class="bi bi-hand-index-thumb me-2"></i>Events and Forms</a>
+
+    <div class="nav-section">Async</div>
+    <a class="nav-link" href="#sec-promises"><i class="bi bi-hourglass-split me-2"></i>Promises</a>
+    <a class="nav-link" href="#sec-async"><i class="bi bi-cloud-arrow-down me-2"></i>Async/Await and Fetch</a>
+    <a class="nav-link" href="#sec-loop"><i class="bi bi-arrow-clockwise me-2"></i>Event Loop and Timers</a>
+    <a class="nav-link" href="#sec-storage"><i class="bi bi-hdd-stack me-2"></i>Storage and JSON</a>
+
+    <div class="nav-section">Advanced</div>
+    <a class="nav-link" href="#sec-collections"><i class="bi bi-collection me-2"></i>Map, Set, Symbol</a>
+    <a class="nav-link" href="#sec-iterators"><i class="bi bi-distribute-horizontal me-2"></i>Iterators and Generators</a>
+    <a class="nav-link" href="#sec-prototype-deep"><i class="bi bi-diagram-3-fill me-2"></i>Prototype Deep Dive</a>
+    <a class="nav-link" href="#sec-currying"><i class="bi bi-bezier2 me-2"></i>Currying</a>
+    <a class="nav-link" href="#sec-memory"><i class="bi bi-trash3 me-2"></i>Memory Leaks</a>
+    <a class="nav-link" href="#sec-error"><i class="bi bi-exclamation-octagon me-2"></i>Errors and Regex</a>
+    <a class="nav-link" href="#sec-performance"><i class="bi bi-speedometer2 me-2"></i>Performance and Debugging</a>
+
+    <div class="nav-section">Wrap Up</div>
+    <a class="nav-link" href="#sec-best"><i class="bi bi-check2-square me-2"></i>Best Practices</a>
+    <a class="nav-link" href="#sec-dom-practice"><i class="bi bi-laptop me-2"></i>DOM Practice</a>
+    <a class="nav-link" href="#sec-projects"><i class="bi bi-kanban me-2"></i>Mini Projects</a>
+    <a class="nav-link" href="#sec-interview"><i class="bi bi-patch-question me-2"></i>Interview Questions</a>
+  </nav>
+</aside>
+
+<div class="offcanvas offcanvas-start d-lg-none" id="mobileSidebar" tabindex="-1">
+  <div class="offcanvas-header">
+    <h6 class="offcanvas-title fw-bold">Advanced JavaScript and ES6</h6>
+    <button class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body p-2">
+    <nav class="nav flex-column gap-1">
+      <div class="nav-section">Introduction</div>
+      <a class="nav-link" href="#sec-what" data-bs-dismiss="offcanvas"><i class="bi bi-info-circle me-2"></i>What is JavaScript?</a>
+      <a class="nav-link" href="#sec-why" data-bs-dismiss="offcanvas"><i class="bi bi-stars me-2"></i>Why Modern JS?</a>
+      <a class="nav-link" href="#sec-execution" data-bs-dismiss="offcanvas"><i class="bi bi-diagram-3 me-2"></i>Execution Model</a>
+      <a class="nav-link" href="#sec-setup" data-bs-dismiss="offcanvas"><i class="bi bi-terminal me-2"></i>Setup and Run</a>
+
+      <div class="nav-section">Fundamentals</div>
+      <a class="nav-link" href="#sec-variables" data-bs-dismiss="offcanvas"><i class="bi bi-box me-2"></i>Variables and Types</a>
+      <a class="nav-link" href="#sec-operators" data-bs-dismiss="offcanvas"><i class="bi bi-sliders me-2"></i>Operators and Flow</a>
+      <a class="nav-link" href="#sec-functions" data-bs-dismiss="offcanvas"><i class="bi bi-braces me-2"></i>Functions</a>
+      <a class="nav-link" href="#sec-scope" data-bs-dismiss="offcanvas"><i class="bi bi-bounding-box me-2"></i>Scope and Closures</a>
+
+      <div class="nav-section">Core Data</div>
+      <a class="nav-link" href="#sec-arrays" data-bs-dismiss="offcanvas"><i class="bi bi-list-ul me-2"></i>Arrays</a>
+      <a class="nav-link" href="#sec-objects" data-bs-dismiss="offcanvas"><i class="bi bi-diagram-2 me-2"></i>Objects</a>
+      <a class="nav-link" href="#sec-modern" data-bs-dismiss="offcanvas"><i class="bi bi-lightning-charge me-2"></i>Modern Syntax</a>
+      <a class="nav-link" href="#sec-this" data-bs-dismiss="offcanvas"><i class="bi bi-arrow-repeat me-2"></i>this and Bind</a>
+
+      <div class="nav-section">Architecture</div>
+      <a class="nav-link" href="#sec-classes" data-bs-dismiss="offcanvas"><i class="bi bi-mortarboard me-2"></i>Classes and Prototypes</a>
+      <a class="nav-link" href="#sec-modules" data-bs-dismiss="offcanvas"><i class="bi bi-box-arrow-in-right me-2"></i>Modules</a>
+      <a class="nav-link" href="#sec-dom" data-bs-dismiss="offcanvas"><i class="bi bi-window me-2"></i>DOM Basics</a>
+      <a class="nav-link" href="#sec-events" data-bs-dismiss="offcanvas"><i class="bi bi-hand-index-thumb me-2"></i>Events and Forms</a>
+
+      <div class="nav-section">Async</div>
+      <a class="nav-link" href="#sec-promises" data-bs-dismiss="offcanvas"><i class="bi bi-hourglass-split me-2"></i>Promises</a>
+      <a class="nav-link" href="#sec-async" data-bs-dismiss="offcanvas"><i class="bi bi-cloud-arrow-down me-2"></i>Async/Await and Fetch</a>
+      <a class="nav-link" href="#sec-loop" data-bs-dismiss="offcanvas"><i class="bi bi-arrow-clockwise me-2"></i>Event Loop and Timers</a>
+      <a class="nav-link" href="#sec-storage" data-bs-dismiss="offcanvas"><i class="bi bi-hdd-stack me-2"></i>Storage and JSON</a>
+
+      <div class="nav-section">Advanced</div>
+      <a class="nav-link" href="#sec-collections" data-bs-dismiss="offcanvas"><i class="bi bi-collection me-2"></i>Map, Set, Symbol</a>
+      <a class="nav-link" href="#sec-iterators" data-bs-dismiss="offcanvas"><i class="bi bi-distribute-horizontal me-2"></i>Iterators and Generators</a>
+      <a class="nav-link" href="#sec-prototype-deep" data-bs-dismiss="offcanvas"><i class="bi bi-diagram-3-fill me-2"></i>Prototype Deep Dive</a>
+      <a class="nav-link" href="#sec-currying" data-bs-dismiss="offcanvas"><i class="bi bi-bezier2 me-2"></i>Currying</a>
+      <a class="nav-link" href="#sec-memory" data-bs-dismiss="offcanvas"><i class="bi bi-trash3 me-2"></i>Memory Leaks</a>
+      <a class="nav-link" href="#sec-error" data-bs-dismiss="offcanvas"><i class="bi bi-exclamation-octagon me-2"></i>Errors and Regex</a>
+      <a class="nav-link" href="#sec-performance" data-bs-dismiss="offcanvas"><i class="bi bi-speedometer2 me-2"></i>Performance and Debugging</a>
+
+      <div class="nav-section">Wrap Up</div>
+      <a class="nav-link" href="#sec-best" data-bs-dismiss="offcanvas"><i class="bi bi-check2-square me-2"></i>Best Practices</a>
+      <a class="nav-link" href="#sec-dom-practice" data-bs-dismiss="offcanvas"><i class="bi bi-laptop me-2"></i>DOM Practice</a>
+      <a class="nav-link" href="#sec-projects" data-bs-dismiss="offcanvas"><i class="bi bi-kanban me-2"></i>Mini Projects</a>
+      <a class="nav-link" href="#sec-interview" data-bs-dismiss="offcanvas"><i class="bi bi-patch-question me-2"></i>Interview Questions</a>
+    </nav>
+  </div>
+</div>
+
+<main id="main-content">
+  <section id="top">
+    <div id="hero-banner">
+      <div class="container py-2">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div style="background:rgba(255,255,255,.25);width:60px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);">
+            <i class="bi bi-filetype-js" style="font-size:1.8rem;color:#161616;"></i>
+          </div>
+          <div>
+            <h1 class="mb-0">Advanced JavaScript and ES6</h1>
+            <p class="mb-0 mt-1">A practical A-to-Z guide with modern syntax, browser APIs, and real examples.</p>
+          </div>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <span class="badge rounded-pill" style="background:rgba(17,17,17,.12);color:#111;">Core JavaScript</span>
+          <span class="badge rounded-pill" style="background:rgba(17,17,17,.12);color:#111;">ES6+</span>
+          <span class="badge rounded-pill" style="background:rgba(17,17,17,.12);color:#111;">DOM and Events</span>
+          <span class="badge rounded-pill" style="background:rgba(17,17,17,.12);color:#111;">Async and Fetch</span>
+          <span class="badge rounded-pill" style="background:rgba(17,17,17,.12);color:#111;">Browser + Node.js</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container py-4 px-3 px-md-4">
+
+    <section id="sec-what" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-info-circle-fill me-2 text-warning"></i>What is JavaScript?</h2>
+
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>JavaScript</strong> is the language that makes web pages interactive. It started in the browser, but today it also powers servers with Node.js, build tools, automation scripts, desktop apps, and edge functions.</p>
+      </div>
+
+      <p>Think of JavaScript as the <span class="text-gradient fw-bold">behavior layer</span> of the web. HTML gives structure, CSS gives style, and JavaScript gives logic, interaction, validation, state updates, and async communication.</p>
+
+      <div class="row g-3 mt-1">
+        <div class="col-sm-6 col-xl-3">
+          <div class="feature-card p-3 h-100">
+            <div class="icon-box mb-2" style="background:rgba(247,223,30,.16);color:#f7df1e;"><i class="bi bi-lightning-fill"></i></div>
+            <h6 class="fw-semibold mb-1">Dynamic Language</h6>
+            <p class="small opacity-75 mb-0">Flexible syntax, rapid iteration, and easy experimentation make it ideal for both prototypes and production apps.</p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="feature-card p-3 h-100">
+            <div class="icon-box mb-2" style="background:rgba(255,183,3,.16);color:#ffb703;"><i class="bi bi-globe2"></i></div>
+            <h6 class="fw-semibold mb-1">Runs Everywhere</h6>
+            <p class="small opacity-75 mb-0">Browsers, Node.js, serverless functions, desktop apps, and mobile frameworks all depend on modern JavaScript.</p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="feature-card p-3 h-100">
+            <div class="icon-box mb-2" style="background:rgba(251,133,0,.16);color:#fb8500;"><i class="bi bi-diagram-3-fill"></i></div>
+            <h6 class="fw-semibold mb-1">Multi-Paradigm</h6>
+            <p class="small opacity-75 mb-0">You can write imperative, functional, object-oriented, and event-driven code in the same language.</p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="feature-card p-3 h-100">
+            <div class="icon-box mb-2" style="background:rgba(0,200,150,.16);color:#00c89a;"><i class="bi bi-box-seam"></i></div>
+            <h6 class="fw-semibold mb-1">Huge Ecosystem</h6>
+            <p class="small opacity-75 mb-0">React, Vue, Next.js, Express, Vite, Playwright, and thousands of packages sit on top of the language.</p>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="sub-title mt-4"><i class="bi bi-grid-3x3-gap-fill me-2"></i>A-to-Z Coverage Map</h5>
+      <div class="coverage-grid">
+        <div class="coverage-item"><strong>Variables and Types</strong><div class="small opacity-75 mt-1">let, const, primitives, references, coercion</div></div>
+        <div class="coverage-item"><strong>Functions and Closures</strong><div class="small opacity-75 mt-1">callbacks, scope chain, lexical capture</div></div>
+        <div class="coverage-item"><strong>Arrays and Objects</strong><div class="small opacity-75 mt-1">map, filter, reduce, destructuring, spread</div></div>
+        <div class="coverage-item"><strong>Modern ES6+ Syntax</strong><div class="small opacity-75 mt-1">template literals, modules, classes, optional chaining</div></div>
+        <div class="coverage-item"><strong>DOM and Events</strong><div class="small opacity-75 mt-1">selectors, event delegation, forms, data attributes</div></div>
+        <div class="coverage-item"><strong>Async JavaScript</strong><div class="small opacity-75 mt-1">promises, async/await, fetch, timers, microtasks</div></div>
+        <div class="coverage-item"><strong>Collections</strong><div class="small opacity-75 mt-1">Map, Set, WeakMap, WeakSet, Symbol</div></div>
+        <div class="coverage-item"><strong>Language Internals</strong><div class="small opacity-75 mt-1">this, prototypes, iterators, generators, event loop</div></div>
+        <div class="coverage-item"><strong>Errors and Validation</strong><div class="small opacity-75 mt-1">try/catch, custom errors, regex, defensive coding</div></div>
+        <div class="coverage-item"><strong>Storage and JSON</strong><div class="small opacity-75 mt-1">localStorage, serialization, browser state</div></div>
+        <div class="coverage-item"><strong>Performance</strong><div class="small opacity-75 mt-1">DOM batching, debounce, memory awareness, profiling</div></div>
+        <div class="coverage-item"><strong>Best Practices</strong><div class="small opacity-75 mt-1">immutability, modularity, early returns, readable code</div></div>
+      </div>
+
+      <div class="code-wrapper mt-4">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">console.log('JavaScript is ready');
+
+const topic = 'ES6';
+const started = true;
+
+if (started) {
+  console.log(`Learning ${topic} with real examples`);
+}</code></pre>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-why" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-stars me-2 text-warning"></i>Why Modern JavaScript Matters</h2>
+      <p class="mb-4"><strong>Short answer:</strong> ES6 and newer versions made JavaScript cleaner, safer, and easier to scale. Modern frameworks and tooling assume you know this syntax well.</p>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">1</div>
+              <h6 class="mb-0 fw-bold">Cleaner Syntax</h6>
+            </div>
+            <p class="small opacity-75 mb-0">Arrow functions, destructuring, template literals, and concise object syntax reduce boilerplate without losing clarity.</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">2</div>
+              <h6 class="mb-0 fw-bold">Safer Defaults</h6>
+            </div>
+            <p class="small opacity-75 mb-0">let and const fix many var-related issues, and modules reduce accidental global scope pollution.</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">3</div>
+              <h6 class="mb-0 fw-bold">Built for Async Work</h6>
+            </div>
+            <p class="small opacity-75 mb-0">Promises and async/await make API calls, timers, and background work much easier to reason about.</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">4</div>
+              <h6 class="mb-0 fw-bold">Framework Foundation</h6>
+            </div>
+            <p class="small opacity-75 mb-0">React, Vue, Next.js, Node.js, and bundlers like Vite all assume strong modern JavaScript fundamentals.</p>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="sub-title mt-4"><i class="bi bi-arrow-left-right me-2"></i>Before ES6 vs Modern Style</h5>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper mb-0">
+            <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">// Older style
+var user = { name: 'Asha' };
+var label = user &amp;&amp; user.name ? 'Hello ' + user.name : 'Hello Guest';
+
+function sum(a, b) {
+  a = a || 0;
+  b = b || 0;
+  return a + b;
+}</code></pre>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper mb-0">
+            <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">// Modern style
+const user = { name: 'Asha' };
+const label = `Hello ${user?.name ?? 'Guest'}`;
+
+const sum = (a = 0, b = 0) =&gt; a + b;</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-execution" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-diagram-3-fill me-2 text-info"></i>Execution Model and Event Loop</h2>
+      <p class="mb-4">JavaScript is <strong>single-threaded</strong> at the language level. It processes one stack frame at a time, while the browser or runtime helps with timers, network calls, DOM events, and queues.</p>
+
+      <div class="note-box mb-4">
+        <p class="mb-0">The important mental model is: <strong>call stack</strong> for current work, <strong>Web APIs / runtime APIs</strong> for background work, <strong>microtask queue</strong> for promise jobs, and <strong>task queue</strong> for timers and events.</p>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-sm-6 col-xl-3">
+          <div class="feature-card p-3 h-100 text-center">
+            <div class="icon-box mx-auto mb-3" style="background:rgba(247,223,30,.16);color:#f7df1e;"><i class="bi bi-stack"></i></div>
+            <h6 class="fw-bold mb-1">Call Stack</h6>
+            <p class="small opacity-75 mb-0">Functions run here. If the stack is busy, nothing else can execute.</p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="feature-card p-3 h-100 text-center">
+            <div class="icon-box mx-auto mb-3" style="background:rgba(255,183,3,.16);color:#ffb703;"><i class="bi bi-cpu"></i></div>
+            <h6 class="fw-bold mb-1">Runtime APIs</h6>
+            <p class="small opacity-75 mb-0">Timers, fetch, and DOM events wait outside the stack until they finish.</p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="feature-card p-3 h-100 text-center">
+            <div class="icon-box mx-auto mb-3" style="background:rgba(251,133,0,.16);color:#fb8500;"><i class="bi bi-lightning-charge"></i></div>
+            <h6 class="fw-bold mb-1">Microtasks</h6>
+            <p class="small opacity-75 mb-0">Promise callbacks run before normal queued tasks after the stack becomes empty.</p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="feature-card p-3 h-100 text-center">
+            <div class="icon-box mx-auto mb-3" style="background:rgba(0,200,150,.16);color:#00c89a;"><i class="bi bi-clock-history"></i></div>
+            <h6 class="fw-bold mb-1">Tasks</h6>
+            <p class="small opacity-75 mb-0">setTimeout, UI events, and message callbacks wait in the task queue.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-wrapper mt-4">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">console.log('start');
+
+setTimeout(() =&gt; {
+  console.log('timeout');
+}, 0);
+
+Promise.resolve().then(() =&gt; {
+  console.log('promise');
+});
+
+console.log('end');
+
+// Output order:
+// start
+// end
+// promise
+// timeout</code></pre>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-setup" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-terminal-fill me-2 text-warning"></i>Setup and Run JavaScript</h2>
+      <p class="mb-4">You can run JavaScript in the browser console, inside a script tag, or with Node.js from the terminal. Learn all three because real work uses all three.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-4">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Browser Console</h6>
+            <p class="small opacity-75 mb-0">Fastest way to test selectors, variables, array methods, and API responses while developing a page.</p>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">HTML Script Tag</h6>
+            <p class="small opacity-75 mb-0">Best for learning DOM manipulation, event handling, and browser APIs in a small standalone page.</p>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Node.js</h6>
+            <p class="small opacity-75 mb-0">Useful for scripts, backend logic, package tooling, file operations, and modern build pipelines.</p>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="sub-title"><i class="bi bi-code-square me-2"></i>Basic Ways to Execute Code</h5>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper mb-0">
+            <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;body&gt;
+  &lt;button id="helloBtn"&gt;Say Hello&lt;/button&gt;
+
+  &lt;script&gt;
+    document.getElementById('helloBtn').addEventListener('click', () =&gt; {
+      console.log('Hello from the browser');
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper mb-0">
+            <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Run in Node.js
+node app.js
+
+# Watch mode in newer Node versions
+node --watch app.js
+
+# Start a package quickly
+npm init -y</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive mt-4">
+        <table class="table table-bordered align-middle cmd-table">
+          <thead>
+            <tr>
+              <th>Environment</th>
+              <th>Best For</th>
+              <th>Typical Command or Action</th>
+            </tr>
+          </thead>
+          <tbody class="small">
+            <tr><td>Browser DevTools</td><td>Quick experiments and DOM inspection</td><td>Press F12 and use the Console tab</td></tr>
+            <tr><td>HTML file</td><td>Interactive learning and page behavior</td><td>Add a <code>&lt;script&gt;</code> tag</td></tr>
+            <tr><td>Node.js</td><td>Scripts, servers, tooling</td><td><code>node file.js</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-variables" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-box-fill me-2 text-primary"></i>Variables and Data Types</h2>
+      <p class="mb-4">Use <strong>const</strong> by default, use <strong>let</strong> when reassignment is required, and avoid <strong>var</strong> in modern code unless you are maintaining older code.</p>
+
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead>
+            <tr>
+              <th>Keyword</th>
+              <th>Scope</th>
+              <th>Reassign?</th>
+              <th>Use It When</th>
+            </tr>
+          </thead>
+          <tbody class="small">
+            <tr><td><code>const</code></td><td>Block</td><td>No</td><td>The binding should stay stable</td></tr>
+            <tr><td><code>let</code></td><td>Block</td><td>Yes</td><td>The value changes over time</td></tr>
+            <tr><td><code>var</code></td><td>Function</td><td>Yes</td><td>Mostly legacy code only</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="d-flex flex-wrap mt-3">
+        <span class="topic-pill"><i class="bi bi-dot"></i>string</span>
+        <span class="topic-pill"><i class="bi bi-dot"></i>number</span>
+        <span class="topic-pill"><i class="bi bi-dot"></i>boolean</span>
+        <span class="topic-pill"><i class="bi bi-dot"></i>null</span>
+        <span class="topic-pill"><i class="bi bi-dot"></i>undefined</span>
+        <span class="topic-pill"><i class="bi bi-dot"></i>symbol</span>
+        <span class="topic-pill"><i class="bi bi-dot"></i>bigint</span>
+        <span class="topic-pill"><i class="bi bi-dot"></i>object</span>
+      </div>
+
+      <div class="code-wrapper mt-4">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const appName = 'Dashboard';
+let activeUsers = 12;
+
+const config = {
+  theme: 'dark',
+};
+
+config.theme = 'light'; // Allowed: object content can change
+// config = {};         // Not allowed: const binding cannot be reassigned
+
+const isReady = true;
+const emptyValue = null;
+let missingValue;
+
+console.log(typeof appName);     // string
+console.log(typeof activeUsers); // number
+console.log(typeof config);      // object
+console.log(typeof missingValue); // undefined</code></pre>
+      </div>
+
+      <div class="note-box">
+        <p class="mb-0"><strong>Important:</strong> const does <em>not</em> make arrays or objects immutable. It only prevents the variable from pointing to a different value.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-operators" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-sliders me-2 text-success"></i>Operators, Truthy/Falsy, and Control Flow</h2>
+      <p class="mb-4">Modern JavaScript code becomes more reliable when you understand strict equality, short-circuit logic, and how truthy/falsy values influence conditions.</p>
+
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-semibold mb-1">Prefer Strict Equality</h6>
+            <p class="small opacity-75 mb-0">Use <code>===</code> and <code>!==</code> to avoid implicit type conversion surprises.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-semibold mb-1">Truthy and Falsy</h6>
+            <p class="small opacity-75 mb-0">Falsy values include <code>false</code>, <code>0</code>, <code>''</code>, <code>null</code>, <code>undefined</code>, and <code>NaN</code>.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-semibold mb-1">Early Return</h6>
+            <p class="small opacity-75 mb-0">Avoid deep nesting by returning early when inputs are invalid or a branch is complete.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-wrapper mt-4">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const role = 'editor';
+const points = 0;
+
+if (role === 'admin') {
+  console.log('Full access');
+} else if (role === 'editor') {
+  console.log('Can edit content');
+} else {
+  console.log('Read only');
+}
+
+const fallbackWithOr = points || 100;   // 100 because 0 is falsy
+const fallbackWithNullish = points ?? 100; // 0 because only null/undefined fallback
+
+switch (role) {
+  case 'admin':
+    console.log('Dashboard + settings');
+    break;
+  case 'editor':
+    console.log('Dashboard only');
+    break;
+  default:
+    console.log('Limited view');
+}</code></pre>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-functions" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-braces-asterisk me-2 text-info"></i>Functions</h2>
+      <p class="mb-4">Functions are first-class values in JavaScript. That means you can store them in variables, pass them into other functions, and return them from functions.</p>
+
+      <div class="row g-3">
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Declaration</h6><p class="small opacity-75 mb-0">Hoisted and readable for named reusable logic.</p></div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Expression</h6><p class="small opacity-75 mb-0">Useful when assigning functions to variables or object properties.</p></div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Arrow Function</h6><p class="small opacity-75 mb-0">Short syntax with lexical this, ideal for callbacks and transformations.</p></div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Higher-Order</h6><p class="small opacity-75 mb-0">Functions that take other functions or return them are common in JS.</p></div>
+        </div>
+      </div>
+
+      <div class="code-wrapper mt-4">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">function sum(a = 0, b = 0) {
+  return a + b;
+}
+
+const multiply = function (a, b) {
+  return a * b;
+};
+
+const divide = (a, b) =&gt; a / b;
+
+function collectTotal(label, ...values) {
+  const total = values.reduce((acc, value) =&gt; acc + value, 0);
+  return `${label}: ${total}`;
+}
+
+function factorial(n) {
+  if (n &lt;= 1) return 1;
+  return n * factorial(n - 1);
+}
+
+console.log(sum(5, 3));
+console.log(multiply(4, 2));
+console.log(divide(10, 2));
+console.log(collectTotal('Revenue', 10, 20, 30));
+console.log(factorial(5));</code></pre>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-scope" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-bounding-box-circles me-2 text-warning"></i>Scope, Hoisting, and Closures</h2>
+      <p class="mb-4">Scope controls where variables are visible. Closures allow a function to remember values from the place where it was created, even after that outer function has finished.</p>
+
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>Closures</strong> are behind private state patterns, factories, memoization, event handlers, and module-like APIs.</p>
+      </div>
+
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">function createCounter(start = 0) {
+  let count = start;
+
+  return {
+    increment() {
+      count += 1;
+      return count;
+    },
+    decrement() {
+      count -= 1;
+      return count;
+    },
+    value() {
+      return count;
+    },
+  };
+}
+
+const counter = createCounter(10);
+console.log(counter.increment()); // 11
+console.log(counter.increment()); // 12
+console.log(counter.value());     // 12
+
+if (true) {
+  let safe = 'block scoped';
+  var leaked = 'function scoped';
+}
+
+console.log(leaked);
+// console.log(safe); // ReferenceError</code></pre>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-arrays" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-list-ul me-2 text-primary"></i>Arrays and Array Methods</h2>
+      <p class="mb-4">Arrays are central to front-end and back-end JavaScript. The most important methods are <strong>map</strong>, <strong>filter</strong>, <strong>reduce</strong>, <strong>find</strong>, <strong>some</strong>, and <strong>every</strong>.</p>
+
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>What It Returns</th>
+              <th>Use Case</th>
+            </tr>
+          </thead>
+          <tbody class="small">
+            <tr><td><code>map()</code></td><td>New array</td><td>Transform each item</td></tr>
+            <tr><td><code>filter()</code></td><td>New array</td><td>Keep matching items</td></tr>
+            <tr><td><code>reduce()</code></td><td>Single value</td><td>Totals, grouping, custom accumulators</td></tr>
+            <tr><td><code>find()</code></td><td>One item or undefined</td><td>Find first matching item</td></tr>
+            <tr><td><code>some()</code></td><td>Boolean</td><td>Check if at least one matches</td></tr>
+            <tr><td><code>every()</code></td><td>Boolean</td><td>Check if all match</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-wrapper mt-4">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const products = [
+  { id: 1, name: 'Mouse', price: 25, inStock: true },
+  { id: 2, name: 'Keyboard', price: 60, inStock: false },
+  { id: 3, name: 'Monitor', price: 220, inStock: true },
+];
+
+const visibleProducts = products
+  .filter((item) =&gt; item.inStock)
+  .map((item) =&gt; ({
+    ...item,
+    priceWithTax: item.price * 1.18,
+  }));
+
+const total = visibleProducts.reduce((sum, item) =&gt; sum + item.priceWithTax, 0);
+
+console.log(visibleProducts);
+console.log(total.toFixed(2));</code></pre>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-objects" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-diagram-2-fill me-2 text-success"></i>Objects and Destructuring</h2>
+      <p class="mb-4">Objects store structured data. Modern JavaScript gives you shorthand properties, computed keys, object spread, and powerful destructuring patterns.</p>
+
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const statusKey = 'status';
+const total = 899;
+
+const order = {
+  id: 101,
+  total,
+  [statusKey]: 'paid',
+  customer: {
+    name: 'Asha',
+    city: 'Surat',
+  },
+};
+
+const {
+  id,
+  status,
+  customer: { name, city },
+} = order;
+
+const updatedOrder = {
+  ...order,
+  total: order.total + 100,
+};
+
+console.log(id, status, name, city);
+console.log(updatedOrder);</code></pre>
+      </div>
+
+      <div class="row g-3 mt-2">
+        <div class="col-md-4"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Object Shorthand</h6><p class="small opacity-75 mb-0">If variable name and property name are the same, write it once.</p></div></div>
+        <div class="col-md-4"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Computed Keys</h6><p class="small opacity-75 mb-0">Use square brackets when the property name comes from a variable.</p></div></div>
+        <div class="col-md-4"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Destructuring</h6><p class="small opacity-75 mb-0">Pull only the fields you need and rename or set defaults inline.</p></div></div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-modern" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-lightning-charge-fill me-2 text-warning"></i>Modern Syntax Toolbox</h2>
+      <p class="mb-4">This is the ES6+ syntax you use daily: template literals, spread, rest, optional chaining, nullish coalescing, and concise expressions.</p>
+
+      <div class="d-flex flex-wrap mb-3">
+        <span class="topic-pill"><i class="bi bi-check2"></i>Template literals</span>
+        <span class="topic-pill"><i class="bi bi-check2"></i>Spread and rest</span>
+        <span class="topic-pill"><i class="bi bi-check2"></i>Optional chaining</span>
+        <span class="topic-pill"><i class="bi bi-check2"></i>Nullish coalescing</span>
+        <span class="topic-pill"><i class="bi bi-check2"></i>Enhanced objects</span>
+      </div>
+
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const defaults = {
+  pageSize: 20,
+  theme: 'dark',
+  filters: { status: 'all' },
+};
+
+const overrides = {
+  pageSize: 50,
+  filters: { status: 'active' },
+};
+
+const settings = {
+  ...defaults,
+  ...overrides,
+  filters: {
+    ...defaults.filters,
+    ...overrides.filters,
+  },
+};
+
+const profile = {
+  user: {
+    name: 'Neel',
+  },
+};
+
+const label = `Hello ${profile.user?.name ?? 'Guest'}`;
+
+function logTags(primaryTag, ...otherTags) {
+  console.log(primaryTag, otherTags);
+}
+
+console.log(settings);
+console.log(label);
+logTags('javascript', 'es6', 'async', 'dom');</code></pre>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-this" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-arrow-repeat me-2 text-info"></i>this, call, apply, and bind</h2>
+      <p class="mb-4">The value of <strong>this</strong> depends on how a function is called. Arrow functions do not create their own this; they capture it from the surrounding scope.</p>
+
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const team = {
+  name: 'Platform Team',
+  printWithFunction() {
+    setTimeout(function () {
+      console.log(this.name); // undefined in strict mode / window in browser globals
+    }, 100);
+  },
+  printWithArrow() {
+    setTimeout(() =&gt; {
+      console.log(this.name); // Platform Team
+    }, 100);
+  },
+};
+
+function greet(city, country) {
+  return `${this.name} from ${city}, ${country}`;
+}
+
+const person = { name: 'Asha' };
+
+console.log(greet.call(person, 'Surat', 'India'));
+console.log(greet.apply(person, ['Surat', 'India']));
+
+const greetFromSurat = greet.bind(person, 'Surat');
+console.log(greetFromSurat('India'));</code></pre>
+      </div>
+
+      <div class="note-box">
+        <p class="mb-0"><strong>Rule of thumb:</strong> use normal functions for object methods, use arrow functions mostly for callbacks and inline transformations.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-classes" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-mortarboard-fill me-2 text-success"></i>Prototypes, Classes, and Inheritance</h2>
+      <p class="mb-4">JavaScript is prototype-based. Classes are a cleaner syntax over that model, but under the hood prototypes still power inheritance and shared behavior.</p>
+
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">class Account {
+  #balance = 0;
+
+  constructor(owner) {
+    this.owner = owner;
+  }
+
+  deposit(amount) {
+    this.#balance += amount;
+    return this;
+  }
+
+  get balance() {
+    return this.#balance;
+  }
+}
+
+class SavingsAccount extends Account {
+  constructor(owner, interestRate) {
+    super(owner);
+    this.interestRate = interestRate;
+  }
+
+  addInterest() {
+    const interest = this.balance * this.interestRate;
+    this.deposit(interest);
+  }
+}
+
+const account = new SavingsAccount('Riya', 0.05);
+account.deposit(1000);
+account.addInterest();
+
+console.log(account.owner);
+console.log(account.balance);</code></pre>
+      </div>
+
+      <div class="note-box">
+        <p class="mb-0"><strong>Key point:</strong> methods defined on a class live on the prototype, so all instances share the same function definitions.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-modules" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-box-arrow-in-right me-2 text-primary"></i>Modules</h2>
+      <p class="mb-4">Modules split code into focused files, make dependencies explicit, and prevent accidental globals. Use named exports for most utility files and default exports sparingly.</p>
+
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">// math.js
+export const add = (a, b) =&gt; a + b;
+export const subtract = (a, b) =&gt; a - b;
+
+export default function multiply(a, b) {
+  return a * b;
+}
+
+// app.js
+import multiply, { add, subtract } from './math.js';
+
+console.log(add(2, 3));
+console.log(subtract(10, 4));
+console.log(multiply(6, 7));
+
+// Dynamic import for lazy loading
+async function loadChartModule() {
+  const module = await import('./chart.js');
+  module.renderChart();
+}</code></pre>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-dom" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-window me-2 text-warning"></i>DOM Basics</h2>
+      <p class="mb-4">The DOM is the browser's in-memory representation of the page. JavaScript can query elements, update text, create nodes, remove nodes, and toggle classes.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper mb-0">
+            <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;ul id="todoList" class="list-group"&gt;
+  &lt;li class="list-group-item" data-id="1"&gt;Learn closures&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper mb-0">
+            <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const list = document.querySelector('#todoList');
+
+const item = document.createElement('li');
+item.textContent = 'Practice fetch API';
+item.dataset.id = '2';
+item.classList.add('list-group-item', 'fw-semibold');
+
+list.append(item);</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-box mt-4">
+        <p class="mb-0">Query APIs you should know: <strong>querySelector</strong>, <strong>querySelectorAll</strong>, <strong>closest</strong>, <strong>matches</strong>, <strong>classList</strong>, and <strong>dataset</strong>.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-events" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-hand-index-thumb-fill me-2 text-info"></i>Events and Forms</h2>
+      <p class="mb-4">Event handling is where JavaScript meets user behavior. Learn click handlers, bubbling, delegation, form submission, and input events.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Event Delegation</h5>
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">document.querySelector('#todoList').addEventListener('click', (event) =&gt; {
+  const item = event.target.closest('[data-id]');
+  if (!item) return;
+
+  item.classList.toggle('text-decoration-line-through');
+});</code></pre>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Form Handling</h5>
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const form = document.querySelector('#signupForm');
+
+form.addEventListener('submit', (event) =&gt; {
+  event.preventDefault();
+
+  const formData = new FormData(form);
+  const email = formData.get('email');
+
+  if (!email) {
+    console.log('Email is required');
+    return;
+  }
+
+  console.log('Submitting', Object.fromEntries(formData.entries()));
+});</code></pre>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-promises" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-hourglass-split me-2 text-primary"></i>Promises</h2>
+      <p class="mb-4">A promise represents a value that may arrive later. It can be <strong>pending</strong>, <strong>fulfilled</strong>, or <strong>rejected</strong>. Promises are the foundation for async/await.</p>
+
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const wait = (ms) =&gt; new Promise((resolve) =&gt; {
+  setTimeout(resolve, ms);
+});
+
+wait(500)
+  .then(() =&gt; console.log('Half a second passed'))
+  .catch((error) =&gt; console.error('Unexpected error', error))
+  .finally(() =&gt; console.log('Done'));
+
+Promise.allSettled([
+  Promise.resolve('first'),
+  Promise.reject(new Error('Boom')),
+]).then((results) =&gt; {
+  console.log(results);
+});</code></pre>
+      </div>
+
+      <div class="row g-3 mt-2">
+        <div class="col-md-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">all</h6><p class="small opacity-75 mb-0">Fail fast when any promise rejects.</p></div></div>
+        <div class="col-md-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">allSettled</h6><p class="small opacity-75 mb-0">Wait for every result, success or failure.</p></div></div>
+        <div class="col-md-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">race</h6><p class="small opacity-75 mb-0">Use the first settled promise.</p></div></div>
+        <div class="col-md-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">any</h6><p class="small opacity-75 mb-0">Resolve when the first promise succeeds.</p></div></div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-async" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-cloud-arrow-down-fill me-2 text-success"></i>Async/Await and Fetch API</h2>
+      <p class="mb-4">async/await is syntax built on top of promises. It makes async code read like synchronous code while still being non-blocking.</p>
+
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">async function getUsers() {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() =&gt; controller.abort(), 5000);
+
+  try {
+    const response = await fetch('https://jsonplaceholder.typicode.com/users', {
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Request failed:', error.message);
+    return [];
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+async function init() {
+  const users = await getUsers();
+  console.log(users.slice(0, 2));
+}
+
+init();</code></pre>
+      </div>
+
+      <div class="note-box">
+        <p class="mb-0"><strong>Best practice:</strong> always check <code>response.ok</code>, wrap awaits that can fail in try/catch, and consider cancellation for slow requests.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-loop" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-arrow-clockwise me-2 text-warning"></i>Event Loop, Timers, Debounce, and Throttle</h2>
+      <p class="mb-4">Timers do not run immediately at their exact delay. They are scheduled, then executed when the call stack is free. Debounce and throttle help control repeated events like search input and scrolling.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Microtasks vs Tasks</h5>
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">console.log('A');
+
+queueMicrotask(() =&gt; console.log('B'));
+setTimeout(() =&gt; console.log('C'), 0);
+
+console.log('D');
+
+// Output:
+// A
+// D
+// B
+// C</code></pre>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Debounce Utility</h5>
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">function debounce(callback, delay = 300) {
+  let timerId;
+
+  return (...args) =&gt; {
+    clearTimeout(timerId);
+    timerId = setTimeout(() =&gt; {
+      callback(...args);
+    }, delay);
+  };
+}
+
+const search = debounce((value) =&gt; {
+  console.log('Search API for:', value);
+}, 400);</code></pre>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-storage" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-hdd-stack-fill me-2 text-info"></i>Storage, JSON, and Browser State</h2>
+      <p class="mb-4">Data stored in browser APIs must often be converted to and from JSON. localStorage stores strings only, so objects and arrays require serialization.</p>
+
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const cart = [
+  { id: 1, name: 'Mouse', qty: 2 },
+  { id: 2, name: 'Keyboard', qty: 1 },
+];
+
+localStorage.setItem('cart', JSON.stringify(cart));
+
+const savedCart = JSON.parse(localStorage.getItem('cart') ?? '[]');
+
+const priceFormatter = new Intl.NumberFormat('en-IN', {
+  style: 'currency',
+  currency: 'INR',
+});
+
+console.log(savedCart);
+console.log(priceFormatter.format(2599));</code></pre>
+      </div>
+
+      <div class="note-box">
+        <p class="mb-0"><strong>Tip:</strong> localStorage is synchronous and small. Use it for lightweight preferences, not large caches or sensitive data.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-collections" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-collection-fill me-2 text-success"></i>Map, Set, WeakMap, WeakSet, and Symbol</h2>
+      <p class="mb-4">These data structures solve problems that arrays and plain objects do not solve as cleanly, especially uniqueness, non-string keys, and ephemeral metadata.</p>
+
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const uniqueTags = [...new Set(['js', 'es6', 'js', 'async'])];
+
+const userRoles = new Map([
+  ['Asha', 'admin'],
+  ['Neel', 'editor'],
+]);
+
+const metadata = new WeakMap();
+const element = document.createElement('div');
+metadata.set(element, { mountedAt: Date.now() });
+
+const secretKey = Symbol('secretKey');
+const session = {
+  user: 'Asha',
+  [secretKey]: 'token-123',
+};
+
+console.log(uniqueTags);
+console.log(userRoles.get('Asha'));
+console.log(metadata.get(element));
+console.log(session[secretKey]);</code></pre>
+      </div>
+
+      <div class="row g-3 mt-2">
+        <div class="col-md-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Map</h6><p class="small opacity-75 mb-0">Any value can be a key, including objects.</p></div></div>
+        <div class="col-md-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Set</h6><p class="small opacity-75 mb-0">Stores unique values only.</p></div></div>
+        <div class="col-md-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">WeakMap</h6><p class="small opacity-75 mb-0">Object keys only, good for non-owning metadata.</p></div></div>
+        <div class="col-md-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Symbol</h6><p class="small opacity-75 mb-0">Unique keys that avoid property name collisions.</p></div></div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-iterators" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-distribute-horizontal me-2 text-primary"></i>Iterators and Generators</h2>
+      <p class="mb-4">Iterables power <code>for...of</code>, spread syntax, and many built-in APIs. Generators make it easy to create lazy sequences.</p>
+
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const range = {
+  start: 1,
+  end: 3,
+  [Symbol.iterator]() {
+    let current = this.start;
+    const end = this.end;
+
+    return {
+      next() {
+        if (current &lt;= end) {
+          return { value: current++, done: false };
+        }
+
+        return { value: undefined, done: true };
+      },
+    };
+  },
+};
+
+function* orderIds() {
+  let id = 1;
+  while (id &lt;= 3) {
+    yield `ORD-${id++}`;
+  }
+}
+
+console.log([...range]);
+console.log([...orderIds()]);</code></pre>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-prototype-deep" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-diagram-3-fill me-2 text-info"></i>Prototype Deep Dive</h2>
+      <p class="mb-4">Every object in JavaScript links to another object through its internal prototype chain. Property lookup walks that chain until it finds a matching key or reaches <code>null</code>.</p>
+
+      <div class="row g-3">
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Own Properties</h6><p class="small opacity-75 mb-0">Values stored directly on the current object, such as instance fields created inside a constructor.</p></div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Prototype Lookup</h6><p class="small opacity-75 mb-0">If a property is missing locally, JavaScript checks the prototype, then that prototype's prototype, and so on.</p></div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Shared Methods</h6><p class="small opacity-75 mb-0">Methods on a prototype are shared by all instances, which saves memory compared with recreating functions per object.</p></div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Object.create</h6><p class="small opacity-75 mb-0">Lets you build an object with an explicit prototype without using class syntax.</p></div>
+        </div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Property Lookup Example</h5>
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const userMethods = {
+  greet() {
+    return `Hello ${this.name}`;
+  },
+  isAdmin() {
+    return this.role === 'admin';
+  },
+};
+
+const user = Object.create(userMethods);
+user.name = 'Neel';
+user.role = 'editor';
+
+console.log(user.greet());
+console.log(user.isAdmin());
+console.log(user.hasOwnProperty('name'));   // true
+console.log(user.hasOwnProperty('greet'));  // false
+console.log(Object.getPrototypeOf(user) === userMethods); // true</code></pre>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Interview-Style Example: Constructor vs Prototype</h5>
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">function BadUser(name) {
+  this.name = name;
+  this.sayHi = function () {
+    return `Hi ${this.name}`;
+  };
+}
+
+function BetterUser(name) {
+  this.name = name;
+}
+
+BetterUser.prototype.sayHi = function () {
+  return `Hi ${this.name}`;
+};
+
+const a = new BadUser('Asha');
+const b = new BadUser('Riya');
+const c = new BetterUser('Neel');
+const d = new BetterUser('Tina');
+
+console.log(a.sayHi === b.sayHi); // false: new function for each instance
+console.log(c.sayHi === d.sayHi); // true: shared prototype method</code></pre>
+      </div>
+
+      <div class="note-box">
+        <p class="mb-0"><strong>Interview takeaway:</strong> classes are mostly syntax sugar. If asked what JavaScript inheritance really uses under the hood, the answer is the prototype chain.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-currying" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-bezier2 me-2 text-warning"></i>Currying and Partial Application</h2>
+      <p class="mb-4">Currying transforms a function that takes multiple arguments into a sequence of functions that each take one argument. It is useful when you want reusable, preconfigured functions.</p>
+
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Currying</h6><p class="small opacity-75 mb-0">Turn <code>fn(a, b, c)</code> into <code>fn(a)(b)(c)</code> so arguments can be supplied in stages.</p></div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Partial Application</h6><p class="small opacity-75 mb-0">Pre-fill some arguments now and supply the rest later, such as creating a tax calculator or formatter.</p></div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Functional Composition</h6><p class="small opacity-75 mb-0">Curried functions are easier to reuse in pipelines because each step accepts fewer, simpler inputs.</p></div>
+        </div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Simple Currying Example</h5>
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const multiply = (a) =&gt; (b) =&gt; a * b;
+
+const double = multiply(2);
+const triple = multiply(3);
+
+console.log(double(8));
+console.log(triple(8));
+
+const formatCurrency = (locale) =&gt; (currency) =&gt; (value) =&gt;
+  new Intl.NumberFormat(locale, { style: 'currency', currency }).format(value);
+
+const formatINR = formatCurrency('en-IN')('INR');
+console.log(formatINR(2599));</code></pre>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Interview-Style Example: Generic curry Helper</h5>
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">function curry(fn) {
+  return function curried(...args) {
+    if (args.length &gt;= fn.length) {
+      return fn(...args);
+    }
+
+    return (...nextArgs) =&gt; curried(...args, ...nextArgs);
+  };
+}
+
+function total(a, b, c) {
+  return a + b + c;
+}
+
+const curriedTotal = curry(total);
+
+console.log(curriedTotal(1)(2)(3));
+console.log(curriedTotal(1, 2)(3));
+console.log(curriedTotal(1)(2, 3));</code></pre>
+      </div>
+
+      <div class="note-box">
+        <p class="mb-0"><strong>Interview takeaway:</strong> if asked for the difference, currying changes the function shape, while partial application usually means fixing a few arguments without necessarily turning every call into one-argument functions.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-memory" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-trash3-fill me-2 text-danger"></i>Memory Leaks and Cleanup Patterns</h2>
+      <p class="mb-4">A memory leak happens when code keeps references to values that are no longer useful, which prevents garbage collection from reclaiming them. In browser apps, leaks often come from event listeners, timers, detached DOM nodes, or ever-growing caches.</p>
+
+      <div class="row g-3">
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Unremoved Listeners</h6><p class="small opacity-75 mb-0">Attaching the same handler repeatedly without removing it can keep components and closures alive.</p></div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Forgotten Timers</h6><p class="small opacity-75 mb-0">Intervals keep firing until you clear them, even if the UI that created them is gone.</p></div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Detached DOM Nodes</h6><p class="small opacity-75 mb-0">Keeping old elements in arrays or maps can retain far more state than expected.</p></div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Unbounded Caches</h6><p class="small opacity-75 mb-0">A cache that never expires or prunes entries will keep growing over time.</p></div>
+        </div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Leak Pattern and Fix</h5>
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">function mountWidget() {
+  const button = document.querySelector('#saveBtn');
+  const clickHistory = [];
+
+  function handleClick() {
+    clickHistory.push(Date.now());
+    console.log(`Clicked ${clickHistory.length} times`);
+  }
+
+  button.addEventListener('click', handleClick);
+
+  const intervalId = setInterval(() =&gt; {
+    console.log('autosave check');
+  }, 5000);
+
+  return function cleanup() {
+    button.removeEventListener('click', handleClick);
+    clearInterval(intervalId);
+  };
+}
+
+const cleanupWidget = mountWidget();
+// Later, when the widget is removed:
+cleanupWidget();</code></pre>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Interview-Style Example: Why This Leaks</h5>
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const cachedNodes = [];
+
+function rememberNode(node) {
+  cachedNodes.push(node);
+}
+
+function renderMessage(text) {
+  const item = document.createElement('li');
+  item.textContent = text;
+  rememberNode(item);
+  return item;
+}
+
+// If nodes are removed from the DOM but still stored in cachedNodes,
+// the array keeps references alive and memory usage can grow.</code></pre>
+      </div>
+
+      <div class="note-box">
+        <p class="mb-0"><strong>Interview takeaway:</strong> garbage collection only frees memory for unreachable values. If your code keeps a live reference, the runtime cannot reclaim it.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-error" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-exclamation-octagon-fill me-2 text-danger"></i>Error Handling and Regex</h2>
+      <p class="mb-4">Good JavaScript code handles invalid input, network failures, and user mistakes gracefully. Regex is also useful for validation and text cleanup when used carefully.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Custom Errors</h5>
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'ValidationError';
+  }
+}
+
+function parseAge(value) {
+  const age = Number(value);
+
+  if (Number.isNaN(age) || age &lt; 0) {
+    throw new ValidationError('Age must be a positive number');
+  }
+
+  return age;
+}
+
+try {
+  console.log(parseAge('24'));
+  console.log(parseAge('-4'));
+} catch (error) {
+  if (error instanceof ValidationError) {
+    console.warn(error.message);
+  } else {
+    console.error('Unexpected error:', error);
+  }
+} finally {
+  console.log('Validation attempt finished');
+}</code></pre>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Regex Basics</h5>
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+console.log(emailPattern.test('dev@example.com'));
+
+const slug = 'advanced javascript and es6'
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-|-$/g, '');
+
+console.log(slug);</code></pre>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-performance" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-speedometer2 me-2 text-warning"></i>Performance and Debugging</h2>
+      <p class="mb-4">Performance work in JavaScript is usually about reducing unnecessary work: fewer reflows, fewer allocations, fewer event handlers, and better scheduling.</p>
+
+      <div class="row g-3">
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Batch DOM Updates</h6><p class="small opacity-75 mb-0">Build nodes in memory first, then attach once.</p></div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Avoid Recreating Work</h6><p class="small opacity-75 mb-0">Memoize expensive pure calculations when repeated inputs are common.</p></div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Clean Up Listeners</h6><p class="small opacity-75 mb-0">Remove timers and handlers when components or screens go away.</p></div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Use DevTools</h6><p class="small opacity-75 mb-0">Console, Network, Performance, and Memory panels reveal real bottlenecks.</p></div>
+        </div>
+      </div>
+
+      <div class="code-wrapper mt-4">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const list = document.querySelector('#results');
+const names = ['Asha', 'Neel', 'Riya'];
+
+const fragment = document.createDocumentFragment();
+
+for (const name of names) {
+  const item = document.createElement('li');
+  item.textContent = name;
+  fragment.append(item);
+}
+
+list.replaceChildren(fragment);
+
+console.time('heavy-work');
+const numbers = Array.from({ length: 10000 }, (_, index) =&gt; index + 1);
+const total = numbers.reduce((sum, value) =&gt; sum + value, 0);
+console.timeEnd('heavy-work');
+console.log(total);</code></pre>
+      </div>
+
+      <div class="note-box">
+        <p class="mb-0"><strong>Debugging checklist:</strong> inspect variables with breakpoints, log narrow and relevant values, verify async order, and always reproduce the bug in the smallest possible case.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-best" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-check2-square me-2 text-success"></i>Best Practices and Quick Revision</h2>
+      <p class="mb-4">Once you understand the language features, the next step is writing code that stays readable, testable, and maintainable as a project grows.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Best Practices</h6>
+            <ul class="small opacity-75 mb-0 ps-3">
+              <li>Prefer const, then use let only when reassignment is necessary.</li>
+              <li>Use strict equality unless you intentionally want coercion.</li>
+              <li>Keep functions small and focused on one responsibility.</li>
+              <li>Avoid mutating arguments when a copied value is clearer.</li>
+              <li>Handle async failures explicitly with try/catch.</li>
+              <li>Use modules to keep files cohesive and dependencies visible.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Interview Quick Notes</h6>
+            <ul class="small opacity-75 mb-0 ps-3">
+              <li><strong>Closure:</strong> function remembers outer variables.</li>
+              <li><strong>Hoisting:</strong> declarations are processed before execution.</li>
+              <li><strong>Prototype:</strong> shared behavior lookup chain for objects.</li>
+              <li><strong>Promise:</strong> future result of async work.</li>
+              <li><strong>Event loop:</strong> decides when queued work returns to the stack.</li>
+              <li><strong>this:</strong> determined by call-site, not where defined, except arrows.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="sub-title mt-4"><i class="bi bi-boxes me-2"></i>Mini Pattern: Closure-Based Store</h5>
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">function createTodoStore() {
+  let items = [];
+
+  return {
+    add(title) {
+      items = [...items, { id: crypto.randomUUID(), title, done: false }];
+      return items;
+    },
+    toggle(id) {
+      items = items.map((item) =&gt;
+        item.id === id ? { ...item, done: !item.done } : item
+      );
+      return items;
+    },
+    all() {
+      return items;
+    },
+  };
+}
+
+const store = createTodoStore();
+store.add('Finish ES6 guide');
+store.add('Practice fetch API');
+console.log(store.all());</code></pre>
+      </div>
+
+      <div class="alert alert-warning border-0 rounded-3 d-flex gap-3 align-items-start mb-0" style="background:rgba(247,223,30,.12);color:inherit;">
+        <i class="bi bi-lightbulb-fill fs-4 mt-1" style="color:#ffb703;"></i>
+        <div><strong>Final advice:</strong> do not memorize syntax in isolation. Build tiny examples, inspect actual output, and repeat the concepts in browser code, Node.js scripts, and one small project.</div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-dom-practice" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-laptop me-2 text-primary"></i>DOM Practice Exercises</h2>
+      <p class="mb-4">These exercises are meant to turn syntax into muscle memory. Each one mixes DOM selection, events, array methods, and state updates so you practice the kind of JavaScript used in real browser projects.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-4">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">1</div>
+              <h6 class="mb-0 fw-bold">Live Search Filter</h6>
+            </div>
+            <p class="small opacity-75 mb-2">Build a searchable list of users, products, or countries.</p>
+            <ul class="small opacity-75 mb-0 ps-3">
+              <li>Listen to the <code>input</code> event.</li>
+              <li>Normalize case with <code>toLowerCase()</code>.</li>
+              <li>Filter data and re-render the results list.</li>
+              <li>Show an empty state when no matches exist.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">2</div>
+              <h6 class="mb-0 fw-bold">Todo List with Delegation</h6>
+            </div>
+            <p class="small opacity-75 mb-2">Create, toggle, and remove items without attaching a separate listener to every row.</p>
+            <ul class="small opacity-75 mb-0 ps-3">
+              <li>Generate items with unique ids.</li>
+              <li>Use one parent click handler.</li>
+              <li>Toggle a completed class.</li>
+              <li>Persist the list in localStorage.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">3</div>
+              <h6 class="mb-0 fw-bold">Modal and Keyboard UX</h6>
+            </div>
+            <p class="small opacity-75 mb-2">Open and close a modal with buttons, backdrop clicks, and the Escape key.</p>
+            <ul class="small opacity-75 mb-0 ps-3">
+              <li>Toggle classes instead of inline styles.</li>
+              <li>Trap or restore focus carefully.</li>
+              <li>Support mouse and keyboard actions.</li>
+              <li>Prevent background scroll while open.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="sub-title mt-4"><span class="step-num me-2">1</span>Starter Exercise: Live Search</h5>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper mb-0">
+            <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;input id="searchInput" class="form-control mb-3" placeholder="Search products" /&gt;
+&lt;ul id="searchResults" class="list-group"&gt;&lt;/ul&gt;</code></pre>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper mb-0">
+            <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const products = ['Mouse', 'Keyboard', 'Monitor', 'Laptop Stand'];
+const input = document.querySelector('#searchInput');
+const results = document.querySelector('#searchResults');
+
+function renderList(items) {
+  results.innerHTML = items.length
+    ? items.map((item) =&gt; `&lt;li class="list-group-item"&gt;${item}&lt;/li&gt;`).join('')
+    : '&lt;li class="list-group-item text-muted"&gt;No results found&lt;/li&gt;';
+}
+
+input.addEventListener('input', (event) =&gt; {
+  const query = event.target.value.trim().toLowerCase();
+  const filtered = products.filter((item) =&gt;
+    item.toLowerCase().includes(query)
+  );
+  renderList(filtered);
+});
+
+renderList(products);</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="sub-title mt-4"><span class="step-num me-2">2</span>Challenge Targets</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead>
+            <tr>
+              <th>Exercise</th>
+              <th>What You Should Practice</th>
+              <th>Extra Stretch Goal</th>
+            </tr>
+          </thead>
+          <tbody class="small">
+            <tr><td>Tabs Component</td><td><code>data-*</code> attributes, class toggling, active states</td><td>Update URL hash when a tab changes</td></tr>
+            <tr><td>Character Counter</td><td><code>input</code> events, max length feedback, conditional styling</td><td>Warn at 80% of the limit</td></tr>
+            <tr><td>Theme Switcher</td><td><code>localStorage</code>, root classes, initialization flow</td><td>Respect system preference with <code>matchMedia</code></td></tr>
+            <tr><td>Accordion FAQ</td><td>Accessibility attributes, event delegation, hidden sections</td><td>Allow one or many open panels</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-box mt-4">
+        <p class="mb-0"><strong>Practice rule:</strong> first build it with plain JavaScript, then refactor. The first version teaches behavior. The second version teaches structure.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-projects" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-kanban-fill me-2 text-warning"></i>Mini Projects for Real Practice</h2>
+      <p class="mb-4">These projects are small enough to finish, but rich enough to force you to combine ES6 syntax, browser APIs, and clean code organization.</p>
+
+      <div class="row g-3">
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Expense Tracker</h6>
+            <p class="small opacity-75 mb-2">Track income and expenses, group by category, and store data locally.</p>
+            <div class="small"><strong>Core concepts:</strong> arrays, reduce, forms, localStorage, formatting</div>
+          </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Quiz App</h6>
+            <p class="small opacity-75 mb-2">Render one question at a time, store score, and show final feedback.</p>
+            <div class="small"><strong>Core concepts:</strong> state, event handling, timers, conditional rendering</div>
+          </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Weather Dashboard</h6>
+            <p class="small opacity-75 mb-2">Search cities, call a weather API, and render loading, success, and error states.</p>
+            <div class="small"><strong>Core concepts:</strong> fetch, async/await, error handling, templating</div>
+          </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Notes App</h6>
+            <p class="small opacity-75 mb-2">Create and filter notes with tags, and autosave them in the browser.</p>
+            <div class="small"><strong>Core concepts:</strong> objects, array transforms, debounce, storage</div>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="sub-title mt-4"><span class="step-num me-2">1</span>Project Blueprint: Expense Tracker</h5>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Suggested Features</h6>
+            <ul class="small opacity-75 mb-0 ps-3">
+              <li>Add income and expense entries with category and date.</li>
+              <li>Show totals, net balance, and category summaries.</li>
+              <li>Filter by date range or category.</li>
+              <li>Persist entries using localStorage.</li>
+              <li>Add edit and delete actions.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Recommended File Structure</h6>
+            <ul class="small opacity-75 mb-0 ps-3">
+              <li><code>index.html</code> for layout and form fields</li>
+              <li><code>style.css</code> for presentation</li>
+              <li><code>app.js</code> for state, rendering, and handlers</li>
+              <li><code>storage.js</code> for save/load helpers if you split files</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-wrapper mt-4">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const transactions = [
+  { id: 1, type: 'income', category: 'Salary', amount: 45000 },
+  { id: 2, type: 'expense', category: 'Rent', amount: 12000 },
+  { id: 3, type: 'expense', category: 'Food', amount: 3500 },
+];
+
+const summary = transactions.reduce((acc, item) =&gt; {
+  acc[item.type] += item.amount;
+  acc.balance = acc.income - acc.expense;
+  return acc;
+}, { income: 0, expense: 0, balance: 0 });
+
+console.log(summary);
+
+const categoryTotals = transactions.reduce((acc, item) =&gt; {
+  acc[item.category] = (acc[item.category] ?? 0) + item.amount;
+  return acc;
+}, {});
+
+console.log(categoryTotals);</code></pre>
+      </div>
+
+      <h5 class="sub-title mt-4"><span class="step-num me-2">2</span>Graduation Roadmap</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead>
+            <tr>
+              <th>Level</th>
+              <th>Goal</th>
+              <th>What It Teaches</th>
+            </tr>
+          </thead>
+          <tbody class="small">
+            <tr><td>Level 1</td><td>Pure browser app with static data</td><td>Rendering and interaction basics</td></tr>
+            <tr><td>Level 2</td><td>Save data in localStorage</td><td>Serialization and persistent state</td></tr>
+            <tr><td>Level 3</td><td>Fetch data from an API</td><td>Async flow and loading states</td></tr>
+            <tr><td>Level 4</td><td>Split into modules</td><td>Maintainable architecture</td></tr>
+            <tr><td>Level 5</td><td>Add tests or migrate to a framework</td><td>Scalability and quality habits</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-interview" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-patch-question-fill me-2 text-success"></i>JavaScript Interview Questions</h2>
+      <p class="mb-4">These are the questions that repeatedly show up in interviews because they reveal whether someone understands the language model, not just the syntax.</p>
+
+      <div class="accordion" id="interviewAccordion">
+        <div class="accordion-item border-0 mb-3 rounded-3 overflow-hidden">
+          <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#qaOne" aria-expanded="true" aria-controls="qaOne">
+              What is the difference between <code>var</code>, <code>let</code>, and <code>const</code>?
+            </button>
+          </h2>
+          <div id="qaOne" class="accordion-collapse collapse show" data-bs-parent="#interviewAccordion">
+            <div class="accordion-body small">
+              <strong>var</strong> is function-scoped and can be redeclared. <strong>let</strong> and <strong>const</strong> are block-scoped. <strong>const</strong> cannot be reassigned after initialization. In modern code, prefer <strong>const</strong> by default and use <strong>let</strong> only when a value must change.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item border-0 mb-3 rounded-3 overflow-hidden">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#qaTwo" aria-expanded="false" aria-controls="qaTwo">
+              What is a closure?
+            </button>
+          </h2>
+          <div id="qaTwo" class="accordion-collapse collapse" data-bs-parent="#interviewAccordion">
+            <div class="accordion-body small">
+              A closure is created when an inner function keeps access to variables from its outer lexical scope even after the outer function has finished. Closures are used in factories, private state, memoization, and event handlers.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item border-0 mb-3 rounded-3 overflow-hidden">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#qaThree" aria-expanded="false" aria-controls="qaThree">
+              How does the event loop work?
+            </button>
+          </h2>
+          <div id="qaThree" class="accordion-collapse collapse" data-bs-parent="#interviewAccordion">
+            <div class="accordion-body small">
+              JavaScript runs synchronous code on the call stack first. When the stack is empty, the runtime checks the microtask queue first, then the task queue. Promise callbacks run as microtasks, while timers and UI events are generally queued as tasks.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item border-0 mb-3 rounded-3 overflow-hidden">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#qaFour" aria-expanded="false" aria-controls="qaFour">
+              What is the difference between <code>==</code> and <code>===</code>?
+            </button>
+          </h2>
+          <div id="qaFour" class="accordion-collapse collapse" data-bs-parent="#interviewAccordion">
+            <div class="accordion-body small">
+              <code>==</code> allows type coercion before comparison, while <code>===</code> compares both type and value directly. Prefer <code>===</code> because it is more predictable and avoids implicit conversion bugs.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item border-0 mb-3 rounded-3 overflow-hidden">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#qaFive" aria-expanded="false" aria-controls="qaFive">
+              What is the difference between shallow copy and deep copy?
+            </button>
+          </h2>
+          <div id="qaFive" class="accordion-collapse collapse" data-bs-parent="#interviewAccordion">
+            <div class="accordion-body small">
+              A shallow copy duplicates only the first level, so nested objects still share references. A deep copy duplicates nested values too. Spread syntax and <code>Object.assign()</code> create shallow copies. <code>structuredClone()</code> can deep copy many built-in data structures.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item border-0 rounded-3 overflow-hidden">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#qaSix" aria-expanded="false" aria-controls="qaSix">
+              What is the difference between regular functions and arrow functions?
+            </button>
+          </h2>
+          <div id="qaSix" class="accordion-collapse collapse" data-bs-parent="#interviewAccordion">
+            <div class="accordion-body small">
+              Arrow functions have shorter syntax and lexical <code>this</code>. They do not have their own <code>arguments</code>, cannot be used as constructors with <code>new</code>, and are usually best for callbacks. Regular functions are better for object methods and constructor-like patterns.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="sub-title mt-4"><span class="step-num me-2">Fast Answer Drill</span></h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead>
+            <tr>
+              <th>Question</th>
+              <th>Short Answer</th>
+            </tr>
+          </thead>
+          <tbody class="small">
+            <tr><td>What is hoisting?</td><td>Declarations are processed before execution starts, but initialization timing differs by keyword and function type.</td></tr>
+            <tr><td>What is a promise?</td><td>An object representing the eventual result of async work.</td></tr>
+            <tr><td>Why use modules?</td><td>To split code, prevent global leakage, and make dependencies explicit.</td></tr>
+            <tr><td>What does optional chaining do?</td><td>Safely reads nested properties and returns <code>undefined</code> if a link is missing.</td></tr>
+            <tr><td>Why use debounce?</td><td>To delay rapid repeated execution until activity pauses.</td></tr>
+            <tr><td>What is the prototype chain?</td><td>The lookup path JavaScript follows when a property does not exist directly on an object.</td></tr>
+            <tr><td>What is currying?</td><td>Transforming a multi-argument function into nested functions that each receive part of the input.</td></tr>
+            <tr><td>What causes a memory leak?</td><td>Live references to unused objects, such as listeners, timers, detached DOM nodes, or unbounded caches.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-wrapper mt-4">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">// Common interview example: remove duplicates
+const values = [1, 2, 2, 3, 4, 4, 5];
+const uniqueValues = [...new Set(values)];
+
+console.log(uniqueValues);
+
+// Common interview example: flatten one level
+const nested = [[1, 2], [3, 4], [5]];
+const flattened = nested.flat();
+
+console.log(flattened);</code></pre>
+      </div>
+
+      <h5 class="sub-title mt-4"><span class="step-num me-2">Code Round Examples</span></h5>
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">// Interview pattern 1: prototype lookup
+function User(name) {
+  this.name = name;
+}
+
+User.prototype.label = function () {
+  return `User: ${this.name}`;
+};
+
+console.log(new User('Asha').label());
+
+// Interview pattern 2: currying
+const add = (a) =&gt; (b) =&gt; a + b;
+console.log(add(5)(7));
+
+// Interview pattern 3: cleanup mindset
+function startPolling(callback) {
+  const id = setInterval(callback, 1000);
+  return () =&gt; clearInterval(id);
+}
+
+const stopPolling = startPolling(() =&gt; console.log('polling...'));
+stopPolling();</code></pre>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<div id="backTop" aria-label="Back to top">
+  <i class="bi bi-arrow-up"></i>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/highlight.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('pre code').forEach((element) => hljs.highlightElement(element));
+  });
+
+  const html = document.documentElement;
+  const toggleBtn = document.getElementById('themeToggle');
+  const hljsDark = document.getElementById('hljs-theme-dark');
+  const hljsLight = document.getElementById('hljs-theme-light');
+
+  function applyTheme(theme) {
+    html.setAttribute('data-bs-theme', theme);
+    toggleBtn.innerHTML = theme === 'dark'
+      ? '<i class="bi bi-sun-fill"></i>'
+      : '<i class="bi bi-moon-fill"></i>';
+    hljsDark.disabled = theme !== 'dark';
+    hljsLight.disabled = theme !== 'light';
+    localStorage.setItem('ajs-guide-theme', theme);
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    applyTheme(html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  const savedTheme = localStorage.getItem('ajs-guide-theme');
+  if (savedTheme) applyTheme(savedTheme);
+
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('#sidebar .nav-link, #mobileSidebar .nav-link');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+
+      navLinks.forEach((link) => link.classList.remove('active'));
+      document.querySelectorAll(`a[href="#${entry.target.id}"]`).forEach((link) => {
+        link.classList.add('active');
+      });
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+
+  sections.forEach((section) => observer.observe(section));
+
+  const backTop = document.getElementById('backTop');
+  backTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  window.addEventListener('scroll', () => {
+    backTop.classList.toggle('show', window.scrollY > 400);
+  });
+
+  document.addEventListener('click', async (event) => {
+    const button = event.target.closest('.copy-btn');
+    if (!button) return;
+
+    const code = button.closest('.code-wrapper')?.querySelector('code');
+    if (!code) return;
+
+    try {
+      await navigator.clipboard.writeText(code.innerText);
+      button.innerHTML = '<i class="bi bi-check-lg me-1"></i>Copied!';
+      setTimeout(() => {
+        button.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy';
+      }, 1800);
+    } catch (error) {
+      button.innerHTML = '<i class="bi bi-x-lg me-1"></i>Failed';
+      setTimeout(() => {
+        button.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy';
+      }, 1800);
+    }
+  });
+</script>
+</body>
+</html>

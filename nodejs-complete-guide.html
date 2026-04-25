@@ -1,0 +1,2643 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Node.js Complete Tutorial</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link id="hljs-theme-dark" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css" />
+  <link id="hljs-theme-light" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css" disabled />
+
+  <style>
+    :root {
+      --sidebar-width: 286px;
+      --header-h: 64px;
+      --node-primary: #3c873a;
+      --node-secondary: #6cc24a;
+      --node-accent: #1f6f43;
+    }
+
+    body {
+      font-size: 0.95rem;
+      scroll-behavior: smooth;
+    }
+
+    #topbar {
+      height: var(--header-h);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1050;
+    }
+    [data-bs-theme="dark"] #topbar {
+      background: rgba(13, 17, 23, 0.86);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    [data-bs-theme="light"] #topbar {
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, var(--node-primary), var(--node-secondary));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+
+    #sidebar {
+      width: var(--sidebar-width);
+      top: var(--header-h);
+      height: calc(100vh - var(--header-h));
+      overflow-y: auto;
+      scrollbar-width: thin;
+      z-index: 1040;
+    }
+    [data-bs-theme="dark"] #sidebar {
+      background: #0d1117;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    [data-bs-theme="light"] #sidebar {
+      background: #f8f9fa;
+      border-right: 1px solid #dee2e6;
+    }
+
+    #sidebar .nav-link {
+      font-size: 0.85rem;
+      padding: 0.38rem 1rem;
+      border-radius: 8px;
+      color: inherit;
+      transition: background 0.15s, color 0.15s, padding-left 0.15s;
+    }
+    #sidebar .nav-link:hover {
+      background: rgba(60, 135, 58, 0.14);
+      color: var(--node-primary);
+      padding-left: 1.3rem;
+    }
+    #sidebar .nav-link.active {
+      background: rgba(60, 135, 58, 0.18);
+      color: var(--node-primary);
+      font-weight: 600;
+    }
+
+    #sidebar .nav-section {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 0.75rem 1rem 0.3rem;
+      opacity: 0.52;
+    }
+
+    #main-content {
+      margin-left: var(--sidebar-width);
+      min-height: calc(100vh - var(--header-h));
+      padding-top: var(--header-h);
+    }
+    @media (max-width: 991.98px) {
+      #sidebar {
+        display: none !important;
+      }
+      #main-content {
+        margin-left: 0 !important;
+      }
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      border-left: 4px solid var(--node-primary);
+      padding-left: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .sub-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      padding-left: 0.5rem;
+      border-left: 3px solid var(--node-secondary);
+      margin: 1.4rem 0 0.8rem;
+    }
+
+    .feature-card {
+      border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid transparent;
+    }
+    .feature-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(60, 135, 58, 0.18);
+      border-color: rgba(60, 135, 58, 0.24);
+    }
+    [data-bs-theme="dark"] .feature-card {
+      background: #161b22;
+    }
+    [data-bs-theme="light"] .feature-card {
+      background: #ffffff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+    }
+
+    .icon-box {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--node-primary), var(--node-secondary));
+      color: #fff;
+    }
+
+    pre {
+      border-radius: 10px;
+      position: relative;
+      font-size: 0.83rem;
+      margin: 0;
+    }
+    pre code.hljs {
+      border-radius: 10px;
+    }
+
+    .code-wrapper {
+      position: relative;
+      margin: 0.75rem 0 1.25rem;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.55rem;
+      opacity: 0.74;
+      z-index: 2;
+    }
+    .copy-btn:hover {
+      opacity: 1;
+    }
+
+    .cmd-table th {
+      white-space: nowrap;
+    }
+    .cmd-table code {
+      font-size: 0.8rem;
+    }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--node-primary), var(--node-secondary));
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .runtime-pill,
+    .node-pill {
+      display: inline-block;
+      font-family: monospace;
+      font-size: 0.79rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+    }
+    [data-bs-theme="dark"] .runtime-pill,
+    [data-bs-theme="dark"] .node-pill {
+      background: #1f2937;
+    }
+    [data-bs-theme="light"] .runtime-pill,
+    [data-bs-theme="light"] .node-pill {
+      background: #edf5ef;
+    }
+
+    .workflow-step {
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      border: 1px solid rgba(60, 135, 58, 0.18);
+    }
+    [data-bs-theme="dark"] .workflow-step {
+      background: rgba(60, 135, 58, 0.08);
+    }
+    [data-bs-theme="light"] .workflow-step {
+      background: rgba(60, 135, 58, 0.04);
+    }
+
+    .check-list,
+    .tip-list {
+      padding-left: 1.15rem;
+    }
+    .check-list li,
+    .tip-list li {
+      margin-bottom: 0.4rem;
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, var(--node-primary), var(--node-secondary));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .divider {
+      height: 1px;
+      opacity: 0.1;
+      margin: 2.5rem 0;
+    }
+
+    .note-box {
+      border-left: 4px solid var(--node-primary);
+      padding: 0.75rem 1rem;
+      border-radius: 0 8px 8px 0;
+    }
+    [data-bs-theme="dark"] .note-box {
+      background: rgba(60, 135, 58, 0.1);
+    }
+    [data-bs-theme="light"] .note-box {
+      background: rgba(60, 135, 58, 0.06);
+    }
+
+    .hero-section {
+      background: linear-gradient(135deg, #255f2c 0%, #3c873a 40%, #6cc24a 100%);
+      padding: 3.4rem 0 3rem;
+      clip-path: ellipse(120% 100% at 50% 0%);
+    }
+    .hero-section h1 {
+      font-size: 2.45rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .hero-section p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.05rem;
+    }
+
+    #themeToggle i {
+      font-size: 1.1rem;
+    }
+
+    #backTop {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--node-primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(60, 135, 58, 0.5);
+      opacity: 0;
+      transition: opacity 0.25s;
+      z-index: 9999;
+    }
+    #backTop.show {
+      opacity: 1;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    [data-bs-theme="dark"] ::-webkit-scrollbar-track {
+      background: #161b22;
+    }
+    [data-bs-theme="dark"] ::-webkit-scrollbar-thumb {
+      background: #30363d;
+      border-radius: 3px;
+    }
+    [data-bs-theme="light"] ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    [data-bs-theme="light"] ::-webkit-scrollbar-thumb {
+      background: #cfcfcf;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+
+<body>
+<nav id="topbar" class="navbar fixed-top px-3 px-md-4 d-flex justify-content-between align-items-center">
+  <a href="#top" class="text-decoration-none d-flex align-items-center gap-2">
+    <div style="background:linear-gradient(135deg,var(--node-primary),var(--node-secondary));width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+      <i class="bi bi-terminal-fill text-white" style="font-size:1rem;"></i>
+    </div>
+    <span class="brand-badge">Node.js</span>
+    <span class="fw-light opacity-50 d-none d-sm-inline">Tutorial</span>
+  </a>
+
+  <div class="d-flex align-items-center gap-2">
+    <button class="btn btn-sm btn-outline-secondary d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+      <i class="bi bi-list"></i>
+    </button>
+    <button id="themeToggle" class="btn btn-sm btn-outline-secondary" title="Toggle dark or light mode">
+      <i class="bi bi-sun-fill"></i>
+    </button>
+    <span class="badge rounded-pill" style="background:var(--node-primary);">LTS</span>
+  </div>
+</nav>
+
+<aside id="sidebar" class="position-fixed start-0 px-2 py-3">
+  <nav class="nav flex-column gap-1" aria-label="Node.js tutorial navigation">
+    <div class="nav-section">Introduction</div>
+    <a class="nav-link" href="#sec-what"><i class="bi bi-info-circle me-2"></i>What is Node.js?</a>
+    <a class="nav-link" href="#sec-why"><i class="bi bi-stars me-2"></i>Why Node.js</a>
+    <a class="nav-link" href="#sec-runtime"><i class="bi bi-diagram-3 me-2"></i>Runtime Architecture</a>
+
+    <div class="nav-section">Getting Started</div>
+    <a class="nav-link" href="#sec-install"><i class="bi bi-download me-2"></i>Install and Versions</a>
+    <a class="nav-link" href="#sec-first-app"><i class="bi bi-play-circle me-2"></i>First App</a>
+    <a class="nav-link" href="#sec-packages"><i class="bi bi-box-seam me-2"></i>npm, npx, Scripts</a>
+
+    <div class="nav-section">Core Node</div>
+    <a class="nav-link" href="#sec-modules"><i class="bi bi-boxes me-2"></i>Modules and ESM</a>
+    <a class="nav-link" href="#sec-async"><i class="bi bi-hourglass-split me-2"></i>Async Patterns</a>
+    <a class="nav-link" href="#sec-event-loop"><i class="bi bi-arrow-repeat me-2"></i>Event Loop</a>
+    <a class="nav-link" href="#sec-core"><i class="bi bi-cpu me-2"></i>Core Modules</a>
+    <a class="nav-link" href="#sec-http"><i class="bi bi-hdd-network me-2"></i>HTTP Server</a>
+
+    <div class="nav-section">Backend APIs</div>
+    <a class="nav-link" href="#sec-express"><i class="bi bi-lightning-charge me-2"></i>Express Basics</a>
+    <a class="nav-link" href="#sec-nestjs"><i class="bi bi-layers me-2"></i>NestJS</a>
+    <a class="nav-link" href="#sec-routing"><i class="bi bi-signpost-split me-2"></i>Routing and Middleware</a>
+    <a class="nav-link" href="#sec-rest"><i class="bi bi-braces-asterisk me-2"></i>REST API</a>
+    <a class="nav-link" href="#sec-graphql"><i class="bi bi-share-fill me-2"></i>GraphQL APIs</a>
+    <a class="nav-link" href="#sec-db"><i class="bi bi-database me-2"></i>Database Layer</a>
+    <a class="nav-link" href="#sec-auth"><i class="bi bi-shield-lock me-2"></i>Auth and Sessions</a>
+    <a class="nav-link" href="#sec-realtime"><i class="bi bi-broadcast me-2"></i>Realtime Apps</a>
+    <a class="nav-link" href="#sec-redis"><i class="bi bi-stack me-2"></i>Redis</a>
+
+    <div class="nav-section">Advanced</div>
+    <a class="nav-link" href="#sec-streams"><i class="bi bi-bezier2 me-2"></i>Streams and Buffers</a>
+    <a class="nav-link" href="#sec-workers"><i class="bi bi-diagram-2 me-2"></i>Workers and Processes</a>
+    <a class="nav-link" href="#sec-queues"><i class="bi bi-list-task me-2"></i>Queues and Jobs</a>
+    <a class="nav-link" href="#sec-cron"><i class="bi bi-clock-history me-2"></i>Cron Jobs</a>
+    <a class="nav-link" href="#sec-testing"><i class="bi bi-check2-square me-2"></i>Testing</a>
+    <a class="nav-link" href="#sec-debug"><i class="bi bi-bug me-2"></i>Debugging and Logs</a>
+    <a class="nav-link" href="#sec-security"><i class="bi bi-shield-check me-2"></i>Security</a>
+    <a class="nav-link" href="#sec-performance"><i class="bi bi-speedometer2 me-2"></i>Performance</a>
+    <a class="nav-link" href="#sec-typescript"><i class="bi bi-filetype-tsx me-2"></i>TypeScript</a>
+    <a class="nav-link" href="#sec-deploy"><i class="bi bi-cloud-arrow-up me-2"></i>Deployment</a>
+
+    <div class="nav-section">Practical</div>
+    <a class="nav-link" href="#sec-publish"><i class="bi bi-box-arrow-up me-2"></i>Package Publishing</a>
+    <a class="nav-link" href="#sec-mini-project"><i class="bi bi-diagram-3-fill me-2"></i>Production Mini Project</a>
+    <a class="nav-link" href="#sec-mini-project-nest"><i class="bi bi-building-gear me-2"></i>NestJS Capstone</a>
+    <a class="nav-link" href="#sec-top-50"><i class="bi bi-list-ol me-2"></i>Top 50 Commands</a>
+    <a class="nav-link" href="#sec-command-reference"><i class="bi bi-terminal me-2"></i>Node Cheat Sheet</a>
+    <a class="nav-link" href="#sec-interview"><i class="bi bi-patch-question me-2"></i>Interview Q and A</a>
+    <a class="nav-link" href="#sec-projects"><i class="bi bi-kanban me-2"></i>Project Labs</a>
+  </nav>
+</aside>
+
+<div class="offcanvas offcanvas-start d-lg-none" id="mobileSidebar" tabindex="-1">
+  <div class="offcanvas-header">
+    <h6 class="offcanvas-title fw-bold">Node.js Tutorial</h6>
+    <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body p-2">
+    <nav class="nav flex-column gap-1">
+      <div class="nav-section">Introduction</div>
+      <a class="nav-link" href="#sec-what" data-bs-dismiss="offcanvas"><i class="bi bi-info-circle me-2"></i>What is Node.js?</a>
+      <a class="nav-link" href="#sec-why" data-bs-dismiss="offcanvas"><i class="bi bi-stars me-2"></i>Why Node.js</a>
+      <a class="nav-link" href="#sec-runtime" data-bs-dismiss="offcanvas"><i class="bi bi-diagram-3 me-2"></i>Runtime Architecture</a>
+
+      <div class="nav-section">Getting Started</div>
+      <a class="nav-link" href="#sec-install" data-bs-dismiss="offcanvas"><i class="bi bi-download me-2"></i>Install and Versions</a>
+      <a class="nav-link" href="#sec-first-app" data-bs-dismiss="offcanvas"><i class="bi bi-play-circle me-2"></i>First App</a>
+      <a class="nav-link" href="#sec-packages" data-bs-dismiss="offcanvas"><i class="bi bi-box-seam me-2"></i>npm, npx, Scripts</a>
+
+      <div class="nav-section">Core Node</div>
+      <a class="nav-link" href="#sec-modules" data-bs-dismiss="offcanvas"><i class="bi bi-boxes me-2"></i>Modules and ESM</a>
+      <a class="nav-link" href="#sec-async" data-bs-dismiss="offcanvas"><i class="bi bi-hourglass-split me-2"></i>Async Patterns</a>
+      <a class="nav-link" href="#sec-event-loop" data-bs-dismiss="offcanvas"><i class="bi bi-arrow-repeat me-2"></i>Event Loop</a>
+      <a class="nav-link" href="#sec-core" data-bs-dismiss="offcanvas"><i class="bi bi-cpu me-2"></i>Core Modules</a>
+      <a class="nav-link" href="#sec-http" data-bs-dismiss="offcanvas"><i class="bi bi-hdd-network me-2"></i>HTTP Server</a>
+
+      <div class="nav-section">Backend APIs</div>
+      <a class="nav-link" href="#sec-express" data-bs-dismiss="offcanvas"><i class="bi bi-lightning-charge me-2"></i>Express Basics</a>
+      <a class="nav-link" href="#sec-nestjs" data-bs-dismiss="offcanvas"><i class="bi bi-layers me-2"></i>NestJS</a>
+      <a class="nav-link" href="#sec-routing" data-bs-dismiss="offcanvas"><i class="bi bi-signpost-split me-2"></i>Routing and Middleware</a>
+      <a class="nav-link" href="#sec-rest" data-bs-dismiss="offcanvas"><i class="bi bi-braces-asterisk me-2"></i>REST API</a>
+      <a class="nav-link" href="#sec-graphql" data-bs-dismiss="offcanvas"><i class="bi bi-share-fill me-2"></i>GraphQL APIs</a>
+      <a class="nav-link" href="#sec-db" data-bs-dismiss="offcanvas"><i class="bi bi-database me-2"></i>Database Layer</a>
+      <a class="nav-link" href="#sec-auth" data-bs-dismiss="offcanvas"><i class="bi bi-shield-lock me-2"></i>Auth and Sessions</a>
+      <a class="nav-link" href="#sec-realtime" data-bs-dismiss="offcanvas"><i class="bi bi-broadcast me-2"></i>Realtime Apps</a>
+      <a class="nav-link" href="#sec-redis" data-bs-dismiss="offcanvas"><i class="bi bi-stack me-2"></i>Redis</a>
+
+      <div class="nav-section">Advanced</div>
+      <a class="nav-link" href="#sec-streams" data-bs-dismiss="offcanvas"><i class="bi bi-bezier2 me-2"></i>Streams and Buffers</a>
+      <a class="nav-link" href="#sec-workers" data-bs-dismiss="offcanvas"><i class="bi bi-diagram-2 me-2"></i>Workers and Processes</a>
+      <a class="nav-link" href="#sec-queues" data-bs-dismiss="offcanvas"><i class="bi bi-list-task me-2"></i>Queues and Jobs</a>
+      <a class="nav-link" href="#sec-cron" data-bs-dismiss="offcanvas"><i class="bi bi-clock-history me-2"></i>Cron Jobs</a>
+      <a class="nav-link" href="#sec-testing" data-bs-dismiss="offcanvas"><i class="bi bi-check2-square me-2"></i>Testing</a>
+      <a class="nav-link" href="#sec-debug" data-bs-dismiss="offcanvas"><i class="bi bi-bug me-2"></i>Debugging and Logs</a>
+      <a class="nav-link" href="#sec-security" data-bs-dismiss="offcanvas"><i class="bi bi-shield-check me-2"></i>Security</a>
+      <a class="nav-link" href="#sec-performance" data-bs-dismiss="offcanvas"><i class="bi bi-speedometer2 me-2"></i>Performance</a>
+      <a class="nav-link" href="#sec-typescript" data-bs-dismiss="offcanvas"><i class="bi bi-filetype-tsx me-2"></i>TypeScript</a>
+      <a class="nav-link" href="#sec-deploy" data-bs-dismiss="offcanvas"><i class="bi bi-cloud-arrow-up me-2"></i>Deployment</a>
+
+      <div class="nav-section">Practical</div>
+      <a class="nav-link" href="#sec-publish" data-bs-dismiss="offcanvas"><i class="bi bi-box-arrow-up me-2"></i>Package Publishing</a>
+      <a class="nav-link" href="#sec-mini-project" data-bs-dismiss="offcanvas"><i class="bi bi-diagram-3-fill me-2"></i>Production Mini Project</a>
+      <a class="nav-link" href="#sec-mini-project-nest" data-bs-dismiss="offcanvas"><i class="bi bi-building-gear me-2"></i>NestJS Capstone</a>
+      <a class="nav-link" href="#sec-top-50" data-bs-dismiss="offcanvas"><i class="bi bi-list-ol me-2"></i>Top 50 Commands</a>
+      <a class="nav-link" href="#sec-command-reference" data-bs-dismiss="offcanvas"><i class="bi bi-terminal me-2"></i>Node Cheat Sheet</a>
+      <a class="nav-link" href="#sec-interview" data-bs-dismiss="offcanvas"><i class="bi bi-patch-question me-2"></i>Interview Q and A</a>
+      <a class="nav-link" href="#sec-projects" data-bs-dismiss="offcanvas"><i class="bi bi-kanban me-2"></i>Project Labs</a>
+    </nav>
+  </div>
+</div>
+
+<main id="main-content">
+  <section id="top" class="hero-section">
+    <div class="container-fluid px-3 px-md-4 px-xl-5">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+          <span class="badge rounded-pill mb-3" style="background:rgba(255,255,255,0.2);color:#fff;">Modern Node.js Guide</span>
+          <h1>Node.js Tutorial Basic to Advance</h1>
+          <p class="mb-4">Learn Node.js end to end: runtime basics, npm, modules, async JavaScript, Express APIs, authentication, databases, realtime apps, testing, performance, deployment, and a command-heavy cheat sheet you can actually use on projects.</p>
+          <div class="d-flex flex-wrap gap-2">
+            <span class="runtime-pill text-white" style="background:rgba(255,255,255,0.18);">Core Runtime</span>
+            <span class="runtime-pill text-white" style="background:rgba(255,255,255,0.18);">API Servers</span>
+            <span class="runtime-pill text-white" style="background:rgba(255,255,255,0.18);">CLI Tools</span>
+            <span class="runtime-pill text-white" style="background:rgba(255,255,255,0.18);">Deploy and Ops</span>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="feature-card p-4 h-100 border-0" style="background:rgba(255,255,255,0.12);backdrop-filter:blur(6px);color:#fff;">
+            <h5 class="fw-bold mb-3">What this guide targets</h5>
+            <ul class="tip-list mb-0">
+              <li>Current LTS-era Node.js features such as <code>--watch</code>, <code>--test</code>, and <code>--env-file</code>.</li>
+              <li>Production-style patterns, not only toy scripts.</li>
+              <li>Commands with short description and short example for faster revision.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container-fluid px-3 px-md-4 px-xl-5 py-4">
+    <section id="sec-what" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-info-circle-fill me-2" style="color:var(--node-primary);"></i>What is Node.js?</h2>
+      <p class="mb-4">Node.js is a JavaScript runtime built on the V8 engine. It lets you run JavaScript outside the browser, especially for servers, APIs, command-line tools, background jobs, automation scripts, realtime systems, and build tooling.</p>
+
+      <div class="row g-3">
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100">
+            <div class="icon-box mb-3"><i class="bi bi-lightning-charge-fill"></i></div>
+            <h6 class="fw-bold">V8 Engine</h6>
+            <p class="small opacity-75 mb-0">Executes JavaScript fast and keeps the syntax familiar for front-end developers.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100">
+            <div class="icon-box mb-3"><i class="bi bi-arrow-repeat"></i></div>
+            <h6 class="fw-bold">Event-Driven I/O</h6>
+            <p class="small opacity-75 mb-0">Handles lots of network or file operations efficiently without blocking the whole process.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100">
+            <div class="icon-box mb-3"><i class="bi bi-box-seam"></i></div>
+            <h6 class="fw-bold">npm Ecosystem</h6>
+            <p class="small opacity-75 mb-0">Ships with the biggest JavaScript package ecosystem for servers, tooling, CLIs, and frameworks.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100">
+            <div class="icon-box mb-3"><i class="bi bi-terminal"></i></div>
+            <h6 class="fw-bold">CLI Friendly</h6>
+            <p class="small opacity-75 mb-0">Excellent for scripts, task runners, build tools, and package publishing workflows.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Important:</strong> Node.js is not a framework. It is the runtime. Express, Fastify, NestJS, Socket.IO, Prisma, and many other tools run on top of it.</p>
+      </div>
+    </section>
+
+    <section id="sec-why" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-stars me-2" style="color:var(--node-primary);"></i>Why Learn Node.js</h2>
+      <p class="mb-4">Node.js is strong when your application spends most of its time waiting on I/O: databases, APIs, message queues, files, sockets, or user requests. It is also a common choice when one team wants to share JavaScript and TypeScript across front end, backend, tooling, and serverless functions.</p>
+
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark">
+            <tr><th>Best fit</th><th>Why it works</th><th>Watch out for</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>REST APIs and web apps</td><td>Fast development loop, huge ecosystem, great JSON handling.</td><td>Do not block the event loop with CPU-heavy work.</td></tr>
+            <tr><td>Realtime apps</td><td>WebSockets, Socket.IO, and event-driven programming feel natural.</td><td>Connection scaling still needs proper infrastructure.</td></tr>
+            <tr><td>Background jobs and automation</td><td>Easy HTTP integrations, queues, and scheduled scripts.</td><td>Long jobs need retries, logging, and monitoring.</td></tr>
+            <tr><td>CLI tools and internal tooling</td><td>Node is already present on many developer machines.</td><td>Keep package dependencies lean for fast installs.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ul class="check-list mt-3">
+        <li>Choose Node.js when your team values fast iteration, APIs, SSR, or shared TypeScript types.</li>
+        <li>Avoid pushing CPU-bound image processing, ML inference, or huge synchronous loops onto the main thread.</li>
+        <li>For CPU-heavy work, use worker threads, queues, native services, or a better-suited runtime.</li>
+      </ul>
+    </section>
+
+    <section id="sec-runtime" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-diagram-3-fill me-2" style="color:var(--node-primary);"></i>Node.js Runtime Architecture</h2>
+      <p class="mb-4">A lot of Node confusion disappears when you understand three parts: V8 executes JavaScript, libuv manages asynchronous I/O and the event loop, and the operating system handles actual network and filesystem work.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">console.log('start');
+
+setTimeout(() =&gt; {
+  console.log('timer');
+}, 0);
+
+Promise.resolve().then(() =&gt; {
+  console.log('promise microtask');
+});
+
+process.nextTick(() =&gt; {
+  console.log('nextTick');
+});
+
+console.log('end');</code></pre></div>
+          <p class="small opacity-75 mb-0">Typical output: <code>start</code>, <code>end</code>, <code>nextTick</code>, <code>promise microtask</code>, <code>timer</code>.</p>
+        </div>
+        <div class="col-lg-6">
+          <div class="feature-card p-3 h-100">
+            <h5 class="fw-bold mb-3">Mental model</h5>
+            <ul class="tip-list mb-0">
+              <li>JavaScript runs on the main thread.</li>
+              <li>I/O gets delegated out, then callbacks get queued.</li>
+              <li><code>process.nextTick()</code> runs before normal microtasks and can starve the loop if abused.</li>
+              <li>CPU-heavy work blocks everything else unless you move it off the main thread.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="workflow-step mt-3">
+        <p class="mb-0"><strong>Cheap performance rule:</strong> if one request does heavy synchronous work for 500ms, every other request sharing that process waits too. That is the root reason event-loop awareness matters.</p>
+      </div>
+    </section>
+
+    <section id="sec-install" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-download me-2" style="color:var(--node-primary);"></i>Install Node.js and Manage Versions</h2>
+      <p class="mb-4">Use a current LTS release for most production work. Version managers are worth learning early because different projects may require different Node versions.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">1</span>Basic Checks</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">node --version
+npm --version
+corepack enable</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">2</span>Version Manager Examples</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">nvm install --lts
+nvm use --lts
+
+fnm install --lts
+fnm use --lts</code></pre></div>
+        </div>
+      </div>
+
+      <div class="table-responsive mt-3">
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark"><tr><th>Tool</th><th>Good for</th><th>Short note</th></tr></thead>
+          <tbody>
+            <tr><td>Official installer</td><td>Simple local setup</td><td>Good starting point if you only maintain one Node version.</td></tr>
+            <tr><td>nvm or fnm</td><td>Multiple projects with different versions</td><td>Best long-term developer workflow.</td></tr>
+            <tr><td>Corepack</td><td>pnpm and Yarn version management</td><td>Lets projects pin a package-manager version too.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Windows note:</strong> use a version manager that is documented for Windows on your team, or use the official LTS installer if you want the least moving parts.</p>
+      </div>
+    </section>
+
+    <section id="sec-first-app" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-play-circle-fill me-2" style="color:var(--node-primary);"></i>Your First Node.js App</h2>
+      <p class="mb-4">Start with a plain file, then move into a project with a <code>package.json</code>. That teaches the difference between "run one script" and "manage a real application".</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">1</span>Hello Node</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">const user = 'Paras';
+
+console.log(`Hello ${user}, Node.js is running.`);
+console.log(`Current pid: ${process.pid}`);</code></pre></div>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">node app.js
+node --watch app.js</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">2</span>Minimal Project File</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-json">{
+  "name": "node-starter",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js"
+  }
+}</code></pre></div>
+        </div>
+      </div>
+
+      <div class="workflow-step mt-3">
+        <p class="mb-0"><strong>Good early habit:</strong> decide whether the project uses CommonJS or ES Modules on day one. Mixed module systems create avoidable confusion later.</p>
+      </div>
+    </section>
+
+    <section id="sec-packages" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-box-seam-fill me-2" style="color:var(--node-primary);"></i>npm, npx, Package Scripts, and Dependency Management</h2>
+      <p class="mb-4">Most daily Node.js work is not just writing JavaScript. It is creating projects, installing dependencies, running scripts, checking versions, and keeping lockfiles healthy.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">npm init -y
+npm install express
+npm install -D nodemon eslint prettier
+npm uninstall express
+npm update</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">npm run dev
+npm run build
+npx nodemon src/server.js
+npm outdated
+npm audit</code></pre></div>
+        </div>
+      </div>
+
+      <div class="table-responsive mt-3">
+        <table class="table table-bordered align-middle cmd-table">
+          <thead class="table-dark"><tr><th>Term</th><th>Meaning</th><th>Short example</th></tr></thead>
+          <tbody>
+            <tr><td><code>dependencies</code></td><td>Needed at runtime in production.</td><td><code>express</code></td></tr>
+            <tr><td><code>devDependencies</code></td><td>Needed for development only.</td><td><code>eslint</code>, <code>tsx</code>, <code>vitest</code></td></tr>
+            <tr><td><code>npx</code></td><td>Run a package binary without installing it globally.</td><td><code>npx prisma init</code></td></tr>
+            <tr><td><code>package-lock.json</code></td><td>Locks exact versions for repeatable installs.</td><td><code>npm ci</code> uses it strictly</td></tr>
+            <tr><td><code>corepack</code></td><td>Manages package-manager versions like pnpm or Yarn.</td><td><code>corepack enable</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Production rule:</strong> use <code>npm ci</code> in CI and deployment pipelines when a lockfile exists. It is more predictable than a normal <code>npm install</code>.</p>
+      </div>
+    </section>
+
+    <section id="sec-modules" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-boxes me-2" style="color:var(--node-primary);"></i>Modules: CommonJS, ES Modules, and Project Boundaries</h2>
+      <p class="mb-4">Node.js supports both CommonJS and ES Modules. Modern projects increasingly choose ESM, but many existing codebases and packages still use CommonJS.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">1</span>CommonJS</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">const path = require('node:path');
+
+function makeSlug(value) {
+  return value.toLowerCase().replace(/\s+/g, '-');
+}
+
+module.exports = { makeSlug, path };</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">2</span>ES Modules</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import path from 'node:path';
+
+export function makeSlug(value) {
+  return value.toLowerCase().replace(/\s+/g, '-');
+}
+
+export const uploadsDir = path.join(process.cwd(), 'uploads');</code></pre></div>
+        </div>
+      </div>
+
+      <ul class="check-list mt-3">
+        <li>Use <code>"type": "module"</code> in <code>package.json</code> for ESM projects.</li>
+        <li>Prefer explicit exports over huge utility barrels when the codebase grows.</li>
+        <li>Keep infrastructure code, services, validators, controllers, and route definitions in separate files.</li>
+      </ul>
+    </section>
+
+    <section id="sec-async" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-hourglass-split me-2" style="color:var(--node-primary);"></i>Async Patterns: Callbacks, Promises, and async or await</h2>
+      <p class="mb-4">Modern Node.js development should default to promises and <code>async</code> or <code>await</code>. You still need to recognize callbacks because core APIs and older packages may expose them.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import fs from 'node:fs/promises';
+
+async function loadConfig() {
+  const raw = await fs.readFile('./config.json', 'utf8');
+  return JSON.parse(raw);
+}
+
+const [config, users] = await Promise.all([
+  loadConfig(),
+  fetch('https://jsonplaceholder.typicode.com/users').then(r =&gt; r.json())
+]);
+
+console.log(config.appName, users.length);</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="feature-card p-3 h-100">
+            <h5 class="fw-bold mb-3">Practical async rules</h5>
+            <ul class="tip-list mb-0">
+              <li>Use <code>Promise.all()</code> for independent work that should run in parallel.</li>
+              <li>Use <code>Promise.allSettled()</code> when some failures are acceptable.</li>
+              <li>Always wrap route handlers and job processors with proper error handling.</li>
+              <li>Never forget <code>await</code> on writes that must complete before returning.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-event-loop" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-arrow-repeat me-2" style="color:var(--node-primary);"></i>Event Loop, Timers, Microtasks, and nextTick</h2>
+      <p class="mb-4">Interviews and production debugging both return to the same question: why did one callback run before another? In Node, that usually comes down to microtasks, timers, <code>process.nextTick()</code>, and libuv phases.</p>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark"><tr><th>Mechanism</th><th>Typical use</th><th>Risk</th></tr></thead>
+          <tbody>
+            <tr><td><code>Promise.then</code></td><td>Microtask after current call stack</td><td>Too many microtasks can delay timers.</td></tr>
+            <tr><td><code>process.nextTick</code></td><td>Internal or immediate follow-up work</td><td>Can starve the event loop if abused in loops.</td></tr>
+            <tr><td><code>setTimeout</code></td><td>Delay work</td><td>Delay is a minimum, not a guarantee.</td></tr>
+            <tr><td><code>setImmediate</code></td><td>Run after I/O callbacks in many cases</td><td>Often misunderstood as "faster timeout".</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="workflow-step">
+        <p class="mb-0"><strong>Interview-safe answer:</strong> Node is single-threaded for JavaScript execution, not single-threaded for all work. libuv and the OS still handle asynchronous operations underneath.</p>
+      </div>
+    </section>
+
+    <section id="sec-core" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-cpu-fill me-2" style="color:var(--node-primary);"></i>Core Node Modules You Will Use Constantly</h2>
+      <p class="mb-4">A strong Node developer knows the standard library well enough to avoid unnecessary dependencies. Many simple tasks do not need a third-party package.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import fs from 'node:fs/promises';
+import path from 'node:path';
+import os from 'node:os';
+
+const filePath = path.join(process.cwd(), 'logs', 'app.log');
+await fs.mkdir(path.dirname(filePath), { recursive: true });
+await fs.appendFile(filePath, `host=${os.hostname()}\n`, 'utf8');</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import { EventEmitter } from 'node:events';
+
+const bus = new EventEmitter();
+
+bus.on('order:paid', orderId =&gt; {
+  console.log(`Send receipt for ${orderId}`);
+});
+
+bus.emit('order:paid', 'ORD-1042');</code></pre></div>
+        </div>
+      </div>
+
+      <div class="table-responsive mt-3">
+        <table class="table table-bordered align-middle cmd-table">
+          <thead class="table-dark"><tr><th>Module</th><th>Use it for</th><th>Short note</th></tr></thead>
+          <tbody>
+            <tr><td><code>node:fs/promises</code></td><td>File reads, writes, and directory work</td><td>Prefer the promise API for modern code.</td></tr>
+            <tr><td><code>node:path</code></td><td>Safe path building</td><td>Never hard-code path separators.</td></tr>
+            <tr><td><code>node:process</code></td><td>Environment variables, exit codes, signals</td><td>Central for runtime config.</td></tr>
+            <tr><td><code>node:events</code></td><td>Custom event emitters</td><td>Good for internal domain events.</td></tr>
+            <tr><td><code>node:stream</code></td><td>Large-file or chunked data flow</td><td>Critical for uploads, proxies, and ETL work.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="sec-http" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-hdd-network-fill me-2" style="color:var(--node-primary);"></i>Build a Raw HTTP Server Before You Reach for a Framework</h2>
+      <p class="mb-4">Express is more productive for most APIs, but a tiny raw HTTP server teaches the request-response model, headers, JSON output, and route branching clearly.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import http from 'node:http';
+
+const server = http.createServer((req, res) =&gt; {
+  if (req.url === '/health') {
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(JSON.stringify({ ok: true, uptime: process.uptime() }));
+    return;
+  }
+
+  res.writeHead(404, { 'content-type': 'application/json' });
+  res.end(JSON.stringify({ message: 'Not found' }));
+});
+
+server.listen(3000, () =&gt; {
+  console.log('HTTP server listening on http://localhost:3000');
+});</code></pre></div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Why this matters:</strong> frameworks hide boilerplate, but they do not replace understanding. Knowing raw Node HTTP makes middleware, reverse proxies, and debugging much easier.</p>
+      </div>
+    </section>
+
+    <section id="sec-express" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-lightning-charge-fill me-2" style="color:var(--node-primary);"></i>Express Basics and the Modern Node Framework Landscape</h2>
+      <p class="mb-4">Express remains the easiest entry point for learning backend structure: app instance, middleware, routes, controllers, error handling, and JSON responses. Once you understand that, moving to Fastify or Nest becomes much easier.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-7">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import express from 'express';
+
+const app = express();
+
+app.use(express.json());
+
+app.get('/api/health', (req, res) =&gt; {
+  res.json({ ok: true, runtime: 'node', env: process.env.NODE_ENV ?? 'development' });
+});
+
+app.listen(3000, () =&gt; {
+  console.log('Express API running on http://localhost:3000');
+});</code></pre></div>
+        </div>
+        <div class="col-lg-5">
+          <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+              <thead class="table-dark"><tr><th>Framework</th><th>Best fit</th></tr></thead>
+              <tbody>
+                <tr><td>Express</td><td>Learning APIs, flexible small to mid-size services</td></tr>
+                <tr><td>Fastify</td><td>Performance-focused APIs with schema-first patterns</td></tr>
+                <tr><td>NestJS</td><td>Large TypeScript apps with DI and strong structure</td></tr>
+                <tr><td>Hono</td><td>Minimal modern handlers and edge-style routing</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-nestjs" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-layers-fill me-2" style="color:var(--node-primary);"></i>NestJS for Structured TypeScript Backends</h2>
+      <p class="mb-4">NestJS sits on top of Node and usually Express or Fastify, but it adds dependency injection, modules, decorators, guards, interceptors, and a very strong large-team architecture. It is a better fit when your app has many domains, shared infrastructure, and long-lived backend complexity.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">1</span>Scaffold a Real Nest Project</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">npx @nestjs/cli new billing-api
+cd billing-api
+npm run start:dev
+npx nest g resource invoices --no-spec</code></pre></div>
+          <p class="small opacity-75 mb-0">The CLI generates modules, controllers, services, DTOs, and test files quickly so teams do not hand-roll structure every time.</p>
+        </div>
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">2</span>Controller plus Service Example</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-ts">import { Controller, Get, Injectable } from '@nestjs/common';
+
+@Injectable()
+export class InvoicesService {
+  findAll() {
+    return [{ id: 1, total: 1200, status: 'paid' }];
+  }
+}
+
+@Controller('invoices')
+export class InvoicesController {
+  constructor(private readonly invoicesService: InvoicesService) {}
+
+  @Get()
+  findAll() {
+    return this.invoicesService.findAll();
+  }
+}</code></pre></div>
+        </div>
+      </div>
+
+      <div class="table-responsive mt-3">
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark"><tr><th>NestJS feature</th><th>Why it matters</th><th>Typical use</th></tr></thead>
+          <tbody>
+            <tr><td>Modules</td><td>Keep domain boundaries explicit</td><td>Billing, auth, notifications, reporting</td></tr>
+            <tr><td>Dependency injection</td><td>Makes services testable and replaceable</td><td>Swap infrastructure for mocks in tests</td></tr>
+            <tr><td>Guards</td><td>Centralize auth and permission checks</td><td>JWT auth, roles, tenant boundaries</td></tr>
+            <tr><td>Pipes</td><td>Transform and validate request data</td><td>DTO validation and route param parsing</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>When to choose it:</strong> use NestJS when a simple Express codebase is starting to sprawl across teams, domains, and infrastructure concerns. Do not adopt it just to return one small JSON response.</p>
+      </div>
+    </section>
+
+    <section id="sec-routing" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-signpost-split-fill me-2" style="color:var(--node-primary);"></i>Routing, Middleware, Validation, and Error Handling</h2>
+      <p class="mb-4">Most backend bugs are not about the transport layer. They come from missing validation, weak authorization, or inconsistent error handling. Route design should reflect business rules clearly.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import express from 'express';
+import { z } from 'zod';
+
+const router = express.Router();
+const createUserSchema = z.object({
+  name: z.string().min(2),
+  email: z.string().email()
+});
+
+router.post('/users', (req, res, next) =&gt; {
+  try {
+    const payload = createUserSchema.parse(req.body);
+    res.status(201).json({ id: 1, ...payload });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.use((error, req, res, next) =&gt; {
+  res.status(400).json({ message: error.message });
+});</code></pre></div>
+
+      <ul class="check-list">
+        <li>Validate request body, params, and query values at the edge of the system.</li>
+        <li>Do not put business logic directly inside route definitions when the app grows.</li>
+        <li>Use one centralized error-shaping middleware instead of returning random formats.</li>
+      </ul>
+    </section>
+
+    <section id="sec-rest" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-braces-asterisk me-2" style="color:var(--node-primary);"></i>Build a REST API with Clear Resource Design</h2>
+      <p class="mb-4">A good Node.js tutorial should not stop at <code>app.get('/')</code>. Real APIs need resource naming, status codes, validation, service layers, and consistent responses.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-8">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">const tasks = [
+  { id: 1, title: 'Review invoice job', done: false }
+];
+
+app.get('/api/tasks', (req, res) =&gt; {
+  res.json(tasks);
+});
+
+app.post('/api/tasks', (req, res) =&gt; {
+  const task = {
+    id: tasks.length + 1,
+    title: req.body.title,
+    done: false
+  };
+
+  tasks.push(task);
+  res.status(201).json(task);
+});
+
+app.patch('/api/tasks/:id', (req, res) =&gt; {
+  const task = tasks.find(item =&gt; item.id === Number(req.params.id));
+  if (!task) return res.status(404).json({ message: 'Task not found' });
+
+  task.done = Boolean(req.body.done);
+  res.json(task);
+});</code></pre></div>
+        </div>
+        <div class="col-lg-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold">REST rules worth keeping</h6>
+            <ul class="tip-list mb-0">
+              <li>Nouns for resources, not verbs for routes.</li>
+              <li><code>201</code> for created resources, <code>404</code> when missing, <code>400</code> for invalid input.</li>
+              <li>Return one predictable response shape across the API.</li>
+              <li>Add pagination before large collections become painful.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-graphql" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-share-fill me-2" style="color:var(--node-primary);"></i>GraphQL APIs with Node.js</h2>
+      <p class="mb-4">GraphQL is useful when clients need flexible shapes of data, nested relationships, and fewer overfetching or underfetching problems than REST. It is powerful, but it needs discipline around schema design, validation, authorization, and query cost.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-7">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import { ApolloServer } from '@apollo/server';
+import { startStandaloneServer } from '@apollo/server/standalone';
+
+const tasks = [{ id: '1', title: 'Ship invoice export', done: false }];
+
+const typeDefs = `#graphql
+  type Task {
+    id: ID!
+    title: String!
+    done: Boolean!
+  }
+
+  type Query {
+    health: String!
+    tasks: [Task!]!
+  }
+`;
+
+const resolvers = {
+  Query: {
+    health: () =&gt; 'ok',
+    tasks: () =&gt; tasks
+  }
+};
+
+const server = new ApolloServer({ typeDefs, resolvers });
+await startStandaloneServer(server, { listen: { port: 4000 } });</code></pre></div>
+        </div>
+        <div class="col-lg-5">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold">GraphQL rules that matter</h6>
+            <ul class="tip-list mb-0">
+              <li>Keep schema names business-focused, not database-focused.</li>
+              <li>Protect expensive nested queries with limits and auth checks.</li>
+              <li>Use DataLoader or batching to avoid N+1 database queries.</li>
+              <li>Log operation names and response time in production.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="workflow-step mt-3">
+        <p class="mb-0"><strong>Practical choice:</strong> GraphQL is strongest when multiple clients need different slices of the same domain data. For a small CRUD service with simple endpoints, REST is often easier to operate.</p>
+      </div>
+    </section>
+
+    <section id="sec-db" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-database-fill me-2" style="color:var(--node-primary);"></i>Database Layer: Prisma, SQL, and Mongo Choices</h2>
+      <p class="mb-4">Node.js does not force one database stack. The more important decision is how clearly your data access layer is separated from routes and controllers.</p>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark"><tr><th>Approach</th><th>Best fit</th><th>Good example</th></tr></thead>
+          <tbody>
+            <tr><td>Prisma + PostgreSQL</td><td>Type-safe CRUD-heavy business apps</td><td>Admin panels, SaaS dashboards, internal tools</td></tr>
+            <tr><td>Mongoose + MongoDB</td><td>Document-first data and flexible schemas</td><td>Content-heavy or event-style systems</td></tr>
+            <tr><td>Knex or Drizzle + SQL</td><td>Teams that want SQL control with less abstraction</td><td>Performance-sensitive or SQL-first codebases</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">1</span>Prisma Schema</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-prisma">model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  createdAt DateTime @default(now())
+}</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">2</span>Query Example</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+const user = await prisma.user.create({
+  data: { email: 'you@example.com', name: 'Paras Shah' }
+});
+
+console.log(user.id);</code></pre></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-auth" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-shield-lock-fill me-2" style="color:var(--node-primary);"></i>Authentication: Sessions, JWT, Password Hashing, and Authorization</h2>
+      <p class="mb-4">Auth in Node.js usually means four separate concerns: identity, password hashing, token or session management, authorization rules, and safe storage of secrets.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+
+const passwordOk = await bcrypt.compare(req.body.password, user.passwordHash);
+if (!passwordOk) {
+  return res.status(401).json({ message: 'Invalid credentials' });
+}
+
+const token = jwt.sign(
+  { sub: user.id, role: user.role },
+  process.env.JWT_SECRET,
+  { expiresIn: '1h' }
+);
+
+res.json({ token });</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+              <thead class="table-dark"><tr><th>Approach</th><th>Best fit</th></tr></thead>
+              <tbody>
+                <tr><td>Cookie session</td><td>Traditional web apps and SSR apps</td></tr>
+                <tr><td>JWT access token</td><td>APIs, mobile apps, service-to-service auth</td></tr>
+                <tr><td>Refresh token</td><td>Longer login sessions with short-lived access tokens</td></tr>
+                <tr><td>Role-based auth</td><td>Admin and team permission boundaries</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Safe default:</strong> hash passwords with bcrypt or argon2, sign tokens with strong secrets, rotate refresh tokens, and never trust role data coming from the client.</p>
+      </div>
+    </section>
+
+    <section id="sec-realtime" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-broadcast-pin me-2" style="color:var(--node-primary);"></i>Realtime Node.js with WebSockets and Socket.IO</h2>
+      <p class="mb-4">Node.js is a natural fit for dashboards, chats, collaboration tools, live notifications, and background status updates because connections can stay open efficiently.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import express from 'express';
+import http from 'node:http';
+import { Server } from 'socket.io';
+
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: '*' } });
+
+io.on('connection', socket =&gt; {
+  socket.on('chat:message', message =&gt; {
+    io.emit('chat:message', {
+      id: crypto.randomUUID(),
+      text: message,
+      createdAt: new Date().toISOString()
+    });
+  });
+});
+
+server.listen(3000);</code></pre></div>
+
+      <div class="workflow-step">
+        <p class="mb-0"><strong>Production note:</strong> realtime systems need sticky sessions or a shared adapter such as Redis when you scale to multiple instances.</p>
+      </div>
+    </section>
+
+    <section id="sec-redis" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-stack me-2" style="color:var(--node-primary);"></i>Redis for Caching, Sessions, Rate Limits, and Shared State</h2>
+      <p class="mb-4">Redis is one of the most useful additions to a Node.js backend. It is fast enough for cache-aside lookups, shared sessions, rate-limit counters, WebSocket adapters, distributed locks, and queue backplanes.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-5">
+          <h5 class="sub-title"><span class="step-num me-2">1</span>Local Setup and Package</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker run --name local-redis -p 6379:6379 redis:7
+npm install redis
+redis-cli ping</code></pre></div>
+        </div>
+        <div class="col-lg-7">
+          <h5 class="sub-title"><span class="step-num me-2">2</span>Cache-Aside Pattern</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import { createClient } from 'redis';
+
+const redis = createClient({ url: process.env.REDIS_URL });
+await redis.connect();
+
+async function getProduct(productId) {
+  const cacheKey = `product:${productId}`;
+  const cached = await redis.get(cacheKey);
+  if (cached) return JSON.parse(cached);
+
+  const product = await db.product.findUnique({ where: { id: productId } });
+  await redis.setEx(cacheKey, 60, JSON.stringify(product));
+  return product;
+}</code></pre></div>
+        </div>
+      </div>
+
+      <div class="table-responsive mt-3">
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark"><tr><th>Redis use case</th><th>Why teams add it</th><th>Short example</th></tr></thead>
+          <tbody>
+            <tr><td>Response caching</td><td>Reduce repeated database reads</td><td>Hot product pages or settings lookups</td></tr>
+            <tr><td>Session store</td><td>Share sessions across multiple app instances</td><td>Express session on a load-balanced app</td></tr>
+            <tr><td>Rate limiting</td><td>Fast counters with expiration</td><td>Login attempts or public API throttling</td></tr>
+            <tr><td>Pub/Sub and adapters</td><td>Fan out events across processes</td><td>Socket.IO scale-out</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Operational rule:</strong> every cache needs an invalidation story and a TTL strategy. Fast stale data is still stale data.</p>
+      </div>
+    </section>
+
+    <section id="sec-streams" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-bezier2 me-2" style="color:var(--node-primary);"></i>Streams, Buffers, File Uploads, and Memory-Friendly Data Flow</h2>
+      <p class="mb-4">Streams are how Node handles large files and chunked data efficiently. If you read a 2GB file fully into memory first, you are fighting the platform.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import { pipeline } from 'node:stream/promises';
+import fs from 'node:fs';
+import zlib from 'node:zlib';
+
+await pipeline(
+  fs.createReadStream('./report.csv'),
+  zlib.createGzip(),
+  fs.createWriteStream('./report.csv.gz')
+);</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold">Where streams matter</h6>
+            <ul class="tip-list mb-0">
+              <li>Large file downloads and uploads</li>
+              <li>CSV imports and exports</li>
+              <li>Compression and proxying</li>
+              <li>Image or media pipelines</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-workers" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-diagram-2-fill me-2" style="color:var(--node-primary);"></i>Worker Threads, child_process, cluster, and Background Work</h2>
+      <p class="mb-4">When your workload becomes CPU-heavy or needs process isolation, move beyond the single event loop. Node gives you multiple escape hatches with different tradeoffs.</p>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark"><tr><th>Tool</th><th>Best use</th><th>Tradeoff</th></tr></thead>
+          <tbody>
+            <tr><td><code>worker_threads</code></td><td>CPU-heavy JavaScript work inside the same app</td><td>More complex data passing</td></tr>
+            <tr><td><code>child_process</code></td><td>Run shell commands or other programs</td><td>Separate process overhead</td></tr>
+            <tr><td><code>cluster</code></td><td>Multiple Node processes using the same server port</td><td>Operational complexity; PM2 often wraps this better</td></tr>
+            <tr><td>Job queue</td><td>Retries, delayed jobs, background processing</td><td>Requires queue infrastructure</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import { Worker } from 'node:worker_threads';
+
+const worker = new Worker(new URL('./hash-worker.js', import.meta.url), {
+  workerData: { batchSize: 100000 }
+});
+
+worker.on('message', result =&gt; {
+  console.log('hash result', result);
+});</code></pre></div>
+    </section>
+
+    <section id="sec-queues" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-list-task me-2" style="color:var(--node-primary);"></i>Queues, Retries, Delayed Jobs, and Background Processing</h2>
+      <p class="mb-4">Queues let your API return quickly while longer work happens in the background. This is where Node starts feeling production-ready: retries, backoff, concurrency limits, delayed jobs, and separate workers instead of brittle in-request side effects.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">1</span>Producer</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import { Queue } from 'bullmq';
+
+const emailQueue = new Queue('email-jobs', {
+  connection: { host: '127.0.0.1', port: 6379 }
+});
+
+await emailQueue.add('send-receipt', {
+  orderId: 'ORD-1042',
+  email: 'customer@example.com'
+}, {
+  attempts: 5,
+  backoff: { type: 'exponential', delay: 2000 }
+});</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">2</span>Worker</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import { Worker } from 'bullmq';
+
+const worker = new Worker('email-jobs', async job =&gt; {
+  if (job.name === 'send-receipt') {
+    await mailer.sendReceipt(job.data.orderId, job.data.email);
+  }
+}, {
+  connection: { host: '127.0.0.1', port: 6379 },
+  concurrency: 10
+});</code></pre></div>
+        </div>
+      </div>
+
+      <ul class="check-list mt-3">
+        <li>Use queues for emails, invoices, imports, thumbnails, webhooks, and third-party retry work.</li>
+        <li>Store enough job data to retry safely, but not so much that payloads become huge.</li>
+        <li>Make workers idempotent so a retry does not create duplicate side effects.</li>
+      </ul>
+
+      <div class="workflow-step mt-3">
+        <p class="mb-0"><strong>Reliability rule:</strong> never depend on in-memory arrays or delayed <code>setTimeout()</code> loops for business-critical background work. A real queue survives process restarts and supports retries intentionally.</p>
+      </div>
+    </section>
+
+    <section id="sec-cron" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-clock-history me-2" style="color:var(--node-primary);"></i>Cron Jobs, Schedulers, and Repeatable Tasks</h2>
+      <p class="mb-4">Cron-style jobs are useful for cleanup, digests, synchronization, billing windows, or health tasks. The tricky part is not syntax. It is making sure the job runs exactly where and when you expect in multi-instance production.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import cron from 'node-cron';
+
+cron.schedule('0 * * * *', async () =&gt; {
+  await syncInvoices();
+  console.log('invoice sync complete');
+}, {
+  timezone: 'Asia/Kolkata'
+});</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold">Cron choices in production</h6>
+            <ul class="tip-list mb-0">
+              <li>Single instance app: in-process cron can be acceptable.</li>
+              <li>Multiple instances: use one scheduler service, a queue repeatable job, or external cron.</li>
+              <li>Critical finance or billing jobs: add locks, idempotency, and alerting.</li>
+              <li>Timezone-sensitive tasks: make the timezone explicit and test daylight-saving behavior.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Safe default:</strong> if duplicate execution would hurt users or money, do not trust a simple in-memory cron alone. Combine scheduling with distributed locks or a queue-based repeatable job.</p>
+      </div>
+    </section>
+
+    <section id="sec-testing" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-check2-square me-2" style="color:var(--node-primary);"></i>Testing Node.js Apps with node:test, Supertest, and Practical Coverage</h2>
+      <p class="mb-4">Modern Node includes a built-in test runner. That is enough for many services, especially when paired with Supertest for HTTP assertions. Use Vitest or Jest only when the extra ecosystem is worth it.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import test from 'node:test';
+import assert from 'node:assert/strict';
+
+test('sum adds numbers', () =&gt; {
+  assert.equal(2 + 3, 5);
+});</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import request from 'supertest';
+import { app } from '../src/app.js';
+
+test('GET /api/health returns ok', async () =&gt; {
+  const response = await request(app).get('/api/health');
+  expect(response.statusCode).toBe(200);
+  expect(response.body.ok).toBe(true);
+});</code></pre></div>
+        </div>
+      </div>
+
+      <ul class="check-list mt-3">
+        <li>Unit test pure business logic first.</li>
+        <li>Integration test API routes with a real request boundary.</li>
+        <li>Mock external services, not your own entire application.</li>
+      </ul>
+    </section>
+
+    <section id="sec-debug" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-bug-fill me-2" style="color:var(--node-primary);"></i>Debugging, Logging, Environment Files, and Failure Analysis</h2>
+      <p class="mb-4">Good Node debugging combines runtime flags, structured logs, meaningful error messages, and clear operational metadata. Random <code>console.log()</code> output everywhere is not a production strategy.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">node --inspect src/server.js
+node --inspect-brk src/server.js
+node --trace-warnings src/server.js
+node --env-file=.env src/server.js</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import pino from 'pino';
+
+const logger = pino({ level: process.env.LOG_LEVEL ?? 'info' });
+
+logger.info({ requestId: req.id, route: req.path }, 'incoming request');
+logger.error({ error }, 'payment capture failed');</code></pre></div>
+        </div>
+      </div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Operational habit:</strong> log request IDs, user IDs when allowed, latency, route names, and external dependency failures. Otherwise production bugs become guessing games.</p>
+      </div>
+    </section>
+
+    <section id="sec-security" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-shield-check me-2" style="color:var(--node-primary);"></i>Node.js Security Basics for Real Apps</h2>
+      <p class="mb-4">Security is mostly boring discipline: validate input, hash passwords, sanitize file paths, rate-limit public endpoints, use least-privilege secrets, and keep dependencies updated.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">import helmet from 'helmet';
+import cors from 'cors';
+import rateLimit from 'express-rate-limit';
+
+app.use(helmet());
+app.use(cors({ origin: ['https://app.example.com'] }));
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 200 }));</code></pre></div>
+
+      <ul class="check-list">
+        <li>Keep secrets out of source control and out of client-visible bundles.</li>
+        <li>Validate every input boundary and reject unknown fields where possible.</li>
+        <li>Run <code>npm audit</code>, but do not blindly auto-upgrade without testing.</li>
+        <li>Use HTTPS, secure cookies, and trusted proxy settings in production.</li>
+      </ul>
+    </section>
+
+    <section id="sec-performance" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-speedometer2 me-2" style="color:var(--node-primary);"></i>Performance, Profiling, Caching, and Process Strategy</h2>
+      <p class="mb-4">Performance work in Node usually means removing event-loop blocking, reducing duplicate I/O, using caching deliberately, and profiling before rewriting architecture.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">node --cpu-prof src/server.js
+node --heap-prof src/server.js
+npx autocannon http://localhost:3000/api/health</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold">Fast wins before major rewrites</h6>
+            <ul class="tip-list mb-0">
+              <li>Move expensive synchronous work off the request path.</li>
+              <li>Batch queries and remote calls with <code>Promise.all()</code> when safe.</li>
+              <li>Cache hot reads with Redis or in-memory layers where appropriate.</li>
+              <li>Use PM2 or orchestration to run multiple processes across CPU cores.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="workflow-step mt-3">
+        <p class="mb-0"><strong>Profiling rule:</strong> use data before opinions. Node offers CPU and heap profiling flags so you do not have to guess where the time or memory went.</p>
+      </div>
+    </section>
+
+    <section id="sec-typescript" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-filetype-tsx me-2" style="color:var(--node-primary);"></i>TypeScript with Node.js</h2>
+      <p class="mb-4">TypeScript is the default choice for many modern Node apps because it catches broken contracts early and makes service, route, and database layers safer to refactor.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">npm install -D typescript tsx @types/node
+npx tsc --init
+npm pkg set scripts.dev="tsx watch src/server.ts"
+npm pkg set scripts.build="tsc -p tsconfig.json"</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-json">{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "outDir": "dist"
+  }
+}</code></pre></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-deploy" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-cloud-arrow-up-fill me-2" style="color:var(--node-primary);"></i>Deploying Node.js: PM2, Docker, Reverse Proxies, and Environment Setup</h2>
+      <p class="mb-4">A production Node service is more than one <code>node server.js</code> command. You need process management, restart strategy, logs, environment injection, health checks, and often a reverse proxy.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">1</span>PM2 Commands</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">pm2 start dist/server.js --name api
+pm2 logs api
+pm2 restart api
+pm2 save
+pm2 startup</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">2</span>Minimal Dockerfile</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-dockerfile">FROM node:22-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev
+COPY . .
+EXPOSE 3000
+CMD ["node", "src/server.js"]</code></pre></div>
+        </div>
+      </div>
+
+      <div class="table-responsive mt-3">
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark"><tr><th>Layer</th><th>Typical tool</th><th>Why it exists</th></tr></thead>
+          <tbody>
+            <tr><td>Process manager</td><td>PM2 or orchestration runtime</td><td>Restarts on crash and manages multiple processes.</td></tr>
+            <tr><td>Reverse proxy</td><td>Nginx, Caddy, cloud load balancer</td><td>Handles TLS, buffering, gzip, and routing.</td></tr>
+            <tr><td>Secrets and env</td><td>Environment variables or secret manager</td><td>Keeps credentials out of source code.</td></tr>
+            <tr><td>Monitoring</td><td>Logs, uptime, APM, metrics</td><td>Lets you see failures before users tell you.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="sec-publish" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-box-arrow-up me-2" style="color:var(--node-primary);"></i>Package Publishing, Exports, Versioning, and npm Release Hygiene</h2>
+      <p class="mb-4">Publishing a Node package well is different from shipping an app. You need a clean public API, a stable versioning policy, the right files in the tarball, and a release process that does not accidentally leak tests, secrets, or build junk.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">1</span>Package Manifest Essentials</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-json">{
+  "name": "@paras-shah/string-tools",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": "&gt;=20"
+  }
+}</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">2</span>Release Commands</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">npm login
+npm pack
+npm version patch
+npm publish --access public
+npm dist-tag add @paras-shah/string-tools@2.0.0 next
+npm link</code></pre></div>
+        </div>
+      </div>
+
+      <div class="table-responsive mt-3">
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark"><tr><th>Publishing rule</th><th>Why it matters</th><th>Short note</th></tr></thead>
+          <tbody>
+            <tr><td>Use semantic versioning</td><td>Consumers need predictable upgrade expectations</td><td><code>patch</code> for fixes, <code>minor</code> for features, <code>major</code> for breaking changes</td></tr>
+            <tr><td>Check the tarball first</td><td>Prevents shipping junk or secrets</td><td><code>npm pack</code> is the cheap verification step</td></tr>
+            <tr><td>Define <code>exports</code> clearly</td><td>Keeps your public API stable</td><td>Avoid reaching into private internal files</td></tr>
+            <tr><td>Document Node support</td><td>Consumers need compatible runtime expectations</td><td>Use <code>engines</code> and release notes</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="workflow-step mt-3">
+        <p class="mb-0"><strong>Release checklist:</strong> run tests, build the package, inspect the tarball, verify README examples, bump the right version, publish deliberately, and add a changelog entry or release note before tagging the next version.</p>
+      </div>
+    </section>
+
+    <section id="sec-mini-project" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-diagram-3-fill me-2" style="color:var(--node-primary);"></i>Production Mini Project: Express Orders API with Redis, BullMQ, Cron, and Docker</h2>
+      <p class="mb-4">This capstone combines the pieces from the guide into one realistic backend: an Express API for orders, Redis for caching and coordination, BullMQ for background jobs, cron for cleanup, and Docker for repeatable local and server deployment. The same architecture can be ported to NestJS later, but Express keeps the core ideas easier to see.</p>
+
+      <div class="row g-3">
+        <div class="col-xl-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">Project goal</h6>
+            <ul class="tip-list mb-0">
+              <li>Create orders through an HTTP API.</li>
+              <li>Cache product lookups in Redis.</li>
+              <li>Queue receipt and inventory jobs with BullMQ.</li>
+              <li>Run a nightly cron cleanup for stale carts and job history.</li>
+              <li>Ship the stack with Docker Compose and a simple deploy flow.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-xl-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">Suggested stack</h6>
+            <ul class="tip-list mb-0">
+              <li>Express for the API surface</li>
+              <li>Prisma with PostgreSQL for durable data</li>
+              <li>Redis for cache and queue backend</li>
+              <li>BullMQ worker for receipts and stock sync</li>
+              <li>node-cron for non-critical scheduled cleanup</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-xl-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">Operational flow</h6>
+            <ul class="tip-list mb-0">
+              <li>API writes the order to PostgreSQL.</li>
+              <li>API returns quickly after queuing async work.</li>
+              <li>Worker sends receipt and syncs downstream systems.</li>
+              <li>Redis cache serves hot reads for product and settings data.</li>
+              <li>Cron removes abandoned carts and old completed jobs.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Folder Structure</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-text">orders-api/
+  src/
+    app.js
+    server.js
+    routes/
+      orders.routes.js
+    controllers/
+      orders.controller.js
+    services/
+      orders.service.js
+      products.service.js
+    cache/
+      redis.js
+    jobs/
+      queues.js
+      workers.js
+      cleanup.cron.js
+    lib/
+      logger.js
+      prisma.js
+  prisma/
+    schema.prisma
+  Dockerfile
+  docker-compose.yml
+  package.json
+  .env</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Project Setup Commands</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">mkdir orders-api
+cd orders-api
+npm init -y
+npm pkg set type=module
+npm install express redis bullmq node-cron pino zod @prisma/client
+npm install -D prisma nodemon
+npx prisma init</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>Environment File</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">PORT=3000
+NODE_ENV=development
+DATABASE_URL=postgresql://app:secret@postgres:5432/orders_db
+REDIS_URL=redis://redis:6379
+JWT_SECRET=replace-me
+LOG_LEVEL=info</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">4</span>Redis and Queue Wiring</h5>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">// src/cache/redis.js
+import { createClient } from 'redis';
+
+export const redis = createClient({ url: process.env.REDIS_URL });
+
+redis.on('error', error =&gt; {
+  console.error('Redis error', error);
+});
+
+await redis.connect();</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">// src/jobs/queues.js
+import { Queue } from 'bullmq';
+
+const connection = { url: process.env.REDIS_URL };
+
+export const receiptQueue = new Queue('receipt-jobs', { connection });
+export const inventoryQueue = new Queue('inventory-jobs', { connection });</code></pre></div>
+        </div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">5</span>API Route and Service Flow</h5>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">// src/routes/orders.routes.js
+import { Router } from 'express';
+import { createOrder } from '../controllers/orders.controller.js';
+
+export const ordersRouter = Router();
+ordersRouter.post('/', createOrder);</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">// src/controllers/orders.controller.js
+import { z } from 'zod';
+import { ordersService } from '../services/orders.service.js';
+
+const orderSchema = z.object({
+  customerEmail: z.string().email(),
+  items: z.array(z.object({ productId: z.number(), qty: z.number().min(1) }))
+});
+
+export async function createOrder(req, res, next) {
+  try {
+    const payload = orderSchema.parse(req.body);
+    const order = await ordersService.create(payload);
+    res.status(201).json(order);
+  } catch (error) {
+    next(error);
+  }
+}</code></pre></div>
+        </div>
+      </div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">// src/services/orders.service.js
+import { prisma } from '../lib/prisma.js';
+import { receiptQueue, inventoryQueue } from '../jobs/queues.js';
+
+export const ordersService = {
+  async create(payload) {
+    const order = await prisma.order.create({
+      data: {
+        customerEmail: payload.customerEmail,
+        status: 'pending',
+        items: {
+          create: payload.items.map(item =&gt; ({
+            productId: item.productId,
+            qty: item.qty
+          }))
+        }
+      },
+      include: { items: true }
+    });
+
+    await Promise.all([
+      receiptQueue.add('send-receipt', { orderId: order.id, email: order.customerEmail }),
+      inventoryQueue.add('reserve-stock', { orderId: order.id, items: payload.items })
+    ]);
+
+    return order;
+  }
+};</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">6</span>Redis Cache Example for Hot Product Reads</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">// src/services/products.service.js
+import { redis } from '../cache/redis.js';
+import { prisma } from '../lib/prisma.js';
+
+export async function getProduct(productId) {
+  const key = `product:${productId}`;
+  const cached = await redis.get(key);
+  if (cached) return JSON.parse(cached);
+
+  const product = await prisma.product.findUnique({ where: { id: productId } });
+  await redis.setEx(key, 120, JSON.stringify(product));
+  return product;
+}</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">7</span>BullMQ Worker and Nightly Cleanup Cron</h5>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">// src/jobs/workers.js
+import { Worker } from 'bullmq';
+
+const connection = { url: process.env.REDIS_URL };
+
+new Worker('receipt-jobs', async job =&gt; {
+  if (job.name === 'send-receipt') {
+    await mailer.sendReceipt(job.data.orderId, job.data.email);
+  }
+}, { connection, concurrency: 10 });
+
+new Worker('inventory-jobs', async job =&gt; {
+  if (job.name === 'reserve-stock') {
+    await inventory.reserve(job.data.items);
+  }
+}, { connection, concurrency: 5 });</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-js">// src/jobs/cleanup.cron.js
+import cron from 'node-cron';
+import { prisma } from '../lib/prisma.js';
+import { receiptQueue, inventoryQueue } from './queues.js';
+
+cron.schedule('0 2 * * *', async () =&gt; {
+  await prisma.cart.deleteMany({
+    where: {
+      checkedOutAt: null,
+      updatedAt: { lt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }
+    }
+  });
+
+  await receiptQueue.clean(24 * 60 * 60 * 1000, 1000, 'completed');
+  await inventoryQueue.clean(24 * 60 * 60 * 1000, 1000, 'completed');
+}, {
+  timezone: 'UTC'
+});</code></pre></div>
+        </div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">8</span>Dockerfile and Compose Stack</h5>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-dockerfile">FROM node:22-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npx prisma generate
+EXPOSE 3000
+CMD ["npm", "run", "start"]</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-yaml">services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file: .env
+    depends_on:
+      - postgres
+      - redis
+
+  worker:
+    build: .
+    command: ["node", "src/jobs/workers.js"]
+    env_file: .env
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: orders_db
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: secret
+
+  redis:
+    image: redis:7-alpine</code></pre></div>
+        </div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">9</span>Deployment Flow</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark"><tr><th>Step</th><th>Action</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Run tests and lint before image build</td><td>Catch broken code before containers are created</td></tr>
+            <tr><td>2</td><td>Build image and push to registry</td><td>Creates a repeatable deploy artifact</td></tr>
+            <tr><td>3</td><td>Run database migrations</td><td>Keeps schema aligned with code</td></tr>
+            <tr><td>4</td><td>Deploy API and worker separately</td><td>Background jobs should not depend on the web process lifecycle</td></tr>
+            <tr><td>5</td><td>Check health endpoint, queue backlog, and Redis connectivity</td><td>Confirms the full system is alive, not just one container</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="workflow-step mt-3">
+        <p class="mb-0"><strong>Production habit:</strong> split API, worker, and database concerns early. The moment receipts, stock sync, and cleanup jobs share one fragile process with web requests, your outages become harder to isolate.</p>
+      </div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Upgrade path:</strong> if this project grows into multiple teams or more complex modules, keep the same architecture but move the API layer to NestJS. Redis, BullMQ, Prisma, cron strategy, and Docker deployment all carry over cleanly.</p>
+      </div>
+    </section>
+
+    <section id="sec-mini-project-nest" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-building-gear me-2" style="color:var(--node-primary);"></i>Production Mini Project Variant: NestJS Commerce API with Redis, BullMQ, Cron, and Docker</h2>
+      <p class="mb-4">This second capstone keeps the same production ingredients but swaps the HTTP layer to NestJS. Use this version when your backend is large enough to benefit from modules, dependency injection, DTO validation, guards, and stronger architectural boundaries across teams.</p>
+
+      <div class="row g-3">
+        <div class="col-xl-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">Business flow</h6>
+            <ul class="tip-list mb-0">
+              <li>Create orders from a typed controller.</li>
+              <li>Cache product and pricing reads in Redis.</li>
+              <li>Push receipt and stock-sync work to BullMQ.</li>
+              <li>Run scheduled cleanup with Nest scheduler.</li>
+              <li>Deploy API and worker containers independently.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-xl-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">Why NestJS here</h6>
+            <ul class="tip-list mb-0">
+              <li>Modules make billing, catalog, and auth boundaries explicit.</li>
+              <li>Services remain testable through dependency injection.</li>
+              <li>Guards, pipes, and interceptors reduce repeated controller logic.</li>
+              <li>Shared infrastructure is easier to standardize across teams.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-xl-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">Shared infra</h6>
+            <ul class="tip-list mb-0">
+              <li>PostgreSQL for persistent order data</li>
+              <li>Redis for cache and queue backend</li>
+              <li>BullMQ for retryable jobs</li>
+              <li>Docker Compose for local stack parity</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>NestJS Project Structure</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-text">commerce-api/
+  src/
+    app.module.ts
+    main.ts
+    common/
+      config/
+      redis/
+      queues/
+    orders/
+      orders.module.ts
+      orders.controller.ts
+      orders.service.ts
+      dto/
+        create-order.dto.ts
+    products/
+      products.module.ts
+      products.service.ts
+    jobs/
+      jobs.module.ts
+      receipts.worker.ts
+      inventory.worker.ts
+      cleanup.scheduler.ts
+  prisma/
+    schema.prisma
+  Dockerfile
+  docker-compose.yml
+  package.json
+  .env</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Scaffold and Install</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">npx @nestjs/cli new commerce-api
+cd commerce-api
+npm install redis bullmq @nestjs/config @nestjs/schedule zod @prisma/client
+npm install -D prisma
+npx nest g resource orders --no-spec
+npx prisma init</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>App Module with Config and Scheduler</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-ts">import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
+import { OrdersModule } from './orders/orders.module';
+import { JobsModule } from './jobs/jobs.module';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    ScheduleModule.forRoot(),
+    OrdersModule,
+    JobsModule
+  ]
+})
+export class AppModule {}</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">4</span>Typed DTO, Controller, and Service</h5>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-ts">// orders/dto/create-order.dto.ts
+export class CreateOrderDto {
+  customerEmail!: string;
+  items!: Array&lt;{ productId: number; qty: number }&gt;;
+}</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-ts">// orders/orders.controller.ts
+import { Body, Controller, Post } from '@nestjs/common';
+import { OrdersService } from './orders.service';
+import { CreateOrderDto } from './dto/create-order.dto';
+
+@Controller('orders')
+export class OrdersController {
+  constructor(private readonly ordersService: OrdersService) {}
+
+  @Post()
+  create(@Body() dto: CreateOrderDto) {
+    return this.ordersService.create(dto);
+  }
+}</code></pre></div>
+        </div>
+      </div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-ts">// orders/orders.service.ts
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../common/config/prisma.service';
+import { ReceiptQueue, InventoryQueue } from '../common/queues/queues.service';
+import { CreateOrderDto } from './dto/create-order.dto';
+
+@Injectable()
+export class OrdersService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly receiptQueue: ReceiptQueue,
+    private readonly inventoryQueue: InventoryQueue,
+  ) {}
+
+  async create(dto: CreateOrderDto) {
+    const order = await this.prisma.order.create({
+      data: {
+        customerEmail: dto.customerEmail,
+        status: 'pending',
+        items: {
+          create: dto.items.map(item =&gt; ({ productId: item.productId, qty: item.qty }))
+        }
+      },
+      include: { items: true }
+    });
+
+    await Promise.all([
+      this.receiptQueue.add('send-receipt', { orderId: order.id, email: order.customerEmail }),
+      this.inventoryQueue.add('reserve-stock', { orderId: order.id, items: dto.items })
+    ]);
+
+    return order;
+  }
+}</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">5</span>Redis Cache Service</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-ts">// common/redis/redis.service.ts
+import { Injectable } from '@nestjs/common';
+import { createClient } from 'redis';
+
+@Injectable()
+export class RedisService {
+  client = createClient({ url: process.env.REDIS_URL });
+
+  async onModuleInit() {
+    await this.client.connect();
+  }
+
+  async getOrSet(key: string, ttl: number, loader: () =&gt; Promise&lt;unknown&gt;) {
+    const cached = await this.client.get(key);
+    if (cached) return JSON.parse(cached);
+    const value = await loader();
+    await this.client.setEx(key, ttl, JSON.stringify(value));
+    return value;
+  }
+}</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">6</span>BullMQ Worker Module</h5>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-ts">// jobs/receipts.worker.ts
+import { Worker } from 'bullmq';
+
+const connection = { url: process.env.REDIS_URL };
+
+export const receiptWorker = new Worker('receipt-jobs', async job =&gt; {
+  if (job.name === 'send-receipt') {
+    await mailer.sendReceipt(job.data.orderId, job.data.email);
+  }
+}, { connection, concurrency: 10 });</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-ts">// jobs/inventory.worker.ts
+import { Worker } from 'bullmq';
+
+const connection = { url: process.env.REDIS_URL };
+
+export const inventoryWorker = new Worker('inventory-jobs', async job =&gt; {
+  if (job.name === 'reserve-stock') {
+    await inventory.reserve(job.data.items);
+  }
+}, { connection, concurrency: 5 });</code></pre></div>
+        </div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">7</span>Scheduled Cleanup with Nest Scheduler</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-ts">// jobs/cleanup.scheduler.ts
+import { Injectable } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
+import { PrismaService } from '../common/config/prisma.service';
+
+@Injectable()
+export class CleanupScheduler {
+  constructor(private readonly prisma: PrismaService) {}
+
+  @Cron('0 2 * * *', { timeZone: 'UTC' })
+  async removeAbandonedCarts() {
+    await this.prisma.cart.deleteMany({
+      where: {
+        checkedOutAt: null,
+        updatedAt: { lt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }
+      }
+    });
+  }
+}</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">8</span>Docker and Compose for API plus Worker</h5>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-dockerfile">FROM node:22-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+EXPOSE 3000
+CMD ["node", "dist/main.js"]</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-yaml">services:
+  api:
+    build: .
+    command: ["node", "dist/main.js"]
+    ports:
+      - "3000:3000"
+    env_file: .env
+    depends_on:
+      - postgres
+      - redis
+
+  worker:
+    build: .
+    command: ["node", "dist/src/jobs/bootstrap-workers.js"]
+    env_file: .env
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:16-alpine
+
+  redis:
+    image: redis:7-alpine</code></pre></div>
+        </div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">9</span>When This Variant Wins</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark"><tr><th>Situation</th><th>Why NestJS helps</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>Many backend domains</td><td>Modules make dependencies explicit</td><td>Catalog, billing, auth, analytics</td></tr>
+            <tr><td>Large TypeScript team</td><td>Strong patterns reduce style drift</td><td>Shared DTOs, guards, and services</td></tr>
+            <tr><td>Heavier platform concerns</td><td>Interceptors, guards, and providers centralize cross-cutting logic</td><td>Multi-tenant APIs, audit logging, permissions</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="workflow-step mt-3">
+        <p class="mb-0"><strong>Decision rule:</strong> choose the Express capstone when you want maximum transparency and lighter ceremony. Choose the NestJS capstone when the system is already complex enough that disciplined structure saves more time than it costs.</p>
+      </div>
+    </section>
+
+    <section id="sec-top-50" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-list-ol me-2" style="color:var(--node-primary);"></i>Top 50 Node.js and npm Commands Quick Scan</h2>
+      <p class="mb-4">This is the fast revision layer. Each command gets a short purpose line so you can scan quickly before dropping into the larger cheat sheet below.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6 col-xl-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">1. Runtime and Setup</h6>
+            <ol class="small mb-0 ps-3">
+              <li><code>node --version</code> - show installed Node version</li>
+              <li><code>npm --version</code> - show installed npm version</li>
+              <li><code>corepack enable</code> - enable package-manager shims</li>
+              <li><code>node -p "process.version"</code> - print a runtime value fast</li>
+              <li><code>node -e "console.log('hi')"</code> - run one inline script</li>
+              <li><code>node --check app.js</code> - syntax-check a file</li>
+              <li><code>node app.js</code> - run a file</li>
+              <li><code>node --watch app.js</code> - rerun on file changes</li>
+              <li><code>node --env-file=.env app.js</code> - load env vars from file</li>
+              <li><code>node --test</code> - run built-in tests</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-xl-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">2. Project and Packages</h6>
+            <ol class="small mb-0 ps-3">
+              <li><code>npm init -y</code> - create package.json quickly</li>
+              <li><code>npm pkg set type=module</code> - switch project to ESM</li>
+              <li><code>npm install express</code> - install runtime dependency</li>
+              <li><code>npm install -D nodemon</code> - install dev dependency</li>
+              <li><code>npm install -D typescript tsx</code> - add TS tooling</li>
+              <li><code>npm install redis bullmq node-cron</code> - add cache, queue, and scheduler packages</li>
+              <li><code>npx @nestjs/cli new commerce-api</code> - scaffold a NestJS project</li>
+              <li><code>npm outdated</code> - list stale packages</li>
+              <li><code>npm audit</code> - inspect security advisories</li>
+              <li><code>npm ci</code> - clean install from lockfile</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-xl-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">3. Scripts and Dev Workflow</h6>
+            <ol class="small mb-0 ps-3">
+              <li><code>npm run dev</code> - run development script</li>
+              <li><code>npm start</code> - run start script</li>
+              <li><code>npm test</code> - run test script</li>
+              <li><code>npm run build</code> - run build step</li>
+              <li><code>npx nodemon src/server.js</code> - restart on changes</li>
+              <li><code>npx eslint .</code> - lint project files</li>
+              <li><code>npx prettier . --write</code> - format files</li>
+              <li><code>npm ls</code> - inspect dependency tree</li>
+              <li><code>npx nest g resource orders --no-spec</code> - generate a NestJS resource</li>
+              <li><code>redis-cli ping</code> - verify Redis is reachable</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-xl-6">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">4. Debug, Test, and Database Tooling</h6>
+            <ol class="small mb-0 ps-3">
+              <li><code>node --inspect src/server.js</code> - enable debugger</li>
+              <li><code>node --inspect-brk src/server.js</code> - pause on first line</li>
+              <li><code>node --trace-warnings src/server.js</code> - show warning traces</li>
+              <li><code>node --cpu-prof src/server.js</code> - collect CPU profile</li>
+              <li><code>node --heap-prof src/server.js</code> - collect heap profile</li>
+              <li><code>npx autocannon http://localhost:3000</code> - quick load test</li>
+              <li><code>npx prisma init</code> - scaffold Prisma config</li>
+              <li><code>npx prisma migrate dev --name init</code> - run a dev migration</li>
+              <li><code>npx prisma generate</code> - generate Prisma client</li>
+              <li><code>npx prisma studio</code> - browse database visually</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-xl-6">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">5. Production and Release</h6>
+            <ol class="small mb-0 ps-3">
+              <li><code>pm2 start dist/server.js --name api</code> - run app under PM2</li>
+              <li><code>pm2 logs api</code> - view runtime logs</li>
+              <li><code>pm2 restart api</code> - restart one process</li>
+              <li><code>node src/jobs/workers.js</code> - run BullMQ workers locally</li>
+              <li><code>docker compose up -d --build</code> - build and start the full stack</li>
+              <li><code>docker compose logs -f api</code> - stream API container logs</li>
+              <li><code>docker compose down</code> - stop the compose stack</li>
+              <li><code>npm pack</code> - create package tarball</li>
+              <li><code>npm version patch</code> - bump package version</li>
+              <li><code>npm publish --access public</code> - publish a public package</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-command-reference" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-terminal-fill me-2" style="color:var(--node-primary);"></i>Node.js Cheat Sheet: Commands, Short Description, Short Example</h2>
+      <p class="mb-4">Use this as a fast lookup table. It covers Node runtime commands, npm and npx work, TypeScript and Prisma tooling, NestJS CLI flow, Redis and BullMQ setup, cron and Docker Compose commands, debugging flags, PM2, Docker, and package publishing commands that show up in real projects.</p>
+
+      <div class="d-flex flex-wrap gap-2 mb-4">
+        <span class="node-pill">Runtime</span>
+        <span class="node-pill">npm</span>
+        <span class="node-pill">npx</span>
+        <span class="node-pill">TypeScript</span>
+        <span class="node-pill">Prisma</span>
+        <span class="node-pill">NestJS</span>
+        <span class="node-pill">Redis</span>
+        <span class="node-pill">Queues</span>
+        <span class="node-pill">Compose</span>
+        <span class="node-pill">Debug</span>
+        <span class="node-pill">PM2</span>
+        <span class="node-pill">Docker</span>
+        <span class="node-pill">Publish</span>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Runtime and Version Checks</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small cmd-table">
+          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
+          <tbody>
+            <tr><td><code>node --version</code></td><td>Show installed Node.js version.</td><td><code>node --version</code></td></tr>
+            <tr><td><code>npm --version</code></td><td>Show installed npm version.</td><td><code>npm --version</code></td></tr>
+            <tr><td><code>corepack enable</code></td><td>Enable Corepack for package-manager shims.</td><td><code>corepack enable</code></td></tr>
+            <tr><td><code>node app.js</code></td><td>Run a Node file normally.</td><td><code>node src/server.js</code></td></tr>
+            <tr><td><code>node --watch file</code></td><td>Restart automatically when watched files change.</td><td><code>node --watch src/server.js</code></td></tr>
+            <tr><td><code>node --env-file=.env file</code></td><td>Load environment variables from a file.</td><td><code>node --env-file=.env src/server.js</code></td></tr>
+            <tr><td><code>node --check file</code></td><td>Check syntax without executing the file.</td><td><code>node --check src/jobs/sendMail.js</code></td></tr>
+            <tr><td><code>node -e "code"</code></td><td>Run a short inline snippet.</td><td><code>node -e "console.log(process.pid)"</code></td></tr>
+            <tr><td><code>node -p "expr"</code></td><td>Print the result of an expression.</td><td><code>node -p "process.platform"</code></td></tr>
+            <tr><td><code>node --test</code></td><td>Run the built-in Node test runner.</td><td><code>node --test</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Project Init, npm, and Package Files</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small cmd-table">
+          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
+          <tbody>
+            <tr><td><code>npm init -y</code></td><td>Create a package.json with defaults.</td><td><code>npm init -y</code></td></tr>
+            <tr><td><code>npm pkg set type=module</code></td><td>Set the project to use ES modules.</td><td><code>npm pkg set type=module</code></td></tr>
+            <tr><td><code>npm pkg get scripts</code></td><td>Read the scripts block from package.json.</td><td><code>npm pkg get scripts</code></td></tr>
+            <tr><td><code>npm pkg set scripts.dev="..."</code></td><td>Add or update a script entry.</td><td><code>npm pkg set scripts.dev="node --watch src/server.js"</code></td></tr>
+            <tr><td><code>npm install package</code></td><td>Install a runtime dependency.</td><td><code>npm install express</code></td></tr>
+            <tr><td><code>npm install -D package</code></td><td>Install a dev dependency.</td><td><code>npm install -D nodemon</code></td></tr>
+            <tr><td><code>npm uninstall package</code></td><td>Remove an installed dependency.</td><td><code>npm uninstall express</code></td></tr>
+            <tr><td><code>npm update</code></td><td>Update packages within allowed version ranges.</td><td><code>npm update</code></td></tr>
+            <tr><td><code>npm outdated</code></td><td>List packages with newer versions available.</td><td><code>npm outdated</code></td></tr>
+            <tr><td><code>npm ci</code></td><td>Do a clean lockfile-based install.</td><td><code>npm ci</code></td></tr>
+            <tr><td><code>npm ls</code></td><td>Show the installed dependency tree.</td><td><code>npm ls</code></td></tr>
+            <tr><td><code>npm prune</code></td><td>Remove extraneous packages.</td><td><code>npm prune</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>Scripts, npx, Formatting, and Day-to-Day Dev</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small cmd-table">
+          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
+          <tbody>
+            <tr><td><code>npm run dev</code></td><td>Run the development script.</td><td><code>npm run dev</code></td></tr>
+            <tr><td><code>npm start</code></td><td>Run the start script.</td><td><code>npm start</code></td></tr>
+            <tr><td><code>npm test</code></td><td>Run the test script.</td><td><code>npm test</code></td></tr>
+            <tr><td><code>npm run build</code></td><td>Run the build script.</td><td><code>npm run build</code></td></tr>
+            <tr><td><code>npx nodemon file</code></td><td>Run a file with auto-restart using Nodemon.</td><td><code>npx nodemon src/server.js</code></td></tr>
+            <tr><td><code>npx eslint .</code></td><td>Lint files in the current project.</td><td><code>npx eslint .</code></td></tr>
+            <tr><td><code>npx prettier . --write</code></td><td>Format files in place.</td><td><code>npx prettier src --write</code></td></tr>
+            <tr><td><code>npm cache verify</code></td><td>Verify npm cache integrity.</td><td><code>npm cache verify</code></td></tr>
+            <tr><td><code>npm audit</code></td><td>Show dependency security issues.</td><td><code>npm audit</code></td></tr>
+            <tr><td><code>npm audit fix</code></td><td>Apply safe audit fixes when available.</td><td><code>npm audit fix</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">4</span>Debugging, Profiling, and Built-in Test Flags</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small cmd-table">
+          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
+          <tbody>
+            <tr><td><code>node --inspect file</code></td><td>Start the process with inspector enabled.</td><td><code>node --inspect src/server.js</code></td></tr>
+            <tr><td><code>node --inspect-brk file</code></td><td>Start the process and pause on line one.</td><td><code>node --inspect-brk src/server.js</code></td></tr>
+            <tr><td><code>node --trace-warnings file</code></td><td>Show stack traces for runtime warnings.</td><td><code>node --trace-warnings src/server.js</code></td></tr>
+            <tr><td><code>node --cpu-prof file</code></td><td>Collect a CPU profile while the app runs.</td><td><code>node --cpu-prof src/server.js</code></td></tr>
+            <tr><td><code>node --heap-prof file</code></td><td>Collect heap profile data.</td><td><code>node --heap-prof src/server.js</code></td></tr>
+            <tr><td><code>node --test --watch</code></td><td>Watch tests using Node's built-in runner.</td><td><code>node --test --watch</code></td></tr>
+            <tr><td><code>npx autocannon url</code></td><td>Run a quick load test against an endpoint.</td><td><code>npx autocannon http://localhost:3000/api/health</code></td></tr>
+            <tr><td><code>node --trace-gc file</code></td><td>Show garbage collection activity.</td><td><code>node --trace-gc src/server.js</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">5</span>TypeScript, Prisma, and API Tooling</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small cmd-table">
+          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
+          <tbody>
+            <tr><td><code>npm install -D typescript tsx @types/node</code></td><td>Install base TypeScript tooling.</td><td><code>npm install -D typescript tsx @types/node</code></td></tr>
+            <tr><td><code>npx tsc --init</code></td><td>Create a tsconfig.json file.</td><td><code>npx tsc --init</code></td></tr>
+            <tr><td><code>npx tsx src/server.ts</code></td><td>Run a TypeScript file directly.</td><td><code>npx tsx src/server.ts</code></td></tr>
+            <tr><td><code>npx tsx watch src/server.ts</code></td><td>Run and restart a TS file on changes.</td><td><code>npx tsx watch src/server.ts</code></td></tr>
+            <tr><td><code>npx prisma init</code></td><td>Scaffold Prisma config and schema files.</td><td><code>npx prisma init</code></td></tr>
+            <tr><td><code>npx prisma migrate dev --name init</code></td><td>Create and apply a local migration.</td><td><code>npx prisma migrate dev --name init</code></td></tr>
+            <tr><td><code>npx prisma generate</code></td><td>Generate the Prisma client.</td><td><code>npx prisma generate</code></td></tr>
+            <tr><td><code>npx prisma studio</code></td><td>Open Prisma Studio to inspect data visually.</td><td><code>npx prisma studio</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">6</span>NestJS, Redis, Queues, Cron, and Docker Compose</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small cmd-table">
+          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
+          <tbody>
+            <tr><td><code>npx @nestjs/cli new app-name</code></td><td>Scaffold a new NestJS application.</td><td><code>npx @nestjs/cli new commerce-api</code></td></tr>
+            <tr><td><code>npx nest g resource name --no-spec</code></td><td>Generate a NestJS resource with controller and service files.</td><td><code>npx nest g resource orders --no-spec</code></td></tr>
+            <tr><td><code>npm install redis bullmq node-cron</code></td><td>Add Redis, BullMQ, and cron packages for an Express-style capstone.</td><td><code>npm install redis bullmq node-cron</code></td></tr>
+            <tr><td><code>npm install redis bullmq @nestjs/config @nestjs/schedule</code></td><td>Add capstone infrastructure packages to a NestJS app.</td><td><code>npm install redis bullmq @nestjs/config @nestjs/schedule</code></td></tr>
+            <tr><td><code>redis-cli ping</code></td><td>Check whether the Redis server is reachable.</td><td><code>redis-cli ping</code></td></tr>
+            <tr><td><code>node src/jobs/workers.js</code></td><td>Run BullMQ workers for the Express capstone locally.</td><td><code>node src/jobs/workers.js</code></td></tr>
+            <tr><td><code>node dist/src/jobs/bootstrap-workers.js</code></td><td>Run compiled NestJS worker bootstrap code.</td><td><code>node dist/src/jobs/bootstrap-workers.js</code></td></tr>
+            <tr><td><code>docker compose up -d --build</code></td><td>Build and start API, worker, Redis, and database services.</td><td><code>docker compose up -d --build</code></td></tr>
+            <tr><td><code>docker compose logs -f api</code></td><td>Stream logs from one compose service.</td><td><code>docker compose logs -f api</code></td></tr>
+            <tr><td><code>docker compose down</code></td><td>Stop and remove the compose stack.</td><td><code>docker compose down</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">7</span>PM2, Docker, and Release Commands</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small cmd-table">
+          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
+          <tbody>
+            <tr><td><code>pm2 start file --name app</code></td><td>Start a Node app under PM2.</td><td><code>pm2 start dist/server.js --name api</code></td></tr>
+            <tr><td><code>pm2 logs app</code></td><td>View PM2 logs for one process.</td><td><code>pm2 logs api</code></td></tr>
+            <tr><td><code>pm2 restart app</code></td><td>Restart a PM2-managed process.</td><td><code>pm2 restart api</code></td></tr>
+            <tr><td><code>pm2 save</code></td><td>Persist the current PM2 process list.</td><td><code>pm2 save</code></td></tr>
+            <tr><td><code>pm2 startup</code></td><td>Generate the command to auto-start PM2 on boot.</td><td><code>pm2 startup</code></td></tr>
+            <tr><td><code>docker build -t image .</code></td><td>Build a Docker image for the app.</td><td><code>docker build -t node-api .</code></td></tr>
+            <tr><td><code>docker run -p 3000:3000 image</code></td><td>Run the container locally.</td><td><code>docker run -p 3000:3000 node-api</code></td></tr>
+            <tr><td><code>npm pack</code></td><td>Create a tarball of the package contents.</td><td><code>npm pack</code></td></tr>
+            <tr><td><code>npm version patch</code></td><td>Bump patch version and create a tag.</td><td><code>npm version patch</code></td></tr>
+            <tr><td><code>npm publish --access public</code></td><td>Publish a public npm package.</td><td><code>npm publish --access public</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-box mt-4">
+        <p class="mb-0"><strong>Config files to remember:</strong> a complete Node app often depends on <code>package.json</code>, <code>.env</code>, <code>tsconfig.json</code>, <code>prisma/schema.prisma</code>, <code>ecosystem.config.cjs</code>, and a <code>Dockerfile</code>. Not every important thing is a command.</p>
+      </div>
+    </section>
+
+    <section id="sec-interview" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-patch-question-fill me-2" style="color:var(--node-primary);"></i>Node.js Interview Questions with Short Answers</h2>
+      <div class="accordion" id="nodeInterviewAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header"><button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#ni1">What is the difference between Node.js and Express?</button></h2>
+          <div id="ni1" class="accordion-collapse collapse show" data-bs-parent="#nodeInterviewAccordion"><div class="accordion-body">Node.js is the runtime. Express is a web framework that runs on top of Node and simplifies routing, middleware, and HTTP responses.</div></div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#ni2">Why is Node.js considered non-blocking?</button></h2>
+          <div id="ni2" class="accordion-collapse collapse" data-bs-parent="#nodeInterviewAccordion"><div class="accordion-body">Because I/O operations are delegated and their completion callbacks are scheduled later, so the main thread does not wait idly for disk or network results.</div></div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#ni3">When should you use worker threads?</button></h2>
+          <div id="ni3" class="accordion-collapse collapse" data-bs-parent="#nodeInterviewAccordion"><div class="accordion-body">Use worker threads for CPU-bound work such as hashing large datasets, image transforms, report generation, or expensive parsing that would otherwise block the event loop.</div></div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#ni4">What is the difference between process.nextTick and Promise.then?</button></h2>
+          <div id="ni4" class="accordion-collapse collapse" data-bs-parent="#nodeInterviewAccordion"><div class="accordion-body">Both schedule follow-up work, but nextTick runs before regular promise microtasks in Node. Overusing nextTick can starve the event loop.</div></div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#ni5">Why does npm ci matter in CI pipelines?</button></h2>
+          <div id="ni5" class="accordion-collapse collapse" data-bs-parent="#nodeInterviewAccordion"><div class="accordion-body">It installs exactly what the lockfile describes, making builds more repeatable and less likely to drift than a normal npm install.</div></div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#ni6">What is the purpose of package.json type=module?</button></h2>
+          <div id="ni6" class="accordion-collapse collapse" data-bs-parent="#nodeInterviewAccordion"><div class="accordion-body">It tells Node to treat .js files as ES Modules by default, enabling import and export syntax instead of require and module.exports.</div></div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#ni7">How do you scale a Node API?</button></h2>
+          <div id="ni7" class="accordion-collapse collapse" data-bs-parent="#nodeInterviewAccordion"><div class="accordion-body">Remove blocking work, cache hot reads, run multiple processes behind a reverse proxy or orchestrator, offload jobs to queues, and monitor latency plus memory.</div></div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#ni8">What is the difference between authentication and authorization?</button></h2>
+          <div id="ni8" class="accordion-collapse collapse" data-bs-parent="#nodeInterviewAccordion"><div class="accordion-body">Authentication proves who the user is. Authorization decides what that authenticated user is allowed to do.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-projects" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-kanban-fill me-2" style="color:var(--node-primary);"></i>Practice Projects and Mini Labs</h2>
+      <p class="mb-4">If you want Node.js to stick, build things that force you to use routing, validation, environment config, error handling, and deployment instead of only reading about them.</p>
+
+      <div class="row g-3">
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Lab 1: Local File Logger</h6><p class="small opacity-75 mb-0">Read input from the command line, append it to a log file, and rotate logs by date.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Lab 2: Express Task API</h6><p class="small opacity-75 mb-0">Build CRUD endpoints with validation, 404 handling, and a central error middleware.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Lab 3: Auth Service</h6><p class="small opacity-75 mb-0">Add user registration, bcrypt password hashing, login, JWT issuance, and protected routes.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Lab 4: Chat Server</h6><p class="small opacity-75 mb-0">Use Socket.IO to build a small multi-room realtime chat app with message timestamps.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Lab 5: Worker Thread Job</h6><p class="small opacity-75 mb-0">Move CPU-heavy CSV or image processing into worker threads and compare latency.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Lab 6: Deploy with PM2 and Docker</h6><p class="small opacity-75 mb-0">Containerize the API, run it with PM2, add environment files, and test a health endpoint.</p></div></div>
+      </div>
+
+      <div class="note-box mt-4">
+        <p class="mb-0"><strong>Best practice:</strong> keep one throwaway sandbox repo just for experimenting with risky commands, profiling flags, streams, process signals, and deployment scripts before touching production code.</p>
+      </div>
+    </section>
+  </div>
+
+  <footer class="text-center py-4 mt-4" style="border-top:1px solid rgba(128,128,128,0.15);">
+    <p class="small opacity-50 mb-0"><i class="bi bi-terminal-fill me-1" style="color:var(--node-primary);"></i>Node.js Complete Guide - Bootstrap 5 + Dark Mode</p>
+  </footer>
+</main>
+
+<div id="backTop">
+  <i class="bi bi-arrow-up"></i>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/highlight.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+
+    const html = document.documentElement;
+    const toggleBtn = document.getElementById('themeToggle');
+    const hljsDark = document.getElementById('hljs-theme-dark');
+    const hljsLight = document.getElementById('hljs-theme-light');
+
+    function applyTheme(theme) {
+      html.setAttribute('data-bs-theme', theme);
+      toggleBtn.innerHTML = theme === 'dark'
+        ? '<i class="bi bi-sun-fill"></i>'
+        : '<i class="bi bi-moon-fill"></i>';
+      hljsDark.disabled = theme !== 'dark';
+      hljsLight.disabled = theme !== 'light';
+      localStorage.setItem('node-guide-theme', theme);
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      applyTheme(html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
+    });
+
+    const savedTheme = localStorage.getItem('node-guide-theme');
+    if (savedTheme) {
+      applyTheme(savedTheme);
+    }
+
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('#sidebar .nav-link');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        navLinks.forEach(link => link.classList.remove('active'));
+        const active = document.querySelector(`#sidebar a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+
+    sections.forEach(section => observer.observe(section));
+
+    const backTop = document.getElementById('backTop');
+    backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    window.addEventListener('scroll', () => {
+      backTop.classList.toggle('show', window.scrollY > 400);
+    });
+
+    document.querySelectorAll('[data-copy-btn]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const code = btn.closest('.code-wrapper')?.querySelector('code');
+        if (!code) return;
+
+        try {
+          await navigator.clipboard.writeText(code.innerText);
+          btn.innerHTML = '<i class="bi bi-check-lg me-1"></i>Copied!';
+          setTimeout(() => {
+            btn.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy';
+          }, 1800);
+        } catch (error) {
+          btn.innerHTML = '<i class="bi bi-x-lg me-1"></i>Failed';
+          setTimeout(() => {
+            btn.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy';
+          }, 1800);
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

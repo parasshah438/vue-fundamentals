@@ -1,0 +1,3236 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vue.js Complete Tutorial</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link id="hljs-theme-dark" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css" />
+  <link id="hljs-theme-light" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css" disabled />
+
+  <style>
+    :root {
+      --sidebar-width: 300px;
+      --header-h: 64px;
+      --vue-primary: #42b883;
+      --vue-secondary: #35495e;
+      --vue-accent: #22c55e;
+    }
+
+    body { font-size: .95rem; scroll-behavior: smooth; }
+
+    #topbar {
+      height: var(--header-h);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1050;
+    }
+    [data-bs-theme="dark"] #topbar { background: rgba(13,17,23,.85); border-bottom: 1px solid rgba(255,255,255,.08); }
+    [data-bs-theme="light"] #topbar { background: rgba(255,255,255,.92); border-bottom: 1px solid rgba(0,0,0,.1); }
+
+    .brand-badge {
+      background: linear-gradient(135deg, var(--vue-primary), #9ef0cb);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+
+    .vue-logo {
+      display: inline-flex;
+      flex-shrink: 0;
+      line-height: 0;
+    }
+
+    .vue-logo svg {
+      display: block;
+    }
+
+    .vue-logo-sm svg {
+      width: 18px;
+      height: 16px;
+    }
+
+    .vue-logo-lg svg {
+      width: 34px;
+      height: 30px;
+    }
+
+    .vue-logo-inline {
+      vertical-align: -2px;
+    }
+
+    .vue-logo-inline svg {
+      width: 14px;
+      height: 12px;
+    }
+
+    #sidebar {
+      width: var(--sidebar-width);
+      top: var(--header-h);
+      height: calc(100vh - var(--header-h));
+      overflow-y: auto;
+      scrollbar-width: thin;
+      z-index: 1040;
+    }
+    [data-bs-theme="dark"] #sidebar { background: #0d1117; border-right: 1px solid rgba(255,255,255,.08); }
+    [data-bs-theme="light"] #sidebar { background: #f8f9fa; border-right: 1px solid #dee2e6; }
+
+    #sidebar .nav-link {
+      font-size: .85rem;
+      padding: .38rem 1rem;
+      border-radius: 8px;
+      color: inherit;
+      transition: background .15s, color .15s, padding-left .15s;
+    }
+    #sidebar .nav-link:hover { background: rgba(66,184,131,.12); color: var(--vue-primary); padding-left: 1.3rem; }
+    #sidebar .nav-link.active { background: rgba(66,184,131,.18); color: var(--vue-primary); font-weight: 600; }
+
+    #sidebar .nav-section {
+      font-size: .7rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: .75rem 1rem .3rem;
+      opacity: .55;
+    }
+
+    #main-content {
+      margin-left: var(--sidebar-width);
+      min-height: calc(100vh - var(--header-h));
+      padding-top: var(--header-h);
+    }
+    @media (max-width: 991.98px) {
+      #sidebar { display: none !important; }
+      #main-content { margin-left: 0 !important; }
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      border-left: 4px solid var(--vue-primary);
+      padding-left: .75rem;
+      margin-bottom: 1.25rem;
+    }
+    .sub-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      padding-left: .5rem;
+      border-left: 3px solid #9ef0cb;
+      margin: 1.5rem 0 .75rem;
+    }
+
+    .feature-card {
+      border-radius: 12px;
+      transition: transform .2s, box-shadow .2s;
+      border: 1px solid transparent;
+    }
+    .feature-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(66,184,131,.18); border-color: rgba(66,184,131,.25); }
+    [data-bs-theme="dark"] .feature-card { background: #161b22; }
+    [data-bs-theme="light"] .feature-card { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.07); }
+
+    .icon-box {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      flex-shrink: 0;
+    }
+
+    pre {
+      border-radius: 10px;
+      position: relative;
+      font-size: .83rem;
+      margin: 0;
+    }
+    pre code.hljs { border-radius: 10px; }
+
+    .code-wrapper {
+      position: relative;
+      margin: .75rem 0 1.25rem;
+    }
+    .copy-btn {
+      position: absolute;
+      top: .5rem;
+      right: .5rem;
+      font-size: .75rem;
+      padding: .2rem .55rem;
+      opacity: .8;
+      z-index: 2;
+    }
+    .copy-btn:hover { opacity: 1; }
+
+    .cmd-table th { white-space: nowrap; }
+    .cmd-table code { font-size: .8rem; }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--vue-primary), var(--vue-secondary));
+      color: #fff;
+      font-weight: 700;
+      font-size: .8rem;
+      flex-shrink: 0;
+    }
+
+    .code-pill {
+      display: inline-block;
+      font-family: monospace;
+      font-size: .8rem;
+      padding: .2rem .55rem;
+      border-radius: 6px;
+    }
+    [data-bs-theme="dark"] .code-pill { background: #1f2937; }
+    [data-bs-theme="light"] .code-pill { background: #eef5f1; }
+
+    #hero {
+      background: linear-gradient(135deg, var(--vue-primary) 0%, #2f8f76 45%, var(--vue-secondary) 100%);
+      padding: 3.5rem 0 3rem;
+      clip-path: ellipse(120% 100% at 50% 0%);
+    }
+    #hero h1 { font-size: 2.4rem; font-weight: 800; color: #fff; }
+    #hero p { color: rgba(255,255,255,.88); font-size: 1.05rem; }
+
+    #themeToggle i { font-size: 1.1rem; }
+
+    #backTop {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--vue-primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(66,184,131,.45);
+      opacity: 0;
+      transition: opacity .25s;
+      z-index: 9999;
+    }
+    #backTop.show { opacity: 1; }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    [data-bs-theme="dark"] ::-webkit-scrollbar-track { background: #161b22; }
+    [data-bs-theme="dark"] ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+    [data-bs-theme="light"] ::-webkit-scrollbar-track { background: #f1f1f1; }
+    [data-bs-theme="light"] ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+
+    .text-gradient {
+      background: linear-gradient(135deg, var(--vue-primary), #9ef0cb);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .divider { height: 1px; opacity: .1; margin: 2.5rem 0; }
+    .note-box {
+      border-left: 4px solid var(--vue-primary);
+      padding: .75rem 1rem;
+      border-radius: 0 8px 8px 0;
+    }
+    [data-bs-theme="dark"] .note-box { background: rgba(66,184,131,.1); }
+    [data-bs-theme="light"] .note-box { background: rgba(66,184,131,.07); }
+
+    .timeline-step {
+      position: relative;
+      padding-left: 1rem;
+      border-left: 2px dashed rgba(66,184,131,.35);
+    }
+
+    @media (max-width: 767.98px) {
+      #hero h1 { font-size: 1.9rem; }
+      .section-title { font-size: 1.35rem; }
+    }
+  </style>
+</head>
+
+<body>
+
+<nav id="topbar" class="navbar fixed-top px-3 px-md-4 d-flex justify-content-between align-items-center">
+  <a href="#top" class="text-decoration-none d-flex align-items-center gap-2">
+    <div style="background:linear-gradient(135deg,var(--vue-primary),#9ef0cb);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+      <span class="vue-logo vue-logo-sm" aria-hidden="true">
+        <svg viewBox="0 0 261.76 226.69" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true" focusable="false">
+          <path fill="#41B883" d="M0 0h60.5l70.4 122.2L201.3 0h60.46L130.88 226.69 0 0Z"></path>
+          <path fill="#35495E" d="M60.5 0l70.38 122.2L201.3 0h-35.62l-34.8 60.42L96.12 0H60.5Z"></path>
+        </svg>
+      </span>
+    </div>
+    <span class="brand-badge">Vue.js</span>
+    <span class="fw-light opacity-50 d-none d-sm-inline">Tutorial</span>
+  </a>
+
+  <div class="d-flex align-items-center gap-2">
+    <button class="btn btn-sm btn-outline-secondary d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+      <i class="bi bi-list"></i>
+    </button>
+    <button id="themeToggle" class="btn btn-sm btn-outline-secondary" title="Toggle Dark / Light mode">
+      <i class="bi bi-sun-fill"></i>
+    </button>
+    <span class="badge rounded-pill" style="background:var(--vue-primary);">v3.4+</span>
+  </div>
+</nav>
+
+<aside id="sidebar" class="position-fixed d-none d-lg-block py-3 px-2">
+  <nav class="nav flex-column gap-1">
+    <div class="nav-section">Introduction</div>
+    <a class="nav-link active" href="#sec-what"><i class="bi bi-info-circle me-2"></i>What is Vue.js?</a>
+    <a class="nav-link" href="#sec-why"><i class="bi bi-stars me-2"></i>Why Vue?</a>
+    <a class="nav-link" href="#sec-flow"><i class="bi bi-signpost-2 me-2"></i>Learning Path</a>
+
+    <div class="nav-section">Getting Started</div>
+    <a class="nav-link" href="#sec-install"><i class="bi bi-download me-2"></i>Installation</a>
+    <a class="nav-link" href="#sec-commands"><i class="bi bi-terminal me-2"></i>Commands</a>
+    <a class="nav-link" href="#sec-structure"><i class="bi bi-folder-symlink me-2"></i>Project Structure</a>
+
+    <div class="nav-section">Templates & Reactivity</div>
+    <a class="nav-link" href="#sec-template"><i class="bi bi-code-square me-2"></i>Template Syntax</a>
+    <a class="nav-link" href="#sec-directives"><i class="bi bi-magic me-2"></i>Directives</a>
+    <a class="nav-link" href="#sec-reactivity"><i class="bi bi-lightning-charge me-2"></i>Reactivity</a>
+    <a class="nav-link" href="#sec-computed"><i class="bi bi-eyeglasses me-2"></i>Computed & Watch</a>
+    <a class="nav-link" href="#sec-forms"><i class="bi bi-input-cursor-text me-2"></i>Events & Forms</a>
+    <a class="nav-link" href="#sec-validation"><i class="bi bi-patch-check me-2"></i>Form Validation</a>
+
+    <div class="nav-section">Components</div>
+    <a class="nav-link" href="#sec-components"><i class="bi bi-boxes me-2"></i>Components</a>
+    <a class="nav-link" href="#sec-props"><i class="bi bi-arrow-left-right me-2"></i>Props & Emits</a>
+    <a class="nav-link" href="#sec-slots"><i class="bi bi-grid-3x3-gap me-2"></i>Slots & Provide</a>
+    <a class="nav-link" href="#sec-lifecycle"><i class="bi bi-arrow-repeat me-2"></i>Lifecycle Hooks</a>
+
+    <div class="nav-section">Advanced Vue</div>
+    <a class="nav-link" href="#sec-composition"><i class="bi bi-layers me-2"></i>Composition API</a>
+    <a class="nav-link" href="#sec-script-setup"><i class="bi bi-braces-asterisk me-2"></i>script setup</a>
+    <a class="nav-link" href="#sec-router"><i class="bi bi-signpost-split me-2"></i>Vue Router</a>
+    <a class="nav-link" href="#sec-pinia"><i class="bi bi-diagram-3 me-2"></i>Pinia</a>
+    <a class="nav-link" href="#sec-api"><i class="bi bi-cloud-arrow-down me-2"></i>API Integration</a>
+
+    <div class="nav-section">Advanced Patterns</div>
+    <a class="nav-link" href="#sec-async"><i class="bi bi-hourglass-split me-2"></i>Async Components</a>
+    <a class="nav-link" href="#sec-builtins"><i class="bi bi-window-stack me-2"></i>Teleport & Suspense</a>
+    <a class="nav-link" href="#sec-animations"><i class="bi bi-magic me-2"></i>Animations</a>
+    <a class="nav-link" href="#sec-plugins"><i class="bi bi-plug me-2"></i>Directives & Plugins</a>
+    <a class="nav-link" href="#sec-typescript"><i class="bi bi-filetype-tsx me-2"></i>TypeScript</a>
+    <a class="nav-link" href="#sec-testing"><i class="bi bi-check2-circle me-2"></i>Testing</a>
+
+    <div class="nav-section">Production</div>
+    <a class="nav-link" href="#sec-performance"><i class="bi bi-speedometer2 me-2"></i>Performance</a>
+    <a class="nav-link" href="#sec-security"><i class="bi bi-shield-check me-2"></i>Security</a>
+    <a class="nav-link" href="#sec-env"><i class="bi bi-key me-2"></i>Build & Env</a>
+    <a class="nav-link" href="#sec-ssr"><i class="bi bi-globe2 me-2"></i>SSR & Nuxt</a>
+    <a class="nav-link" href="#sec-nuxt"><i class="bi bi-box-arrow-up-right me-2"></i>Nuxt Deep Dive</a>
+    <a class="nav-link" href="#sec-laravel"><i class="bi bi-diagram-2 me-2"></i>Laravel + Vue</a>
+    <a class="nav-link" href="#sec-sanctum"><i class="bi bi-shield-lock me-2"></i>Sanctum Auth</a>
+    <a class="nav-link" href="#sec-go-live"><i class="bi bi-cloud-upload me-2"></i>Go Live</a>
+    <a class="nav-link" href="#sec-hosting"><i class="bi bi-hdd-network me-2"></i>Hosting Platforms</a>
+    <a class="nav-link" href="#sec-forge-script"><i class="bi bi-lightning-charge me-2"></i>Forge Deploy Script</a>
+    <a class="nav-link" href="#sec-forge-ops"><i class="bi bi-diagram-3 me-2"></i>Forge Redis &amp; Horizon</a>
+    <a class="nav-link" href="#sec-deploy"><i class="bi bi-rocket-takeoff me-2"></i>Deployment</a>
+
+    <div class="nav-section">Practical</div>
+    <a class="nav-link" href="#sec-projects"><i class="bi bi-kanban me-2"></i>Mini Projects</a>
+    <a class="nav-link" href="#sec-crud"><i class="bi bi-database-gear me-2"></i>CRUD Case Study</a>
+    <a class="nav-link" href="#sec-interview"><i class="bi bi-patch-question me-2"></i>Interview Q&amp;A</a>
+  </nav>
+</aside>
+
+<div class="offcanvas offcanvas-start d-lg-none" id="mobileSidebar" tabindex="-1">
+  <div class="offcanvas-header">
+    <h6 class="offcanvas-title fw-bold">Vue.js Tutorial</h6>
+    <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body p-2">
+    <nav class="nav flex-column gap-1">
+      <div class="nav-section">Introduction</div>
+      <a class="nav-link" href="#sec-what" data-bs-dismiss="offcanvas"><i class="bi bi-info-circle me-2"></i>What is Vue.js?</a>
+      <a class="nav-link" href="#sec-why" data-bs-dismiss="offcanvas"><i class="bi bi-stars me-2"></i>Why Vue?</a>
+      <a class="nav-link" href="#sec-flow" data-bs-dismiss="offcanvas"><i class="bi bi-signpost-2 me-2"></i>Learning Path</a>
+      <div class="nav-section">Getting Started</div>
+      <a class="nav-link" href="#sec-install" data-bs-dismiss="offcanvas"><i class="bi bi-download me-2"></i>Installation</a>
+      <a class="nav-link" href="#sec-commands" data-bs-dismiss="offcanvas"><i class="bi bi-terminal me-2"></i>Commands</a>
+      <a class="nav-link" href="#sec-structure" data-bs-dismiss="offcanvas"><i class="bi bi-folder-symlink me-2"></i>Project Structure</a>
+      <div class="nav-section">Templates & Reactivity</div>
+      <a class="nav-link" href="#sec-template" data-bs-dismiss="offcanvas"><i class="bi bi-code-square me-2"></i>Template Syntax</a>
+      <a class="nav-link" href="#sec-directives" data-bs-dismiss="offcanvas"><i class="bi bi-magic me-2"></i>Directives</a>
+      <a class="nav-link" href="#sec-reactivity" data-bs-dismiss="offcanvas"><i class="bi bi-lightning-charge me-2"></i>Reactivity</a>
+      <a class="nav-link" href="#sec-computed" data-bs-dismiss="offcanvas"><i class="bi bi-eyeglasses me-2"></i>Computed & Watch</a>
+      <a class="nav-link" href="#sec-forms" data-bs-dismiss="offcanvas"><i class="bi bi-input-cursor-text me-2"></i>Events & Forms</a>
+      <a class="nav-link" href="#sec-validation" data-bs-dismiss="offcanvas"><i class="bi bi-patch-check me-2"></i>Form Validation</a>
+      <div class="nav-section">Components</div>
+      <a class="nav-link" href="#sec-components" data-bs-dismiss="offcanvas"><i class="bi bi-boxes me-2"></i>Components</a>
+      <a class="nav-link" href="#sec-props" data-bs-dismiss="offcanvas"><i class="bi bi-arrow-left-right me-2"></i>Props & Emits</a>
+      <a class="nav-link" href="#sec-slots" data-bs-dismiss="offcanvas"><i class="bi bi-grid-3x3-gap me-2"></i>Slots & Provide</a>
+      <a class="nav-link" href="#sec-lifecycle" data-bs-dismiss="offcanvas"><i class="bi bi-arrow-repeat me-2"></i>Lifecycle Hooks</a>
+      <div class="nav-section">Advanced Vue</div>
+      <a class="nav-link" href="#sec-composition" data-bs-dismiss="offcanvas"><i class="bi bi-layers me-2"></i>Composition API</a>
+      <a class="nav-link" href="#sec-script-setup" data-bs-dismiss="offcanvas"><i class="bi bi-braces-asterisk me-2"></i>script setup</a>
+      <a class="nav-link" href="#sec-router" data-bs-dismiss="offcanvas"><i class="bi bi-signpost-split me-2"></i>Vue Router</a>
+      <a class="nav-link" href="#sec-pinia" data-bs-dismiss="offcanvas"><i class="bi bi-diagram-3 me-2"></i>Pinia</a>
+      <a class="nav-link" href="#sec-api" data-bs-dismiss="offcanvas"><i class="bi bi-cloud-arrow-down me-2"></i>API Integration</a>
+      <div class="nav-section">Advanced Patterns</div>
+      <a class="nav-link" href="#sec-async" data-bs-dismiss="offcanvas"><i class="bi bi-hourglass-split me-2"></i>Async Components</a>
+      <a class="nav-link" href="#sec-builtins" data-bs-dismiss="offcanvas"><i class="bi bi-window-stack me-2"></i>Teleport & Suspense</a>
+      <a class="nav-link" href="#sec-animations" data-bs-dismiss="offcanvas"><i class="bi bi-magic me-2"></i>Animations</a>
+      <a class="nav-link" href="#sec-plugins" data-bs-dismiss="offcanvas"><i class="bi bi-plug me-2"></i>Directives & Plugins</a>
+      <a class="nav-link" href="#sec-typescript" data-bs-dismiss="offcanvas"><i class="bi bi-filetype-tsx me-2"></i>TypeScript</a>
+      <a class="nav-link" href="#sec-testing" data-bs-dismiss="offcanvas"><i class="bi bi-check2-circle me-2"></i>Testing</a>
+      <div class="nav-section">Production</div>
+      <a class="nav-link" href="#sec-performance" data-bs-dismiss="offcanvas"><i class="bi bi-speedometer2 me-2"></i>Performance</a>
+      <a class="nav-link" href="#sec-security" data-bs-dismiss="offcanvas"><i class="bi bi-shield-check me-2"></i>Security</a>
+      <a class="nav-link" href="#sec-env" data-bs-dismiss="offcanvas"><i class="bi bi-key me-2"></i>Build & Env</a>
+      <a class="nav-link" href="#sec-ssr" data-bs-dismiss="offcanvas"><i class="bi bi-globe2 me-2"></i>SSR & Nuxt</a>
+      <a class="nav-link" href="#sec-nuxt" data-bs-dismiss="offcanvas"><i class="bi bi-box-arrow-up-right me-2"></i>Nuxt Deep Dive</a>
+      <a class="nav-link" href="#sec-laravel" data-bs-dismiss="offcanvas"><i class="bi bi-diagram-2 me-2"></i>Laravel + Vue</a>
+      <a class="nav-link" href="#sec-sanctum" data-bs-dismiss="offcanvas"><i class="bi bi-shield-lock me-2"></i>Sanctum Auth</a>
+      <a class="nav-link" href="#sec-go-live" data-bs-dismiss="offcanvas"><i class="bi bi-cloud-upload me-2"></i>Go Live</a>
+      <a class="nav-link" href="#sec-hosting" data-bs-dismiss="offcanvas"><i class="bi bi-hdd-network me-2"></i>Hosting Platforms</a>
+      <a class="nav-link" href="#sec-forge-script" data-bs-dismiss="offcanvas"><i class="bi bi-lightning-charge me-2"></i>Forge Deploy Script</a>
+      <a class="nav-link" href="#sec-forge-ops" data-bs-dismiss="offcanvas"><i class="bi bi-diagram-3 me-2"></i>Forge Redis &amp; Horizon</a>
+      <a class="nav-link" href="#sec-deploy" data-bs-dismiss="offcanvas"><i class="bi bi-rocket-takeoff me-2"></i>Deployment</a>
+      <div class="nav-section">Practical</div>
+      <a class="nav-link" href="#sec-projects" data-bs-dismiss="offcanvas"><i class="bi bi-kanban me-2"></i>Mini Projects</a>
+      <a class="nav-link" href="#sec-crud" data-bs-dismiss="offcanvas"><i class="bi bi-database-gear me-2"></i>CRUD Case Study</a>
+      <a class="nav-link" href="#sec-interview" data-bs-dismiss="offcanvas"><i class="bi bi-patch-question me-2"></i>Interview Q&amp;A</a>
+    </nav>
+  </div>
+</div>
+
+<main id="main-content">
+  <section id="top">
+    <div id="hero">
+      <div class="container py-2">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div style="background:rgba(255,255,255,.18);width:60px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);">
+            <span class="vue-logo vue-logo-lg" aria-hidden="true">
+              <svg viewBox="0 0 261.76 226.69" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true" focusable="false">
+                <path fill="#41B883" d="M0 0h60.5l70.4 122.2L201.3 0h60.46L130.88 226.69 0 0Z"></path>
+                <path fill="#35495E" d="M60.5 0l70.38 122.2L201.3 0h-35.62l-34.8 60.42L96.12 0H60.5Z"></path>
+              </svg>
+            </span>
+          </div>
+          <div>
+            <h1 class="mb-0">Vue.js Tutorial</h1>
+            <p class="mb-0 mt-1">Basic to Advanced, A to Z with Practical Examples</p>
+          </div>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">Vue 3</span>
+          <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">Composition API</span>
+          <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">script setup</span>
+          <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">Pinia</span>
+          <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">Vue Router</span>
+          <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">Vite</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container py-4 px-3 px-md-4">
+    <section id="sec-what" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-info-circle-fill me-2" style="color:var(--vue-primary);"></i>What is Vue.js?</h2>
+
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>Vue.js</strong> is a progressive JavaScript framework for building user interfaces. You can use it as a lightweight view layer in a single HTML page, or scale it into a full single-page application with routing, state management, testing, and server rendering.</p>
+      </div>
+
+      <p>Vue focuses on <span class="text-gradient fw-bold">clarity, reactive state, and incremental adoption</span>. It gives you declarative templates, a powerful reactivity system, single-file components, and a mature ecosystem without forcing a heavy architectural style on day one.</p>
+
+      <div class="row g-3 mt-1">
+        <div class="col-sm-6 col-xl-3">
+          <div class="feature-card p-3 h-100">
+            <div class="icon-box mb-2" style="background:rgba(66,184,131,.15);color:var(--vue-primary);"><i class="bi bi-layers-fill"></i></div>
+            <h6 class="fw-semibold mb-1">Progressive</h6>
+            <p class="small opacity-75 mb-0">Start with a CDN script in a static page or adopt the full tooling stack with Vite, Router, and Pinia.</p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="feature-card p-3 h-100">
+            <div class="icon-box mb-2" style="background:rgba(53,73,94,.18);color:#9ef0cb;"><i class="bi bi-lightning-charge-fill"></i></div>
+            <h6 class="fw-semibold mb-1">Reactive</h6>
+            <p class="small opacity-75 mb-0">Data changes update the DOM automatically through refs, reactive objects, computed values, and watchers.</p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="feature-card p-3 h-100">
+            <div class="icon-box mb-2" style="background:rgba(34,197,94,.16);color:#22c55e;"><i class="bi bi-file-earmark-code"></i></div>
+            <h6 class="fw-semibold mb-1">Single-File Components</h6>
+            <p class="small opacity-75 mb-0">Keep template, logic, and scoped styles in one .vue file for maintainable components and better team readability.</p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="feature-card p-3 h-100">
+            <div class="icon-box mb-2" style="background:rgba(16,185,129,.15);color:#10b981;"><i class="bi bi-diagram-3-fill"></i></div>
+            <h6 class="fw-semibold mb-1">Strong Ecosystem</h6>
+            <p class="small opacity-75 mb-0">Vue Router, Pinia, DevTools, Nuxt, Vue Test Utils, and Vite cover the normal needs of production teams.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-why" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-stars me-2" style="color:var(--vue-primary);"></i>Why Vue?</h2>
+
+      <p>Vue is often chosen because it balances <strong>developer experience</strong> with <strong>production capability</strong>. The learning curve is gentle for beginners, but the architecture scales well when teams need routing, stores, testing, lazy loading, and SSR.</p>
+
+      <div class="row g-3 mt-1">
+        <div class="col-md-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-semibold mb-2">Fast to Learn</h6>
+            <p class="small opacity-75 mb-0">Templates feel close to plain HTML, directives are readable, and Vue hides a lot of boilerplate without hiding the fundamentals.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-semibold mb-2">Flexible API Style</h6>
+            <p class="small opacity-75 mb-0">You can read old code written in the Options API and build modern code with Composition API and script setup.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-semibold mb-2">Production Friendly</h6>
+            <p class="small opacity-75 mb-0">Code splitting, transitions, SSR via Nuxt, typed code, and store patterns are well documented and stable.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive mt-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Situation</th><th>Why Vue fits</th><th>Common ecosystem add-on</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Static page needs interactivity</td><td>Drop Vue in via CDN and progressively enhance small parts of the page.</td><td><code>petite-vue</code> or plain Vue CDN</td></tr>
+            <tr><td>SPA dashboard</td><td>Reactive UIs, nested routing, data fetching, and component reuse are straightforward.</td><td><code>vue-router</code>, <code>pinia</code>, <code>axios</code></td></tr>
+            <tr><td>Large product with SSR/SEO</td><td>Vue syntax stays the same while Nuxt adds server rendering, file-based routing, and full-stack patterns.</td><td><code>nuxt</code></td></tr>
+            <tr><td>Team migrating from jQuery or PHP templates</td><td>The template syntax is approachable and can be introduced page by page.</td><td>Vite or CDN</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="sec-flow" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-signpost-2-fill me-2" style="color:var(--vue-primary);"></i>Vue Learning Path</h2>
+
+      <p class="mb-4">A strong Vue roadmap is not random. Learn the features in the order they actually depend on each other.</p>
+
+      <div class="row g-3">
+        <div class="col-md-6 col-xl-4">
+          <div class="feature-card p-3 h-100 timeline-step">
+            <div class="d-flex align-items-center gap-2 mb-2"><span class="step-num">1</span><strong>Templates First</strong></div>
+            <p class="small opacity-75 mb-0">Interpolation, <code>v-bind</code>, <code>v-on</code>, <code>v-if</code>, <code>v-show</code>, <code>v-for</code>, and <code>v-model</code>.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-xl-4">
+          <div class="feature-card p-3 h-100 timeline-step">
+            <div class="d-flex align-items-center gap-2 mb-2"><span class="step-num">2</span><strong>Understand Reactivity</strong></div>
+            <p class="small opacity-75 mb-0">Know when to use <code>ref()</code>, <code>reactive()</code>, <code>computed()</code>, <code>watch()</code>, and <code>watchEffect()</code>.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-xl-4">
+          <div class="feature-card p-3 h-100 timeline-step">
+            <div class="d-flex align-items-center gap-2 mb-2"><span class="step-num">3</span><strong>Component Communication</strong></div>
+            <p class="small opacity-75 mb-0">Master props, emits, slots, provide/inject, and custom <code>v-model</code> before reaching for global stores.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-xl-4">
+          <div class="feature-card p-3 h-100 timeline-step">
+            <div class="d-flex align-items-center gap-2 mb-2"><span class="step-num">4</span><strong>Composition API</strong></div>
+            <p class="small opacity-75 mb-0">Extract reusable logic into composables, learn <code>&lt;script setup&gt;</code>, and type your code cleanly.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-xl-4">
+          <div class="feature-card p-3 h-100 timeline-step">
+            <div class="d-flex align-items-center gap-2 mb-2"><span class="step-num">5</span><strong>Ecosystem & Production</strong></div>
+            <p class="small opacity-75 mb-0">Vue Router, Pinia, API patterns, testing, performance, SSR, environment handling, and deployment.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-xl-4">
+          <div class="feature-card p-3 h-100 timeline-step">
+            <div class="d-flex align-items-center gap-2 mb-2"><span class="step-num">6</span><strong>Practice Projects</strong></div>
+            <p class="small opacity-75 mb-0">Build forms, dashboards, CRUD apps, and route-based products so the concepts become muscle memory.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-box mt-4">
+        <p class="mb-0"><strong>Pragmatic rule:</strong> learn enough Options API to read existing codebases, but build new code mostly with Composition API and <code>&lt;script setup&gt;</code>. That is the most common modern Vue style.</p>
+      </div>
+    </section>
+
+    <section id="sec-install" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-download me-2" style="color:var(--vue-primary);"></i>Installation</h2>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Quick Start with CDN</h5>
+      <p class="small opacity-75 mb-2">This is ideal for experiments, prototypes, or enhancing an existing PHP/HTML page.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8" /&gt;
+  &lt;title&gt;Vue CDN Demo&lt;/title&gt;
+  &lt;script src="https://unpkg.com/vue@3/dist/vue.global.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id="app"&gt;
+    &lt;h2&gt;{{ message }}&lt;/h2&gt;
+    &lt;button @click="count++"&gt;Clicked {{ count }} times&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;script&gt;
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          message: 'Hello Vue from CDN',
+          count: 0,
+        };
+      },
+    }).mount('#app');
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Recommended Setup with Vite</h5>
+      <p class="small opacity-75 mb-2">Use Vite for real projects. It gives fast startup, instant HMR, easy environment variables, and modern build tooling.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">npm create vue@latest
+cd my-vue-app
+npm install
+npm run dev</code></pre></div>
+
+      <div class="row g-3 mt-2">
+        <div class="col-md-6">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-semibold mb-2">When to use CDN</h6>
+            <p class="small opacity-75 mb-0">Small widgets, multi-page legacy systems, or learning Vue directives without a bundler.</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-semibold mb-2">When to use Vite</h6>
+            <p class="small opacity-75 mb-0">Any serious project with components, routing, state management, TypeScript, tests, and deployment pipelines.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-commands" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-terminal-fill me-2" style="color:var(--vue-primary);"></i>Common Vue Commands</h2>
+
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small cmd-table">
+          <thead class="table-dark">
+            <tr><th>Command</th><th>Purpose</th><th>When you use it</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>npm create vue@latest</code></td><td>Create a new Vue project scaffold</td><td>Starting a fresh app with optional Router, Pinia, ESLint, Vitest, and TypeScript</td></tr>
+            <tr><td><code>npm install</code></td><td>Install dependencies</td><td>After cloning or creating a project</td></tr>
+            <tr><td><code>npm run dev</code></td><td>Start the Vite dev server</td><td>Local development with hot module replacement</td></tr>
+            <tr><td><code>npm run build</code></td><td>Create production assets</td><td>Before deployment or bundle analysis</td></tr>
+            <tr><td><code>npm run preview</code></td><td>Preview the production build locally</td><td>Sanity-check static output before shipping</td></tr>
+            <tr><td><code>npm install vue-router pinia axios</code></td><td>Add common ecosystem packages</td><td>Routing, stores, and HTTP work</td></tr>
+            <tr><td><code>npm install -D vitest @vue/test-utils jsdom</code></td><td>Add unit testing tools</td><td>Component and composable testing</td></tr>
+            <tr><td><code>npm install -D playwright</code></td><td>Add end-to-end testing</td><td>Browser-level tests for full user flows</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="sec-structure" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-folder-fill me-2" style="color:var(--vue-primary);"></i>Typical Project Structure</h2>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">my-vue-app/
+  public/
+  src/
+    assets/
+    components/
+      ui/
+    composables/
+    router/
+      index.ts
+    stores/
+      cart.ts
+    views/
+      HomeView.vue
+      ProductView.vue
+    App.vue
+    main.ts
+  .env
+  .env.production
+  index.html
+  package.json
+  vite.config.ts</code></pre></div>
+
+      <div class="row g-3 mt-2">
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">main.ts</h6><p class="small opacity-75 mb-0">Bootstraps the app and registers plugins like Router or Pinia.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">views/</h6><p class="small opacity-75 mb-0">Route-level pages. Keep business screens here instead of overloading <code>components/</code>.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">components/</h6><p class="small opacity-75 mb-0">Reusable UI pieces such as cards, inputs, modals, navigation, and tables.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">composables/</h6><p class="small opacity-75 mb-0">Shared logic extracted from components, usually functions named like <code>useAuth</code> or <code>useFetch</code>.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">stores/</h6><p class="small opacity-75 mb-0">Pinia modules for app-wide state such as auth, cart, filters, or permissions.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">router/</h6><p class="small opacity-75 mb-0">Central route configuration, lazy-loaded pages, guards, and route metadata.</p></div></div>
+      </div>
+    </section>
+
+    <section id="sec-template" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-code-square me-2" style="color:var(--vue-primary);"></i>Template Syntax</h2>
+
+      <p>Vue templates are declarative. You describe how the UI should look for the current state, and Vue updates the DOM when that state changes.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;script setup&gt;
+import { ref } from 'vue';
+
+const name = ref('Paras');
+const skills = ref(['Vue', 'Pinia', 'Router']);
+const isAvailable = ref(true);
+const cardClass = ref('border border-success');
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;section :class="['p-3', 'rounded', cardClass]"&gt;
+    &lt;h3&gt;Hello {{ name }}&lt;/h3&gt;
+    &lt;p :title="`Welcome ${name}`"&gt;Interpolation and attribute binding&lt;/p&gt;
+    &lt;p v-if="isAvailable"&gt;Currently available for Vue projects&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li v-for="skill in skills" :key="skill"&gt;{{ skill }}&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/section&gt;
+&lt;/template&gt;</code></pre></div>
+
+      <div class="table-responsive mt-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Syntax</th><th>Meaning</th><th>Example</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>{{ value }}</code></td><td>Text interpolation</td><td><code>{{ user.name }}</code></td></tr>
+            <tr><td><code>:attr="value"</code></td><td>Attribute binding</td><td><code>:src="avatarUrl"</code></td></tr>
+            <tr><td><code>@event="handler"</code></td><td>Event binding</td><td><code>@click="save"</code></td></tr>
+            <tr><td><code>:class="..."</code></td><td>Dynamic classes</td><td><code>:class="{ active: isOpen }"</code></td></tr>
+            <tr><td><code>:style="..."</code></td><td>Inline style binding</td><td><code>:style="{ color: themeColor }"</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="sec-directives" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-magic me-2" style="color:var(--vue-primary);"></i>Directives A to Z</h2>
+
+      <p>Directives are special template attributes prefixed with <code>v-</code>. They connect state to the DOM.</p>
+
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Directive</th><th>Use case</th><th>Example</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>v-text</code></td><td>Set text content</td><td><code>&lt;p v-text="message" /&gt;</code></td></tr>
+            <tr><td><code>v-html</code></td><td>Render raw HTML</td><td><code>&lt;div v-html="safeHtml" /&gt;</code></td></tr>
+            <tr><td><code>v-bind</code></td><td>Bind attributes or props</td><td><code>&lt;img :src="avatar" /&gt;</code></td></tr>
+            <tr><td><code>v-on</code></td><td>Listen to DOM events</td><td><code>&lt;button @click="submit" /&gt;</code></td></tr>
+            <tr><td><code>v-if</code></td><td>Conditional render</td><td><code>&lt;div v-if="isAdmin" /&gt;</code></td></tr>
+            <tr><td><code>v-show</code></td><td>Conditional visibility</td><td><code>&lt;div v-show="open" /&gt;</code></td></tr>
+            <tr><td><code>v-for</code></td><td>Render lists</td><td><code>&lt;li v-for="item in items" :key="item.id" /&gt;</code></td></tr>
+            <tr><td><code>v-model</code></td><td>Two-way form binding</td><td><code>&lt;input v-model="search" /&gt;</code></td></tr>
+            <tr><td><code>v-slot</code></td><td>Named or scoped slots</td><td><code>&lt;template #header&gt;...&lt;/template&gt;</code></td></tr>
+            <tr><td><code>v-once</code></td><td>Render once, skip updates</td><td><code>&lt;h1 v-once&gt;Static title&lt;/h1&gt;</code></td></tr>
+            <tr><td><code>v-pre</code></td><td>Skip Vue compilation</td><td><code>&lt;code v-pre&gt;{{ raw }}&lt;/code&gt;</code></td></tr>
+            <tr><td><code>v-memo</code></td><td>Memoize subtree updates</td><td><code>&lt;li v-for="row in rows" v-memo="[row.id, row.status]" /&gt;</code></td></tr>
+            <tr><td><code>v-cloak</code></td><td>Hide uncompiled content</td><td><code>&lt;div v-cloak&gt;...&lt;/div&gt;</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;template&gt;
+  &lt;form @submit.prevent="saveUser" class="d-grid gap-2"&gt;
+    &lt;input v-model.trim="form.name" placeholder="Name" /&gt;
+    &lt;input v-model.number="form.age" type="number" min="0" /&gt;
+
+    &lt;button @click.ctrl="toggleAdvanced"&gt;Ctrl + click for advanced&lt;/button&gt;
+
+    &lt;p v-show="showAdvanced"&gt;Advanced options visible&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li v-for="user in users" :key="user.id"&gt;
+        {{ user.name }}
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/form&gt;
+&lt;/template&gt;</code></pre></div>
+    </section>
+
+    <section id="sec-reactivity" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-lightning-charge-fill me-2" style="color:var(--vue-primary);"></i>Reactivity Fundamentals</h2>
+
+      <p>Vue tracks dependencies automatically. When you read a reactive value during render or in a computed/watcher, Vue knows what should update later.</p>
+
+      <div class="row g-3">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">ref()</h6><p class="small opacity-75 mb-0">Best for primitives and single values like booleans, strings, numbers, DOM refs, and async state flags.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">reactive()</h6><p class="small opacity-75 mb-0">Best for objects that you want to mutate deeply without constantly accessing <code>.value</code>.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">computed()</h6><p class="small opacity-75 mb-0">Derived state. Use for filtered lists, totals, formatted output, and reusable logic in templates.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">shallowRef()</h6><p class="small opacity-75 mb-0">Useful when you want Vue to track only the top-level reference, such as large third-party instances or immutable payloads.</p></div></div>
+      </div>
+
+      <div class="code-wrapper mt-3"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">import { ref, reactive, toRefs, nextTick } from 'vue';
+
+const count = ref(0);
+const filters = reactive({
+  search: '',
+  inStock: false,
+});
+const inputRef = ref(null);
+
+async function incrementAndFocus() {
+  count.value += 1;
+  await nextTick();
+  inputRef.value?.focus();
+}
+
+const state = reactive({
+  page: 1,
+  pageSize: 10,
+});
+
+const { page, pageSize } = toRefs(state);</code></pre></div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Common trap:</strong> do not destructure a <code>reactive()</code> object directly if you still need reactivity. Use <code>toRefs()</code> or keep property access on the original object.</p>
+      </div>
+    </section>
+
+    <section id="sec-computed" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-eyeglasses me-2" style="color:var(--vue-primary);"></i>Computed, watch, and watchEffect</h2>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Tool</th><th>Use it for</th><th>Avoid when</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>computed()</code></td><td>Derived values cached from other reactive state</td><td>You only need a one-time calculation</td></tr>
+            <tr><td><code>watch()</code></td><td>Side effects when specific sources change</td><td>You can express the result as plain derived state</td></tr>
+            <tr><td><code>watchEffect()</code></td><td>Auto-track side effects when dependencies are easy to infer</td><td>You need exact control over which source triggers updates</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">import { ref, computed, watch, watchEffect } from 'vue';
+
+const firstName = ref('Ada');
+const lastName = ref('Lovelace');
+const query = ref('');
+const results = ref([]);
+
+const fullName = computed(() =&gt; `${firstName.value} ${lastName.value}`);
+
+watch(query, async (term, _oldTerm, onCleanup) =&gt; {
+  const controller = new AbortController();
+  onCleanup(() =&gt; controller.abort());
+
+  if (!term) {
+    results.value = [];
+    return;
+  }
+
+  const response = await fetch(`/api/search?q=${encodeURIComponent(term)}`, {
+    signal: controller.signal,
+  });
+
+  results.value = await response.json();
+}, { immediate: true, flush: 'post' });
+
+watchEffect(() =&gt; {
+  console.log('Current query:', query.value);
+});</code></pre></div>
+
+      <p class="small opacity-75 mb-2"><strong>Useful options:</strong> <code>immediate</code> runs the watcher right away, <code>deep</code> tracks nested object changes, and <code>flush: 'post'</code> runs after DOM updates when you need fresh rendered output.</p>
+    </section>
+
+    <section id="sec-forms" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-input-cursor-text me-2" style="color:var(--vue-primary);"></i>Events and Forms</h2>
+
+      <p>Vue form handling feels simple because <code>v-model</code> handles the sync between inputs and state, while event modifiers reduce noisy DOM boilerplate.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;script setup&gt;
+import { reactive, computed } from 'vue';
+
+const form = reactive({
+  fullName: '',
+  email: '',
+  role: 'developer',
+  newsletter: true,
+});
+
+const isValid = computed(() =&gt; form.fullName.trim() &amp;&amp; form.email.includes('@'));
+
+function submitForm() {
+  if (!isValid.value) return;
+  console.log('Submitting', form);
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;form @submit.prevent="submitForm" class="d-grid gap-3"&gt;
+    &lt;input v-model.trim="form.fullName" placeholder="Full name" /&gt;
+    &lt;input v-model.trim="form.email" type="email" placeholder="Email" /&gt;
+
+    &lt;select v-model="form.role"&gt;
+      &lt;option value="developer"&gt;Developer&lt;/option&gt;
+      &lt;option value="designer"&gt;Designer&lt;/option&gt;
+    &lt;/select&gt;
+
+    &lt;label&gt;
+      &lt;input v-model="form.newsletter" type="checkbox" /&gt;
+      Subscribe to newsletter
+    &lt;/label&gt;
+
+    &lt;button :disabled="!isValid"&gt;Save&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/template&gt;</code></pre></div>
+
+      <div class="table-responsive mt-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Modifier</th><th>Effect</th><th>Example</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>.prevent</code></td><td>Prevent default browser behavior</td><td><code>@submit.prevent</code></td></tr>
+            <tr><td><code>.stop</code></td><td>Stop propagation</td><td><code>@click.stop</code></td></tr>
+            <tr><td><code>.trim</code></td><td>Trim input whitespace</td><td><code>v-model.trim</code></td></tr>
+            <tr><td><code>.number</code></td><td>Cast value to number</td><td><code>v-model.number</code></td></tr>
+            <tr><td><code>.lazy</code></td><td>Sync on change instead of input</td><td><code>v-model.lazy</code></td></tr>
+            <tr><td><code>.enter</code></td><td>Keyboard-specific handling</td><td><code>@keyup.enter</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="sec-validation" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-patch-check-fill me-2" style="color:var(--vue-primary);"></i>Form Validation</h2>
+
+      <p>Good Vue forms validate at three levels: input-level feedback, form-level submit rules, and async server validation. Do not wait until submit to tell users everything is wrong.</p>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-4"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Synchronous rules</h6><p class="small opacity-75 mb-0">Required fields, min length, email shape, number ranges, and cross-field checks like password confirmation.</p></div></div>
+        <div class="col-md-4"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Async checks</h6><p class="small opacity-75 mb-0">Username uniqueness, coupon validity, and server-side business rules should return field-specific feedback.</p></div></div>
+        <div class="col-md-4"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Touched state</h6><p class="small opacity-75 mb-0">Show errors after blur or submit so the form feels guided, not hostile from the first keypress.</p></div></div>
+      </div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;script setup&gt;
+import { computed, reactive, ref, watch } from 'vue';
+
+const form = reactive({
+  name: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+});
+
+const touched = reactive({
+  name: false,
+  email: false,
+  password: false,
+  confirmPassword: false,
+});
+
+const serverError = ref('');
+const checkingEmail = ref(false);
+
+const errors = computed(() =&gt; ({
+  name: form.name.trim().length &gt;= 3 ? '' : 'Name must be at least 3 characters.',
+  email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) ? '' : 'Enter a valid email address.',
+  password: form.password.length &gt;= 8 ? '' : 'Password must be at least 8 characters.',
+  confirmPassword: form.password === form.confirmPassword ? '' : 'Passwords must match.',
+}));
+
+watch(() =&gt; form.email, async (email, _oldEmail, onCleanup) =&gt; {
+  if (!email || errors.value.email) return;
+
+  const controller = new AbortController();
+  onCleanup(() =&gt; controller.abort());
+  checkingEmail.value = true;
+
+  try {
+    const response = await fetch(`/api/check-email?email=${encodeURIComponent(email)}`, {
+      signal: controller.signal,
+    });
+    const result = await response.json();
+    serverError.value = result.available ? '' : 'This email is already registered.';
+  } catch (error) {
+    if (error.name !== 'AbortError') {
+      serverError.value = 'Could not validate email right now.';
+    }
+  } finally {
+    checkingEmail.value = false;
+  }
+});
+
+const canSubmit = computed(() =&gt;
+  Object.values(errors.value).every(value =&gt; !value) &amp;&amp; !serverError.value
+);
+
+function handleBlur(field) {
+  touched[field] = true;
+}
+
+function submitForm() {
+  Object.keys(touched).forEach(key =&gt; {
+    touched[key] = true;
+  });
+  if (!canSubmit.value) return;
+  console.log('Submit payload', form);
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;form @submit.prevent="submitForm" class="d-grid gap-3" novalidate&gt;
+    &lt;div&gt;
+      &lt;input v-model.trim="form.name" @blur="handleBlur('name')" placeholder="Name" /&gt;
+      &lt;p v-if="touched.name &amp;&amp; errors.name" class="text-danger small mb-0"&gt;{{ errors.name }}&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div&gt;
+      &lt;input v-model.trim="form.email" @blur="handleBlur('email')" type="email" placeholder="Email" /&gt;
+      &lt;p v-if="checkingEmail" class="small mb-0"&gt;Checking email...&lt;/p&gt;
+      &lt;p v-else-if="(touched.email &amp;&amp; errors.email) || serverError" class="text-danger small mb-0"&gt;
+        {{ errors.email || serverError }}
+      &lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div&gt;
+      &lt;input v-model="form.password" @blur="handleBlur('password')" type="password" placeholder="Password" /&gt;
+      &lt;p v-if="touched.password &amp;&amp; errors.password" class="text-danger small mb-0"&gt;{{ errors.password }}&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div&gt;
+      &lt;input v-model="form.confirmPassword" @blur="handleBlur('confirmPassword')" type="password" placeholder="Confirm password" /&gt;
+      &lt;p v-if="touched.confirmPassword &amp;&amp; errors.confirmPassword" class="text-danger small mb-0"&gt;{{ errors.confirmPassword }}&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;button :disabled="!canSubmit"&gt;Create account&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/template&gt;</code></pre></div>
+
+      <div class="table-responsive mt-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Approach</th><th>Best for</th><th>Tradeoff</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Manual reactive validation</td><td>Most small and medium forms</td><td>You write more plumbing but keep full control</td></tr>
+            <tr><td>Composable like <code>useForm</code></td><td>Internal design systems</td><td>Needs your team to maintain conventions</td></tr>
+            <tr><td>Library like VeeValidate</td><td>Large forms and schema-heavy apps</td><td>More abstraction to learn, but faster complex validation setup</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="sec-components" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-boxes me-2" style="color:var(--vue-primary);"></i>Components</h2>
+
+      <p>Components are the unit of composition in Vue. Split UI into reusable, focused pieces that each own a single concern.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Single-File Component Example</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;script setup&gt;
+defineProps({
+  title: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+});
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;article class="product-card"&gt;
+    &lt;h3&gt;{{ title }}&lt;/h3&gt;
+    &lt;p&gt;${{ price.toFixed(2) }}&lt;/p&gt;
+    &lt;slot /&gt;
+  &lt;/article&gt;
+&lt;/template&gt;
+
+&lt;style scoped&gt;
+.product-card {
+  border: 1px solid #d9e2ec;
+  border-radius: 12px;
+  padding: 1rem;
+}
+&lt;/style&gt;</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Dynamic Components</h5>
+      <p class="small opacity-75 mb-2">Use a dynamic component when multiple views share the same slot in the UI but render different component implementations.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;component :is="currentTab" /&gt;</code></pre></div>
+    </section>
+
+    <section id="sec-props" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-arrow-left-right me-2" style="color:var(--vue-primary);"></i>Props, Emits, and Custom v-model</h2>
+
+      <p>Parent-to-child communication flows through <strong>props</strong>. Child-to-parent communication flows through <strong>emits</strong>. For form-like components, modern Vue also supports <strong>defineModel()</strong>.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;script setup lang="ts"&gt;
+const props = defineProps&lt;{
+  label: string;
+  disabled?: boolean;
+}&gt;();
+
+const emit = defineEmits&lt;{
+  blur: [];
+}&gt;();
+
+const model = defineModel&lt;string&gt;({ required: true });
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;label class="d-grid gap-1"&gt;
+    &lt;span&gt;{{ props.label }}&lt;/span&gt;
+    &lt;input v-model="model" :disabled="props.disabled" @blur="emit('blur')" /&gt;
+  &lt;/label&gt;
+&lt;/template&gt;</code></pre></div>
+
+      <div class="table-responsive mt-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Pattern</th><th>Use case</th><th>Example</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Props</td><td>Pass data down</td><td><code>&lt;UserCard :user="selectedUser" /&gt;</code></td></tr>
+            <tr><td>Emits</td><td>Notify parent of child actions</td><td><code>emit('delete', id)</code></td></tr>
+            <tr><td>Custom <code>v-model</code></td><td>Reusable inputs or pickers</td><td><code>&lt;BaseInput v-model="name" /&gt;</code></td></tr>
+            <tr><td>Multiple models</td><td>Advanced component APIs</td><td><code>v-model:open</code>, <code>v-model:page</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="sec-slots" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-grid-3x3-gap-fill me-2" style="color:var(--vue-primary);"></i>Slots, Scoped Slots, and provide/inject</h2>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Named and Scoped Slots</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- BaseTable.vue --&gt;
+&lt;template&gt;
+  &lt;section&gt;
+    &lt;header&gt;&lt;slot name="header" /&gt;&lt;/header&gt;
+    &lt;ul&gt;
+      &lt;li v-for="row in rows" :key="row.id"&gt;
+        &lt;slot name="row" :row="row" /&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/section&gt;
+&lt;/template&gt;
+
+&lt;!-- Parent.vue --&gt;
+&lt;BaseTable :rows="users"&gt;
+  &lt;template #header&gt;
+    &lt;h3&gt;Users&lt;/h3&gt;
+  &lt;/template&gt;
+
+  &lt;template #row="{ row }"&gt;
+    &lt;strong&gt;{{ row.name }}&lt;/strong&gt; - {{ row.email }}
+  &lt;/template&gt;
+&lt;/BaseTable&gt;</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>provide/inject</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">// Parent or app-level provider
+import { provide, readonly, ref } from 'vue';
+
+const theme = ref('dark');
+provide('theme', readonly(theme));
+
+// Deep child consumer
+import { inject } from 'vue';
+
+const theme = inject('theme', 'light');</code></pre></div>
+
+      <p class="small opacity-75 mb-0"><strong>Rule of thumb:</strong> use slots for layout flexibility, props/emits for direct communication, and provide/inject for cross-tree dependency sharing such as themes, form groups, or app services.</p>
+    </section>
+
+    <section id="sec-lifecycle" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-arrow-repeat me-2" style="color:var(--vue-primary);"></i>Lifecycle Hooks</h2>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Composition API</th><th>When it runs</th><th>Typical work</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>onMounted()</code></td><td>After the component is mounted</td><td>Fetch data, measure DOM, start listeners</td></tr>
+            <tr><td><code>onUpdated()</code></td><td>After reactive DOM updates</td><td>Respond to rendered changes carefully</td></tr>
+            <tr><td><code>onBeforeUnmount()</code></td><td>Right before teardown</td><td>Remove timers, sockets, observers, listeners</td></tr>
+            <tr><td><code>onUnmounted()</code></td><td>After teardown</td><td>Final cleanup or logging</td></tr>
+            <tr><td><code>onActivated()</code>/<code>onDeactivated()</code></td><td>With <code>&lt;KeepAlive&gt;</code></td><td>Pause or resume cached view logic</td></tr>
+            <tr><td><code>onErrorCaptured()</code></td><td>When a descendant throws</td><td>Render fallback UI or log errors</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">import { onMounted, onBeforeUnmount, onErrorCaptured, ref } from 'vue';
+
+const online = ref(navigator.onLine);
+
+function updateStatus() {
+  online.value = navigator.onLine;
+}
+
+onMounted(() =&gt; {
+  window.addEventListener('online', updateStatus);
+  window.addEventListener('offline', updateStatus);
+});
+
+onBeforeUnmount(() =&gt; {
+  window.removeEventListener('online', updateStatus);
+  window.removeEventListener('offline', updateStatus);
+});
+
+onErrorCaptured((error, instance, info) =&gt; {
+  console.error('Captured Vue error', error, info);
+  return false;
+});</code></pre></div>
+    </section>
+
+    <section id="sec-composition" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-layers-fill me-2" style="color:var(--vue-primary);"></i>Composition API</h2>
+
+      <p>Composition API groups logic by feature rather than by option type. That becomes much more maintainable as components grow.</p>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-6"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Good for large components</h6><p class="small opacity-75 mb-0">Related state, computed values, watchers, and methods can stay together instead of being split across <code>data</code>, <code>methods</code>, and <code>computed</code>.</p></div></div>
+        <div class="col-md-6"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Great for reuse</h6><p class="small opacity-75 mb-0">Move logic into composables such as <code>useCart</code>, <code>usePermissions</code>, or <code>useInfiniteScroll</code>.</p></div></div>
+      </div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">// composables/useCounter.js
+import { ref, computed } from 'vue';
+
+export function useCounter(initialValue = 0) {
+  const count = ref(initialValue);
+
+  const doubled = computed(() =&gt; count.value * 2);
+
+  function increment() {
+    count.value += 1;
+  }
+
+  function reset() {
+    count.value = initialValue;
+  }
+
+  return {
+    count,
+    doubled,
+    increment,
+    reset,
+  };
+}</code></pre></div>
+    </section>
+
+    <section id="sec-script-setup" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-braces-asterisk me-2" style="color:var(--vue-primary);"></i>&lt;script setup&gt; and Compiler Macros</h2>
+
+      <p><code>&lt;script setup&gt;</code> is the modern default for Vue SFCs. It removes boilerplate and makes imports and top-level declarations directly available to the template.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;script setup lang="ts"&gt;
+defineOptions({
+  inheritAttrs: false,
+});
+
+const props = defineProps&lt;{
+  title: string;
+  count?: number;
+}&gt;();
+
+const emit = defineEmits&lt;{
+  save: [value: number];
+}&gt;();
+
+defineExpose({
+  focusInput,
+});
+
+function focusInput() {
+  console.log('Expose an imperative method to parent refs when needed');
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;button @click="emit('save', props.count ?? 0)"&gt;
+    Save {{ props.title }}
+  &lt;/button&gt;
+&lt;/template&gt;</code></pre></div>
+
+      <div class="table-responsive mt-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Macro</th><th>Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>defineProps()</code></td><td>Declare component props</td></tr>
+            <tr><td><code>defineEmits()</code></td><td>Declare emitted events</td></tr>
+            <tr><td><code>defineModel()</code></td><td>Create model bindings for custom components</td></tr>
+            <tr><td><code>defineExpose()</code></td><td>Expose an internal API to parent refs</td></tr>
+            <tr><td><code>defineOptions()</code></td><td>Set component options inside script setup</td></tr>
+            <tr><td><code>defineSlots()</code></td><td>Type slot contracts in TypeScript-heavy codebases</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="sec-router" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-signpost-split-fill me-2" style="color:var(--vue-primary);"></i>Vue Router</h2>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Router Setup</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">// router/index.ts
+import { createRouter, createWebHistory } from 'vue-router';
+
+const routes = [
+  {
+    path: '/',
+    name: 'home',
+    component: () =&gt; import('../views/HomeView.vue'),
+  },
+  {
+    path: '/users/:id',
+    name: 'user',
+    component: () =&gt; import('../views/UserView.vue'),
+    meta: { requiresAuth: true },
+  },
+];
+
+export const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Using Routes Inside Components</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
+import { watch } from 'vue';
+
+const route = useRoute();
+const router = useRouter();
+
+watch(() =&gt; route.params.id, (userId) =&gt; {
+  console.log('Load user', userId);
+}, { immediate: true });
+
+function goHome() {
+  router.push({ name: 'home' });
+}
+
+onBeforeRouteLeave(() =&gt; {
+  const hasUnsavedChanges = false;
+  return hasUnsavedChanges ? window.confirm('Leave page?') : true;
+});</code></pre></div>
+
+      <p class="small opacity-75 mb-2"><strong>Guard pattern:</strong> use global guards for authentication and per-route guards for feature-specific checks.</p>
+    </section>
+
+    <section id="sec-pinia" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-diagram-3-fill me-2" style="color:var(--vue-primary);"></i>Pinia State Management</h2>
+
+      <p>Pinia is the official state management library for Vue. It is lightweight, typed well, and much easier to reason about than older Vuex patterns.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">// stores/cart.ts
+import { computed, ref } from 'vue';
+import { defineStore } from 'pinia';
+
+export const useCartStore = defineStore('cart', () =&gt; {
+  const items = ref&lt;Array&lt;{ id: number; title: string; price: number; qty: number }&gt;&gt;([]);
+
+  const total = computed(() =&gt;
+    items.value.reduce((sum, item) =&gt; sum + item.price * item.qty, 0)
+  );
+
+  function addItem(product: { id: number; title: string; price: number }) {
+    const existing = items.value.find(item =&gt; item.id === product.id);
+    if (existing) {
+      existing.qty += 1;
+      return;
+    }
+    items.value.push({ ...product, qty: 1 });
+  }
+
+  function clearCart() {
+    items.value = [];
+  }
+
+  return { items, total, addItem, clearCart };
+});</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">import { storeToRefs } from 'pinia';
+import { useCartStore } from '@/stores/cart';
+
+const cart = useCartStore();
+const { items, total } = storeToRefs(cart);
+
+cart.addItem({ id: 1, title: 'Vue Mastery', price: 49 });</code></pre></div>
+    </section>
+
+    <section id="sec-api" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-cloud-arrow-down-fill me-2" style="color:var(--vue-primary);"></i>API Integration</h2>
+
+      <p>Fetching data in Vue is usually done inside a composable or lifecycle hook. The main production rules are simple: track loading, surface errors, and cancel stale requests.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">import { ref, watchEffect } from 'vue';
+
+export function useFetchJson(urlRef) {
+  const data = ref(null);
+  const loading = ref(false);
+  const error = ref('');
+
+  watchEffect(async (onCleanup) =&gt; {
+    const url = urlRef.value;
+    if (!url) return;
+
+    const controller = new AbortController();
+    onCleanup(() =&gt; controller.abort());
+
+    loading.value = true;
+    error.value = '';
+
+    try {
+      const response = await fetch(url, { signal: controller.signal });
+      if (!response.ok) throw new Error('Request failed');
+      data.value = await response.json();
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        error.value = err.message;
+      }
+    } finally {
+      loading.value = false;
+    }
+  });
+
+  return { data, loading, error };
+}</code></pre></div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Architecture advice:</strong> keep raw fetch logic in composables or service modules. Components should mainly coordinate state and render UI.</p>
+      </div>
+    </section>
+
+    <section id="sec-async" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-hourglass-split me-2" style="color:var(--vue-primary);"></i>Async Components</h2>
+
+      <p>Async components split bundles and delay loading until the user actually reaches that part of the interface.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">import { defineAsyncComponent } from 'vue';
+
+const SalesChart = defineAsyncComponent({
+  loader: () =&gt; import('@/components/charts/SalesChart.vue'),
+  delay: 200,
+  timeout: 5000,
+  suspensible: true,
+});</code></pre></div>
+
+      <p class="small opacity-75 mb-0">Combine async components with route-level lazy loading and a skeleton fallback for the best perceived performance.</p>
+    </section>
+
+    <section id="sec-builtins" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-window-stack me-2" style="color:var(--vue-primary);"></i>Teleport, Transition, KeepAlive, and Suspense</h2>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Teleport</h6><p class="small opacity-75 mb-0">Render a component elsewhere in the DOM. Ideal for modals, drawers, and tooltips.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Transition</h6><p class="small opacity-75 mb-0">Animate entering and leaving UI with CSS classes or JS hooks.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">KeepAlive</h6><p class="small opacity-75 mb-0">Cache dynamic components or route views so users do not lose local state while navigating.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Suspense</h6><p class="small opacity-75 mb-0">Coordinate async dependencies and show a fallback while async setup resolves.</p></div></div>
+      </div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;Teleport to="body"&gt;
+  &lt;ModalWindow v-if="open" @close="open = false" /&gt;
+&lt;/Teleport&gt;
+
+&lt;KeepAlive include="DashboardView,SettingsView"&gt;
+  &lt;component :is="activeTab" /&gt;
+&lt;/KeepAlive&gt;
+
+&lt;Suspense&gt;
+  &lt;template #default&gt;
+    &lt;AsyncReport /&gt;
+  &lt;/template&gt;
+  &lt;template #fallback&gt;
+    &lt;p&gt;Loading report...&lt;/p&gt;
+  &lt;/template&gt;
+&lt;/Suspense&gt;</code></pre></div>
+    </section>
+
+    <section id="sec-animations" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-stars me-2" style="color:var(--vue-primary);"></i>Animations and Transitions</h2>
+
+      <p>Vue gives you structure for UI motion without forcing a full animation library. Start with <code>&lt;Transition&gt;</code> and <code>&lt;TransitionGroup&gt;</code> before adding GSAP, Motion One, or custom timeline logic.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Single Element Transitions</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;script setup&gt;
+import { ref } from 'vue';
+
+const showNotice = ref(false);
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;button @click="showNotice = !showNotice"&gt;Toggle notice&lt;/button&gt;
+
+  &lt;Transition name="fade-slide" appear&gt;
+    &lt;aside v-if="showNotice" class="notice-card"&gt;
+      Saved successfully.
+    &lt;/aside&gt;
+  &lt;/Transition&gt;
+&lt;/template&gt;
+
+&lt;style scoped&gt;
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: opacity .25s ease, transform .25s ease;
+}
+
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.notice-card {
+  margin-top: 1rem;
+  padding: .85rem 1rem;
+  border-radius: 12px;
+  background: rgba(66, 184, 131, .12);
+}
+&lt;/style&gt;</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>List Animations</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;TransitionGroup name="list" tag="ul" class="list-unstyled d-grid gap-2"&gt;
+  &lt;li v-for="task in tasks" :key="task.id" class="p-2 rounded border"&gt;
+    {{ task.title }}
+  &lt;/li&gt;
+&lt;/TransitionGroup&gt;
+
+&lt;style scoped&gt;
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all .25s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: scale(.96) translateY(8px);
+}
+
+.list-leave-active {
+  position: absolute;
+}
+&lt;/style&gt;</code></pre></div>
+
+      <div class="table-responsive mt-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Animation need</th><th>Vue tool</th><th>Example</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Toggle one panel</td><td><code>&lt;Transition&gt;</code></td><td>Modal, alert, accordion section</td></tr>
+            <tr><td>Add/remove list items</td><td><code>&lt;TransitionGroup&gt;</code></td><td>Todo list, notifications, comments</td></tr>
+            <tr><td>Route page transitions</td><td>RouterView + Transition</td><td>Fade between dashboards or settings views</td></tr>
+            <tr><td>Complex choreographed motion</td><td>JS hooks + GSAP</td><td>Marketing pages, drag-drop, staged reveals</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Motion rule:</strong> use motion to explain state changes and preserve continuity, not just to decorate. If the animation delays task completion, it is probably too much.</p>
+      </div>
+    </section>
+
+    <section id="sec-plugins" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-plug-fill me-2" style="color:var(--vue-primary);"></i>Custom Directives and Plugins</h2>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Custom Directive</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">export const vFocus = {
+  mounted(el) {
+    el.focus();
+  },
+};</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Plugin</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">export default {
+  install(app, options) {
+    app.config.globalProperties.$currency = (value) =&gt;
+      new Intl.NumberFormat(options.locale, {
+        style: 'currency',
+        currency: options.currency,
+      }).format(value);
+  },
+};
+
+// main.ts
+app.use(CurrencyPlugin, { locale: 'en-US', currency: 'USD' });</code></pre></div>
+
+      <p class="small opacity-75 mb-0">Use plugins for app-wide services and directives for low-level DOM behavior. Do not hide business logic inside either one.</p>
+    </section>
+
+    <section id="sec-typescript" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-filetype-tsx me-2" style="color:var(--vue-primary);"></i>TypeScript with Vue</h2>
+
+      <p>Vue works very well with TypeScript, especially in <code>&lt;script setup lang="ts"&gt;</code>. The biggest value comes from typed props, emits, composables, stores, and API responses.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;script setup lang="ts"&gt;
+import { ref } from 'vue';
+
+type User = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+const props = defineProps&lt;{
+  initialUsers: User[];
+}&gt;();
+
+const users = ref&lt;User[]&gt;(props.initialUsers);
+const inputRef = ref&lt;HTMLInputElement | null&gt;(null);
+&lt;/script&gt;</code></pre></div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Strong default:</strong> type the edges first. That means props, route params, server responses, emitted event payloads, and store shape.</p>
+      </div>
+    </section>
+
+    <section id="sec-testing" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-check2-circle me-2" style="color:var(--vue-primary);"></i>Testing Vue Apps</h2>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Layer</th><th>What to test</th><th>Typical tooling</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Unit</td><td>Pure utilities, formatting, validators, small composables</td><td>Vitest</td></tr>
+            <tr><td>Component</td><td>Rendering, emitted events, slot behavior, local interaction</td><td>Vitest + Vue Test Utils</td></tr>
+            <tr><td>Store</td><td>Pinia actions, getters, async flows</td><td>Vitest</td></tr>
+            <tr><td>E2E</td><td>Critical user journeys in the browser</td><td>Playwright or Cypress</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">import { mount } from '@vue/test-utils';
+import CounterButton from './CounterButton.vue';
+
+test('increments count when clicked', async () =&gt; {
+  const wrapper = mount(CounterButton);
+
+  await wrapper.get('button').trigger('click');
+
+  expect(wrapper.text()).toContain('1');
+});</code></pre></div>
+    </section>
+
+    <section id="sec-performance" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-speedometer2 me-2" style="color:var(--vue-primary);"></i>Performance Optimization</h2>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Lazy-load routes</h6><p class="small opacity-75 mb-0">Split route views with dynamic imports so the first bundle stays lean.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Cache derived state</h6><p class="small opacity-75 mb-0">Use <code>computed()</code> rather than repeating expensive expressions in templates.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Stable keys</h6><p class="small opacity-75 mb-0">Always use meaningful list keys such as database IDs, not array indexes.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Avoid deep tracking</h6><p class="small opacity-75 mb-0">Use <code>shallowRef()</code>, <code>markRaw()</code>, or immutable updates for very large objects or libraries.</p></div></div>
+      </div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;li
+  v-for="row in rows"
+  :key="row.id"
+  v-memo="[row.id, row.status, row.updatedAt]"
+&gt;
+  {{ row.title }}
+&lt;/li&gt;</code></pre></div>
+
+      <p class="small opacity-75 mb-0"><strong>For very large lists:</strong> use virtualization rather than trying to micro-optimize thousands of mounted DOM nodes.</p>
+    </section>
+
+    <section id="sec-security" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-shield-check me-2" style="color:var(--vue-primary);"></i>Security and Best Practices</h2>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Risk</th><th>Bad pattern</th><th>Safer pattern</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>XSS via raw HTML</td><td><code>v-html="userInput"</code></td><td>Sanitize first with a library like DOMPurify, or render plain text instead</td></tr>
+            <tr><td>Leaking secrets</td><td>Putting private keys in <code>VITE_*</code> variables</td><td>Keep secrets on the server only. Anything prefixed for Vite is exposed to the client</td></tr>
+            <tr><td>Prop mutation</td><td>Changing prop objects directly inside children</td><td>Create local state or emit updates back to the parent</td></tr>
+            <tr><td>Unbounded watchers</td><td>Starting timers or fetches without cleanup</td><td>Use <code>onCleanup</code>, <code>onBeforeUnmount</code>, and <code>AbortController</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-box">
+        <p class="mb-0"><strong>Hard rule:</strong> Vue protects against a lot of DOM injection by default, but it cannot protect you if you deliberately bypass that safety with raw HTML or client-side secrets.</p>
+      </div>
+    </section>
+
+    <section id="sec-env" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-key-fill me-2" style="color:var(--vue-primary);"></i>Build Modes and Environment Variables</h2>
+
+      <p>In Vite-powered Vue apps, environment variables that should be available in the browser must begin with <code>VITE_</code>.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># .env
+VITE_API_BASE_URL=https://dev-api.example.com
+
+# .env.production
+VITE_API_BASE_URL=https://api.example.com</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+const isProduction = import.meta.env.PROD;</code></pre></div>
+
+      <p class="small opacity-75 mb-0"><strong>Important:</strong> environment variables without the public prefix are not available in client-side Vue code.</p>
+    </section>
+
+    <section id="sec-ssr" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-globe2 me-2" style="color:var(--vue-primary);"></i>SSR, SSG, and Nuxt</h2>
+
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>Vue itself</strong> is the UI framework. <strong>Nuxt</strong> is the framework you reach for when you need SSR, SSG, hybrid rendering, file-based routing, SEO workflows, or server-side data conventions.</p>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Need</th><th>Vue + Vite</th><th>Nuxt</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Pure SPA dashboard</td><td>Excellent fit</td><td>Usually unnecessary</td></tr>
+            <tr><td>SEO-heavy marketing site</td><td>Possible, but manual</td><td>Preferred fit</td></tr>
+            <tr><td>Server rendering and route data conventions</td><td>Requires custom setup</td><td>Built in</td></tr>
+            <tr><td>Simple static deployment</td><td>Very easy</td><td>Also easy, but more framework surface</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="sec-nuxt" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-box-arrow-up-right me-2" style="color:var(--vue-primary);"></i>Nuxt Deep Dive</h2>
+
+      <p>Nuxt is the production framework layer on top of Vue when you need file-based routing, server rendering, static generation, data-loading conventions, server API handlers, middleware, and SEO-aware page structure.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>What Nuxt Adds</h5>
+      <div class="row g-3 mb-3">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">File routing</h6><p class="small opacity-75 mb-0">Pages become routes automatically under <code>pages/</code>.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Server routes</h6><p class="small opacity-75 mb-0">Add backend handlers under <code>server/api</code> without building a separate Express app.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">SEO structure</h6><p class="small opacity-75 mb-0">Use <code>useHead()</code>, meta config, and SSR for crawler-friendly pages.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Hybrid rendering</h6><p class="small opacity-75 mb-0">Mix static, cached, and server-rendered routes based on each page’s needs.</p></div></div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Core Folder Layout</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">my-nuxt-app/
+  app.vue
+  components/
+  composables/
+  layouts/
+  middleware/
+  pages/
+    index.vue
+    products/[slug].vue
+  plugins/
+  server/
+    api/
+      products.get.ts
+  nuxt.config.ts</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>Route and Data Example</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;script setup lang="ts"&gt;
+const route = useRoute();
+
+const { data: product, pending, error, refresh } = await useFetch(
+  `/api/products/${route.params.slug}`
+);
+
+useHead({
+  title: () =&gt; product.value?.name ? `${product.value.name} | Store` : 'Product',
+  meta: [
+    {
+      name: 'description',
+      content: product.value?.summary ?? 'Product details page',
+    },
+  ],
+});
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div v-if="pending"&gt;Loading...&lt;/div&gt;
+  &lt;div v-else-if="error"&gt;Could not load product.&lt;/div&gt;
+  &lt;article v-else&gt;
+    &lt;h1&gt;{{ product.name }}&lt;/h1&gt;
+    &lt;p&gt;{{ product.summary }}&lt;/p&gt;
+    &lt;button @click="refresh"&gt;Refresh&lt;/button&gt;
+  &lt;/article&gt;
+&lt;/template&gt;</code></pre></div>
+
+      <div class="table-responsive mt-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Question</th><th>Use Vue + Vite</th><th>Use Nuxt</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Do you need SEO-first content pages?</td><td>Possible but more manual</td><td>Yes, this is a strong Nuxt case</td></tr>
+            <tr><td>Do you need server endpoints near the frontend?</td><td>Use a separate backend</td><td>Nuxt server routes fit well</td></tr>
+            <tr><td>Is the app a private internal dashboard?</td><td>Usually enough</td><td>Often unnecessary unless SSR brings real value</td></tr>
+            <tr><td>Do you want file conventions over manual wiring?</td><td>Less convention</td><td>Nuxt gives strong structure</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="sec-laravel" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-diagram-2-fill me-2" style="color:var(--vue-primary);"></i>Laravel + Vue.js Integration</h2>
+
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>Recommended latest stack:</strong> use <strong>Laravel 12</strong> with <strong>Vue 3</strong> and the built-in <strong>Vite</strong> frontend pipeline. This is the clean default when you want Laravel for backend routes, auth, validation, and database work while Vue handles reactive UI on the frontend.</p>
+      </div>
+
+      <p>There are two common ways to use Laravel with Vue. The first is a <strong>single Laravel app</strong> where Blade loads a Vue entry file through Vite. The second is a <strong>separate frontend + API backend</strong> architecture. For most small and medium apps, the first approach is simpler and easier to maintain.</p>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Architecture</th><th>Best for</th><th>How it works</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Laravel app + Vue inside same project</td><td>Admin panels, dashboards, CRUD apps, business tools</td><td>Blade serves the page, Vite compiles Vue, Laravel handles web/API routes and database logic</td></tr>
+            <tr><td>Separate Laravel API + Vue frontend</td><td>Large SPAs or teams splitting backend/frontend deployment</td><td>Vue app calls Laravel API over HTTP, usually with token auth like Sanctum</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Setup Laravel 12 with Vue 3</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">composer create-project laravel/laravel laravel-vue-app
+cd laravel-vue-app
+
+npm install
+npm install vue @vitejs/plugin-vue
+
+php artisan serve
+npm run dev</code></pre></div>
+
+      <p class="small opacity-75 mb-2"><strong>Why this works:</strong> Laravel already ships with Vite support. You only add the Vue plugin and then point your JS entry file at a Vue app.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Configure Vite for Vue</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">// vite.config.js
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import vue from '@vitejs/plugin-vue';
+
+export default defineConfig({
+  plugins: [
+    laravel({
+      input: ['resources/css/app.css', 'resources/js/app.js'],
+      refresh: true,
+    }),
+    vue(),
+  ],
+});</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>Create the Vue Entry File</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-javascript">// resources/js/app.js
+import './bootstrap';
+import { createApp } from 'vue';
+import UserDashboard from './components/UserDashboard.vue';
+
+createApp({
+  components: {
+    UserDashboard,
+  },
+}).mount('#app');</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">4</span>Load Vue from a Blade View</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">&lt;!-- resources/views/dashboard.blade.php --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8" /&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+  &lt;title&gt;Laravel + Vue Demo&lt;/title&gt;
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id="app"&gt;
+    &lt;user-dashboard&gt;&lt;/user-dashboard&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// routes/web.php
+use Illuminate\Support\Facades\Route;
+
+Route::view('/dashboard', 'dashboard');</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">5</span>Simple Laravel + Vue Example</h5>
+      <p class="small opacity-75 mb-2">This example shows the normal real-world flow: Laravel exposes data through an API route, and Vue fetches and renders it.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// routes/api.php
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/users', function () {
+  return response()-&gt;json([
+    ['id' =&gt; 1, 'name' =&gt; 'Paras Shah', 'email' =&gt; 'paras@example.com'],
+    ['id' =&gt; 2, 'name' =&gt; 'Aarav Patel', 'email' =&gt; 'aarav@example.com'],
+  ]);
+});</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- resources/js/components/UserDashboard.vue --&gt;
+&lt;script setup&gt;
+import { onMounted, ref } from 'vue';
+
+const users = ref([]);
+const loading = ref(true);
+const error = ref('');
+
+async function loadUsers() {
+  loading.value = true;
+  error.value = '';
+
+  try {
+    const response = await fetch('/api/users');
+    if (!response.ok) {
+      throw new Error('Failed to fetch users');
+    }
+    users.value = await response.json();
+  } catch (err) {
+    error.value = err.message;
+  } finally {
+    loading.value = false;
+  }
+}
+
+onMounted(loadUsers);
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;section class="container py-4"&gt;
+    &lt;h2 class="mb-3"&gt;Laravel + Vue User List&lt;/h2&gt;
+
+    &lt;p v-if="loading"&gt;Loading users...&lt;/p&gt;
+    &lt;p v-else-if="error" class="text-danger"&gt;{{ error }}&lt;/p&gt;
+
+    &lt;ul v-else class="list-group"&gt;
+      &lt;li v-for="user in users" :key="user.id" class="list-group-item"&gt;
+        &lt;strong&gt;{{ user.name }}&lt;/strong&gt; - {{ user.email }}
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/section&gt;
+&lt;/template&gt;</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">6</span>Second Example — Form Submit + Validation + Database Save</h5>
+      <p class="small opacity-75 mb-2">This example shows the backend and frontend responsibilities clearly: Laravel validates and stores the data, while Vue manages the interactive form and shows field errors.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">php artisan make:model Contact -m
+php artisan make:controller Api/ContactController
+php artisan migrate</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// database/migrations/xxxx_xx_xx_xxxxxx_create_contacts_table.php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+  public function up(): void
+  {
+    Schema::create('contacts', function (Blueprint $table) {
+      $table-&gt;id();
+      $table-&gt;string('name');
+      $table-&gt;string('email');
+      $table-&gt;text('message');
+      $table-&gt;timestamps();
+    });
+  }
+
+  public function down(): void
+  {
+    Schema::dropIfExists('contacts');
+  }
+};</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// app/Models/Contact.php
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Contact extends Model
+{
+  protected $fillable = ['name', 'email', 'message'];
+}</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// app/Http/Controllers/Api/ContactController.php
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\Contact;
+use Illuminate\Http\Request;
+
+class ContactController extends Controller
+{
+  public function store(Request $request)
+  {
+    $validated = $request-&gt;validate([
+      'name' =&gt; ['required', 'string', 'min:3'],
+      'email' =&gt; ['required', 'email'],
+      'message' =&gt; ['required', 'string', 'min:10'],
+    ]);
+
+    $contact = Contact::create($validated);
+
+    return response()-&gt;json([
+      'message' =&gt; 'Contact saved successfully.',
+      'contact' =&gt; $contact,
+    ], 201);
+  }
+}</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// routes/api.php
+use App\Http\Controllers\Api\ContactController;
+use Illuminate\Support\Facades\Route;
+
+Route::post('/contacts', [ContactController::class, 'store']);</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- resources/js/components/ContactForm.vue --&gt;
+&lt;script setup&gt;
+import { computed, reactive, ref } from 'vue';
+
+const form = reactive({
+  name: '',
+  email: '',
+  message: '',
+});
+
+const serverErrors = reactive({});
+const saving = ref(false);
+const successMessage = ref('');
+
+const clientErrors = computed(() =&gt; ({
+  name: form.name.trim().length &gt;= 3 ? '' : 'Name must be at least 3 characters.',
+  email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) ? '' : 'Enter a valid email.',
+  message: form.message.trim().length &gt;= 10 ? '' : 'Message must be at least 10 characters.',
+}));
+
+function resetServerErrors() {
+  Object.keys(serverErrors).forEach(key =&gt; delete serverErrors[key]);
+}
+
+async function submitForm() {
+  successMessage.value = '';
+  resetServerErrors();
+
+  if (Object.values(clientErrors.value).some(Boolean)) {
+    Object.assign(serverErrors, clientErrors.value);
+    return;
+  }
+
+  saving.value = true;
+
+  try {
+    const response = await fetch('/api/contacts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify(form),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      if (result.errors) {
+        Object.entries(result.errors).forEach(([field, messages]) =&gt; {
+          serverErrors[field] = messages[0];
+        });
+        return;
+      }
+
+      throw new Error(result.message || 'Save failed');
+    }
+
+    successMessage.value = result.message;
+    form.name = '';
+    form.email = '';
+    form.message = '';
+  } catch (error) {
+    serverErrors.general = error.message;
+  } finally {
+    saving.value = false;
+  }
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;form @submit.prevent="submitForm" class="d-grid gap-3"&gt;
+    &lt;div&gt;
+      &lt;input v-model.trim="form.name" placeholder="Name" /&gt;
+      &lt;p v-if="serverErrors.name" class="text-danger small mb-0"&gt;{{ serverErrors.name }}&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div&gt;
+      &lt;input v-model.trim="form.email" type="email" placeholder="Email" /&gt;
+      &lt;p v-if="serverErrors.email" class="text-danger small mb-0"&gt;{{ serverErrors.email }}&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div&gt;
+      &lt;textarea v-model.trim="form.message" rows="4" placeholder="Message" /&gt;&lt;/textarea&gt;
+      &lt;p v-if="serverErrors.message" class="text-danger small mb-0"&gt;{{ serverErrors.message }}&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;p v-if="serverErrors.general" class="text-danger small mb-0"&gt;{{ serverErrors.general }}&lt;/p&gt;
+    &lt;p v-if="successMessage" class="text-success small mb-0"&gt;{{ successMessage }}&lt;/p&gt;
+
+    &lt;button :disabled="saving" class="btn btn-primary"&gt;
+      {{ saving ? 'Saving...' : 'Send message' }}
+    &lt;/button&gt;
+  &lt;/form&gt;
+&lt;/template&gt;</code></pre></div>
+
+      <p class="small opacity-75 mb-2"><strong>Key idea:</strong> client validation improves UX, but Laravel validation remains the source of truth before anything touches the database.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">7</span>How to Use Laravel with Vue Properly</h5>
+      <div class="row g-3 mb-3">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Use Laravel for backend concerns</h6><p class="small opacity-75 mb-0">Authentication, validation, database queries, queues, notifications, file uploads, and business rules belong in Laravel.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Use Vue for interactive UI</h6><p class="small opacity-75 mb-0">Tables, filters, live forms, modals, charts, and dynamic dashboards are a good fit for Vue components.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Prefer API responses for data</h6><p class="small opacity-75 mb-0">Return JSON from Laravel and let Vue fetch it, especially when components need refresh, filtering, or partial updates.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Keep boundaries clean</h6><p class="small opacity-75 mb-0">Do not bury SQL or business rules in Vue files. Do not render complex reactive UI with Blade alone if Vue is already mounted.</p></div></div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Task</th><th>Use Laravel</th><th>Use Vue</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Form request validation</td><td>Yes</td><td>Only for client feedback before submit</td></tr>
+            <tr><td>Database CRUD</td><td>Yes</td><td>No</td></tr>
+            <tr><td>Interactive search filters</td><td>API endpoint</td><td>UI state and rendering</td></tr>
+            <tr><td>Authentication UI</td><td>Auth logic and session</td><td>Reactive login/register form screens</td></tr>
+            <tr><td>Charts and dashboards</td><td>Aggregate data</td><td>Render components and handle interactions</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-box mt-4">
+        <p class="mb-0"><strong>Best starting pattern:</strong> begin with one Laravel page that mounts one Vue root component, then add API routes and reusable components as the UI becomes more dynamic. That keeps the integration simple while still scaling cleanly.</p>
+      </div>
+    </section>
+
+    <section id="sec-sanctum" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-shield-lock-fill me-2" style="color:var(--vue-primary);"></i>Laravel Sanctum Authentication for Vue</h2>
+
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>Best fit:</strong> use <strong>Sanctum</strong> when your Vue frontend and Laravel backend work as one app or share the same top-level domain. Sanctum is excellent for SPA authentication with session cookies, CSRF protection, and authenticated API requests.</p>
+      </div>
+
+      <p>For Laravel + Vue, Sanctum is usually the simplest auth choice. The frontend asks for a CSRF cookie, submits login credentials, then calls protected routes using browser cookies. That means you do not manually store tokens in localStorage for the normal SPA flow.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Sanctum Setup Commands</h5>
+      <p class="small opacity-75 mb-2">These are the commands you typically run in an existing Laravel + Vue project.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">composer require laravel/sanctum
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+php artisan migrate</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Enable Stateful API Middleware</h5>
+      <p class="small opacity-75 mb-2">In latest Laravel versions, the clean place to enable Sanctum's SPA middleware is <code>bootstrap/app.php</code>.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// bootstrap/app.php
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Middleware;
+
+return Application::configure(basePath: dirname(__DIR__))
+    -&gt;withRouting(
+        web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
+        commands: __DIR__.'/../routes/console.php',
+        health: '/up',
+    )
+    -&gt;withMiddleware(function (Middleware $middleware) {
+        $middleware-&gt;statefulApi();
+    })
+    -&gt;create();</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>Environment and CORS Settings</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-env">APP_URL=http://localhost:8000
+FRONTEND_URL=http://localhost:5173
+SESSION_DRIVER=cookie
+SESSION_DOMAIN=localhost
+SANCTUM_STATEFUL_DOMAINS=localhost:5173,127.0.0.1:5173,localhost:8000,127.0.0.1:8000</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// config/cors.php
+return [
+    'paths' =&gt; ['api/*', 'sanctum/csrf-cookie', 'login', 'logout'],
+    'allowed_methods' =&gt; ['*'],
+    'allowed_origins' =&gt; ['http://localhost:5173'],
+    'allowed_headers' =&gt; ['*'],
+    'supports_credentials' =&gt; true,
+];</code></pre></div>
+
+      <p class="small opacity-75 mb-2"><strong>Important:</strong> if credentials are not enabled in CORS and fetch requests, the login may appear to succeed but the browser will not send the session cookie correctly.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">4</span>Login and Protected Routes</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// routes/web.php
+use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Route;
+
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// routes/api.php
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+Route::middleware('auth:sanctum')-&gt;get('/user', function (Request $request) {
+    return $request-&gt;user();
+});</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// app/Http/Controllers/AuthController.php
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class AuthController extends Controller
+{
+    public function login(Request $request)
+    {
+        $credentials = $request-&gt;validate([
+            'email' =&gt; ['required', 'email'],
+            'password' =&gt; ['required', 'string'],
+        ]);
+
+        if (!Auth::attempt($credentials, $request-&gt;boolean('remember'))) {
+            return response()-&gt;json([
+                'message' =&gt; 'Invalid credentials.',
+            ], 422);
+        }
+
+        $request-&gt;session()-&gt;regenerate();
+
+        return response()-&gt;json([
+            'message' =&gt; 'Login successful.',
+            'user' =&gt; $request-&gt;user(),
+        ]);
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request-&gt;session()-&gt;invalidate();
+        $request-&gt;session()-&gt;regenerateToken();
+
+        return response()-&gt;json([
+            'message' =&gt; 'Logged out successfully.',
+        ]);
+    }
+}</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">5</span>Vue Login Example</h5>
+      <p class="small opacity-75 mb-2">The frontend flow is always the same: first get the CSRF cookie, then send the login request with credentials enabled, then fetch the authenticated user.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;script setup&gt;
+import { reactive, ref } from 'vue';
+
+const form = reactive({
+  email: '',
+  password: '',
+  remember: false,
+});
+
+const user = ref(null);
+const error = ref('');
+const loading = ref(false);
+
+async function login() {
+  loading.value = true;
+  error.value = '';
+
+  try {
+    await fetch('http://localhost:8000/sanctum/csrf-cookie', {
+      credentials: 'include',
+    });
+
+    const loginResponse = await fetch('http://localhost:8000/login', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify(form),
+    });
+
+    const loginResult = await loginResponse.json();
+    if (!loginResponse.ok) {
+      throw new Error(loginResult.message || 'Login failed');
+    }
+
+    const userResponse = await fetch('http://localhost:8000/api/user', {
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!userResponse.ok) {
+      throw new Error('Could not load authenticated user');
+    }
+
+    user.value = await userResponse.json();
+  } catch (err) {
+    error.value = err.message;
+  } finally {
+    loading.value = false;
+  }
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;form @submit.prevent="login" class="d-grid gap-3"&gt;
+    &lt;input v-model.trim="form.email" type="email" placeholder="Email" /&gt;
+    &lt;input v-model="form.password" type="password" placeholder="Password" /&gt;
+
+    &lt;label class="small"&gt;
+      &lt;input v-model="form.remember" type="checkbox" /&gt;
+      Remember me
+    &lt;/label&gt;
+
+    &lt;button :disabled="loading" class="btn btn-primary"&gt;
+      {{ loading ? 'Signing in...' : 'Login' }}
+    &lt;/button&gt;
+
+    &lt;p v-if="error" class="text-danger small mb-0"&gt;{{ error }}&lt;/p&gt;
+    &lt;p v-if="user" class="text-success small mb-0"&gt;Welcome {{ user.name }}&lt;/p&gt;
+  &lt;/form&gt;
+&lt;/template&gt;</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">6</span>Composer Commands Quick Reference</h5>
+      <p class="small opacity-75 mb-2">These are the Composer commands you will use most often in Laravel projects. This is the practical command set, not every internal Composer subcommand.</p>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Command</th><th>Short info</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>composer create-project laravel/laravel app-name</code></td><td>Create a brand-new Laravel project.</td></tr>
+            <tr><td><code>composer install</code></td><td>Install dependencies from <code>composer.lock</code>.</td></tr>
+            <tr><td><code>composer update</code></td><td>Update dependencies based on version constraints in <code>composer.json</code>.</td></tr>
+            <tr><td><code>composer require package/name</code></td><td>Install a new production package.</td></tr>
+            <tr><td><code>composer require --dev package/name</code></td><td>Install a development-only package such as testing or debug tools.</td></tr>
+            <tr><td><code>composer remove package/name</code></td><td>Remove an installed package.</td></tr>
+            <tr><td><code>composer dump-autoload</code></td><td>Rebuild Composer’s autoloader after class or namespace changes.</td></tr>
+            <tr><td><code>composer show</code></td><td>List installed packages.</td></tr>
+            <tr><td><code>composer outdated</code></td><td>Show which installed packages have newer versions available.</td></tr>
+            <tr><td><code>composer why package/name</code></td><td>Explain why a package is installed.</td></tr>
+            <tr><td><code>composer why-not package/name version</code></td><td>Show why a version cannot be installed.</td></tr>
+            <tr><td><code>composer diagnose</code></td><td>Check Composer configuration and environment problems.</td></tr>
+            <tr><td><code>composer clear-cache</code></td><td>Clear Composer’s package cache.</td></tr>
+            <tr><td><code>composer install --no-dev --optimize-autoloader</code></td><td>Production install without dev packages.</td></tr>
+            <tr><td><code>composer self-update</code></td><td>Update the global Composer binary when Composer is installed system-wide.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-box mt-4">
+        <p class="mb-0"><strong>Pragmatic rule:</strong> if your Vue frontend is a first-party SPA for the same Laravel app, choose Sanctum first. It keeps auth simpler, more secure, and easier to manage than custom token handling for normal session-based application flows.</p>
+      </div>
+    </section>
+
+    <section id="sec-go-live" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-cloud-upload-fill me-2" style="color:var(--vue-primary);"></i>Go Live on Production</h2>
+
+      <p>This section covers both common production paths: a <strong>Laravel + Vue project in one application</strong> and a <strong>Vue-only app</strong>. The commands below are the practical baseline you run before DNS, SSL, and real traffic are involved.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Laravel + Vue in One Project</h5>
+      <p class="small opacity-75 mb-2">Use this workflow when Laravel serves the app, Vue is bundled with Vite, and your public web root points to Laravel’s <code>public/</code> directory.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">git clone your-repository-url app
+cd app
+
+composer install --no-dev --optimize-autoloader
+npm ci
+npm run build
+
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --force
+php artisan storage:link
+
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">sudo chown -R www-data:www-data storage bootstrap/cache
+sudo chmod -R ug+rwx storage bootstrap/cache
+sudo systemctl reload php8.3-fpm
+sudo systemctl reload nginx</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-nginx">server {
+    listen 80;
+    server_name app.example.com;
+    root /var/www/app/public;
+    index index.php index.html;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}</code></pre></div>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Production step</th><th>Why it matters</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>composer install --no-dev --optimize-autoloader</code></td><td>Installs only production PHP dependencies and optimizes autoloading.</td></tr>
+            <tr><td><code>npm ci</code> + <code>npm run build</code></td><td>Builds the Vue frontend assets that Laravel serves from Vite output.</td></tr>
+            <tr><td><code>php artisan migrate --force</code></td><td>Runs database migrations safely in production.</td></tr>
+            <tr><td><code>config:cache</code>, <code>route:cache</code>, <code>view:cache</code></td><td>Reduces runtime overhead and speeds up boot time.</td></tr>
+            <tr><td>Correct file permissions</td><td>Laravel needs write access to <code>storage/</code> and <code>bootstrap/cache</code>.</td></tr>
+            <tr><td>Nginx root set to <code>public/</code></td><td>Never point production directly at the project root.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>Recommended extras:</strong> add HTTPS, a queue worker via Supervisor, and a cron entry for the scheduler: <code>* * * * * php /var/www/app/artisan schedule:run &gt;&gt; /dev/null 2&gt;&amp;1</code>.</p>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Vue-Only Project on Production</h5>
+      <p class="small opacity-75 mb-2">Use this when the frontend is a pure Vite/Vue app and the backend is separate or not needed. The deploy target is normally the built <code>dist/</code> folder.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">npm ci
+npm run build
+npm run preview</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">rsync -avz dist/ user@your-server:/var/www/vue-app/dist/</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-nginx">server {
+    listen 80;
+    server_name vue.example.com;
+    root /var/www/vue-app/dist;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}</code></pre></div>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Vue-only step</th><th>Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>npm ci</code></td><td>Installs dependencies reproducibly from the lockfile.</td></tr>
+            <tr><td><code>npm run build</code></td><td>Generates the optimized static production bundle.</td></tr>
+            <tr><td>Upload <code>dist/</code></td><td>Only the built output is needed on the host.</td></tr>
+            <tr><td>SPA rewrite to <code>index.html</code></td><td>Required when using Vue Router history mode.</td></tr>
+            <tr><td>Public environment variables</td><td>Only values exposed intentionally to the client should ship in the bundle.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>Go-Live Checklist</h5>
+      <div class="row g-3">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Set environment values</h6><p class="small opacity-75 mb-0">Production URLs, database credentials, mail settings, and API base URLs must be verified before building or caching.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Build once, verify once</h6><p class="small opacity-75 mb-0">Run the production build locally or on staging and verify routes, assets, and form submissions before flipping DNS.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Enable HTTPS</h6><p class="small opacity-75 mb-0">Use a reverse proxy or managed hosting with SSL before accepting real traffic or auth sessions.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Monitor errors</h6><p class="small opacity-75 mb-0">Watch Laravel logs, browser console errors, and HTTP response failures immediately after release.</p></div></div>
+      </div>
+    </section>
+
+    <section id="sec-hosting" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-hdd-network-fill me-2" style="color:var(--vue-primary);"></i>Shared Hosting, cPanel, Forge, and Hostinger</h2>
+
+      <p>This section is for platform-specific deployment decisions. The core build commands stay the same, but document roots, available SSH access, queue support, and deployment automation change depending on where you host the project.</p>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Platform</th><th>Best fit</th><th>Important constraint</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Shared hosting</td><td>Small Laravel apps or Vue-only sites on a low budget</td><td>Usually limited server control and background process support</td></tr>
+            <tr><td>cPanel hosting</td><td>Projects managed through a classic hosting panel</td><td>Document root and terminal access depend on the hosting plan</td></tr>
+            <tr><td>Laravel Forge</td><td>Teams deploying Laravel on VPS providers with automation</td><td>Requires a VPS, not shared hosting</td></tr>
+            <tr><td>Hostinger server</td><td>Vue-only static sites or Laravel apps on Hostinger VPS</td><td>Shared plans are simpler for static sites than full Laravel workloads</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Shared Hosting or cPanel</h5>
+      <p class="small opacity-75 mb-2">If you cannot point the domain directly to Laravel’s <code>public/</code> folder, the usual pattern is to keep the Laravel app above <code>public_html</code> and expose only the public files through the web root.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">composer install --no-dev --optimize-autoloader
+npm ci
+npm run build
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-text">Example layout
+/home/username/laravel-app
+/home/username/public_html</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-text">public_html/index.php
+require __DIR__.'/../laravel-app/vendor/autoload.php';
+$app = require_once __DIR__.'/../laravel-app/bootstrap/app.php';</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-apache"># public_html/.htaccess for Vue Router history mode or Laravel front controller
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L]
+</code></pre></div>
+
+      <p class="small opacity-75 mb-2"><strong>cPanel workflow:</strong> upload the project zip, extract it, set the correct PHP version, configure the domain or subdomain root, update the <code>.env</code> file, then use Terminal or SSH if available for migrations and cache commands.</p>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>cPanel task</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Create domain or subdomain</td><td>Point it to the correct web root, ideally Laravel <code>public/</code> or your Vue <code>dist/</code> output</td></tr>
+            <tr><td>PHP version</td><td>Choose the newest supported production version matching your app requirements</td></tr>
+            <tr><td>Terminal or SSH</td><td>Run <code>composer install</code>, migrations, and cache commands if your plan allows it</td></tr>
+            <tr><td>File Manager upload</td><td>Use it when shell access is unavailable, but prefer SSH when possible</td></tr>
+            <tr><td>Permissions</td><td>Ensure <code>storage/</code> and <code>bootstrap/cache</code> are writable for Laravel apps</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>Practical limit:</strong> shared hosting is fine for small dashboards or brochure sites, but queue workers, websockets, Horizon, and heavier Laravel jobs usually push you toward a VPS.</p>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Laravel Forge</h5>
+      <p class="small opacity-75 mb-2">Forge is the cleanest option when you want Laravel deployment automation on a VPS from DigitalOcean, Linode, Vultr, AWS, Hetzner, or similar providers.</p>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Provision server</h6><p class="small opacity-75 mb-0">Forge installs Nginx, PHP, Composer, SSL tooling, and standard server hardening on the VPS.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Create site</h6><p class="small opacity-75 mb-0">Point the site web directory to Laravel’s <code>public/</code> folder.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Add environment</h6><p class="small opacity-75 mb-0">Set app URL, database credentials, mail, queue, cache, and third-party keys in the Forge environment editor.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Enable workers</h6><p class="small opacity-75 mb-0">Configure scheduler, queue workers, and SSL through Forge’s UI instead of manual server setup.</p></div></div>
+      </div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">cd /home/forge/app.example.com
+git pull origin main
+
+composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+npm ci
+npm run build
+
+php artisan migrate --force
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan queue:restart</code></pre></div>
+
+      <p class="small opacity-75 mb-2"><strong>Forge advantage:</strong> you get repeatable deploy scripts, SSL, scheduler, queues, backups, and server management without manually stitching those pieces together every release.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>Hostinger Server</h5>
+      <p class="small opacity-75 mb-2">Hostinger can mean either a shared hosting plan or a VPS. Treat those as two different products because the deployment strategy is different.</p>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Hostinger option</th><th>Best use</th><th>Recommendation</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Shared hosting / hPanel</td><td>Vue-only static sites, lightweight PHP apps</td><td>Good for Vue <code>dist/</code>, acceptable for very small Laravel apps if the plan supports it</td></tr>
+            <tr><td>VPS</td><td>Laravel + Vue production apps</td><td>Treat it like a normal Ubuntu server with Nginx, PHP-FPM, Composer, Node, and Supervisor</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">ssh root@your-hostinger-vps-ip
+apt update
+apt install -y nginx php8.3-fpm php8.3-mysql php8.3-xml php8.3-mbstring php8.3-curl unzip git
+
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar /usr/local/bin/composer
+
+curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+apt install -y nodejs</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">cd /var/www
+git clone your-repository-url app
+cd app
+
+composer install --no-dev --optimize-autoloader
+npm ci
+npm run build
+
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --force
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache</code></pre></div>
+
+      <p class="small opacity-75 mb-0"><strong>Hostinger rule of thumb:</strong> if you want queues, scheduler, Horizon, or stable Laravel operations, use Hostinger VPS rather than shared hosting.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">4</span>Vue-Only on Shared Hosting or cPanel</h5>
+      <p class="small opacity-75 mb-2">A Vue-only Vite project is much simpler to deploy than Laravel on shared hosting. Build locally, upload the <code>dist/</code> contents, and add an SPA rewrite rule.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">npm ci
+npm run build</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-apache"># public_html/.htaccess for Vue Router history mode
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
+</code></pre></div>
+    </section>
+
+    <section id="sec-forge-script" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-lightning-charge-fill me-2" style="color:var(--vue-primary);"></i>Laravel Forge Deploy Script</h2>
+
+      <p>Forge can do much more than run a basic <code>git pull</code>. A production-ready Forge setup should handle dependency install, asset build, migrations, cache refresh, queue restarts, scheduler configuration, SSL, and a release flow that avoids downtime during deploys.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Recommended Forge Site Setup</h5>
+      <div class="row g-3 mb-3">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Web directory</h6><p class="small opacity-75 mb-0">Point the site to Laravel’s <code>public/</code> directory, not the repository root.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Environment values</h6><p class="small opacity-75 mb-0">Set database, mail, cache, queue, app URL, and third-party credentials in Forge before the first deploy.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Build on server</h6><p class="small opacity-75 mb-0">If the Vue bundle is built on the server, Node must be available and the deploy script must run <code>npm ci</code> and <code>npm run build</code>.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Workers enabled</h6><p class="small opacity-75 mb-0">Forge should supervise queues and scheduled commands so background jobs keep running after deploys.</p></div></div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Forge Deploy Script Example</h5>
+      <p class="small opacity-75 mb-2">This is the kind of deploy script you place in the Forge deployment command box for a Laravel + Vue application.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">cd /home/forge/app.example.com
+
+git pull origin main
+
+composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+
+npm ci
+npm run build
+
+php artisan down --render="errors::503"
+
+php artisan migrate --force
+
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan event:clear
+
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan event:cache
+
+php artisan queue:restart
+
+php artisan up</code></pre></div>
+
+      <p class="small opacity-75 mb-2"><strong>What this does:</strong> updates code, installs dependencies, builds Vue assets, runs migrations, refreshes caches, restarts queue workers, and brings the app back online in a predictable order.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>Queues and Workers</h5>
+      <p class="small opacity-75 mb-2">If your app sends mail, generates reports, processes uploads, or uses notifications, you should not depend only on web requests. Forge can manage queue workers directly.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">php artisan queue:work --queue=default --sleep=3 --tries=3 --max-time=3600</code></pre></div>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Forge worker setting</th><th>Why it matters</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Connection / queue name</td><td>Choose the right queue backend and target queue.</td></tr>
+            <tr><td>Process count</td><td>More workers improve throughput for heavy job traffic.</td></tr>
+            <tr><td>Memory / timeout</td><td>Protects long-running workers from stale state or runaway jobs.</td></tr>
+            <tr><td><code>queue:restart</code> after deploy</td><td>Ensures workers load the fresh codebase after release.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">4</span>Scheduler Setup</h5>
+      <p class="small opacity-75 mb-2">Forge can install the cron entry automatically. Your Laravel app then decides which scheduled tasks actually run inside <code>app/Console/Kernel.php</code>.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+    <pre><code class="language-bash">* * * * * cd /home/forge/app.example.com &amp;&amp; php artisan schedule:run &gt;&gt; /dev/null 2&gt;&amp;1</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// app/Console/Kernel.php
+protected function schedule(Schedule $schedule): void
+{
+    $schedule-&gt;command('queue:prune-batches')-&gt;daily();
+    $schedule-&gt;command('model:prune')-&gt;daily();
+    $schedule-&gt;command('emails:send-reminders')-&gt;hourly();
+}</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">5</span>SSL on Forge</h5>
+      <p class="small opacity-75 mb-2">Forge can provision Let’s Encrypt certificates directly from the site dashboard. The usual flow is simple:</p>
+      <div class="row g-3 mb-4">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Point DNS first</h6><p class="small opacity-75 mb-0">Make sure the domain already resolves to the Forge server IP.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Install certificate</h6><p class="small opacity-75 mb-0">Use the SSL tab in Forge to issue Let’s Encrypt for the domain and optional <code>www</code> alias.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Force HTTPS</h6><p class="small opacity-75 mb-0">Enable secure redirects so all traffic lands on the encrypted URL.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Update app URL</h6><p class="small opacity-75 mb-0">Set <code>APP_URL</code> and any frontend origin values to the HTTPS domain.</p></div></div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">6</span>Zero-Downtime Release Pattern</h5>
+      <p class="small opacity-75 mb-2">For smaller apps, <code>php artisan down</code> during deploy is acceptable. For larger apps, a release-based strategy avoids visible downtime.</p>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">/home/forge/app.example.com
+  current -&gt; /home/forge/app.example.com/releases/20260422193000
+  releases/
+    20260422193000/
+    20260423101500/
+  shared/
+    .env
+    storage/</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">RELEASE=$(date +%Y%m%d%H%M%S)
+APP_DIR=/home/forge/app.example.com
+RELEASE_DIR=$APP_DIR/releases/$RELEASE
+
+mkdir -p $RELEASE_DIR
+git clone --depth=1 --branch=main git@github.com:owner/repo.git $RELEASE_DIR
+
+ln -nfs $APP_DIR/shared/.env $RELEASE_DIR/.env
+rm -rf $RELEASE_DIR/storage
+ln -nfs $APP_DIR/shared/storage $RELEASE_DIR/storage
+
+cd $RELEASE_DIR
+composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+npm ci
+npm run build
+php artisan migrate --force
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+ln -nfs $RELEASE_DIR $APP_DIR/current
+php artisan queue:restart</code></pre></div>
+
+      <div class="note-box mt-4">
+        <p class="mb-0"><strong>Zero-downtime rule:</strong> keep shared state outside the release folder, switch a symlink only after the new release is fully prepared, and restart workers after the switch so background jobs use the new code.</p>
+      </div>
+    </section>
+
+    <section id="sec-forge-ops" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-diagram-3-fill me-2" style="color:var(--vue-primary);"></i>Forge Redis, Horizon, and Queue Monitoring</h2>
+
+      <p>Once queue traffic grows, plain <code>queue:work</code> becomes harder to observe and tune. On Forge, the usual production setup is <strong>Redis</strong> for queue storage plus cache/session support, <strong>Horizon</strong> for worker orchestration and dashboards, and <strong>queue monitoring</strong> for alerts when backlog rises.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>When to Use Redis and Horizon</h5>
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Need</th><th>Recommended choice</th><th>Reason</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Small app, light background jobs</td><td><code>queue:work</code></td><td>Simple and enough when jobs are infrequent</td></tr>
+            <tr><td>Medium or large app with steady jobs</td><td>Redis + Horizon</td><td>Better concurrency control, monitoring, balancing, and visibility</td></tr>
+            <tr><td>Need real-time queue dashboard</td><td>Horizon</td><td>Shows throughput, failed jobs, wait time, and worker activity</td></tr>
+            <tr><td>Need queue-backed cache or sessions</td><td>Redis</td><td>Fast in-memory storage works well across queue, cache, and session workloads</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Install Redis on the Forge Server</h5>
+      <p class="small opacity-75 mb-2">On a Forge-managed Ubuntu VPS, Redis usually means both the Redis server package and the PHP Redis extension.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">sudo apt update
+sudo apt install -y redis-server php8.3-redis
+
+sudo systemctl enable redis-server
+sudo systemctl start redis-server
+
+redis-cli ping</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-env">QUEUE_CONNECTION=redis
+CACHE_STORE=redis
+SESSION_DRIVER=redis
+REDIS_CLIENT=phpredis</code></pre></div>
+
+      <p class="small opacity-75 mb-2"><strong>Expected result:</strong> <code>redis-cli ping</code> should return <code>PONG</code>. If not, do not proceed to Horizon until Redis itself is healthy.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>Install and Configure Horizon</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">composer require laravel/horizon
+php artisan horizon:install
+php artisan migrate --force</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// config/horizon.php
+'environments' =&gt; [
+    'production' =&gt; [
+        'supervisor-default' =&gt; [
+            'connection' =&gt; 'redis',
+            'queue' =&gt; ['default', 'emails', 'notifications'],
+            'balance' =&gt; 'auto',
+            'minProcesses' =&gt; 1,
+            'maxProcesses' =&gt; 10,
+            'tries' =&gt; 3,
+            'timeout' =&gt; 120,
+        ],
+    ],
+],</code></pre></div>
+
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>Important:</strong> if Horizon manages your queues, do not run separate long-lived <code>queue:work</code> daemons for the same queues at the same time. Pick one worker model and stay consistent.</p>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">4</span>Run Horizon with a Forge Daemon</h5>
+      <p class="small opacity-75 mb-2">In Forge, create a daemon for Horizon instead of a normal queue worker when Horizon is your queue manager.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">cd /home/forge/app.example.com/current
+php artisan horizon</code></pre></div>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Forge daemon field</th><th>Suggested value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Command</td><td><code>php artisan horizon</code></td></tr>
+            <tr><td>Directory</td><td><code>/home/forge/app.example.com/current</code></td></tr>
+            <tr><td>User</td><td><code>forge</code></td></tr>
+            <tr><td>Processes</td><td>1 daemon process is normal because Horizon manages its own supervisors internally</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">5</span>Deploy Script Change for Horizon</h5>
+      <p class="small opacity-75 mb-2">When Horizon is active, replace the usual queue worker restart command with Horizon termination so it restarts cleanly on the new release.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">php artisan horizon:terminate</code></pre></div>
+
+      <p class="small opacity-75 mb-2"><strong>Why:</strong> <code>horizon:terminate</code> tells Horizon to gracefully stop after current jobs finish, and the daemon process will bring it back up using the freshly deployed code.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">6</span>Queue Monitoring and Alerts</h5>
+      <p class="small opacity-75 mb-2">Monitoring should tell you when the queue is slow, failing, or stuck before users start noticing delayed emails, reports, or uploads.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// app/Console/Kernel.php
+protected function schedule(Schedule $schedule): void
+{
+    $schedule-&gt;command('queue:monitor redis:default --max=100')-&gt;everyMinute();
+    $schedule-&gt;command('queue:monitor redis:emails --max=50')-&gt;everyMinute();
+}</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">php artisan queue:failed
+php artisan queue:retry all
+php artisan queue:flush
+php artisan horizon:status</code></pre></div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Horizon dashboard</h6><p class="small opacity-75 mb-0">Use it to inspect throughput, pending jobs, recent failures, runtimes, and active supervisors.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Failed jobs table</h6><p class="small opacity-75 mb-0">Keep failed-job storage enabled so production issues can be retried or analyzed after incidents.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Queue monitor</h6><p class="small opacity-75 mb-0">Add scheduled queue thresholds so you get alerts when pending jobs exceed safe limits.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Log review</h6><p class="small opacity-75 mb-0">Watch Laravel logs and server metrics together with Horizon, because queue issues often start as database, mail, or network problems.</p></div></div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">7</span>Protect the Horizon Dashboard</h5>
+      <p class="small opacity-75 mb-2">Do not leave the Horizon UI open to the public internet. Restrict it to trusted admins.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// app/Providers/HorizonServiceProvider.php
+use Laravel\Horizon\Horizon;
+
+public function boot(): void
+{
+    Horizon::auth(function ($request) {
+        return $request-&gt;user() &amp;&amp; $request-&gt;user()-&gt;is_admin;
+    });
+}</code></pre></div>
+
+      <div class="note-box mt-4">
+        <p class="mb-0"><strong>Operational rule:</strong> Redis gives you fast queue infrastructure, Horizon gives you worker orchestration and visibility, and queue monitoring gives you early warning. In production you usually want all three together, not just one.</p>
+      </div>
+    </section>
+
+    <section id="sec-deploy" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-rocket-takeoff-fill me-2" style="color:var(--vue-primary);"></i>Deployment Checklist</h2>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">npm run build
+npm run preview</code></pre></div>
+
+      <div class="row g-3 mt-2">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Static hosting</h6><p class="small opacity-75 mb-0">Deploy <code>dist/</code> to Netlify, Vercel static hosting, GitHub Pages, or S3.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">History mode fallback</h6><p class="small opacity-75 mb-0">If you use <code>createWebHistory()</code>, configure your host to rewrite unknown paths to <code>index.html</code>.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Environment sanity</h6><p class="small opacity-75 mb-0">Validate build-time variables and API base URLs per environment.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Performance check</h6><p class="small opacity-75 mb-0">Verify route splitting, image sizes, and unnecessary third-party scripts before release.</p></div></div>
+      </div>
+    </section>
+
+    <section id="sec-projects" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-kanban-fill me-2" style="color:var(--vue-primary);"></i>Mini Project Ideas</h2>
+
+      <div class="row g-3">
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-2">Task Manager</h6><p class="small opacity-75 mb-0">Practice forms, list rendering, filters, Pinia, local storage persistence, and route views.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-2">Admin Dashboard</h6><p class="small opacity-75 mb-0">Practice charts, async components, route guards, API calls, table virtualization, and responsive layouts.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-2">E-commerce Storefront</h6><p class="small opacity-75 mb-0">Practice product pages, cart stores, reusable inputs, optimistic UI, and route-based code splitting.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-2">Chat UI</h6><p class="small opacity-75 mb-0">Practice scrolling, composables, websockets, suspense fallbacks, and unread indicators.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-2">CMS Editor</h6><p class="small opacity-75 mb-0">Practice nested forms, slots, provide/inject, route params, and debounced autosave.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-2">Kanban Board</h6><p class="small opacity-75 mb-0">Practice drag-and-drop, store normalization, transition groups, and performance tuning for many cards.</p></div></div>
+      </div>
+    </section>
+
+    <section id="sec-crud" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-database-gear me-2" style="color:var(--vue-primary);"></i>Real CRUD Case Study</h2>
+
+      <p>This is the kind of Vue work that turns separate topics into a real feature: route-based pages, a store, form validation, optimistic UI, reusable modal components, and API synchronization.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Feature Requirements</h5>
+      <div class="row g-3 mb-3">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">List users</h6><p class="small opacity-75 mb-0">Paginated table with search, status filters, loading state, and empty state.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Create user</h6><p class="small opacity-75 mb-0">Validated modal form with optimistic insert and server error recovery.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Edit user</h6><p class="small opacity-75 mb-0">Load row data into a reusable form component and track dirty state.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Delete user</h6><p class="small opacity-75 mb-0">Confirm destructive action and roll back the UI if the server call fails.</p></div></div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Recommended Structure</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">src/
+  components/users/
+    UserForm.vue
+    UserModal.vue
+    UserTable.vue
+  composables/
+    useUsersApi.ts
+  stores/
+    users.ts
+  views/
+    UsersView.vue</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>Pinia Store Flow</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">import { defineStore } from 'pinia';
+import { ref } from 'vue';
+
+type User = {
+  id: number;
+  name: string;
+  email: string;
+  status: 'active' | 'blocked';
+};
+
+export const useUsersStore = defineStore('users', () =&gt; {
+  const items = ref&lt;User[]&gt;([]);
+  const loading = ref(false);
+  const error = ref('');
+
+  async function fetchUsers() {
+    loading.value = true;
+    error.value = '';
+    try {
+      const response = await fetch('/api/users');
+      items.value = await response.json();
+    } catch (err) {
+      error.value = 'Could not load users.';
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  async function createUser(payload: Omit&lt;User, 'id'&gt;) {
+    const tempUser = { id: Date.now(), ...payload };
+    items.value.unshift(tempUser);
+
+    try {
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const createdUser = await response.json();
+      const index = items.value.findIndex(user =&gt; user.id === tempUser.id);
+      if (index &gt;= 0) items.value[index] = createdUser;
+    } catch (err) {
+      items.value = items.value.filter(user =&gt; user.id !== tempUser.id);
+      throw err;
+    }
+  }
+
+  async function updateUser(id: number, payload: Partial&lt;User&gt;) {
+    const existing = items.value.find(user =&gt; user.id === id);
+    if (!existing) return;
+
+    const snapshot = { ...existing };
+    Object.assign(existing, payload);
+
+    try {
+      await fetch(`/api/users/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    } catch (err) {
+      Object.assign(existing, snapshot);
+      throw err;
+    }
+  }
+
+  async function removeUser(id: number) {
+    const snapshot = [...items.value];
+    items.value = items.value.filter(user =&gt; user.id !== id);
+
+    try {
+      await fetch(`/api/users/${id}`, { method: 'DELETE' });
+    } catch (err) {
+      items.value = snapshot;
+      throw err;
+    }
+  }
+
+  return { items, loading, error, fetchUsers, createUser, updateUser, removeUser };
+});</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">4</span>Users View Example</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;script setup lang="ts"&gt;
+import { computed, onMounted, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useUsersStore } from '@/stores/users';
+
+const usersStore = useUsersStore();
+const { items, loading, error } = storeToRefs(usersStore);
+const search = ref('');
+
+onMounted(usersStore.fetchUsers);
+
+const filteredUsers = computed(() =&gt;
+  items.value.filter(user =&gt;
+    user.name.toLowerCase().includes(search.value.toLowerCase()) ||
+    user.email.toLowerCase().includes(search.value.toLowerCase())
+  )
+);
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;section class="d-grid gap-3"&gt;
+    &lt;header class="d-flex justify-content-between gap-3"&gt;
+      &lt;input v-model.trim="search" placeholder="Search users" /&gt;
+      &lt;button&gt;Add user&lt;/button&gt;
+    &lt;/header&gt;
+
+    &lt;p v-if="loading"&gt;Loading users...&lt;/p&gt;
+    &lt;p v-else-if="error" class="text-danger"&gt;{{ error }}&lt;/p&gt;
+    &lt;UserTable v-else :users="filteredUsers" /&gt;
+  &lt;/section&gt;
+&lt;/template&gt;</code></pre></div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Production pattern:</strong> keep form components dumb, keep server synchronization in stores or composables, and always design a rollback path for optimistic updates.</p>
+      </div>
+    </section>
+
+    <section id="sec-interview" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-patch-question-fill me-2" style="color:var(--vue-primary);"></i>Interview Questions and Pitfalls</h2>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Question</th><th>Short answer</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>What is the difference between <code>ref()</code> and <code>reactive()</code>?</td><td><code>ref()</code> wraps single values and uses <code>.value</code>; <code>reactive()</code> wraps objects and arrays with deep proxy tracking.</td></tr>
+            <tr><td>When do you use <code>computed()</code> instead of <code>watch()</code>?</td><td>Use <code>computed()</code> for derived state and <code>watch()</code> for side effects like fetches, local storage, or analytics.</td></tr>
+            <tr><td>Why are keys important in <code>v-for</code>?</td><td>They help Vue reuse or replace the correct DOM nodes and component instances during updates.</td></tr>
+            <tr><td>When should you choose Pinia over props and emits?</td><td>When multiple distant parts of the app depend on the same state or behavior and local component communication becomes awkward.</td></tr>
+            <tr><td>What does <code>&lt;KeepAlive&gt;</code> do?</td><td>It caches inactive component instances so their local state survives tab or route switches.</td></tr>
+            <tr><td>What is the purpose of <code>defineModel()</code>?</td><td>It simplifies custom <code>v-model</code> support in reusable components.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-box">
+        <p class="mb-2"><strong>Common mistakes to avoid:</strong></p>
+        <ul class="mb-0">
+          <li>Using <code>watch()</code> where a computed value would be simpler.</li>
+          <li>Mutating props directly instead of emitting updates.</li>
+          <li>Using array indexes as <code>v-for</code> keys in dynamic lists.</li>
+          <li>Fetching directly in many components instead of centralizing logic in composables.</li>
+          <li>Putting server secrets into client-exposed <code>VITE_*</code> variables.</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <footer class="text-center py-4 mt-4" style="border-top:1px solid rgba(128,128,128,.15);">
+    <p class="small opacity-50 mb-0"><span class="vue-logo vue-logo-inline me-1" aria-hidden="true"><svg viewBox="0 0 261.76 226.69" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true" focusable="false"><path fill="#41B883" d="M0 0h60.5l70.4 122.2L201.3 0h60.46L130.88 226.69 0 0Z"></path><path fill="#35495E" d="M60.5 0l70.38 122.2L201.3 0h-35.62l-34.8 60.42L96.12 0H60.5Z"></path></svg></span>Vue.js Complete Guide - Bootstrap 5 + Dark Mode</p>
+  </footer>
+</main>
+
+<div id="backTop">
+  <i class="bi bi-arrow-up"></i>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/highlight.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('pre code').forEach(element => hljs.highlightElement(element));
+  });
+
+  const html = document.documentElement;
+  const toggleBtn = document.getElementById('themeToggle');
+  const hljsDark = document.getElementById('hljs-theme-dark');
+  const hljsLight = document.getElementById('hljs-theme-light');
+
+  function applyTheme(theme) {
+    html.setAttribute('data-bs-theme', theme);
+    toggleBtn.innerHTML = theme === 'dark'
+      ? '<i class="bi bi-sun-fill"></i>'
+      : '<i class="bi bi-moon-fill"></i>';
+    hljsDark.disabled = theme !== 'dark';
+    hljsLight.disabled = theme !== 'light';
+    localStorage.setItem('vue-guide-theme', theme);
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    applyTheme(html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  const saved = localStorage.getItem('vue-guide-theme');
+  if (saved) applyTheme(saved);
+
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('#sidebar .nav-link');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => link.classList.remove('active'));
+        const active = document.querySelector(`#sidebar a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+
+  sections.forEach(section => observer.observe(section));
+
+  const backTop = document.getElementById('backTop');
+  backTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  window.addEventListener('scroll', () => {
+    backTop.classList.toggle('show', window.scrollY > 400);
+  });
+
+  document.addEventListener('click', async event => {
+    const button = event.target.closest('[data-copy-btn]');
+    if (!button) return;
+
+    const code = button.closest('.code-wrapper')?.querySelector('code');
+    if (!code) return;
+
+    try {
+      await navigator.clipboard.writeText(code.innerText);
+      button.innerHTML = '<i class="bi bi-check-lg me-1"></i>Copied!';
+      setTimeout(() => {
+        button.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy';
+      }, 1800);
+    } catch (error) {
+      button.innerHTML = '<i class="bi bi-x-circle me-1"></i>Failed';
+      setTimeout(() => {
+        button.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy';
+      }, 1800);
+    }
+  });
+</script>
+</body>
+</html>

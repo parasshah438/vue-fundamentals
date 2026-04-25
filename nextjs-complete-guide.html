@@ -263,6 +263,7 @@
 
     <div class="nav-section">Components & Data</div>
     <a class="nav-link" href="#sec-server-client"><i class="bi bi-cpu me-2"></i>Server vs Client</a>
+    <a class="nav-link" href="#sec-hooks"><i class="bi bi-bezier2 me-2"></i>React Hooks</a>
     <a class="nav-link" href="#sec-layouts"><i class="bi bi-layout-split me-2"></i>Layouts & Special Files</a>
     <a class="nav-link" href="#sec-data-fetch"><i class="bi bi-cloud-download me-2"></i>Data Fetching</a>
     <a class="nav-link" href="#sec-server-actions"><i class="bi bi-send-fill me-2"></i>Server Actions</a>
@@ -330,6 +331,7 @@
       <a class="nav-link" href="#sec-version"     data-bs-dismiss="offcanvas"><i class="bi bi-tag me-2"></i>Version & Upgrade</a>
       <div class="nav-section">Components & Data</div>
       <a class="nav-link" href="#sec-server-client"  data-bs-dismiss="offcanvas"><i class="bi bi-cpu me-2"></i>Server vs Client</a>
+      <a class="nav-link" href="#sec-hooks"          data-bs-dismiss="offcanvas"><i class="bi bi-bezier2 me-2"></i>React Hooks</a>
       <a class="nav-link" href="#sec-layouts"        data-bs-dismiss="offcanvas"><i class="bi bi-layout-split me-2"></i>Layouts & Special Files</a>
       <a class="nav-link" href="#sec-data-fetch"     data-bs-dismiss="offcanvas"><i class="bi bi-cloud-download me-2"></i>Data Fetching</a>
       <a class="nav-link" href="#sec-server-actions" data-bs-dismiss="offcanvas"><i class="bi bi-send-fill me-2"></i>Server Actions</a>
@@ -1376,6 +1378,703 @@ export default function Counter() {
       <div class="alert alert-warning border-0 rounded-3 d-flex gap-3 align-items-start mt-3">
         <i class="bi bi-lightbulb-fill fs-5 mt-1"></i>
         <div><strong>Best Practice:</strong> Keep Server Components as the default. Only add <code>"use client"</code> to the smallest leaf components that actually need interactivity. Use Client Components as <em>leaves</em>, not roots.</div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         SECTION 12A — REACT HOOKS
+         ════════════════════════════════════════════════════════════════════ -->
+    <section id="sec-hooks" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-bezier2 me-2 text-info"></i>React Hooks in Next.js — Basic to Advanced</h2>
+      <p class="mb-4">Hooks are how <strong>Client Components</strong> manage state, effects, refs, transitions, route state, and form interactions. In Next.js App Router, hooks are not just React knowledge — they directly shape when code runs on the server, when it runs in the browser, and how much JavaScript ships to users.</p>
+
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>Key rule:</strong> Most hooks in this section require a <code>"use client"</code> component. The main exception is <code>use()</code>, which is a special React 19 hook that can also be used in Server Components to unwrap promises during render.</p>
+      </div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-3">
+          <div class="feature-card p-3 h-100 text-center">
+            <i class="bi bi-toggle-on fs-2 text-primary mb-2 d-block"></i>
+            <h6 class="fw-bold small">Basic Hooks</h6>
+            <p class="small opacity-65 mb-0"><code>useState</code>, <code>useEffect</code>, <code>useRef</code></p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="feature-card p-3 h-100 text-center">
+            <i class="bi bi-diagram-2 fs-2 text-success mb-2 d-block"></i>
+            <h6 class="fw-bold small">State Composition</h6>
+            <p class="small opacity-65 mb-0"><code>useContext</code>, <code>useReducer</code>, custom hooks</p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="feature-card p-3 h-100 text-center">
+            <i class="bi bi-speedometer2 fs-2 text-warning mb-2 d-block"></i>
+            <h6 class="fw-bold small">Performance Hooks</h6>
+            <p class="small opacity-65 mb-0"><code>useMemo</code>, <code>useCallback</code>, <code>useTransition</code>, <code>useDeferredValue</code></p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="feature-card p-3 h-100 text-center">
+            <i class="bi bi-stars fs-2 text-info mb-2 d-block"></i>
+            <h6 class="fw-bold small">React 19 + Next.js</h6>
+            <p class="small opacity-65 mb-0"><code>useActionState</code>, <code>useOptimistic</code>, <code>useFormStatus</code>, <code>use()</code></p>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="sub-title"><i class="bi bi-check2-square me-2 text-success"></i>Rules of Hooks</h5>
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <div class="feature-card p-3 h-100">
+            <ul class="small mb-0 ps-3">
+              <li>Call hooks only at the top level of a component or custom hook.</li>
+              <li>Never call hooks inside loops, conditions, or nested functions.</li>
+              <li>Hooks run in the same order on every render — that order is how React tracks state.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card p-3 h-100">
+            <ul class="small mb-0 ps-3">
+              <li>Only call hooks from React function components or custom hooks.</li>
+              <li>Custom hooks must start with <code>use</code> by convention.</li>
+              <li>In Next.js, client hooks belong inside files marked with <code>"use client"</code>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Basic Hooks — useState, useEffect, useRef</h5>
+      <p class="small opacity-75 mb-2">These are the hooks you will use first in almost every Client Component: state for values that change, effects for syncing with the outside world, and refs for DOM access or mutable values that do not trigger re-renders.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-tsx">'use client';
+
+import { useEffect, useRef, useState } from 'react';
+
+export default function SearchWidget() {
+  const [query, setQuery] = useState('');
+  const inputRef = useRef&lt;HTMLInputElement | null&gt;(null);
+
+  useEffect(() =&gt; {
+    inputRef.current?.focus();
+  }, []);
+
+  useEffect(() =&gt; {
+    document.title = query ? `Searching: ${query}` : 'Hooks Demo';
+
+    return () =&gt; {
+      document.title = 'Next.js Complete Tutorial';
+    };
+  }, [query]);
+
+  return (
+    &lt;div className="d-grid gap-2"&gt;
+      &lt;input
+        ref={inputRef}
+        value={query}
+        onChange={(e) =&gt; setQuery(e.target.value)}
+        placeholder="Search posts"
+        className="form-control"
+      /&gt;
+      &lt;p className="mb-0 small text-secondary"&gt;Current query: {query || 'empty'}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}</code></pre></div>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Hook</th><th>Use it for</th><th>Avoid using it for</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>useState</code></td><td>Interactive UI state like counters, inputs, modals</td><td>Complex multi-step state machines</td></tr>
+            <tr><td><code>useEffect</code></td><td>Subscriptions, timers, browser APIs, syncing external systems</td><td>Pure calculations that can run during render</td></tr>
+            <tr><td><code>useRef</code></td><td>DOM access, previous values, mutable instance data</td><td>Values that should trigger UI updates</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Dependency array</th><th>What it means</th><th>Common use</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>useEffect(fn)</code></td><td>Run after every render</td><td>Rarely needed; usually too broad</td></tr>
+            <tr><td><code>useEffect(fn, [])</code></td><td>Run once after mount, cleanup on unmount</td><td>Initial subscriptions, focus, one-time setup</td></tr>
+            <tr><td><code>useEffect(fn, [value])</code></td><td>Run when one of the listed dependencies changes</td><td>Sync URL, filters, analytics, external state</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>Cleanup timing:</strong> the function returned from an effect runs <strong>before</strong> the effect runs again with new dependencies, and also when the component unmounts. That is where you remove listeners, clear timers, and abort in-flight requests.</p>
+      </div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-tsx">'use client';
+
+import { useEffect, useRef, useState } from 'react';
+
+export default function RenderTracker() {
+  const [query, setQuery] = useState('next');
+  const renderCount = useRef(0);
+  const previousQuery = useRef('');
+
+  useEffect(() =&gt; {
+    renderCount.current += 1;
+    previousQuery.current = query;
+  }, [query]);
+
+  return (
+    &lt;div&gt;
+      &lt;input value={query} onChange={(e) =&gt; setQuery(e.target.value)} className="form-control" /&gt;
+      &lt;p className="small mt-2 mb-0"&gt;Render count: {renderCount.current}&lt;/p&gt;
+      &lt;p className="small mb-0"&gt;Previous query stored in ref: {previousQuery.current || 'none'}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Shared State — useContext and Custom Hooks</h5>
+      <p class="small opacity-75 mb-2">When multiple components need the same state, combine <code>useContext</code> with a small custom hook so consumers stay clean and type-safe.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-tsx">'use client';
+
+import { createContext, useContext, useState } from 'react';
+
+type SidebarContextValue = {
+  open: boolean;
+  toggle: () =&gt; void;
+};
+
+const SidebarContext = createContext&lt;SidebarContextValue | null&gt;(null);
+
+export function SidebarProvider({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    &lt;SidebarContext.Provider value={{ open, toggle: () =&gt; setOpen(v =&gt; !v) }}&gt;
+      {children}
+    &lt;/SidebarContext.Provider&gt;
+  );
+}
+
+export function useSidebar() {
+  const context = useContext(SidebarContext);
+  if (!context) throw new Error('useSidebar must be used inside SidebarProvider');
+  return context;
+}</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>Complex State — useReducer</h5>
+      <p class="small opacity-75 mb-2">When state transitions are linked and have many actions, <code>useReducer</code> is often cleaner than stacking multiple <code>useState</code> calls.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-tsx">'use client';
+
+import { useReducer } from 'react';
+
+type CheckoutState = {
+  step: number;
+  shippingMethod: 'standard' | 'express';
+  agreed: boolean;
+};
+
+type Action =
+  | { type: 'next' }
+  | { type: 'prev' }
+  | { type: 'shipping'; payload: 'standard' | 'express' }
+  | { type: 'toggle-agreed' };
+
+const initialState: CheckoutState = {
+  step: 1,
+  shippingMethod: 'standard',
+  agreed: false,
+};
+
+function reducer(state: CheckoutState, action: Action): CheckoutState {
+  switch (action.type) {
+    case 'next':
+      return { ...state, step: Math.min(state.step + 1, 3) };
+    case 'prev':
+      return { ...state, step: Math.max(state.step - 1, 1) };
+    case 'shipping':
+      return { ...state, shippingMethod: action.payload };
+    case 'toggle-agreed':
+      return { ...state, agreed: !state.agreed };
+    default:
+      return state;
+  }
+}
+
+export default function CheckoutFlow() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Step: {state.step}&lt;/p&gt;
+      &lt;p&gt;Shipping: {state.shippingMethod}&lt;/p&gt;
+      &lt;button onClick={() =&gt; dispatch({ type: 'prev' })}&gt;Back&lt;/button&gt;
+      &lt;button onClick={() =&gt; dispatch({ type: 'next' })}&gt;Next&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">4</span>Useful Intermediate Hooks — useId and useLayoutEffect</h5>
+      <p class="small opacity-75 mb-2"><code>useId</code> helps create stable, SSR-safe IDs for labels and accessibility attributes. <code>useLayoutEffect</code> runs after DOM mutations but before the browser paints, which is useful for measurement or immediate layout corrections.</p>
+      <div class="row g-3 mb-4">
+        <div class="col-lg-6">
+          <div class="code-wrapper mb-0"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-tsx">'use client';
+
+import { useId } from 'react';
+
+export default function NewsletterField() {
+  const emailId = useId();
+
+  return (
+    &lt;div&gt;
+      &lt;label htmlFor={emailId} className="form-label"&gt;Email&lt;/label&gt;
+      &lt;input id={emailId} name="email" className="form-control" /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper mb-0"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-tsx">'use client';
+
+import { useLayoutEffect, useRef, useState } from 'react';
+
+export default function MeasuredBanner() {
+  const bannerRef = useRef&lt;HTMLDivElement | null&gt;(null);
+  const [width, setWidth] = useState(0);
+
+  useLayoutEffect(() =&gt; {
+    setWidth(bannerRef.current?.offsetWidth ?? 0);
+  }, []);
+
+  return &lt;div ref={bannerRef}&gt;Banner width: {width}px&lt;/div&gt;;
+}</code></pre></div>
+        </div>
+      </div>
+
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>When to use:</strong> choose <code>useId</code> for accessible form fields and SSR-safe IDs. Choose <code>useLayoutEffect</code> only when you must read or correct layout before paint. For most side effects, prefer <code>useEffect</code>.</p>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">5</span>Performance Hooks — useMemo, useCallback, useTransition, startTransition, useDeferredValue</h5>
+      <p class="small opacity-75 mb-2">These hooks are for real bottlenecks or responsiveness issues, not for every component. Measure first, then optimize.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-tsx">'use client';
+
+import {
+  useCallback,
+  useDeferredValue,
+  useMemo,
+  useState,
+  useTransition,
+} from 'react';
+
+export default function ProductSearch({ products }: { products: { id: number; name: string }[] }) {
+  const [query, setQuery] = useState('');
+  const [isPending, startTransition] = useTransition();
+  const deferredQuery = useDeferredValue(query);
+
+  const filtered = useMemo(() =&gt; {
+    return products.filter((product) =&gt;
+      product.name.toLowerCase().includes(deferredQuery.toLowerCase())
+    );
+  }, [products, deferredQuery]);
+
+  const handleChange = useCallback((value: string) =&gt; {
+    startTransition(() =&gt; {
+      setQuery(value);
+    });
+  }, []);
+
+  return (
+    &lt;&gt;
+      &lt;input value={query} onChange={(e) =&gt; handleChange(e.target.value)} className="form-control" /&gt;
+      {isPending &amp;&amp; &lt;p className="small text-secondary mt-2"&gt;Updating results...&lt;/p&gt;}
+      &lt;ul className="mt-3"&gt;
+        {filtered.map((product) =&gt; &lt;li key={product.id}&gt;{product.name}&lt;/li&gt;)}
+      &lt;/ul&gt;
+    &lt;/&gt;
+  );
+}</code></pre></div>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Hook</th><th>Best use case</th><th>Warning</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>useMemo</code></td><td>Cache expensive derived values</td><td>Do not wrap every tiny calculation</td></tr>
+            <tr><td><code>useCallback</code></td><td>Keep stable function identity for memoized children</td><td>Not useful if no child depends on it</td></tr>
+            <tr><td><code>useTransition</code></td><td>Mark non-urgent UI updates as interruptible</td><td>It does not make network requests faster</td></tr>
+            <tr><td><code>useDeferredValue</code></td><td>Let derived UI lag behind fast input typing</td><td>Use it for rendering pressure, not business logic</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">6</span>Next.js Route Hooks</h5>
+      <p class="small opacity-75 mb-2">These hooks come from <code>next/navigation</code> and are only for Client Components.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-tsx">'use client';
+
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+  useSelectedLayoutSegment,
+  useSelectedLayoutSegments,
+} from 'next/navigation';
+
+export default function RouteInspector() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const params = useParams();
+  const segment = useSelectedLayoutSegment();
+  const segments = useSelectedLayoutSegments();
+
+  return (
+    &lt;div className="small"&gt;
+      &lt;p&gt;Pathname: {pathname}&lt;/p&gt;
+      &lt;p&gt;Query page: {searchParams.get('page')}&lt;/p&gt;
+      &lt;p&gt;Route param id: {String(params.id ?? '')}&lt;/p&gt;
+      &lt;p&gt;Active segment: {segment ?? 'none'}&lt;/p&gt;
+      &lt;p&gt;All active segments: {segments.join(' / ') || 'root'}&lt;/p&gt;
+      &lt;button onClick={() =&gt; router.push('/dashboard')}&gt;Go dashboard&lt;/button&gt;
+      &lt;button onClick={() =&gt; router.refresh()} className="ms-2"&gt;Refresh server data&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre></div>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Hook</th><th>What it gives you</th><th>Typical use</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>useRouter()</code></td><td>Imperative navigation</td><td>Redirect after login, refresh route data</td></tr>
+            <tr><td><code>usePathname()</code></td><td>Current pathname</td><td>Active nav highlighting</td></tr>
+            <tr><td><code>useSearchParams()</code></td><td>Current query string</td><td>Filters, pagination, search</td></tr>
+            <tr><td><code>useParams()</code></td><td>Dynamic route params</td><td>Read <code>[id]</code> and nested segments</td></tr>
+            <tr><td><code>useSelectedLayoutSegment()</code></td><td>Current segment inside a layout</td><td>Dashboard tab highlighting</td></tr>
+            <tr><td><code>useSelectedLayoutSegments()</code></td><td>All active nested segments</td><td>Breadcrumbs, nested dashboard state</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong><code>router.refresh()</code> pattern:</strong> use it after a mutation when you want the current route's Server Components to refetch data without doing a full page reload.</p>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">7</span>React 19 + Next.js Form Hooks</h5>
+      <p class="small opacity-75 mb-2">These hooks are especially useful in App Router forms and optimistic user interfaces.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-tsx">'use client';
+
+import { useActionState, useOptimistic } from 'react';
+import { useFormStatus } from 'react-dom';
+import { submitComment } from '@/lib/actions';
+
+type CommentState = {
+  success: string;
+  error: string;
+  fieldErrors: {
+    text?: string;
+  };
+};
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return &lt;button disabled={pending}&gt;{pending ? 'Posting…' : 'Post comment'}&lt;/button&gt;;
+}
+
+export default function CommentForm({
+  initialComments,
+}: {
+  initialComments: { id: string; text: string }[];
+}) {
+  const [optimisticComments, addOptimisticComment] = useOptimistic(
+    initialComments,
+    (state, text: string) =&gt; [...state, { id: crypto.randomUUID(), text }]
+  );
+
+  const [state, action] = useActionState&lt;CommentState, FormData&gt;(submitComment, {
+    success: '',
+    error: '',
+    fieldErrors: {},
+  });
+
+  return (
+    &lt;&gt;
+      &lt;ul&gt;
+        {optimisticComments.map((comment) =&gt; &lt;li key={comment.id}&gt;{comment.text}&lt;/li&gt;)}
+      &lt;/ul&gt;
+
+      &lt;form
+        action={async (formData) =&gt; {
+          const text = String(formData.get('text') ?? '');
+          if (text.trim().length &gt;= 3) addOptimisticComment(text);
+          await action(formData);
+        }}
+      &gt;
+        &lt;input name="text" className="form-control mb-2" minLength={3} /&gt;
+        &lt;SubmitButton /&gt;
+        {state.fieldErrors.text &amp;&amp; &lt;p className="text-danger mt-2 mb-0"&gt;{state.fieldErrors.text}&lt;/p&gt;}
+        {state.error &amp;&amp; &lt;p className="text-danger mt-2"&gt;{state.error}&lt;/p&gt;}
+        {state.success &amp;&amp; &lt;p className="text-success mt-2"&gt;{state.success}&lt;/p&gt;}
+      &lt;/form&gt;
+    &lt;/&gt;
+  );
+}</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-tsx">// lib/actions.ts
+'use server';
+
+type CommentState = {
+  success: string;
+  error: string;
+  fieldErrors: {
+    text?: string;
+  };
+};
+
+export async function submitComment(
+  prevState: CommentState,
+  formData: FormData
+): Promise&lt;CommentState&gt; {
+  const text = String(formData.get('text') ?? '').trim();
+
+  if (text.length &lt; 3) {
+    return {
+      success: '',
+      error: 'Validation failed',
+      fieldErrors: { text: 'Comment must be at least 3 characters long.' },
+    };
+  }
+
+  // await db.comment.create({ data: { text } });
+  return {
+    success: 'Comment saved successfully.',
+    error: '',
+    fieldErrors: {},
+  };
+}</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-tsx">// React 19 special hook: use()
+import { use } from 'react';
+
+export default function ProductPage({
+  params,
+}: {
+  params: Promise&lt;{ id: string }&gt;;
+}) {
+  const { id } = use(params);
+  return &lt;div&gt;Product ID: {id}&lt;/div&gt;;
+}</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">8</span>Client Data Hooks — SWR and TanStack Query</h5>
+      <p class="small opacity-75 mb-2">Server Components should be your default for server data in App Router, but client data hooks still matter when you need live polling, focus revalidation, cache sharing across interactive widgets, or fully client-managed dashboards.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-tsx">'use client';
+
+import useSWR from 'swr';
+
+const fetcher = (url: string) =&gt; fetch(url).then((res) =&gt; res.json());
+
+export default function NotificationsPanel() {
+  const { data, error, isLoading, mutate } = useSWR('/api/notifications', fetcher, {
+    refreshInterval: 30000,
+    revalidateOnFocus: true,
+  });
+
+  if (isLoading) return &lt;p&gt;Loading notifications...&lt;/p&gt;;
+  if (error) return &lt;p&gt;Failed to load notifications.&lt;/p&gt;;
+
+  return (
+    &lt;&gt;
+      &lt;button onClick={() =&gt; mutate()} className="btn btn-sm btn-outline-primary mb-2"&gt;
+        Refresh Notifications
+      &lt;/button&gt;
+      &lt;ul&gt;
+        {data.map((item: any) =&gt; &lt;li key={item.id}&gt;{item.title}&lt;/li&gt;)}
+      &lt;/ul&gt;
+    &lt;/&gt;
+  );
+}</code></pre></div>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Choose this</th><th>When it fits best</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Server Components + revalidation</td><td>Default for page data, SEO, initial render speed, and keeping secrets on the server</td></tr>
+            <tr><td>SWR</td><td>Simple client cache, polling, focus revalidation, dashboards, notification panels</td></tr>
+            <tr><td>TanStack Query</td><td>Larger client-heavy apps with mutations, cache invalidation, pagination, and offline-friendly patterns</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">9</span>Custom Hooks</h5>
+      <p class="small opacity-75 mb-2">A custom hook is just a function that uses other hooks and packages reusable behavior behind a clean API.</p>
+      <div class="row g-3 mb-3">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold small mb-1">useLocalStorage</h6><p class="small opacity-65 mb-0">Persist theme, filters, or draft values in the browser.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold small mb-1">useDebounce</h6><p class="small opacity-65 mb-0">Delay expensive search or filter reactions while the user types.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold small mb-1">useMediaQuery</h6><p class="small opacity-65 mb-0">Respond to screen size or system preferences like dark mode.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold small mb-1">useToggle</h6><p class="small opacity-65 mb-0">Handle common open/close and show/hide interactions cleanly.</p></div></div>
+      </div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-tsx">'use client';
+
+import { useEffect, useState } from 'react';
+
+export function useDebouncedValue&lt;T&gt;(value: T, delay = 300) {
+  const [debounced, setDebounced] = useState(value);
+
+  useEffect(() =&gt; {
+    const id = setTimeout(() =&gt; setDebounced(value), delay);
+    return () =&gt; clearTimeout(id);
+  }, [value, delay]);
+
+  return debounced;
+}
+
+// Usage
+// const debouncedQuery = useDebouncedValue(query, 400);</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-tsx">'use client';
+
+import { useEffect, useState } from 'react';
+
+export function useLocalStorage(key: string, initialValue: string) {
+  const [value, setValue] = useState(initialValue);
+
+  useEffect(() =&gt; {
+    const saved = localStorage.getItem(key);
+    if (saved !== null) setValue(saved);
+  }, [key]);
+
+  useEffect(() =&gt; {
+    localStorage.setItem(key, value);
+  }, [key, value]);
+
+  return [value, setValue] as const;
+}
+
+export function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() =&gt; {
+    const media = window.matchMedia(query);
+    setMatches(media.matches);
+
+    const handler = (event: MediaQueryListEvent) =&gt; setMatches(event.matches);
+    media.addEventListener('change', handler);
+    return () =&gt; media.removeEventListener('change', handler);
+  }, [query]);
+
+  return matches;
+}
+
+export function useToggle(initial = false) {
+  const [value, setValue] = useState(initial);
+  return { value, toggle: () =&gt; setValue((current) =&gt; !current) };
+}</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">10</span>Hook Pitfalls and Interview Points</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark">
+            <tr><th>Topic</th><th>What interviewers want to hear</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Stale closures</td><td>Effects and callbacks capture values from the render where they were created. Missing dependencies cause stale data bugs.</td></tr>
+            <tr><td>Effect cleanup</td><td>Return a cleanup function to remove listeners, cancel timers, and abort requests when dependencies change or components unmount.</td></tr>
+            <tr><td>exhaustive-deps</td><td>The ESLint rule catches missing dependencies in effects and callbacks. Suppressing it blindly often hides real stale-state bugs.</td></tr>
+            <tr><td>Race conditions with fetch</td><td>Two fast-changing requests can resolve out of order. The latest user input should win, not whichever network response arrives last.</td></tr>
+            <tr><td>AbortController</td><td>Use it in effects to cancel in-flight fetch calls when dependencies change or the component unmounts.</td></tr>
+            <tr><td>Hydration mismatch</td><td>Do not render browser-only values like <code>window.innerWidth</code> during SSR. Read them in a client effect instead.</td></tr>
+            <tr><td>Conditional hooks</td><td>Hooks must always run in the same order. Do not call them inside <code>if</code>, loops, or nested handlers.</td></tr>
+            <tr><td>useRef vs useState</td><td><code>useRef</code> stores mutable data without re-rendering. <code>useState</code> stores data that should update the UI.</td></tr>
+            <tr><td>useMemo and useCallback</td><td>They are performance tools, not default style. Use them only when memoization solves a measured rendering cost.</td></tr>
+            <tr><td>Next.js boundary</td><td>Client hooks belong in Client Components. Server Components should fetch data and keep browser-only logic out.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-tsx">'use client';
+
+import { useEffect, useState } from 'react';
+
+export default function SafeSearch() {
+  const [query, setQuery] = useState('react');
+  const [results, setResults] = useState&lt;any[]&gt;([]);
+
+  useEffect(() =&gt; {
+    const controller = new AbortController();
+
+    async function run() {
+      const res = await fetch(`/api/search?q=${query}`, {
+        signal: controller.signal,
+      });
+      const data = await res.json();
+      setResults(data);
+    }
+
+    run().catch((error) =&gt; {
+      if (error.name !== 'AbortError') console.error(error);
+    });
+
+    return () =&gt; controller.abort();
+  }, [query]);
+
+  return &lt;div&gt;Results: {results.length}&lt;/div&gt;;
+}</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">11</span>Hook Practice Exercises</h5>
+      <div class="row g-3">
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold small mb-2">Debounced Search</h6>
+            <p class="small opacity-75 mb-0">Use <code>useState</code>, <code>useDebouncedValue</code>, and <code>useEffect</code> to build a search UI that avoids firing on every keystroke.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold small mb-2">Optimistic Comment Form</h6>
+            <p class="small opacity-75 mb-0">Combine <code>useActionState</code>, <code>useOptimistic</code>, and <code>useFormStatus</code> for instant UI feedback.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold small mb-2">Infinite Scroll</h6>
+            <p class="small opacity-75 mb-0">Use <code>useEffect</code>, <code>useRef</code>, and an <code>IntersectionObserver</code> to load the next page when a sentinel enters view.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold small mb-2">Multi-Step Form</h6>
+            <p class="small opacity-75 mb-0">Use <code>useReducer</code> for transitions, validation state, and next/previous actions without prop-drilling chaos.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-primary border-0 rounded-3 d-flex gap-3 align-items-start mt-4 mb-0">
+        <i class="bi bi-lightbulb-fill fs-5 mt-1 text-warning"></i>
+        <div><strong>Recommended learning order:</strong> first master <code>useState</code>, <code>useEffect</code>, <code>dependency arrays</code>, and <code>useRef</code>; then move to <code>useContext</code>, <code>useReducer</code>, <code>useId</code>, and <code>useLayoutEffect</code>; after that learn route hooks, performance hooks, client data hooks like SWR, and finally React 19 form hooks such as <code>useActionState</code>, <code>useOptimistic</code>, <code>useFormStatus</code>, and <code>use()</code>.</div>
       </div>
     </section>
 
