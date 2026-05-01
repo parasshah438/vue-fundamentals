@@ -177,19 +177,20 @@
             background: radial-gradient(circle, rgba(102, 126, 234, 0.3) 0%, transparent 70%);
             border-radius: 50%;
             filter: blur(80px);
-            animation: heroFloat 6s ease-in-out infinite;
+            animation: heroFloat 12s ease-in-out infinite;
+            will-change: transform;
         }
 
         .gradient-bg:nth-child(2) {
             right: -100px;
             top: 20%;
             background: radial-gradient(circle, rgba(118, 75, 162, 0.3) 0%, transparent 70%);
-            animation-delay: 2s;
+            animation-delay: 4s;
         }
 
         @keyframes heroFloat {
             0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(30px, 30px); }
+            50% { transform: translate(8px, 8px); }
         }
 
         .hero-content {
@@ -270,8 +271,8 @@
         }
 
         .btn-primary-custom:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6), 0 8px 24px rgba(0, 212, 255, 0.3);
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.45), 0 6px 18px rgba(0, 212, 255, 0.22);
             color: white;
         }
 
@@ -327,8 +328,8 @@
         }
 
         .tech-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(0, 212, 255, 0.12);
         }
 
         .tech-card:hover::before {
@@ -384,12 +385,12 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: shimmer 2s infinite;
+            animation: shimmer 12s linear infinite;
         }
 
         @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            0% { transform: translateX(-30%); }
+            100% { transform: translateX(30%); }
         }
 
         /* ===== PROJECT CARDS (AI-Projects section) ===== */
@@ -404,8 +405,8 @@
         }
 
         .project-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.3);
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 10px 32px rgba(102, 126, 234, 0.22);
         }
 
         .project-card h5 {
@@ -705,7 +706,7 @@
             height: 12px;
             background: #28a745;
             border-radius: 50%;
-            animation: statusPulse 2s infinite;
+            animation: statusPulse 6s ease-in-out infinite;
         }
 
         @keyframes statusPulse {
@@ -849,8 +850,8 @@
         }
 
         .portfolio-card:hover {
-            transform: translateY(-15px) scale(1.03) rotateX(3deg);
-            box-shadow: 0 25px 60px rgba(0, 212, 255, 0.25), 0 15px 40px rgba(123, 44, 191, 0.15);
+            transform: translateY(-6px) scale(1.01) rotateX(1.2deg);
+            box-shadow: 0 14px 34px rgba(0, 212, 255, 0.16), 0 8px 24px rgba(123, 44, 191, 0.10);
             border-color: var(--accent-primary);
         }
 
@@ -892,7 +893,7 @@
             border: 3px solid var(--accent-primary);
             border-top-color: transparent;
             border-radius: 50%;
-            animation: spinner 0.8s linear infinite;
+            animation: spinner 1.8s linear infinite;
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -954,7 +955,8 @@
             color: var(--accent-primary);
             transform: translateY(20px);
             transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s;
-            animation: overlayPulse 2s infinite;
+            animation: overlayPulse 7s ease-in-out infinite;
+            will-change: transform;
         }
 
         .portfolio-card:hover .portfolio-overlay i {
@@ -963,7 +965,7 @@
 
         @keyframes overlayPulse {
             0% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-5px) scale(1.1); }
+            50% { transform: translateY(-1px) scale(1.02); }
             100% { transform: translateY(0) scale(1); }
         }
 
@@ -1241,8 +1243,8 @@
         .social-links a:hover {
             background: var(--gradient);
             color: white;
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.26);
         }
 
         /* ===== THEME TOGGLE ===== */
@@ -1294,7 +1296,7 @@
             border: 4px solid var(--border-color);
             border-top-color: var(--accent-primary);
             border-radius: 50%;
-            animation: preloaderSpin 0.8s linear infinite;
+            animation: preloaderSpin 2.2s linear infinite;
         }
 
         @keyframes preloaderSpin {
@@ -1320,7 +1322,7 @@
             height: 1.5rem;
             background: var(--accent-primary);
             margin-left: 4px;
-            animation: cursorBlink 1s step-end infinite;
+            animation: cursorBlink 1.8s step-end infinite;
             vertical-align: text-bottom;
         }
 
@@ -1641,18 +1643,18 @@
             z-index: 1000;
             box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
             transition: all 0.3s ease;
-            animation: whatsappPulse 2s infinite;
+            animation: whatsappPulse 5s ease-in-out infinite;
         }
 
         .float-whatsapp:hover {
-            transform: scale(1.1);
+            transform: scale(1.05);
             color: white;
             box-shadow: 0 8px 30px rgba(37, 211, 102, 0.6);
         }
 
         @keyframes whatsappPulse {
-            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
-            70% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.35); }
+            70% { box-shadow: 0 0 0 8px rgba(37, 211, 102, 0); }
             100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
 
@@ -1914,6 +1916,508 @@
                 -moz-osx-font-smoothing: grayscale;
             }
         }
+        /* ===== MOTION RESTRAINT (Accessibility) ===== */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* ===== CASE STUDY SECTION SUBTITLE ===== */
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 620px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* ===== CASE STUDY CARDS (Product-page style) ===== */
+        .cs-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: box-shadow 0.4s ease, transform 0.4s ease;
+            margin-bottom: 3rem;
+        }
+
+        .cs-card:hover {
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .cs-visual {
+            position: relative;
+            min-height: 340px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem;
+            overflow: hidden;
+        }
+
+        .cs-visual-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cs-visual-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .cs-visual-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.55;
+        }
+
+        .cs-visual-blob-1 {
+            width: 220px;
+            height: 220px;
+            top: -40px;
+            left: -40px;
+        }
+
+        .cs-visual-blob-2 {
+            width: 180px;
+            height: 180px;
+            bottom: -20px;
+            right: -20px;
+        }
+
+        .cs-metrics-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+            margin-top: 1.5rem;
+        }
+
+        .cs-metric-chip {
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 50px;
+            padding: 0.5rem 1.2rem;
+            text-align: center;
+            color: #fff;
+        }
+
+        .cs-metric-chip .chip-value {
+            font-size: 1.3rem;
+            font-weight: 800;
+            line-height: 1;
+            display: block;
+        }
+
+        .cs-metric-chip .chip-label {
+            font-size: 0.7rem;
+            opacity: 0.85;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cs-content {
+            padding: 2.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .cs-category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.35rem 0.9rem;
+            border-radius: 50px;
+            margin-bottom: 1rem;
+        }
+
+        .cs-title {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.6rem;
+            line-height: 1.25;
+        }
+
+        .cs-hook {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Story Arc (Problem → Solution → Impact) */
+        .cs-arc {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 1.8rem;
+            flex-wrap: wrap;
+            row-gap: 0.5rem;
+        }
+
+        .cs-arc-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.45rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .cs-arc-step.challenge {
+            background: rgba(220, 53, 69, 0.12);
+            color: #e05260;
+            border: 1px solid rgba(220, 53, 69, 0.25);
+        }
+
+        .cs-arc-step.solution {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--accent-primary);
+            border: 1px solid rgba(0, 212, 255, 0.25);
+        }
+
+        .cs-arc-step.impact {
+            background: rgba(40, 167, 69, 0.12);
+            color: #4caf72;
+            border: 1px solid rgba(40, 167, 69, 0.25);
+        }
+
+        .cs-arc-arrow {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin: 0 0.3rem;
+            opacity: 0.5;
+        }
+
+        .cs-stack-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .cs-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .cs-cta:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 10px 28px rgba(102, 126, 234, 0.45);
+            color: white;
+        }
+
+        .cs-cta-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.4rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            background: transparent;
+            color: var(--accent-primary);
+            border: 2px solid var(--accent-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cs-cta-secondary:hover {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        /* ===== CASE STUDY MODAL ===== */
+        #caseStudyModal .modal-dialog {
+            max-width: 860px;
+        }
+
+        .cs-modal-hero {
+            position: relative;
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 2rem 2.5rem;
+            overflow: hidden;
+        }
+
+        .cs-modal-hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .cs-modal-hero-icon {
+            font-size: 3.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cs-modal-hero-text {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cs-modal-hero-text h3 {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 0.3rem;
+        }
+
+        .cs-modal-hero-text p {
+            color: rgba(255,255,255,0.8);
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        /* Tabs */
+        .cs-tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .cs-tab-btn {
+            background: none;
+            border: none;
+            padding: 0.8rem 1.4rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            position: relative;
+            white-space: nowrap;
+            transition: color 0.2s;
+        }
+
+        .cs-tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transition: transform 0.2s ease;
+        }
+
+        .cs-tab-btn.active {
+            color: var(--accent-primary);
+        }
+
+        .cs-tab-btn.active::after {
+            transform: scaleX(1);
+        }
+
+        .cs-tab-panel {
+            display: none;
+        }
+
+        .cs-tab-panel.active {
+            display: block;
+            animation: tabFadeIn 0.3s ease;
+        }
+
+        @keyframes tabFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Story narrative blocks */
+        .cs-narrative-block {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1.2rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color-subtle);
+            background: var(--bg-secondary);
+        }
+
+        .cs-narrative-icon {
+            font-size: 1.4rem;
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cs-narrative-icon.red   { background: rgba(220,53,69,0.12); color: #e05260; }
+        .cs-narrative-icon.blue  { background: rgba(0,212,255,0.1);  color: var(--accent-primary); }
+        .cs-narrative-icon.green { background: rgba(40,167,69,0.12); color: #4caf72; }
+        .cs-narrative-icon.purple{ background: rgba(123,44,191,0.12);color: #a855f7; }
+
+        .cs-narrative-block h6 {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cs-narrative-block p {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            margin: 0;
+            line-height: 1.65;
+        }
+
+        /* Process timeline in modal */
+        .cs-process-step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .cs-process-step:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: 17px;
+            top: 40px;
+            width: 2px;
+            height: calc(100% + 0.5rem);
+            background: var(--border-color);
+        }
+
+        .cs-process-num {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            border-radius: 50%;
+            background: var(--gradient);
+            color: white;
+            font-weight: 800;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cs-process-content {
+            padding-top: 0.3rem;
+            padding-bottom: 1rem;
+        }
+
+        .cs-process-content h6 {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .cs-process-content p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Impact metrics in modal */
+        .cs-impact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cs-impact-tile {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 1.2rem;
+            text-align: center;
+            border: 1px solid var(--border-color-subtle);
+        }
+
+        .cs-impact-tile .impact-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent-primary);
+            line-height: 1;
+            margin-bottom: 0.3rem;
+        }
+
+        .cs-impact-tile .impact-label {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cs-outcome-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .cs-outcome-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            border-bottom: 1px solid var(--border-color-subtle);
+        }
+
+        .cs-outcome-list li:last-child { border-bottom: none; }
+
+        .cs-outcome-list li i {
+            color: #4caf72;
+            margin-top: 0.2rem;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .cs-visual { min-height: 220px; }
+            .cs-title { font-size: 1.35rem; }
+            .cs-impact-grid { grid-template-columns: repeat(2, 1fr); }
+            .cs-modal-hero { flex-direction: column; text-align: center; padding: 1.5rem; }
+        }
     </style>
 </head>
 <body>
@@ -1960,8 +2464,9 @@
                         <i class="fas fa-robot me-2"></i>AI-Powered Developer
                     </div>
                     <h1 class="hero-title">Paras Shah</h1>
+                    <p class="text-uppercase fw-semibold mb-2" style="letter-spacing: 0.14em; color: var(--accent-primary);">AI-Powered Full-Stack Developer</p>
                     <p class="hero-subtitle"><span id="typewriterText">Full Stack Developer</span><span class="typewriter-cursor"></span></p>
-                    <p class="text-secondary mb-4">Building intelligent solutions that transform ideas into reality with cutting-edge technologies and artificial intelligence.</p>
+                    <p class="text-secondary mb-4">I build AI-powered web applications, scalable APIs, and cloud-ready products for startups and businesses that need fast, reliable execution.</p>
                     <div class="hero-buttons">
                         <a href="#contact" class="btn btn-primary-custom">
                             <i class="fas fa-rocket me-2"></i>Let's Connect
@@ -2500,6 +3005,229 @@
         </div>
     </section>
 
+    <!-- Case Studies Section -->
+    <section id="case-studies" class="py-5">
+        <div class="container">
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-8 text-center">
+                    <h2 class="section-title">Case Studies</h2>
+                    <p class="section-subtitle">A deeper look at the problems I solve, how I approach them, and the results delivered.</p>
+                </div>
+            </div>
+
+            <!-- Case Study 1 — AI Workflow Automation -->
+            <div class="cs-card">
+                <div class="row g-0">
+                    <!-- Visual Side -->
+                    <div class="col-lg-5">
+                        <div class="cs-visual" style="background: linear-gradient(135deg, #0f0c29, #1a1a4e);">
+                            <div class="cs-visual-bg">
+                                <div class="cs-visual-blob cs-visual-blob-1" style="background: rgba(102,126,234,0.6);"></div>
+                                <div class="cs-visual-blob cs-visual-blob-2" style="background: rgba(0,212,255,0.5);"></div>
+                            </div>
+                            <div class="cs-visual-icon">🤖</div>
+                            <p style="color:rgba(255,255,255,0.75); font-size:0.9rem; position:relative; z-index:2; text-align:center; max-width:260px;">
+                                AI pipeline that replaced a manual content workflow, delivering faster and more consistent results.
+                            </p>
+                            <div class="cs-metrics-row">
+                                <div class="cs-metric-chip">
+                                    <span class="chip-value">70%</span>
+                                    <span class="chip-label">Time Saved</span>
+                                </div>
+                                <div class="cs-metric-chip">
+                                    <span class="chip-value">3×</span>
+                                    <span class="chip-label">Faster Delivery</span>
+                                </div>
+                                <div class="cs-metric-chip">
+                                    <span class="chip-value">98%</span>
+                                    <span class="chip-label">Consistency</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Story Side -->
+                    <div class="col-lg-7">
+                        <div class="cs-content">
+                            <div>
+                                <span class="cs-category-badge" style="background:rgba(102,126,234,0.12); color:#667eea; border:1px solid rgba(102,126,234,0.25);">
+                                    <i class="fas fa-robot"></i> AI Workflow Automation
+                                </span>
+                            </div>
+                            <h3 class="cs-title">Replacing a Manual Content Pipeline with AI</h3>
+                            <p class="cs-hook">A growing media team was spending 30+ hours a week manually drafting, reviewing, and organizing content — creating bottlenecks, inconsistencies, and burnout before anything shipped.</p>
+
+                            <div class="cs-arc">
+                                <div class="cs-arc-step challenge"><i class="fas fa-exclamation-triangle"></i> Manual bottleneck</div>
+                                <span class="cs-arc-arrow">›</span>
+                                <div class="cs-arc-step solution"><i class="fas fa-microchip"></i> AI-assisted pipeline</div>
+                                <span class="cs-arc-arrow">›</span>
+                                <div class="cs-arc-step impact"><i class="fas fa-chart-line"></i> 3× faster delivery</div>
+                            </div>
+
+                            <div class="cs-stack-tags">
+                                <span class="tech-tag">React</span>
+                                <span class="tech-tag">Node.js</span>
+                                <span class="tech-tag">OpenAI API</span>
+                                <span class="tech-tag">REST APIs</span>
+                                <span class="tech-tag">Bootstrap</span>
+                            </div>
+
+                            <div class="d-flex flex-wrap gap-2">
+                                <button class="cs-cta" onclick="openCaseStudyModal('cs1')">
+                                    <i class="fas fa-book-open"></i> Read Full Story
+                                </button>
+                                <a href="#" class="cs-cta-secondary" target="_blank" rel="noopener noreferrer">
+                                    <i class="fas fa-external-link-alt"></i> Live Demo
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Case Study 2 — Scalable Web Platform (reversed) -->
+            <div class="cs-card">
+                <div class="row g-0 flex-lg-row-reverse">
+                    <!-- Visual Side -->
+                    <div class="col-lg-5">
+                        <div class="cs-visual" style="background: linear-gradient(135deg, #0a2e1a, #0f3d2e);">
+                            <div class="cs-visual-bg">
+                                <div class="cs-visual-blob cs-visual-blob-1" style="background: rgba(40,167,69,0.55);"></div>
+                                <div class="cs-visual-blob cs-visual-blob-2" style="background: rgba(0,212,255,0.4);"></div>
+                            </div>
+                            <div class="cs-visual-icon">🌐</div>
+                            <p style="color:rgba(255,255,255,0.75); font-size:0.9rem; position:relative; z-index:2; text-align:center; max-width:260px;">
+                                A modular, performant web platform rebuilt to handle growing traffic and evolving feature demands.
+                            </p>
+                            <div class="cs-metrics-row">
+                                <div class="cs-metric-chip">
+                                    <span class="chip-value">60%</span>
+                                    <span class="chip-label">Load Faster</span>
+                                </div>
+                                <div class="cs-metric-chip">
+                                    <span class="chip-value">99.9%</span>
+                                    <span class="chip-label">Uptime</span>
+                                </div>
+                                <div class="cs-metric-chip">
+                                    <span class="chip-value">40%</span>
+                                    <span class="chip-label">Cost Reduced</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Story Side -->
+                    <div class="col-lg-7">
+                        <div class="cs-content">
+                            <div>
+                                <span class="cs-category-badge" style="background:rgba(40,167,69,0.12); color:#4caf72; border:1px solid rgba(40,167,69,0.25);">
+                                    <i class="fas fa-globe"></i> Scalable Web Platform
+                                </span>
+                            </div>
+                            <h3 class="cs-title">Rebuilding a Fragile Platform for Real Scale</h3>
+                            <p class="cs-hook">The existing system was held together by quick fixes — slow page loads, messy data handling, and a UI that confused new users. As traffic doubled, cracks became crises.</p>
+
+                            <div class="cs-arc">
+                                <div class="cs-arc-step challenge"><i class="fas fa-exclamation-triangle"></i> Fragile codebase</div>
+                                <span class="cs-arc-arrow">›</span>
+                                <div class="cs-arc-step solution"><i class="fas fa-layer-group"></i> Modular rebuild</div>
+                                <span class="cs-arc-arrow">›</span>
+                                <div class="cs-arc-step impact"><i class="fas fa-chart-line"></i> 60% faster pages</div>
+                            </div>
+
+                            <div class="cs-stack-tags">
+                                <span class="tech-tag">HTML/CSS</span>
+                                <span class="tech-tag">JavaScript</span>
+                                <span class="tech-tag">Bootstrap</span>
+                                <span class="tech-tag">PHP</span>
+                                <span class="tech-tag">MySQL</span>
+                            </div>
+
+                            <div class="d-flex flex-wrap gap-2">
+                                <button class="cs-cta" onclick="openCaseStudyModal('cs2')">
+                                    <i class="fas fa-book-open"></i> Read Full Story
+                                </button>
+                                <a href="#" class="cs-cta-secondary" target="_blank" rel="noopener noreferrer">
+                                    <i class="fas fa-external-link-alt"></i> Live Demo
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Case Study 3 — Cloud-Ready API -->
+            <div class="cs-card">
+                <div class="row g-0">
+                    <!-- Visual Side -->
+                    <div class="col-lg-5">
+                        <div class="cs-visual" style="background: linear-gradient(135deg, #1a0a00, #2e1a00);">
+                            <div class="cs-visual-bg">
+                                <div class="cs-visual-blob cs-visual-blob-1" style="background: rgba(255,193,7,0.5);"></div>
+                                <div class="cs-visual-blob cs-visual-blob-2" style="background: rgba(220,53,69,0.4);"></div>
+                            </div>
+                            <div class="cs-visual-icon">☁️</div>
+                            <p style="color:rgba(255,255,255,0.75); font-size:0.9rem; position:relative; z-index:2; text-align:center; max-width:260px;">
+                                A structured, cloud-deployable API layer built to serve multiple clients reliably at low latency.
+                            </p>
+                            <div class="cs-metrics-row">
+                                <div class="cs-metric-chip">
+                                    <span class="chip-value">&lt;80ms</span>
+                                    <span class="chip-label">Avg Latency</span>
+                                </div>
+                                <div class="cs-metric-chip">
+                                    <span class="chip-value">5×</span>
+                                    <span class="chip-label">More Clients</span>
+                                </div>
+                                <div class="cs-metric-chip">
+                                    <span class="chip-value">Zero</span>
+                                    <span class="chip-label">Downtime</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Story Side -->
+                    <div class="col-lg-7">
+                        <div class="cs-content">
+                            <div>
+                                <span class="cs-category-badge" style="background:rgba(255,193,7,0.12); color:#f59e0b; border:1px solid rgba(255,193,7,0.25);">
+                                    <i class="fas fa-cloud"></i> Cloud-Ready API
+                                </span>
+                            </div>
+                            <h3 class="cs-title">From Spaghetti Backend to a Reliable API Layer</h3>
+                            <p class="cs-hook">Multiple client apps were sharing logic through undocumented, brittle server code. Any change broke something. The team needed a clean, contract-driven API that could scale without drama.</p>
+
+                            <div class="cs-arc">
+                                <div class="cs-arc-step challenge"><i class="fas fa-exclamation-triangle"></i> Brittle shared backend</div>
+                                <span class="cs-arc-arrow">›</span>
+                                <div class="cs-arc-step solution"><i class="fas fa-server"></i> Modular API layer</div>
+                                <span class="cs-arc-arrow">›</span>
+                                <div class="cs-arc-step impact"><i class="fas fa-chart-line"></i> &lt;80ms at scale</div>
+                            </div>
+
+                            <div class="cs-stack-tags">
+                                <span class="tech-tag">Node.js</span>
+                                <span class="tech-tag">Express</span>
+                                <span class="tech-tag">REST APIs</span>
+                                <span class="tech-tag">JSON Schema</span>
+                                <span class="tech-tag">Cloud Deploy</span>
+                            </div>
+
+                            <div class="d-flex flex-wrap gap-2">
+                                <button class="cs-cta" onclick="openCaseStudyModal('cs3')">
+                                    <i class="fas fa-book-open"></i> Read Full Story
+                                </button>
+                                <a href="#" class="cs-cta-secondary" target="_blank" rel="noopener noreferrer">
+                                    <i class="fas fa-external-link-alt"></i> Live Demo
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
     <!-- Featured Projects Section -->
     <section id="projects" class="py-5">
         <div class="container">
@@ -2849,16 +3577,158 @@
         </div>
     </div>
 
+    <!-- Case Study Story Modal -->
+    <div class="modal fade" id="caseStudyModal" tabindex="-1" aria-labelledby="csModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <!-- Dynamic hero header -->
+                <div class="cs-modal-hero" id="csModalHero">
+                    <div class="cs-modal-hero-bg" id="csModalHeroBg"></div>
+                    <div class="cs-modal-hero-icon" id="csModalHeroIcon">🚀</div>
+                    <div class="cs-modal-hero-text">
+                        <div id="csModalBadge" class="mb-2"></div>
+                        <h3 id="csModalTitle">Case Study</h3>
+                        <p id="csModalContext">Context loading…</p>
+                    </div>
+                    <button type="button" class="btn-close ms-auto align-self-start position-relative" style="z-index:3; filter:brightness(0) invert(1);" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-0">
+                    <!-- Tabs -->
+                    <div class="px-3 pt-3">
+                        <div class="cs-tabs">
+                            <button class="cs-tab-btn active" data-cstab="story">📖 The Story</button>
+                            <button class="cs-tab-btn" data-cstab="process">⚙️ The Process</button>
+                            <button class="cs-tab-btn" data-cstab="impact">📊 The Impact</button>
+                        </div>
+                    </div>
+
+                    <div class="px-3 pb-3">
+                        <!-- Story Tab -->
+                        <div class="cs-tab-panel active" id="cstab-story">
+                            <div id="csStoryContent"></div>
+                        </div>
+
+                        <!-- Process Tab -->
+                        <div class="cs-tab-panel" id="cstab-process">
+                            <div id="csProcessContent"></div>
+                        </div>
+
+                        <!-- Impact Tab -->
+                        <div class="cs-tab-panel" id="cstab-impact">
+                            <div id="csImpactContent"></div>
+                        </div>
+                    </div>
+
+                    <!-- Footer links -->
+                    <div class="px-3 pb-3 pt-2 border-top" style="border-color: var(--border-color) !important;">
+                        <div class="d-flex flex-wrap gap-2 align-items-center justify-content-between">
+                            <div class="d-flex flex-wrap gap-2">
+                                <a href="#" id="csLiveLink" class="cs-cta" target="_blank" rel="noopener noreferrer">
+                                    <i class="fas fa-external-link-alt"></i> Live Demo
+                                </a>
+                                <a href="#" id="csGithubLink" class="cs-cta-secondary" target="_blank" rel="noopener noreferrer">
+                                    <i class="fab fa-github"></i> Source Code
+                                </a>
+                            </div>
+                            <div id="csStackFooter" class="d-flex flex-wrap gap-1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Contact Section (SINGLE — no duplicate) -->
+    <!-- Process / Workflow Section -->
+    <section id="process" class="py-5">
+        <div class="container">
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-8 text-center">
+                    <h2 class="section-title">My Process</h2>
+                    <p class="section-subtitle">A simple, transparent workflow that keeps projects moving from idea to launch.</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="project-card h-100 p-4">
+                        <span class="badge bg-primary mb-3">01</span>
+                        <h5 class="mb-3">Discover</h5>
+                        <p class="text-secondary mb-0">Understand goals, users, constraints, and success metrics before any build starts.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="project-card h-100 p-4">
+                        <span class="badge bg-primary mb-3">02</span>
+                        <h5 class="mb-3">Design</h5>
+                        <p class="text-secondary mb-0">Plan the architecture, user flow, UI structure, and delivery roadmap.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="project-card h-100 p-4">
+                        <span class="badge bg-primary mb-3">03</span>
+                        <h5 class="mb-3">Develop</h5>
+                        <p class="text-secondary mb-0">Build the frontend, backend, and AI integrations with clean, scalable code.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                    <div class="project-card h-100 p-4">
+                        <span class="badge bg-primary mb-3">04</span>
+                        <h5 class="mb-3">Test</h5>
+                        <p class="text-secondary mb-0">Validate performance, reliability, responsiveness, and edge cases before release.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                    <div class="project-card h-100 p-4">
+                        <span class="badge bg-primary mb-3">05</span>
+                        <h5 class="mb-3">Deploy</h5>
+                        <p class="text-secondary mb-0">Ship the product, monitor the rollout, and support improvements after launch.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="contact" class="py-5">
         <div class="container">
             <h2 class="section-title">🚀 Let's Build Something Amazing</h2>
             <div class="row g-5">
                 <div class="col-lg-6">
                     <div class="contact-info">
-                        <h4 class="mb-4">Ready to collaborate on your next AI-powered project?</h4>
+                        <h4 class="mb-3">Ready to collaborate on your next AI-powered project?</h4>
                         <p class="text-secondary mb-4">Whether you need a full-stack web application, AI integration, or performance optimization, I'm here to help bring your vision to life.</p>
 
+                        <div class="border border-primary border-opacity-25 rounded-4 p-4 mb-4" style="background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(123, 44, 191, 0.08));">
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <i class="fas fa-briefcase text-info"></i>
+                                <h5 class="mb-0">Hire Me / Work With Me</h5>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="p-3 rounded-3 bg-dark bg-opacity-25 h-100">
+                                        <small class="text-uppercase text-secondary d-block mb-1">Availability</small>
+                                        <strong class="text-white">Freelance & Full-Time</strong>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 rounded-3 bg-dark bg-opacity-25 h-100">
+                                        <small class="text-uppercase text-secondary d-block mb-1">Response Time</small>
+                                        <strong class="text-white">Within 24 hours</strong>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 rounded-3 bg-dark bg-opacity-25 h-100">
+                                        <small class="text-uppercase text-secondary d-block mb-1">Preferred Work</small>
+                                        <strong class="text-white">AI apps, APIs, cloud-ready products</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 d-flex flex-wrap gap-2">
+                                <a href="#contactForm" class="btn-primary-custom"><i class="fas fa-paper-plane me-2"></i>Hire Me</a>
+                                <a href="#case-studies" class="btn-outline-custom"><i class="fas fa-diagram-project me-2"></i>View Case Studies</a>
+                            </div>
+                        </div>
+                        
                         <div class="contact-methods">
                             <div class="contact-method">
                                 <i class="fas fa-envelope"></i>
@@ -3139,7 +4009,7 @@
             card.style.transition = 'all 0.6s ease';
         });
 
-        document.querySelectorAll('#technologies, #ai-projects, #certifications, #testimonials').forEach(section => {
+        document.querySelectorAll('#technologies, #ai-projects, #certifications, #testimonials, #process, #case-studies').forEach(section => {
             if (section) cardsObserver.observe(section);
         });
 
@@ -3530,6 +4400,260 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         })();
+
+        // ===== CASE STUDY MODAL =====
+        const caseStudyData = {
+            cs1: {
+                icon: '🤖',
+                badge: '<span class="cs-category-badge" style="background:rgba(102,126,234,0.15);color:#667eea;border:1px solid rgba(102,126,234,0.3);display:inline-flex;align-items:center;gap:0.4rem;padding:0.3rem 0.9rem;border-radius:50px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;"><i class="fas fa-robot"></i> AI Workflow Automation</span>',
+                title: 'Replacing a Manual Content Pipeline with AI',
+                context: 'Media team · 12-week engagement · Full-stack + AI integration',
+                heroBg: 'linear-gradient(135deg, #0f0c29, #1a1a4e)',
+                blobColors: ['rgba(102,126,234,0.6)', 'rgba(0,212,255,0.5)'],
+                liveLink: '#',
+                githubLink: '#',
+                stack: ['React', 'Node.js', 'OpenAI API', 'REST APIs', 'Bootstrap', 'PostgreSQL'],
+                story: [
+                    {
+                        icon: 'fas fa-exclamation-triangle', iconClass: 'red',
+                        label: 'The Challenge',
+                        text: 'A growing media team spent 30+ hours every week manually drafting, reviewing, categorizing, and distributing content. Every handoff introduced inconsistencies, missed deadlines were common, and team members were burning out on repetitive work instead of creative thinking.'
+                    },
+                    {
+                        icon: 'fas fa-lightbulb', iconClass: 'purple',
+                        label: 'The Insight',
+                        text: 'The repetitive structure of the workflow was actually a strength — if systematized correctly. 80% of content followed predictable patterns, meaning a well-prompted AI with structured inputs could handle first drafts reliably while humans focused on judgment and refinement.'
+                    },
+                    {
+                        icon: 'fas fa-microchip', iconClass: 'blue',
+                        label: 'The Solution',
+                        text: 'Built a full-stack AI content pipeline: a React dashboard where editors define content type and brief, a Node.js backend that structures the prompt and calls the OpenAI API, and a review queue where editors approve, edit, or reject AI output before it ships. Reusable component templates meant consistent structure every time.'
+                    },
+                    {
+                        icon: 'fas fa-chart-line', iconClass: 'green',
+                        label: 'The Outcome',
+                        text: 'The team reclaimed 20+ hours per week. Content delivery accelerated 3× with fewer errors. Editors shifted from drafting to curating — doing the work only humans can do. The platform now handles 5× the content volume with the same team size.'
+                    }
+                ],
+                process: [
+                    { step: '01', title: 'Discovery & Audit', desc: 'Mapped every step in the existing content workflow, identified repeated patterns, measured time lost, and defined what "good enough for AI" actually meant.' },
+                    { step: '02', title: 'Prompt Engineering', desc: 'Designed and iterated structured prompts with role definition, tone guidelines, and output schemas. Tested against 50+ real content briefs before locking structure.' },
+                    { step: '03', title: 'Backend Pipeline', desc: 'Built a Node.js service to accept structured input, compose the final prompt, call the OpenAI API, validate the response format, and store results in PostgreSQL.' },
+                    { step: '04', title: 'Editor Dashboard', desc: 'Created a React UI with a brief form, AI output preview, inline editing, approval workflow, and version history. Optimized for speed — editors can review and approve in under 60 seconds.' },
+                    { step: '05', title: 'Testing & Rollout', desc: 'Ran a 2-week parallel test where editors compared AI-assisted output vs manual work. Measured time, quality scores, and error rates. Rolled out team-wide after results confirmed the hypothesis.' }
+                ],
+                metrics: [
+                    { value: '70%', label: 'Time Saved Per Piece' },
+                    { value: '3×', label: 'Faster Delivery' },
+                    { value: '98%', label: 'Output Consistency' },
+                    { value: '5×', label: 'Volume Increase' },
+                    { value: '20+', label: 'Hours Freed / Week' },
+                    { value: '0', label: 'Missed Deadlines' }
+                ],
+                outcomes: [
+                    'Editors shifted from drafting to curating — high-value work only',
+                    'New team members onboard in days, not weeks, using AI-guided templates',
+                    'Content errors dropped by 85% due to structured output validation',
+                    'Platform now supports 5 content types with no additional development',
+                    'Cost per piece of content reduced by 60%'
+                ]
+            },
+            cs2: {
+                icon: '🌐',
+                badge: '<span class="cs-category-badge" style="background:rgba(40,167,69,0.15);color:#4caf72;border:1px solid rgba(40,167,69,0.3);display:inline-flex;align-items:center;gap:0.4rem;padding:0.3rem 0.9rem;border-radius:50px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;"><i class="fas fa-globe"></i> Scalable Web Platform</span>',
+                title: 'Rebuilding a Fragile Platform for Real Scale',
+                context: 'SaaS product · 8-week engagement · Full-stack rebuild',
+                heroBg: 'linear-gradient(135deg, #0a2e1a, #0f3d2e)',
+                blobColors: ['rgba(40,167,69,0.55)', 'rgba(0,212,255,0.4)'],
+                liveLink: '#',
+                githubLink: '#',
+                stack: ['HTML/CSS', 'JavaScript', 'Bootstrap', 'PHP', 'MySQL', 'Redis'],
+                story: [
+                    {
+                        icon: 'fas fa-exclamation-triangle', iconClass: 'red',
+                        label: 'The Challenge',
+                        text: 'The platform was 4 years old and built without a plan. Pages took 6–8 seconds to load. Navigation confused users. The database had no indexes, every feature addition felt risky, and the team dreaded deployments. When traffic doubled, the system buckled.'
+                    },
+                    {
+                        icon: 'fas fa-lightbulb', iconClass: 'purple',
+                        label: 'The Insight',
+                        text: 'The real problem wasn\'t the code — it was missing architecture decisions. No component system meant code was duplicated 40+ times. No caching meant every page hit the database fresh. Fixing these root issues would unlock performance gains without needing a full rewrite.'
+                    },
+                    {
+                        icon: 'fas fa-layer-group', iconClass: 'blue',
+                        label: 'The Solution',
+                        text: 'Introduced a modular UI component library so shared elements were maintained in one place. Added Redis caching for frequent queries. Rewrote the data layer with proper indexing and query optimization. Redesigned key user flows based on heatmap data. Introduced CI/CD for zero-drama deployments.'
+                    },
+                    {
+                        icon: 'fas fa-chart-line', iconClass: 'green',
+                        label: 'The Outcome',
+                        text: 'Pages that took 7 seconds now load in under 2. The team deploys confidently multiple times a week. User session time increased by 45% after navigation improvements. Server costs dropped 40% due to caching. The platform now handles 3× the traffic with no scaling events.'
+                    }
+                ],
+                process: [
+                    { step: '01', title: 'Audit & Prioritize', desc: 'Profiled every page with Lighthouse, analyzed query execution times, and mapped the most-used user flows. Created a priority matrix: highest impact, lowest risk first.' },
+                    { step: '02', title: 'Component System', desc: 'Extracted repeated UI patterns into reusable Bootstrap-based components. Created a living style guide. Reduced HTML duplication by 70% in the first sprint.' },
+                    { step: '03', title: 'Database Optimization', desc: 'Added missing indexes, rewrote N+1 queries, and introduced query result caching via Redis. The most critical page went from 450ms DB time to 18ms.' },
+                    { step: '04', title: 'UX Improvements', desc: 'Used session recordings and heatmaps to identify where users were dropping off. Redesigned 3 core flows — signup, dashboard, and settings — reducing clicks to completion by 40%.' },
+                    { step: '05', title: 'CI/CD & Deploy', desc: 'Set up a GitHub Actions pipeline with automated testing, staging deployment, and one-click production releases. Deployments went from nerve-wracking manual FTP to a 3-minute automated process.' }
+                ],
+                metrics: [
+                    { value: '60%', label: 'Faster Page Loads' },
+                    { value: '99.9%', label: 'Uptime Achieved' },
+                    { value: '40%', label: 'Server Cost Reduction' },
+                    { value: '3×', label: 'Traffic Handled' },
+                    { value: '45%', label: 'Session Time Up' },
+                    { value: '70%', label: 'Less Code Duplication' }
+                ],
+                outcomes: [
+                    'Homepage load time dropped from 7.2s to 1.8s',
+                    'Team moved from monthly to daily deployments with confidence',
+                    'User drop-off on core flows reduced by 38%',
+                    'No downtime incidents in 6 months post-launch',
+                    'New features now take 60% less time to develop due to component reuse'
+                ]
+            },
+            cs3: {
+                icon: '☁️',
+                badge: '<span class="cs-category-badge" style="background:rgba(255,193,7,0.15);color:#f59e0b;border:1px solid rgba(255,193,7,0.3);display:inline-flex;align-items:center;gap:0.4rem;padding:0.3rem 0.9rem;border-radius:50px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;"><i class="fas fa-cloud"></i> Cloud-Ready API</span>',
+                title: 'From Spaghetti Backend to a Reliable API Layer',
+                context: 'Multi-client SaaS · 6-week engagement · Backend architecture',
+                heroBg: 'linear-gradient(135deg, #1a0a00, #2e1a00)',
+                blobColors: ['rgba(255,193,7,0.5)', 'rgba(220,53,69,0.4)'],
+                liveLink: '#',
+                githubLink: '#',
+                stack: ['Node.js', 'Express', 'REST APIs', 'JSON Schema', 'Docker', 'Cloud Deploy'],
+                story: [
+                    {
+                        icon: 'fas fa-exclamation-triangle', iconClass: 'red',
+                        label: 'The Challenge',
+                        text: 'Five client applications were all calling the same backend, but through undocumented, inconsistent endpoints written at different times by different developers. A change to one endpoint could silently break three clients. There was no validation, no versioning, and no documentation. Debugging was guesswork.'
+                    },
+                    {
+                        icon: 'fas fa-lightbulb', iconClass: 'purple',
+                        label: 'The Insight',
+                        text: 'The backend code itself wasn\'t the biggest problem — the lack of contracts was. If every endpoint had a defined, validated schema and a clear versioned URL, clients could be independent. The fix wasn\'t a rewrite — it was a structure layer built on top of what already worked.'
+                    },
+                    {
+                        icon: 'fas fa-server', iconClass: 'blue',
+                        label: 'The Solution',
+                        text: 'Designed a versioned REST API layer with JSON Schema validation on every request and response. Introduced modular route handlers, centralized error handling, and middleware for auth and rate limiting. Wrapped the whole thing in Docker for consistent environments, and added automated API docs via code annotations.'
+                    },
+                    {
+                        icon: 'fas fa-chart-line', iconClass: 'green',
+                        label: 'The Outcome',
+                        text: 'Average response latency dropped to under 80ms. All five clients migrated to the new API with zero production incidents. The team onboarded two new services in the first month using the established patterns. Breaking changes are now impossible to make silently — validation catches them at the gate.'
+                    }
+                ],
+                process: [
+                    { step: '01', title: 'Map Existing Endpoints', desc: 'Crawled all client codebases to document every endpoint being used, its expected inputs, and what it actually returned. Created a comprehensive inventory of the undocumented API surface.' },
+                    { step: '02', title: 'Define API Contracts', desc: 'Wrote JSON Schema definitions for every endpoint\'s request and response. Established versioning conventions (v1/, v2/) and error response standards across all routes.' },
+                    { step: '03', title: 'Build the Middleware Layer', desc: 'Implemented centralized validation middleware that enforces schemas on every request, centralized error formatting, JWT auth middleware, and request rate limiting using Redis.' },
+                    { step: '04', title: 'Modularize Route Handlers', desc: 'Refactored spaghetti controller code into modular service files. Each business domain (users, billing, content) became an isolated module with its own tests.' },
+                    { step: '05', title: 'Containerize & Deploy', desc: 'Dockerized the API service with environment-based config. Set up staging and production cloud environments with health checks, auto-restart, and deployment scripts for zero-downtime updates.' }
+                ],
+                metrics: [
+                    { value: '<80ms', label: 'Avg Response Time' },
+                    { value: '5×', label: 'More Clients Served' },
+                    { value: 'Zero', label: 'Breaking Changes Post-Launch' },
+                    { value: '100%', label: 'Endpoint Documentation' },
+                    { value: '3min', label: 'Deploy Time (was hours)' },
+                    { value: '0', label: 'Production Incidents' }
+                ],
+                outcomes: [
+                    'All 5 client apps migrated to new API with zero production incidents',
+                    'Two new services integrated in the first month using established patterns',
+                    'Response validation catches malformed requests before they hit the database',
+                    'Auto-generated API docs eliminated back-and-forth with client teams',
+                    'Deployment time reduced from hours of manual steps to a 3-minute script'
+                ]
+            }
+        };
+
+        function openCaseStudyModal(id) {
+            const cs = caseStudyData[id];
+            if (!cs) return;
+
+            // Hero
+            document.getElementById('csModalHeroIcon').textContent = cs.icon;
+            document.getElementById('csModalHeroBg').style.background = cs.heroBg;
+            document.getElementById('csModalBadge').innerHTML = cs.badge;
+            document.getElementById('csModalTitle').textContent = cs.title;
+            document.getElementById('csModalContext').textContent = cs.context;
+
+            // Add blobs to hero bg
+            const heroBg = document.getElementById('csModalHeroBg');
+            heroBg.innerHTML = `
+                <div style="position:absolute;width:260px;height:260px;top:-60px;left:-60px;border-radius:50%;filter:blur(70px);background:${cs.blobColors[0]};opacity:0.6;"></div>
+                <div style="position:absolute;width:200px;height:200px;bottom:-40px;right:-20px;border-radius:50%;filter:blur(60px);background:${cs.blobColors[1]};opacity:0.5;"></div>
+            `;
+
+            // Links & stack
+            document.getElementById('csLiveLink').href = cs.liveLink;
+            document.getElementById('csGithubLink').href = cs.githubLink;
+            document.getElementById('csStackFooter').innerHTML = cs.stack.map(t => `<span class="tech-tag">${t}</span>`).join('');
+
+            // Story Tab
+            document.getElementById('csStoryContent').innerHTML = cs.story.map(block => `
+                <div class="cs-narrative-block">
+                    <div class="cs-narrative-icon ${block.iconClass}"><i class="${block.icon}"></i></div>
+                    <div>
+                        <h6>${block.label}</h6>
+                        <p>${block.text}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Process Tab
+            document.getElementById('csProcessContent').innerHTML = cs.process.map(step => `
+                <div class="cs-process-step">
+                    <div class="cs-process-num">${step.step}</div>
+                    <div class="cs-process-content">
+                        <h6>${step.title}</h6>
+                        <p>${step.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Impact Tab
+            document.getElementById('csImpactContent').innerHTML = `
+                <div class="cs-impact-grid mb-3">
+                    ${cs.metrics.map(m => `
+                        <div class="cs-impact-tile">
+                            <div class="impact-value">${m.value}</div>
+                            <div class="impact-label">${m.label}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <h6 style="color:var(--text-primary);font-weight:700;margin-bottom:0.8rem;"><i class="fas fa-check-circle me-2" style="color:#4caf72;"></i>Key Outcomes</h6>
+                <ul class="cs-outcome-list">
+                    ${cs.outcomes.map(o => `<li><i class="fas fa-check"></i>${o}</li>`).join('')}
+                </ul>
+            `;
+
+            // Reset tabs to first
+            document.querySelectorAll('.cs-tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.cs-tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelector('.cs-tab-btn[data-cstab="story"]').classList.add('active');
+            document.getElementById('cstab-story').classList.add('active');
+
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('caseStudyModal'));
+            modal.show();
+        }
+
+        window.openCaseStudyModal = openCaseStudyModal;
+
+        // Tab switching for case study modal
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.cs-tab-btn');
+            if (!btn) return;
+            const tab = btn.dataset.cstab;
+            document.querySelectorAll('.cs-tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.cs-tab-panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('cstab-' + tab).classList.add('active');
+        });
     </script>
 </body>
 </html>

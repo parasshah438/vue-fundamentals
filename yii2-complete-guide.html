@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yii2 Complete Tutorial</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link id="hljs-theme-dark" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css" />
+  <link id="hljs-theme-light" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css" disabled />
+
+  <style>
+    :root {
+      --sidebar-width: 286px;
+      --header-h: 64px;
+      --yii-primary: #7cb342;
+      --yii-secondary: #f39c12;
+      --yii-accent: #1e88e5;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      overflow-x: hidden;
+    }
+
+    html,
+    body {
+      max-width: 100%;
+    }
+
+    body {
+      font-size: 0.95rem;
+      scroll-behavior: smooth;
+    }
+
+    #topbar {
+      height: var(--header-h);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1050;
+    }
+    [data-bs-theme="dark"] #topbar {
+      background: rgba(13, 17, 23, 0.86);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    [data-bs-theme="light"] #topbar {
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, var(--yii-primary), var(--yii-secondary));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+
+    #sidebar {
+      width: var(--sidebar-width);
+      top: var(--header-h);
+      height: calc(100vh - var(--header-h));
+      overflow-y: auto;
+      scrollbar-width: thin;
+      z-index: 1040;
+    }
+    [data-bs-theme="dark"] #sidebar {
+      background: #0d1117;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    [data-bs-theme="light"] #sidebar {
+      background: #f8f9fa;
+      border-right: 1px solid #dee2e6;
+    }
+
+    #sidebar .nav-link {
+      font-size: 0.85rem;
+      padding: 0.38rem 1rem;
+      border-radius: 8px;
+      color: inherit;
+      transition: background 0.15s, color 0.15s, padding-left 0.15s;
+    }
+    #sidebar .nav-link:hover {
+      background: rgba(124, 179, 66, 0.14);
+      color: var(--yii-primary);
+      padding-left: 1.3rem;
+    }
+    #sidebar .nav-link.active {
+      background: rgba(124, 179, 66, 0.18);
+      color: var(--yii-primary);
+      font-weight: 600;
+    }
+
+    #sidebar .nav-section {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 0.75rem 1rem 0.3rem;
+      opacity: 0.52;
+    }
+
+    #main-content {
+      margin-left: var(--sidebar-width);
+      min-height: calc(100vh - var(--header-h));
+      padding-top: var(--header-h);
+      width: auto;   /* override Bootstrap container-fluid width:100% so margin-left doesn't add to viewport width */
+      min-width: 0;
+    }
+
+    #main-content .row,
+    #main-content .row > *,
+    .hero-section,
+    .feature-card,
+    .workflow-step,
+    .note-box {
+      min-width: 0;
+    }
+
+    @media (max-width: 991.98px) {
+      #sidebar {
+        display: none !important;
+      }
+      #main-content {
+        margin-left: 0 !important;
+      }
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      border-left: 4px solid var(--yii-primary);
+      padding-left: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .sub-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      padding-left: 0.5rem;
+      border-left: 3px solid var(--yii-secondary);
+      margin: 1.4rem 0 0.8rem;
+    }
+
+    .feature-card {
+      border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid transparent;
+    }
+    .feature-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(124, 179, 66, 0.18);
+      border-color: rgba(124, 179, 66, 0.24);
+    }
+    [data-bs-theme="dark"] .feature-card {
+      background: #161b22;
+    }
+    [data-bs-theme="light"] .feature-card {
+      background: #ffffff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+    }
+
+    .icon-box {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--yii-primary), var(--yii-secondary));
+      color: #fff;
+    }
+
+    pre {
+      border-radius: 10px;
+      position: relative;
+      font-size: 0.83rem;
+      margin: 0;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+    pre code {
+      display: block;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    pre code.hljs {
+      border-radius: 10px;
+    }
+
+    .code-wrapper {
+      position: relative;
+      margin: 0.75rem 0 1.25rem;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .table-responsive {
+      max-width: 100%;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    img,
+    svg,
+    iframe {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.55rem;
+      opacity: 0.74;
+      z-index: 2;
+    }
+    .copy-btn:hover {
+      opacity: 1;
+    }
+
+    .cmd-table th {
+      white-space: nowrap;
+    }
+    .cmd-table code {
+      font-size: 0.8rem;
+    }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--yii-primary), var(--yii-secondary));
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .yii-pill {
+      display: inline-block;
+      font-family: monospace;
+      font-size: 0.79rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+    }
+    [data-bs-theme="dark"] .yii-pill {
+      background: #1f2937;
+    }
+    [data-bs-theme="light"] .yii-pill {
+      background: #edf5ef;
+    }
+
+    .workflow-step {
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      border: 1px solid rgba(124, 179, 66, 0.18);
+    }
+    [data-bs-theme="dark"] .workflow-step {
+      background: rgba(124, 179, 66, 0.08);
+    }
+    [data-bs-theme="light"] .workflow-step {
+      background: rgba(124, 179, 66, 0.04);
+    }
+
+    .check-list,
+    .tip-list {
+      padding-left: 1.15rem;
+    }
+    .check-list li,
+    .tip-list li {
+      margin-bottom: 0.4rem;
+    }
+
+    .note-box {
+      border-left: 4px solid var(--yii-primary);
+      padding: 0.75rem 1rem;
+      border-radius: 0 8px 8px 0;
+    }
+    [data-bs-theme="dark"] .note-box {
+      background: rgba(124, 179, 66, 0.1);
+    }
+    [data-bs-theme="light"] .note-box {
+      background: rgba(124, 179, 66, 0.05);
+    }
+
+    .hero-section {
+      background:
+        radial-gradient(circle at top right, rgba(30, 136, 229, 0.25), transparent 28%),
+        linear-gradient(135deg, rgba(124, 179, 66, 0.22), rgba(243, 156, 18, 0.18));
+      border-radius: 22px;
+      padding: 2.4rem;
+      margin-top: 1.25rem;
+      border: 1px solid rgba(124, 179, 66, 0.18);
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, var(--yii-primary), var(--yii-secondary));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    #backTop {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--yii-primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(124, 179, 66, 0.5);
+      opacity: 0;
+      transition: opacity 0.25s;
+      z-index: 9999;
+    }
+    #backTop.show {
+      opacity: 1;
+    }
+
+    #themeToggle i {
+      font-size: 1.1rem;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    [data-bs-theme="dark"] ::-webkit-scrollbar-track {
+      background: #161b22;
+    }
+    [data-bs-theme="dark"] ::-webkit-scrollbar-thumb {
+      background: #30363d;
+      border-radius: 3px;
+    }
+    [data-bs-theme="light"] ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    [data-bs-theme="light"] ::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 3px;
+    }
+
+    @media (max-width: 767.98px) {
+      .hero-section {
+        padding: 1.5rem 1rem;
+        border-radius: 16px;
+      }
+
+      .section-title {
+        font-size: 1.35rem;
+      }
+
+      .sub-title {
+        font-size: 1rem;
+      }
+
+      .copy-btn {
+        top: 0.4rem;
+        right: 0.4rem;
+        font-size: 0.7rem;
+        padding: 0.15rem 0.45rem;
+      }
+
+      pre,
+      pre code.hljs {
+        font-size: 0.78rem;
+      }
+
+      pre code,
+      pre code.hljs {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        padding-right: 3.25rem;
+        box-sizing: border-box;
+      }
+
+      .cmd-table th,
+      .cmd-table td {
+        white-space: normal;
+      }
+
+      .cmd-table code {
+        white-space: normal;
+        word-break: break-word;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<nav id="topbar" class="navbar fixed-top px-3 px-md-4 d-flex justify-content-between align-items-center">
+  <a href="#top" class="text-decoration-none d-flex align-items-center gap-2">
+    <div style="background:linear-gradient(135deg,var(--yii-primary),var(--yii-secondary));width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+      <i class="bi bi-grid-1x2-fill text-white" style="font-size:1rem;"></i>
+    </div>
+    <span class="brand-badge">Yii2</span>
+    <span class="fw-light opacity-50 d-none d-sm-inline">Tutorial</span>
+  </a>
+
+  <div class="d-flex align-items-center gap-2">
+    <button class="btn btn-sm btn-outline-secondary d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+      <i class="bi bi-list"></i>
+    </button>
+    <button id="themeToggle" class="btn btn-sm btn-outline-secondary" title="Toggle Dark / Light mode">
+      <i class="bi bi-sun-fill"></i>
+    </button>
+    <span class="badge rounded-pill text-bg-success d-none d-sm-inline">Yii2 + Yii3</span>
+  </div>
+</nav>
+
+<aside id="sidebar" class="position-fixed d-none d-lg-block py-3 px-2">
+  <nav class="nav flex-column gap-1">
+    <div class="nav-section">Introduction</div>
+    <a class="nav-link active" href="#sec-what"><i class="bi bi-info-circle me-2"></i>What is Yii?</a>
+    <a class="nav-link" href="#sec-why"><i class="bi bi-star me-2"></i>Why Yii2?</a>
+    <a class="nav-link" href="#sec-versions"><i class="bi bi-layers me-2"></i>Yii2 vs Yii3</a>
+
+    <div class="nav-section">Getting Started</div>
+    <a class="nav-link" href="#sec-requirements"><i class="bi bi-check2-square me-2"></i>Requirements</a>
+    <a class="nav-link" href="#sec-install"><i class="bi bi-download me-2"></i>Installation</a>
+    <a class="nav-link" href="#sec-commands"><i class="bi bi-terminal me-2"></i>Starter Commands</a>
+    <a class="nav-link" href="#sec-structure"><i class="bi bi-folder-symlink me-2"></i>Folder Structure</a>
+    <a class="nav-link" href="#sec-lifecycle"><i class="bi bi-diagram-3 me-2"></i>Request Lifecycle</a>
+
+    <div class="nav-section">MVC Core</div>
+    <a class="nav-link" href="#sec-routing"><i class="bi bi-signpost-split me-2"></i>Routing and URLs</a>
+    <a class="nav-link" href="#sec-controllers"><i class="bi bi-window-sidebar me-2"></i>Controllers and Actions</a>
+    <a class="nav-link" href="#sec-views"><i class="bi bi-layout-text-window me-2"></i>Views and Layouts</a>
+    <a class="nav-link" href="#sec-models"><i class="bi bi-box me-2"></i>Models and Forms</a>
+    <a class="nav-link" href="#sec-validation"><i class="bi bi-patch-check me-2"></i>Validation Rules</a>
+
+    <div class="nav-section">Data Layer</div>
+    <a class="nav-link" href="#sec-db"><i class="bi bi-database me-2"></i>Database Config</a>
+    <a class="nav-link" href="#sec-ar"><i class="bi bi-table me-2"></i>ActiveRecord</a>
+    <a class="nav-link" href="#sec-relations"><i class="bi bi-link-45deg me-2"></i>Relations</a>
+    <a class="nav-link" href="#sec-migrations"><i class="bi bi-hammer me-2"></i>Migrations</a>
+    <a class="nav-link" href="#sec-gii"><i class="bi bi-magic me-2"></i>Gii CRUD</a>
+
+    <div class="nav-section">Architecture</div>
+    <a class="nav-link" href="#sec-components"><i class="bi bi-gear-wide-connected me-2"></i>Components and Helpers</a>
+    <a class="nav-link" href="#sec-di"><i class="bi bi-boxes me-2"></i>DI Container</a>
+    <a class="nav-link" href="#sec-events"><i class="bi bi-broadcast-pin me-2"></i>Events and Behaviors</a>
+    <a class="nav-link" href="#sec-modules"><i class="bi bi-collection me-2"></i>Modules</a>
+    <a class="nav-link" href="#sec-console"><i class="bi bi-terminal-dash me-2"></i>Console Commands</a>
+
+    <div class="nav-section">Web Features</div>
+    <a class="nav-link" href="#sec-rest"><i class="bi bi-cloud-arrow-up me-2"></i>REST API</a>
+    <a class="nav-link" href="#sec-auth"><i class="bi bi-person-lock me-2"></i>Auth and RBAC</a>
+    <a class="nav-link" href="#sec-cache"><i class="bi bi-lightning-charge me-2"></i>Cache and Session</a>
+    <a class="nav-link" href="#sec-assets"><i class="bi bi-palette me-2"></i>Assets and i18n</a>
+
+    <div class="nav-section">Ops</div>
+    <a class="nav-link" href="#sec-queue"><i class="bi bi-list-task me-2"></i>Queue and Cron</a>
+    <a class="nav-link" href="#sec-testing"><i class="bi bi-check2-circle me-2"></i>Testing</a>
+    <a class="nav-link" href="#sec-security"><i class="bi bi-shield-check me-2"></i>Security</a>
+    <a class="nav-link" href="#sec-performance"><i class="bi bi-speedometer me-2"></i>Performance</a>
+    <a class="nav-link" href="#sec-deploy"><i class="bi bi-rocket-takeoff me-2"></i>Deployment</a>
+    <a class="nav-link" href="#sec-deploy-hosting"><i class="bi bi-hdd-network me-2"></i>Hosting and Workers</a>
+
+    <div class="nav-section">Modern Yii</div>
+    <a class="nav-link" href="#sec-yii3"><i class="bi bi-stars me-2"></i>Yii3 New Version</a>
+
+    <div class="nav-section">Practical</div>
+    <a class="nav-link" href="#sec-crud-mini"><i class="bi bi-box-seam me-2"></i>CRUD Mini Project</a>
+    <a class="nav-link" href="#sec-top-50"><i class="bi bi-list-ol me-2"></i>Top 50 Commands</a>
+    <a class="nav-link" href="#sec-command-reference"><i class="bi bi-terminal-fill me-2"></i>Yii Cheat Sheet</a>
+    <a class="nav-link" href="#sec-interview"><i class="bi bi-patch-question me-2"></i>Interview Q and A</a>
+    <a class="nav-link" href="#sec-projects"><i class="bi bi-kanban me-2"></i>Project Labs</a>
+  </nav>
+</aside>
+
+<div class="offcanvas offcanvas-start d-lg-none" id="mobileSidebar" tabindex="-1">
+  <div class="offcanvas-header">
+    <h6 class="offcanvas-title fw-bold">Yii2 Tutorial</h6>
+    <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body p-2">
+    <nav class="nav flex-column gap-1">
+      <div class="nav-section">Introduction</div>
+      <a class="nav-link" href="#sec-what" data-bs-dismiss="offcanvas"><i class="bi bi-info-circle me-2"></i>What is Yii?</a>
+      <a class="nav-link" href="#sec-why" data-bs-dismiss="offcanvas"><i class="bi bi-star me-2"></i>Why Yii2?</a>
+      <a class="nav-link" href="#sec-versions" data-bs-dismiss="offcanvas"><i class="bi bi-layers me-2"></i>Yii2 vs Yii3</a>
+
+      <div class="nav-section">Getting Started</div>
+      <a class="nav-link" href="#sec-requirements" data-bs-dismiss="offcanvas"><i class="bi bi-check2-square me-2"></i>Requirements</a>
+      <a class="nav-link" href="#sec-install" data-bs-dismiss="offcanvas"><i class="bi bi-download me-2"></i>Installation</a>
+      <a class="nav-link" href="#sec-commands" data-bs-dismiss="offcanvas"><i class="bi bi-terminal me-2"></i>Starter Commands</a>
+      <a class="nav-link" href="#sec-structure" data-bs-dismiss="offcanvas"><i class="bi bi-folder-symlink me-2"></i>Folder Structure</a>
+      <a class="nav-link" href="#sec-lifecycle" data-bs-dismiss="offcanvas"><i class="bi bi-diagram-3 me-2"></i>Request Lifecycle</a>
+
+      <div class="nav-section">MVC Core</div>
+      <a class="nav-link" href="#sec-routing" data-bs-dismiss="offcanvas"><i class="bi bi-signpost-split me-2"></i>Routing and URLs</a>
+      <a class="nav-link" href="#sec-controllers" data-bs-dismiss="offcanvas"><i class="bi bi-window-sidebar me-2"></i>Controllers and Actions</a>
+      <a class="nav-link" href="#sec-views" data-bs-dismiss="offcanvas"><i class="bi bi-layout-text-window me-2"></i>Views and Layouts</a>
+      <a class="nav-link" href="#sec-models" data-bs-dismiss="offcanvas"><i class="bi bi-box me-2"></i>Models and Forms</a>
+      <a class="nav-link" href="#sec-validation" data-bs-dismiss="offcanvas"><i class="bi bi-patch-check me-2"></i>Validation Rules</a>
+
+      <div class="nav-section">Data Layer</div>
+      <a class="nav-link" href="#sec-db" data-bs-dismiss="offcanvas"><i class="bi bi-database me-2"></i>Database Config</a>
+      <a class="nav-link" href="#sec-ar" data-bs-dismiss="offcanvas"><i class="bi bi-table me-2"></i>ActiveRecord</a>
+      <a class="nav-link" href="#sec-relations" data-bs-dismiss="offcanvas"><i class="bi bi-link-45deg me-2"></i>Relations</a>
+      <a class="nav-link" href="#sec-migrations" data-bs-dismiss="offcanvas"><i class="bi bi-hammer me-2"></i>Migrations</a>
+      <a class="nav-link" href="#sec-gii" data-bs-dismiss="offcanvas"><i class="bi bi-magic me-2"></i>Gii CRUD</a>
+
+      <div class="nav-section">Architecture</div>
+      <a class="nav-link" href="#sec-components" data-bs-dismiss="offcanvas"><i class="bi bi-gear-wide-connected me-2"></i>Components and Helpers</a>
+      <a class="nav-link" href="#sec-di" data-bs-dismiss="offcanvas"><i class="bi bi-boxes me-2"></i>DI Container</a>
+      <a class="nav-link" href="#sec-events" data-bs-dismiss="offcanvas"><i class="bi bi-broadcast-pin me-2"></i>Events and Behaviors</a>
+      <a class="nav-link" href="#sec-modules" data-bs-dismiss="offcanvas"><i class="bi bi-collection me-2"></i>Modules</a>
+      <a class="nav-link" href="#sec-console" data-bs-dismiss="offcanvas"><i class="bi bi-terminal-dash me-2"></i>Console Commands</a>
+
+      <div class="nav-section">Web Features</div>
+      <a class="nav-link" href="#sec-rest" data-bs-dismiss="offcanvas"><i class="bi bi-cloud-arrow-up me-2"></i>REST API</a>
+      <a class="nav-link" href="#sec-auth" data-bs-dismiss="offcanvas"><i class="bi bi-person-lock me-2"></i>Auth and RBAC</a>
+      <a class="nav-link" href="#sec-cache" data-bs-dismiss="offcanvas"><i class="bi bi-lightning-charge me-2"></i>Cache and Session</a>
+      <a class="nav-link" href="#sec-assets" data-bs-dismiss="offcanvas"><i class="bi bi-palette me-2"></i>Assets and i18n</a>
+
+      <div class="nav-section">Ops</div>
+      <a class="nav-link" href="#sec-queue" data-bs-dismiss="offcanvas"><i class="bi bi-list-task me-2"></i>Queue and Cron</a>
+      <a class="nav-link" href="#sec-testing" data-bs-dismiss="offcanvas"><i class="bi bi-check2-circle me-2"></i>Testing</a>
+      <a class="nav-link" href="#sec-security" data-bs-dismiss="offcanvas"><i class="bi bi-shield-check me-2"></i>Security</a>
+      <a class="nav-link" href="#sec-performance" data-bs-dismiss="offcanvas"><i class="bi bi-speedometer me-2"></i>Performance</a>
+      <a class="nav-link" href="#sec-deploy" data-bs-dismiss="offcanvas"><i class="bi bi-rocket-takeoff me-2"></i>Deployment</a>
+      <a class="nav-link" href="#sec-deploy-hosting" data-bs-dismiss="offcanvas"><i class="bi bi-hdd-network me-2"></i>Hosting and Workers</a>
+
+      <div class="nav-section">Modern Yii</div>
+      <a class="nav-link" href="#sec-yii3" data-bs-dismiss="offcanvas"><i class="bi bi-stars me-2"></i>Yii3 New Version</a>
+
+      <div class="nav-section">Practical</div>
+      <a class="nav-link" href="#sec-crud-mini" data-bs-dismiss="offcanvas"><i class="bi bi-box-seam me-2"></i>CRUD Mini Project</a>
+      <a class="nav-link" href="#sec-top-50" data-bs-dismiss="offcanvas"><i class="bi bi-list-ol me-2"></i>Top 50 Commands</a>
+      <a class="nav-link" href="#sec-command-reference" data-bs-dismiss="offcanvas"><i class="bi bi-terminal-fill me-2"></i>Yii Cheat Sheet</a>
+      <a class="nav-link" href="#sec-interview" data-bs-dismiss="offcanvas"><i class="bi bi-patch-question me-2"></i>Interview Q and A</a>
+      <a class="nav-link" href="#sec-projects" data-bs-dismiss="offcanvas"><i class="bi bi-kanban me-2"></i>Project Labs</a>
+    </nav>
+  </div>
+</div>
+
+<main id="main-content" class="container-fluid px-3 px-md-4 pb-5">
+  <div class="py-4 px-lg-2">
+    <section id="top" class="hero-section mb-5">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <span class="badge rounded-pill text-bg-warning text-dark mb-3">Basic to Advanced Yii2 + Yii3 Update</span>
+          <h1 class="display-5 fw-bold mb-3 text-gradient">Yii2 Complete Guide for Real Projects</h1>
+          <p class="lead mb-4">This guide follows the same tutorial style as the Next.js page, but the topic is Yii. It covers Yii2 from installation to deployment, with practical examples for MVC, ActiveRecord, forms, REST, queue jobs, testing, and production work. It also includes a dedicated Yii3 section so you can understand what changed in the newer generation.</p>
+          <div class="d-flex gap-2 flex-wrap">
+            <span class="yii-pill">PHP</span>
+            <span class="yii-pill">Composer</span>
+            <span class="yii-pill">MVC</span>
+            <span class="yii-pill">ActiveRecord</span>
+            <span class="yii-pill">REST</span>
+            <span class="yii-pill">Yii3</span>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="icon-box"><i class="bi bi-lightning-charge"></i></div>
+              <div>
+                <h5 class="mb-1">What you will build mentally</h5>
+                <p class="mb-0 small opacity-75">A clear map of how Yii apps are structured, extended, secured, and deployed.</p>
+              </div>
+            </div>
+            <ul class="tip-list mb-0">
+              <li>Understand the Yii2 basic and advanced templates.</li>
+              <li>Learn routing, controllers, models, validation, and views.</li>
+              <li>Work with ActiveRecord, migrations, Gii, and REST APIs.</li>
+              <li>Use console commands, queues, tests, and deployment workflows.</li>
+              <li>See how Yii3 differs before planning upgrades or new work.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-what" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-info-circle me-2" style="color:var(--yii-primary);"></i>What is Yii?</h2>
+      <p class="mb-4">Yii is a high-performance PHP framework for building web applications, admin panels, APIs, and full business systems. Yii2 is the mature, production-proven version used in many long-running projects. Its strengths are MVC structure, strong code generation tooling, solid caching support, flexible configuration, and tight integration with database-centric apps.</p>
+      <div class="row g-3">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Fast start</h6><p class="small opacity-75 mb-0">Composer templates, Gii, migrations, and conventions let you move from zero to CRUD quickly.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Strong MVC</h6><p class="small opacity-75 mb-0">Controllers, form models, AR models, views, layouts, and modules are clearly separated.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold">DB friendly</h6><p class="small opacity-75 mb-0">ActiveRecord, Query Builder, migration tooling, and relational helpers are first-class.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Enterprise ready</h6><p class="small opacity-75 mb-0">RBAC, caching, queue integration, console commands, and testing support fit larger systems.</p></div></div>
+      </div>
+    </section>
+
+    <section id="sec-why" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-star me-2" style="color:var(--yii-primary);"></i>Why Yii2?</h2>
+      <p class="mb-4">Choose Yii2 when you want a pragmatic PHP framework with batteries included, especially for back-office systems, dashboards, CMS-style tools, internal enterprise apps, and APIs backed by relational databases.</p>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark"><tr><th>Need</th><th>How Yii2 helps</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>Rapid admin work</td><td>Gii generates models, CRUD, and forms fast.</td><td>Product, order, customer, and invoice management.</td></tr>
+            <tr><td>Business rules</td><td>Form models, validators, behaviors, and services keep rules organized.</td><td>Loan approval, HR approvals, ecommerce back-office logic.</td></tr>
+            <tr><td>Performance</td><td>Fragment caching, data caching, eager loading, and asset optimization are built in.</td><td>Large catalog pages or analytics dashboards.</td></tr>
+            <tr><td>Long-lived codebase</td><td>Modules, components, console commands, and RBAC scale better than ad hoc PHP code.</td><td>ERP, CRM, booking, and logistics systems.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="sec-versions" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-layers me-2" style="color:var(--yii-primary);"></i>Yii2 vs Yii3 at a Glance</h2>
+      <p class="mb-4">Yii2 is the stable and widely deployed generation. Yii3 is the newer direction with a more package-based architecture and stronger PSR alignment. Yii3 is not a drop-in replacement for Yii2, so treat it as a separate architecture choice rather than a simple version bump.</p>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark"><tr><th>Area</th><th>Yii2</th><th>Yii3</th></tr></thead>
+          <tbody>
+            <tr><td>Architecture</td><td>Classic integrated framework experience</td><td>More package-based and modular</td></tr>
+            <tr><td>Style</td><td>MVC with strong conventions</td><td>PSR-friendly, middleware-oriented, package-first</td></tr>
+            <tr><td>Adoption</td><td>Production-proven and common in legacy plus active apps</td><td>Newer ecosystem; evaluate package maturity per use case</td></tr>
+            <tr><td>Migration</td><td>Existing apps stay on Yii2 unless there is a real business reason to move</td><td>Best for new builds or selective package adoption</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="sec-requirements" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-check2-square me-2" style="color:var(--yii-primary);"></i>Requirements</h2>
+      <p class="mb-4">Before installing Yii2, make sure the local machine is ready for Composer-based PHP development.</p>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">Minimum stack</h6>
+            <ul class="check-list mb-0">
+              <li>PHP with required extensions such as mbstring, intl, pdo, and openssl</li>
+              <li>Composer installed globally</li>
+              <li>MySQL, MariaDB, PostgreSQL, or another supported database</li>
+              <li>Apache or Nginx for production-like local testing</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">php -v
+composer --version
+php -m
+php -i | findstr PDO</code></pre></div>
+          <p class="small opacity-75 mb-0">Use these quick checks before blaming Yii for environment issues.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-install" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-download me-2" style="color:var(--yii-primary);"></i>Installation</h2>
+      <p class="mb-4">Yii2 commonly starts from either the basic template for single-app setups or the advanced template for separated frontend, backend, and console applications.</p>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">1</span>Basic Template</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">composer create-project --prefer-dist yiisoft/yii2-app-basic basic-app
+cd basic-app
+php yii serve --port=8080</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">2</span>Advanced Template</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">composer create-project --prefer-dist yiisoft/yii2-app-advanced advanced-app
+cd advanced-app
+php init
+php yii serve --port=8080</code></pre></div>
+        </div>
+      </div>
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Rule of thumb:</strong> use the basic template for a single web app or API. Use the advanced template when you explicitly want separated frontend, backend, and console application layers.</p>
+      </div>
+    </section>
+
+    <section id="sec-commands" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-terminal me-2" style="color:var(--yii-primary);"></i>Starter Commands</h2>
+      <p class="mb-4">These are the commands you reach for in the first hour of a new Yii project.</p>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle cmd-table">
+          <thead class="table-dark"><tr><th>Command</th><th>What it does</th><th>Short example</th></tr></thead>
+          <tbody>
+            <tr><td><code>php yii</code></td><td>List available Yii console commands.</td><td><code>php yii</code></td></tr>
+            <tr><td><code>php yii serve</code></td><td>Run a local PHP server for the app.</td><td><code>php yii serve --port=8080</code></td></tr>
+            <tr><td><code>php yii help route</code></td><td>Show help for a specific console command.</td><td><code>php yii help migrate</code></td></tr>
+            <tr><td><code>composer require package</code></td><td>Add a package to the project.</td><td><code>composer require yiisoft/yii2-bootstrap5</code></td></tr>
+            <tr><td><code>composer install</code></td><td>Install dependencies from composer.lock.</td><td><code>composer install</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="sec-structure" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-folder-symlink me-2" style="color:var(--yii-primary);"></i>Folder Structure</h2>
+      <p class="mb-4">One reason Yii is maintainable is that the directory layout expresses the application structure clearly.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-text">basic-app/
+  assets/
+  commands/
+  config/
+  controllers/
+  mail/
+  migrations/
+  models/
+  runtime/
+  tests/
+  vendor/
+  views/
+  web/
+    index.php</code></pre></div>
+      <div class="workflow-step">
+        <p class="mb-1"><strong>Structure reading tip:</strong></p>
+        <p class="mb-0">`controllers/` handles incoming requests, `models/` holds data and validation logic, `views/` renders HTML, `config/` wires the app, and `commands/` is for console automation.</p>
+      </div>
+    </section>
+
+    <section id="sec-lifecycle" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-diagram-3 me-2" style="color:var(--yii-primary);"></i>Request Lifecycle</h2>
+      <p class="mb-4">Understanding the request flow makes debugging much easier than blindly changing controllers and hoping for the best.</p>
+      <div class="row g-3">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold">1. Entry script</h6><p class="small opacity-75 mb-0">The request enters through `web/index.php` and boots the application.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold">2. Router</h6><p class="small opacity-75 mb-0">URL rules resolve the route to a controller action.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold">3. Action logic</h6><p class="small opacity-75 mb-0">Models validate input, query data, and prepare a response.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold">4. Response</h6><p class="small opacity-75 mb-0">A view, JSON payload, redirect, or error response is returned.</p></div></div>
+      </div>
+    </section>
+
+    <section id="sec-routing" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-signpost-split me-2" style="color:var(--yii-primary);"></i>Routing and URLs</h2>
+      <p class="mb-4">Yii routing is configured through URL rules. Pretty URLs should usually be enabled early so route names stay clean and stable.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// config/web.php
+'components' =&gt; [
+    'urlManager' =&gt; [
+        'enablePrettyUrl' =&gt; true,
+        'showScriptName' =&gt; false,
+        'rules' =&gt; [
+            'posts' =&gt; 'post/index',
+            'post/&lt;id:\d+&gt;' =&gt; 'post/view',
+        ],
+    ],
+],</code></pre></div>
+      <p class="mb-0">That rule maps `/post/5` to `PostController::actionView($id)`.</p>
+    </section>
+
+    <section id="sec-controllers" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-window-sidebar me-2" style="color:var(--yii-primary);"></i>Controllers and Actions</h2>
+      <p class="mb-4">Controllers receive requests and coordinate work. Keep them thin by moving validation, business rules, and persistence into models or services.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">namespace app\controllers;
+
+use Yii;
+use app\models\ContactForm;
+use yii\web\Controller;
+
+class SiteController extends Controller
+{
+    public function actionContact()
+    {
+        $model = new ContactForm();
+
+        if ($model-&gt;load(Yii::$app-&gt;request-&gt;post()) &amp;&amp; $model-&gt;validate()) {
+            // send mail or save lead
+            Yii::$app-&gt;session-&gt;setFlash('success', 'Message sent');
+            return $this-&gt;refresh();
+        }
+
+        return $this-&gt;render('contact', ['model' =&gt; $model]);
+    }
+}</code></pre></div>
+    </section>
+
+    <section id="sec-views" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-layout-text-window me-2" style="color:var(--yii-primary);"></i>Views and Layouts</h2>
+      <p class="mb-4">Views are PHP templates. Layouts wrap repeated page structure around the per-page content. Yii helpers keep HTML generation cleaner and safer.</p>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// views/post/view.php
+use yii\helpers\Html;
+
+/** @var app\models\Post $model */
+
+&lt;h1&gt;&lt;?= Html::encode($model-&gt;title) ?&gt;&lt;/h1&gt;
+&lt;p&gt;&lt;?= Html::encode($model-&gt;body) ?&gt;&lt;/p&gt;</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// views/layouts/main.php
+&lt;?php $this-&gt;beginPage() ?&gt;
+&lt;!doctype html&gt;
+&lt;html&gt;
+&lt;body&gt;
+  &lt;header&gt;Admin Header&lt;/header&gt;
+  &lt;main&gt;&lt;?= $content ?&gt;&lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;?php $this-&gt;endPage() ?&gt;</code></pre></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-models" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-box me-2" style="color:var(--yii-primary);"></i>Models and Forms</h2>
+      <p class="mb-4">In Yii, not every model is a database table. Form models are useful for contact forms, search forms, login forms, and workflows that should validate input without writing directly to the database.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">namespace app\models;
+
+use yii\base\Model;
+
+class ContactForm extends Model
+{
+    public $name;
+    public $email;
+    public $message;
+
+    public function rules(): array
+    {
+        return [
+            [['name', 'email', 'message'], 'required'],
+            ['email', 'email'],
+            ['message', 'string', 'min' =&gt; 10],
+        ];
+    }
+}</code></pre></div>
+    </section>
+
+    <section id="sec-validation" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-patch-check me-2" style="color:var(--yii-primary);"></i>Validation Rules</h2>
+      <p class="mb-4">Validation in Yii2 is declarative. Rules live in one place, can be reused in forms and AR models, and support custom methods when built-in validators are not enough.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">public function rules(): array
+{
+    return [
+        ['price', 'number', 'min' =&gt; 0],
+        ['slug', 'match', 'pattern' =&gt; '/^[a-z0-9-]+$/'],
+        ['start_date', 'validateStartDate'],
+    ];
+}
+
+public function validateStartDate($attribute): void
+{
+    if (strtotime($this-&gt;$attribute) &lt; time()) {
+        $this-&gt;addError($attribute, 'Start date must be in the future.');
+    }
+}</code></pre></div>
+    </section>
+
+    <section id="sec-db" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-database me-2" style="color:var(--yii-primary);"></i>Database Configuration</h2>
+      <p class="mb-4">Yii keeps DB configuration in a component, usually `config/db.php`. Once configured, the app can use ActiveRecord, Query Builder, migrations, and transactions against the same connection.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">return [
+    'class' =&gt; yii\db\Connection::class,
+    'dsn' =&gt; 'mysql:host=127.0.0.1;dbname=yii_shop',
+    'username' =&gt; 'root',
+    'password' =&gt; '',
+    'charset' =&gt; 'utf8mb4',
+];</code></pre></div>
+    </section>
+
+    <section id="sec-ar" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-table me-2" style="color:var(--yii-primary);"></i>ActiveRecord</h2>
+      <p class="mb-4">ActiveRecord maps rows to PHP objects. It is fast for normal CRUD work and easy for teams to understand, especially when models stay focused and relations are explicit.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">namespace app\models;
+
+use yii\db\ActiveRecord;
+
+class Post extends ActiveRecord
+{
+    public static function tableName(): string
+    {
+        return '{{%post}}';
+    }
+}
+
+$post = new Post();
+$post-&gt;title = 'First Post';
+$post-&gt;body = 'Yii2 makes CRUD straightforward.';
+$post-&gt;save();</code></pre></div>
+    </section>
+
+    <section id="sec-relations" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-link-45deg me-2" style="color:var(--yii-primary);"></i>Relations</h2>
+      <p class="mb-4">Relations express the data graph and make eager loading possible. Use them carefully to prevent N+1 query problems.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">class Post extends ActiveRecord
+{
+    public function getAuthor()
+    {
+        return $this-&gt;hasOne(User::class, ['id' =&gt; 'user_id']);
+    }
+
+    public function getComments()
+    {
+        return $this-&gt;hasMany(Comment::class, ['post_id' =&gt; 'id']);
+    }
+}
+
+$posts = Post::find()-&gt;with(['author', 'comments'])-&gt;all();</code></pre></div>
+    </section>
+
+    <section id="sec-migrations" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-hammer me-2" style="color:var(--yii-primary);"></i>Migrations</h2>
+      <p class="mb-4">Treat the schema as code. Migrations keep database structure reviewable and reproducible across environments.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">php yii migrate/create create_post_table
+php yii migrate</code></pre></div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">use yii\db\Migration;
+
+class m260427_100000_create_post_table extends Migration
+{
+    public function safeUp()
+    {
+        $this-&gt;createTable('{{%post}}', [
+            'id' =&gt; $this-&gt;primaryKey(),
+            'title' =&gt; $this-&gt;string()-&gt;notNull(),
+            'body' =&gt; $this-&gt;text()-&gt;notNull(),
+            'created_at' =&gt; $this-&gt;integer()-&gt;notNull(),
+        ]);
+    }
+
+    public function safeDown()
+    {
+        $this-&gt;dropTable('{{%post}}');
+    }
+}</code></pre></div>
+    </section>
+
+    <section id="sec-gii" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-magic me-2" style="color:var(--yii-primary);"></i>Gii CRUD Generator</h2>
+      <p class="mb-4">Gii is one of Yii2's most productive features. It can generate models, forms, CRUD pages, and more. Use it to accelerate scaffolding, then review and refactor the generated code instead of shipping it unchanged.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">composer require --prefer-dist yiisoft/yii2-gii --dev
+php yii gii</code></pre></div>
+      <div class="note-box">
+        <p class="mb-0"><strong>Best use:</strong> let Gii generate the first 60 percent of admin CRUD, then move domain logic out of generated controllers when the project becomes serious.</p>
+      </div>
+    </section>
+
+    <section id="sec-components" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-gear-wide-connected me-2" style="color:var(--yii-primary);"></i>Components and Helpers</h2>
+      <p class="mb-4">Custom components keep cross-cutting logic out of controllers. Yii helpers such as `Html`, `ArrayHelper`, and `Url` reduce repetition and improve safety.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">namespace app\components;
+
+use yii\base\Component;
+
+class InvoiceFormatter extends Component
+{
+    public function formatCurrency(float $amount): string
+    {
+        return number_format($amount, 2) . ' USD';
+    }
+}
+
+// config/web.php
+'components' =&gt; [
+    'invoiceFormatter' =&gt; app\components\InvoiceFormatter::class,
+],</code></pre></div>
+    </section>
+
+    <section id="sec-di" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-boxes me-2" style="color:var(--yii-primary);"></i>Dependency Injection Container</h2>
+      <p class="mb-4">Yii2 includes a DI container that can instantiate classes, resolve dependencies, and bind interfaces. This matters when controllers should depend on services rather than raw implementation details.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">Yii::$container-&gt;set(app\services\MailerInterface::class, app\services\SmtpMailer::class);
+
+$service = Yii::$container-&gt;get(app\services\ReportService::class);</code></pre></div>
+    </section>
+
+    <section id="sec-events" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-broadcast-pin me-2" style="color:var(--yii-primary);"></i>Events and Behaviors</h2>
+      <p class="mb-4">Events let you react to lifecycle hooks, while behaviors attach reusable logic to models or components. They are powerful, but overuse can hide business logic if events are scattered without discipline.</p>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">$model-&gt;on(Post::EVENT_AFTER_INSERT, function ($event) {
+    Yii::info('New post created: ' . $event-&gt;sender-&gt;id);
+});</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">use yii\behaviors\TimestampBehavior;
+
+public function behaviors(): array
+{
+    return [TimestampBehavior::class];
+}</code></pre></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-modules" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-collection me-2" style="color:var(--yii-primary);"></i>Modules</h2>
+      <p class="mb-4">Modules help split larger apps into domain-focused sections such as admin, billing, support, or API. They reduce controller sprawl and make large projects easier to navigate.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// config/web.php
+'modules' =&gt; [
+    'admin' =&gt; [
+        'class' =&gt; app\modules\admin\Module::class,
+    ],
+],</code></pre></div>
+    </section>
+
+    <section id="sec-console" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-terminal-dash me-2" style="color:var(--yii-primary);"></i>Console Commands</h2>
+      <p class="mb-4">Console commands are where background maintenance, imports, report jobs, cleanup tasks, and scheduled work usually belong.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">namespace app\commands;
+
+use yii\console\Controller;
+
+class ReportController extends Controller
+{
+    public function actionDaily(): int
+    {
+        // generate report here
+        $this-&gt;stdout("Daily report generated\n");
+        return self::EXIT_CODE_NORMAL;
+    }
+}</code></pre></div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">php yii report/daily</code></pre></div>
+    </section>
+
+    <section id="sec-rest" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-cloud-arrow-up me-2" style="color:var(--yii-primary);"></i>REST API</h2>
+      <p class="mb-4">Yii2 can expose REST APIs with serializers, content negotiation, verbs filtering, and AR integration. That makes it useful for SPA backends, mobile APIs, and partner integrations.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">namespace app\controllers;
+
+use yii\rest\ActiveController;
+
+class PostController extends ActiveController
+{
+    public $modelClass = app\models\Post::class;
+}</code></pre></div>
+    </section>
+
+    <section id="sec-auth" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-person-lock me-2" style="color:var(--yii-primary);"></i>Authentication and RBAC</h2>
+      <p class="mb-4">Yii2 supports identity-based login flows and role-based permissions. For business apps, put actual authorization rules behind RBAC or service-level permission checks, not only in buttons or menus.</p>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold">Authentication</h6>
+            <p class="small opacity-75 mb-0">Use `IdentityInterface`, login forms, and auth methods like sessions or bearer tokens.</p>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold">Authorization</h6>
+            <p class="small opacity-75 mb-0">Use RBAC roles and permissions so access decisions stay centralized.</p>
+          </div>
+        </div>
+      </div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">public function behaviors(): array
+{
+    return [
+        'access' =&gt; [
+            'class' =&gt; yii\filters\AccessControl::class,
+            'only' =&gt; ['create', 'update', 'delete'],
+            'rules' =&gt; [
+                [
+                    'allow' =&gt; true,
+                    'roles' =&gt; ['@'],
+                ],
+            ],
+        ],
+    ];
+}</code></pre></div>
+    </section>
+
+    <section id="sec-cache" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-lightning-charge me-2" style="color:var(--yii-primary);"></i>Cache and Session</h2>
+      <p class="mb-4">Caching is not optional when dashboards or catalog pages start doing repeated heavy queries. Yii2 supports file cache, Redis, Memcached, fragment caching, and dependency-based invalidation.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">$stats = Yii::$app-&gt;cache-&gt;getOrSet('dashboard-stats', function () {
+    return [
+        'users' =&gt; User::find()-&gt;count(),
+        'orders' =&gt; Order::find()-&gt;count(),
+    ];
+}, 300);</code></pre></div>
+    </section>
+
+    <section id="sec-assets" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-palette me-2" style="color:var(--yii-primary);"></i>Assets and Internationalization</h2>
+      <p class="mb-4">Yii Asset Bundles manage CSS and JS dependencies. i18n support helps when the same codebase needs multiple languages or translated admin labels.</p>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">class AppAsset extends yii\web\AssetBundle
+{
+    public $css = ['css/site.css'];
+    public $js = ['js/site.js'];
+    public $depends = [yii\bootstrap5\BootstrapAsset::class];
+}</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">echo Yii::t('app', 'Welcome back');
+
+// extract messages
+// php yii message/extract config/i18n.php</code></pre></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-queue" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-list-task me-2" style="color:var(--yii-primary);"></i>Queue and Cron</h2>
+      <p class="mb-4">Move slow or retryable work out of web requests. Email sending, webhook retries, PDF generation, imports, and inventory sync are typical queue jobs.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">composer require yiisoft/yii2-queue
+php yii queue/listen
+php yii queue/run</code></pre></div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-text"># Windows Task Scheduler or Linux cron example
+* * * * * php /var/www/app/yii queue/run</code></pre></div>
+    </section>
+
+    <section id="sec-testing" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-check2-circle me-2" style="color:var(--yii-primary);"></i>Testing</h2>
+      <p class="mb-4">Yii projects often use Codeception for unit, functional, and acceptance tests. The real value is not the tool name. It is that your business rules stay protected when features evolve.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">vendor/bin/codecept build
+vendor/bin/codecept run
+vendor/bin/codecept run unit
+vendor/bin/codecept run functional</code></pre></div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">public function testPriceCannotBeNegative(): void
+{
+    $model = new Product(['price' =&gt; -1]);
+    $this-&gt;assertFalse($model-&gt;validate());
+}</code></pre></div>
+    </section>
+
+    <section id="sec-security" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-shield-check me-2" style="color:var(--yii-primary);"></i>Security</h2>
+      <p class="mb-4">Yii helps with CSRF, XSS-safe encoding, authentication, and access rules, but the framework does not remove the need for careful engineering.</p>
+      <ul class="check-list">
+        <li>Always encode untrusted output with `Html::encode()`.</li>
+        <li>Use validation rules and model scenarios for input handling.</li>
+        <li>Prefer parameter binding and AR over raw string SQL concatenation.</li>
+        <li>Restrict upload types and store uploaded files outside predictable public paths when needed.</li>
+        <li>Do authorization checks in code paths, not only in the UI.</li>
+      </ul>
+    </section>
+
+    <section id="sec-performance" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-speedometer me-2" style="color:var(--yii-primary);"></i>Performance</h2>
+      <p class="mb-4">Performance work in Yii2 usually comes down to query quality, cache discipline, asset strategy, and production PHP configuration.</p>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark"><tr><th>Area</th><th>Common problem</th><th>Fix</th></tr></thead>
+          <tbody>
+            <tr><td>DB queries</td><td>N+1 relation loading</td><td>Use `with()` or `joinWith()` where appropriate.</td></tr>
+            <tr><td>Rendering</td><td>Repeated expensive widgets</td><td>Use fragment caching or data caching.</td></tr>
+            <tr><td>Assets</td><td>Too many JS/CSS requests</td><td>Bundle wisely and use production assets.</td></tr>
+            <tr><td>PHP runtime</td><td>Slow cold starts and repeated file parsing</td><td>Enable OPcache in production.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="sec-deploy" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-rocket-takeoff me-2" style="color:var(--yii-primary);"></i>Deployment</h2>
+      <p class="mb-4">Production deployment is mostly disciplined PHP deployment: correct environment config, optimized Composer install, generated assets, DB migrations, cache flushing, and web-server configuration.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">composer install --no-dev --optimize-autoloader
+php yii migrate --interactive=0
+php yii cache/flush-all</code></pre></div>
+      <div class="note-box">
+        <p class="mb-0"><strong>Deploy order:</strong> code, environment file, dependencies, migrations, caches, queue workers, smoke test. Reversing this order creates avoidable downtime.</p>
+      </div>
+    </section>
+
+    <section id="sec-deploy-hosting" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-hdd-network me-2" style="color:var(--yii-primary);"></i>Deployment Expansion: Shared Hosting, cPanel, VPS, Nginx, and Queue Worker Supervision</h2>
+      <p class="mb-4">The general deployment rules above stay the same, but hosting style changes the exact operational steps. Yii2 can run on cheap shared hosting, on cPanel-managed servers, and on full VPS stacks. The main difference is how much control you have over document root, process management, cron, and long-running queue workers.</p>
+
+      <div class="row g-3 mb-3">
+        <div class="col-lg-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Shared Hosting</h6><p class="small opacity-75 mb-0">Lowest control. Best for simple Yii2 apps with minimal background processing.</p></div></div>
+        <div class="col-lg-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold">cPanel</h6><p class="small opacity-75 mb-0">Still managed hosting, but usually with cron, document-root controls, and easier PHP version switching.</p></div></div>
+        <div class="col-lg-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold">VPS</h6><p class="small opacity-75 mb-0">Full server control. Best for serious apps, APIs, queues, and custom infrastructure.</p></div></div>
+        <div class="col-lg-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Worker Supervision</h6><p class="small opacity-75 mb-0">Required when queue listeners must stay alive after crashes or reboots.</p></div></div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Shared Hosting Checklist</h5>
+      <p class="mb-3">Shared hosting works best for the Yii2 basic template or for advanced-template deployments where you can clearly isolate the public web root. The main constraint is that you often cannot run long-lived workers or install system packages.</p>
+      <ul class="check-list">
+        <li>Point the public document root to the Yii `web/` directory, not the project root.</li>
+        <li>Keep `runtime/` and `web/assets/` writable by the web-server user.</li>
+        <li>Disable debug and use production config values.</li>
+        <li>If shell access is limited, run Composer locally or in CI and upload the built project carefully.</li>
+        <li>Prefer cron-driven `php yii queue/run` over `queue/listen` because shared hosting usually kills long-running processes.</li>
+      </ul>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>cPanel Deployment Pattern</h5>
+      <p class="mb-3">cPanel is still shared-style hosting, but it usually gives you enough control for proper cron jobs, PHP version selection, and a cleaner deployment process.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-text">public_html/
+  index.php           # points into your Yii app web root if required by host setup
+  assets/
+
+yii-app/
+  commands/
+  config/
+  models/
+  runtime/
+  vendor/
+  views/
+  web/</code></pre></div>
+      <ul class="check-list">
+        <li>Set the domain document root to `web/` when cPanel allows custom docroots.</li>
+        <li>If the host forces `public_html`, copy or adapt the Yii front controller carefully so only public assets live there.</li>
+        <li>Create cron jobs in cPanel for migrations or queue processing only when those commands are safe and idempotent.</li>
+        <li>Store secrets outside public paths and confirm `.env` or config files are not directly downloadable.</li>
+      </ul>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+    <pre><code class="language-text">*/2 * * * * /usr/local/bin/php /home/account/yii-app/yii queue/run &gt;&gt; /home/account/logs/queue.log 2&gt;&amp;1</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>VPS Deployment Flow</h5>
+      <p class="mb-3">A VPS is the right place for production Yii apps that need Redis, workers, full Nginx control, SSL management, or deployment automation. This is where Yii2 feels most comfortable operationally.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">sudo apt update
+sudo apt install nginx php-fpm php-mysql php-intl php-mbstring php-xml unzip git supervisor
+cd /var/www
+git clone your-repo yii-app
+cd yii-app
+composer install --no-dev --optimize-autoloader
+php yii migrate --interactive=0
+php yii cache/flush-all</code></pre></div>
+      <div class="workflow-step">
+        <p class="mb-1"><strong>Recommended production stack:</strong></p>
+        <p class="mb-0">Nginx + PHP-FPM + Composer install + DB migrations + Redis when needed + Supervisor for queue listeners. That gives you far more predictable behavior than trying to force worker-style operations into shared hosting.</p>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">4</span>Nginx Configuration Example</h5>
+      <p class="mb-3">With Yii2, the important rule is that Nginx should serve only the `web/` directory and pass PHP requests through the front controller correctly.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-nginx">server {
+    listen 80;
+    server_name example.com;
+    root /var/www/yii-app/web;
+    index index.php;
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.2-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+
+    location ~* /(?:runtime|tests|vendor)/ {
+        deny all;
+    }
+}</code></pre></div>
+      <p class="small opacity-75 mb-0">For the advanced template, the `root` changes depending on whether you are exposing `frontend/web` or `backend/web`.</p>
+
+      <h5 class="sub-title"><span class="step-num me-2">5</span>Queue Worker Supervision</h5>
+      <p class="mb-3">If your app sends emails, processes imports, retries webhooks, or generates reports, the queue worker must stay alive. That means you should supervise `queue/listen` with a process manager instead of manually starting it in SSH and hoping it survives.</p>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">Use cron when</h6>
+            <ul class="tip-list mb-0">
+              <li>The host does not allow persistent workers.</li>
+              <li>Jobs are light and can tolerate minute-level delay.</li>
+              <li>You only need `queue/run` periodically.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">Use supervision when</h6>
+            <ul class="tip-list mb-0">
+              <li>The app needs near-real-time background work.</li>
+              <li>The worker must restart automatically on crash.</li>
+              <li>You control the VPS or dedicated server.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-ini">[program:yii-queue]
+command=/usr/bin/php /var/www/yii-app/yii queue/listen --verbose=1 --color=0
+directory=/var/www/yii-app
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+user=www-data
+numprocs=1
+redirect_stderr=true
+stdout_logfile=/var/log/supervisor/yii-queue.log</code></pre></div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl status yii-queue
+sudo supervisorctl restart yii-queue</code></pre></div>
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Operational rule:</strong> shared hosting and most cPanel plans should stick to cron-based `queue/run`. VPS and dedicated servers should prefer supervised `queue/listen` for reliable background processing.</p>
+      </div>
+    </section>
+
+    <section id="sec-yii3" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-stars me-2" style="color:var(--yii-primary);"></i>Yii3 New Version Details</h2>
+      <p class="mb-4">Yii3 represents a structural shift rather than just a routine framework update. It is more package-first, more PSR-friendly, and more explicit about middleware, dependency injection, and decoupled components. For teams starting a new system, Yii3 is the part to study. For existing Yii2 systems, the right move is usually to understand Yii3 concepts first, not to rush a rewrite.</p>
+      <div class="row g-3">
+        <div class="col-lg-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">What changed</h6>
+            <ul class="tip-list mb-0">
+              <li>More package-based architecture</li>
+              <li>Stronger PSR alignment</li>
+              <li>Middleware-oriented HTTP handling</li>
+              <li>Cleaner separation between packages</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">Why it matters</h6>
+            <ul class="tip-list mb-0">
+              <li>Better interoperability with the wider PHP ecosystem</li>
+              <li>More selective adoption of only the pieces you need</li>
+              <li>Less coupling to a single monolithic runtime style</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">Practical caution</h6>
+            <ul class="tip-list mb-0">
+              <li>Yii3 is not a drop-in `composer update` for Yii2</li>
+              <li>Existing Yii2 apps should migrate deliberately, not emotionally</li>
+              <li>Package maturity should be checked per feature area</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Typical Yii3 Skeleton Flow</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">composer create-project yiisoft/app app
+cd app
+composer require yiisoft/router yiisoft/validator yiisoft/db-mysql</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Conceptual Differences from Yii2</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark"><tr><th>Topic</th><th>Yii2 mindset</th><th>Yii3 mindset</th></tr></thead>
+          <tbody>
+            <tr><td>HTTP flow</td><td>Controller-oriented web application</td><td>Middleware and handler pipeline</td></tr>
+            <tr><td>Framework shape</td><td>Integrated framework distribution</td><td>Composable packages</td></tr>
+            <tr><td>Dependency injection</td><td>Available and useful</td><td>More central to the architecture</td></tr>
+            <tr><td>Migration strategy</td><td>Stable base for existing projects</td><td>Better considered for new builds or selective package adoption</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="workflow-step mt-3">
+        <p class="mb-0"><strong>Recommendation:</strong> if your team already runs a healthy Yii2 app, improve architecture inside Yii2 first. If you are planning a fresh greenfield system and want a more package-based modern PHP style, evaluate Yii3 early.</p>
+      </div>
+    </section>
+
+    <section id="sec-crud-mini" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-box-seam me-2" style="color:var(--yii-primary);"></i>Yii2 CRUD Mini Project: Product Manager</h2>
+      <p class="mb-4">This mini project ties the Yii2 basics together into one realistic slice: a Product Manager for an admin panel. It includes a database table, migration, ActiveRecord model, controller actions, views, and a Gii shortcut flow. The goal is not just to see isolated snippets, but to understand how the full CRUD chain works end to end.</p>
+
+      <div class="row g-3 mb-3">
+        <div class="col-lg-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">Project goal</h6>
+            <ul class="tip-list mb-0">
+              <li>Create products with name, slug, price, status, and description.</li>
+              <li>List products in an admin table.</li>
+              <li>Edit and delete records safely.</li>
+              <li>Use one migration and one ActiveRecord model as the base.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">Database shape</h6>
+            <ul class="tip-list mb-0">
+              <li>`id` primary key</li>
+              <li>`name` required</li>
+              <li>`slug` unique</li>
+              <li>`price` decimal</li>
+              <li>`status` active or draft</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">What you practice</h6>
+            <ul class="tip-list mb-0">
+              <li>Migration authoring</li>
+              <li>Model rules and labels</li>
+              <li>Controller CRUD actions</li>
+              <li>Form and table views</li>
+              <li>Manual code vs Gii-generated scaffolding</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Create the Database Table with a Migration</h5>
+      <p class="mb-3">Start by creating the schema in a migration so the project can be reproduced on every environment.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">php yii migrate/create create_product_table
+php yii migrate</code></pre></div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">use yii\db\Migration;
+
+class m260427_120000_create_product_table extends Migration
+{
+    public function safeUp()
+    {
+        $this-&gt;createTable('{{%product}}', [
+            'id' =&gt; $this-&gt;primaryKey(),
+            'name' =&gt; $this-&gt;string(150)-&gt;notNull(),
+            'slug' =&gt; $this-&gt;string(180)-&gt;notNull()-&gt;unique(),
+            'price' =&gt; $this-&gt;decimal(10, 2)-&gt;notNull()-&gt;defaultValue(0),
+            'status' =&gt; $this-&gt;smallInteger()-&gt;notNull()-&gt;defaultValue(1),
+            'description' =&gt; $this-&gt;text(),
+            'created_at' =&gt; $this-&gt;integer()-&gt;notNull(),
+            'updated_at' =&gt; $this-&gt;integer()-&gt;notNull(),
+        ]);
+    }
+
+    public function safeDown()
+    {
+        $this-&gt;dropTable('{{%product}}');
+    }
+}</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Build the Product Model</h5>
+      <p class="mb-3">The model defines the table name, validation rules, labels, and any helper methods your views or controllers need.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">namespace app\models;
+
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+
+class Product extends ActiveRecord
+{
+    public static function tableName(): string
+    {
+        return '{{%product}}';
+    }
+
+    public function rules(): array
+    {
+        return [
+            [['name', 'slug', 'price'], 'required'],
+            [['description'], 'string'],
+            [['price'], 'number', 'min' =&gt; 0],
+            [['status'], 'integer'],
+            [['name'], 'string', 'max' =&gt; 150],
+            [['slug'], 'string', 'max' =&gt; 180],
+            [['slug'], 'unique'],
+            ['slug', 'match', 'pattern' =&gt; '/^[a-z0-9-]+$/'],
+        ];
+    }
+
+    public function attributeLabels(): array
+    {
+        return [
+            'name' =&gt; 'Product Name',
+            'slug' =&gt; 'URL Slug',
+            'price' =&gt; 'Unit Price',
+        ];
+    }
+
+    public function behaviors(): array
+    {
+        return [TimestampBehavior::class];
+    }
+}</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>Create the Controller</h5>
+      <p class="mb-3">The controller is responsible for listing products, showing the form, saving data, and handling updates or deletes. This is the classic CRUD shape every Yii2 team should be comfortable with.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">namespace app\controllers;
+
+use app\models\Product;
+use yii\data\ActiveDataProvider;
+use yii\filters\VerbFilter;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use Yii;
+
+class ProductController extends Controller
+{
+    public function behaviors(): array
+    {
+        return [
+            'verbs' =&gt; [
+                'class' =&gt; VerbFilter::class,
+                'actions' =&gt; [
+                    'delete' =&gt; ['POST'],
+                ],
+            ],
+        ];
+    }
+
+    public function actionIndex()
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' =&gt; Product::find()-&gt;orderBy(['id' =&gt; SORT_DESC]),
+            'pagination' =&gt; ['pageSize' =&gt; 10],
+        ]);
+
+        return $this-&gt;render('index', [
+            'dataProvider' =&gt; $dataProvider,
+        ]);
+    }
+
+    public function actionCreate()
+    {
+        $model = new Product();
+
+        if ($model-&gt;load(Yii::$app-&gt;request-&gt;post()) &amp;&amp; $model-&gt;save()) {
+            Yii::$app-&gt;session-&gt;setFlash('success', 'Product created successfully.');
+            return $this-&gt;redirect(['index']);
+        }
+
+        return $this-&gt;render('create', ['model' =&gt; $model]);
+    }
+
+    public function actionUpdate($id)
+    {
+        $model = $this-&gt;findModel($id);
+
+        if ($model-&gt;load(Yii::$app-&gt;request-&gt;post()) &amp;&amp; $model-&gt;save()) {
+            Yii::$app-&gt;session-&gt;setFlash('success', 'Product updated successfully.');
+            return $this-&gt;redirect(['index']);
+        }
+
+        return $this-&gt;render('update', ['model' =&gt; $model]);
+    }
+
+    public function actionDelete($id)
+    {
+        $this-&gt;findModel($id)-&gt;delete();
+        Yii::$app-&gt;session-&gt;setFlash('success', 'Product deleted successfully.');
+        return $this-&gt;redirect(['index']);
+    }
+
+    protected function findModel($id): Product
+    {
+        if (($model = Product::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested product does not exist.');
+    }
+}</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">4</span>Create the Form and List Views</h5>
+      <p class="mb-3">For small admin pages, `_form.php` plus `index.php`, `create.php`, and `update.php` is enough. The partial keeps create and update screens consistent.</p>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">&lt;?php
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+
+/** @var app\models\Product $model */
+
+$form = ActiveForm::begin();
+echo $form-&gt;field($model, 'name');
+echo $form-&gt;field($model, 'slug');
+echo $form-&gt;field($model, 'price');
+echo $form-&gt;field($model, 'status')-&gt;dropDownList([
+    1 =&gt; 'Active',
+    0 =&gt; 'Draft',
+]);
+echo $form-&gt;field($model, 'description')-&gt;textarea(['rows' =&gt; 5]);
+echo Html::submitButton('Save Product', ['class' =&gt; 'btn btn-success']);
+ActiveForm::end();</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">&lt;?php
+use yii\grid\GridView;
+use yii\helpers\Html;
+
+echo Html::a('Create Product', ['create'], ['class' =&gt; 'btn btn-success mb-3']);
+
+echo GridView::widget([
+    'dataProvider' =&gt; $dataProvider,
+    'columns' =&gt; [
+        'id',
+        'name',
+        'slug',
+        'price:currency',
+        'status',
+        ['class' =&gt; yii\grid\ActionColumn::class],
+    ],
+]);</code></pre></div>
+        </div>
+      </div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// views/product/create.php
+&lt;h1&gt;Create Product&lt;/h1&gt;
+&lt;?= $this-&gt;render('_form', ['model' =&gt; $model]) ?&gt;
+
+// views/product/update.php
+&lt;h1&gt;Update Product&lt;/h1&gt;
+&lt;?= $this-&gt;render('_form', ['model' =&gt; $model]) ?&gt;</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">5</span>Manual Flow End to End</h5>
+      <div class="workflow-step">
+        <p class="mb-1"><strong>How the request moves:</strong></p>
+        <p class="mb-0">The migration creates the `product` table. The `Product` model maps to that table and validates input. The `ProductController` loads post data and saves the model. The form view renders input fields, and the index view renders a GridView table with edit and delete actions.</p>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">6</span>Gii Flow for the Same CRUD</h5>
+      <p class="mb-3">Once the migration has created the table, Gii can generate much of this structure. That makes it ideal for admin scaffolding, as long as you still review what it produces.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">composer require --prefer-dist yiisoft/yii2-gii --dev
+php yii gii</code></pre></div>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark"><tr><th>Gii generator</th><th>What to enter</th><th>Outcome</th></tr></thead>
+          <tbody>
+            <tr><td>Model Generator</td><td>Table Name: `product`, Model Class: `app\\models\\Product`</td><td>Creates AR model from the DB table</td></tr>
+            <tr><td>CRUD Generator</td><td>Model Class: `app\\models\\Product`, Search Model: `app\\models\\ProductSearch`, Controller: `app\\controllers\\ProductController`</td><td>Creates controller, views, search model, and CRUD pages</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note-box">
+        <p class="mb-0"><strong>Practical standard:</strong> let Gii scaffold the repetitive parts, then clean the controller, simplify the generated search model if needed, and move business rules back into models or services. Gii saves time, but architecture still needs human judgment.</p>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">7</span>Mini Project Commands Summary</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">composer create-project --prefer-dist yiisoft/yii2-app-basic product-manager
+cd product-manager
+php yii migrate/create create_product_table
+php yii migrate
+composer require --prefer-dist yiisoft/yii2-gii --dev
+php yii serve --port=8080</code></pre></div>
+    </section>
+
+    <section id="sec-top-50" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-list-ol me-2" style="color:var(--yii-primary);"></i>Top 50 Yii, Composer, and PHP Commands Quick Scan</h2>
+      <p class="mb-4">This is the fast revision layer. Each line gives one command and one short purpose so you can scan quickly before using the larger cheat sheet below.</p>
+      <div class="row g-3">
+        <div class="col-lg-6 col-xl-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">1. Install and Environment</h6>
+            <ol class="small mb-0 ps-3">
+              <li><code>php -v</code> - show PHP version</li>
+              <li><code>composer --version</code> - show Composer version</li>
+              <li><code>composer create-project --prefer-dist yiisoft/yii2-app-basic basic-app</code> - create a basic Yii2 app</li>
+              <li><code>composer create-project --prefer-dist yiisoft/yii2-app-advanced advanced-app</code> - create the advanced template</li>
+              <li><code>cd basic-app</code> - move into the project folder</li>
+              <li><code>php init</code> - initialize advanced template environment</li>
+              <li><code>composer install</code> - install dependencies</li>
+              <li><code>composer update</code> - update packages within allowed versions</li>
+              <li><code>composer dump-autoload</code> - rebuild autoloader</li>
+              <li><code>composer show</code> - list installed packages</li>
+            </ol>
+          </div>
+        </div>
+        <div class="col-lg-6 col-xl-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">2. Daily Yii Workflow</h6>
+            <ol class="small mb-0 ps-3">
+              <li><code>php yii</code> - list console commands</li>
+              <li><code>php yii serve</code> - run a local server</li>
+              <li><code>php yii serve --port=8080</code> - run server on a custom port</li>
+              <li><code>php yii help migrate</code> - show help for migrations</li>
+              <li><code>php yii help serve</code> - show serve command help</li>
+              <li><code>php yii cache/flush-all</code> - clear all app caches</li>
+              <li><code>php yii gii</code> - open or run Gii generator entry</li>
+              <li><code>composer require yiisoft/yii2-bootstrap5</code> - add Bootstrap 5 integration</li>
+              <li><code>composer require --prefer-dist yiisoft/yii2-gii --dev</code> - add Gii</li>
+              <li><code>composer require --prefer-dist yiisoft/yii2-debug --dev</code> - add debug toolbar</li>
+            </ol>
+          </div>
+        </div>
+        <div class="col-lg-6 col-xl-4">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">3. Database and Migrations</h6>
+            <ol class="small mb-0 ps-3">
+              <li><code>php yii migrate/create create_post_table</code> - create a migration file</li>
+              <li><code>php yii migrate</code> - apply pending migrations</li>
+              <li><code>php yii migrate/down 1</code> - revert the last migration</li>
+              <li><code>php yii migrate/history</code> - list applied migrations</li>
+              <li><code>php yii migrate/new 5</code> - show new unapplied migrations</li>
+              <li><code>php yii fixture/load User</code> - load a fixture</li>
+              <li><code>php yii fixture/unload User</code> - unload a fixture</li>
+              <li><code>composer require yiisoft/yii2-redis</code> - add Redis integration</li>
+              <li><code>composer require yiisoft/yii2-queue</code> - add queue support</li>
+              <li><code>composer require yiisoft/yii2-symfonymailer</code> - add mailer support</li>
+            </ol>
+          </div>
+        </div>
+        <div class="col-lg-6 col-xl-6">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">4. Testing, Queue, and Assets</h6>
+            <ol class="small mb-0 ps-3">
+              <li><code>vendor/bin/codecept build</code> - rebuild Codeception helper classes</li>
+              <li><code>vendor/bin/codecept run</code> - run all tests</li>
+              <li><code>vendor/bin/codecept run unit</code> - run unit tests</li>
+              <li><code>vendor/bin/codecept run functional</code> - run functional tests</li>
+              <li><code>vendor/bin/codecept run acceptance</code> - run browser acceptance tests</li>
+              <li><code>php yii queue/listen</code> - listen for queue jobs continuously</li>
+              <li><code>php yii queue/run</code> - process queued jobs once</li>
+              <li><code>php yii queue/info</code> - inspect queue configuration</li>
+              <li><code>php yii asset assets.php config/assets-prod.php</code> - compile production assets</li>
+              <li><code>php yii message/extract config/i18n.php</code> - extract translation messages</li>
+            </ol>
+          </div>
+        </div>
+        <div class="col-lg-6 col-xl-6">
+          <div class="feature-card p-3 h-100">
+            <h6 class="fw-bold mb-3">5. Production and Yii3</h6>
+            <ol class="small mb-0 ps-3">
+              <li><code>composer install --no-dev --optimize-autoloader</code> - install production dependencies</li>
+              <li><code>php yii migrate --interactive=0</code> - run migrations non-interactively</li>
+              <li><code>php yii cache/flush-all</code> - clear stale cache after deploy</li>
+              <li><code>composer outdated</code> - check stale dependencies</li>
+              <li><code>composer remove vendor/package</code> - remove a package</li>
+              <li><code>composer create-project yiisoft/app app</code> - start a Yii3-style app skeleton</li>
+              <li><code>composer require yiisoft/router</code> - add Yii3 router package</li>
+              <li><code>composer require yiisoft/validator</code> - add Yii3 validation package</li>
+              <li><code>composer require yiisoft/db-mysql</code> - add Yii3 MySQL support</li>
+              <li><code>php -S localhost:8080 -t public</code> - run a simple PHP server for a public docroot</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-command-reference" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-terminal-fill me-2" style="color:var(--yii-primary);"></i>Yii Cheat Sheet: Commands, Short Description, Short Example</h2>
+      <p class="mb-4">Use this as the practical lookup table. It combines Composer, PHP, Yii console, Codeception, queue, asset, and early Yii3 package commands that show up in real project work.</p>
+      <div class="d-flex flex-wrap gap-2 mb-4">
+        <span class="yii-pill">Composer</span>
+        <span class="yii-pill">Yii CLI</span>
+        <span class="yii-pill">Migrations</span>
+        <span class="yii-pill">Testing</span>
+        <span class="yii-pill">Queue</span>
+        <span class="yii-pill">Deploy</span>
+        <span class="yii-pill">Yii3</span>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Install and Setup</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small cmd-table">
+          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
+          <tbody>
+            <tr><td><code>php -v</code></td><td>Show installed PHP version.</td><td><code>php -v</code></td></tr>
+            <tr><td><code>composer --version</code></td><td>Show installed Composer version.</td><td><code>composer --version</code></td></tr>
+            <tr><td><code>composer create-project --prefer-dist yiisoft/yii2-app-basic dir</code></td><td>Create a Yii2 basic app.</td><td><code>composer create-project --prefer-dist yiisoft/yii2-app-basic basic-app</code></td></tr>
+            <tr><td><code>composer create-project --prefer-dist yiisoft/yii2-app-advanced dir</code></td><td>Create a Yii2 advanced app.</td><td><code>composer create-project --prefer-dist yiisoft/yii2-app-advanced advanced-app</code></td></tr>
+            <tr><td><code>php init</code></td><td>Initialize the advanced app environment.</td><td><code>php init</code></td></tr>
+            <tr><td><code>composer install</code></td><td>Install dependencies from the lock file.</td><td><code>composer install</code></td></tr>
+            <tr><td><code>composer update</code></td><td>Update dependencies within allowed constraints.</td><td><code>composer update</code></td></tr>
+            <tr><td><code>composer dump-autoload</code></td><td>Rebuild Composer autoload files.</td><td><code>composer dump-autoload</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Yii Console and Daily Flow</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small cmd-table">
+          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
+          <tbody>
+            <tr><td><code>php yii</code></td><td>List available console routes.</td><td><code>php yii</code></td></tr>
+            <tr><td><code>php yii serve</code></td><td>Run the local Yii server.</td><td><code>php yii serve</code></td></tr>
+            <tr><td><code>php yii serve --port=8080</code></td><td>Run the local server on a custom port.</td><td><code>php yii serve --port=8080</code></td></tr>
+            <tr><td><code>php yii help route</code></td><td>Show help for one console route.</td><td><code>php yii help migrate</code></td></tr>
+            <tr><td><code>php yii gii</code></td><td>Open or invoke the Gii generator route.</td><td><code>php yii gii</code></td></tr>
+            <tr><td><code>php yii cache/flush-all</code></td><td>Flush configured caches.</td><td><code>php yii cache/flush-all</code></td></tr>
+            <tr><td><code>composer require yiisoft/yii2-bootstrap5</code></td><td>Add Bootstrap 5 support.</td><td><code>composer require yiisoft/yii2-bootstrap5</code></td></tr>
+            <tr><td><code>composer require --prefer-dist yiisoft/yii2-debug --dev</code></td><td>Add Yii debug tools in development.</td><td><code>composer require --prefer-dist yiisoft/yii2-debug --dev</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>Database and Migrations</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small cmd-table">
+          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
+          <tbody>
+            <tr><td><code>php yii migrate/create name</code></td><td>Create a new migration file.</td><td><code>php yii migrate/create create_order_table</code></td></tr>
+            <tr><td><code>php yii migrate</code></td><td>Apply pending migrations.</td><td><code>php yii migrate</code></td></tr>
+            <tr><td><code>php yii migrate/down 1</code></td><td>Revert the last migration batch entry.</td><td><code>php yii migrate/down 1</code></td></tr>
+            <tr><td><code>php yii migrate/history</code></td><td>Show applied migration history.</td><td><code>php yii migrate/history</code></td></tr>
+            <tr><td><code>php yii migrate/new 5</code></td><td>List new migrations not yet applied.</td><td><code>php yii migrate/new 5</code></td></tr>
+            <tr><td><code>php yii fixture/load Name</code></td><td>Load test fixture data.</td><td><code>php yii fixture/load User</code></td></tr>
+            <tr><td><code>php yii fixture/unload Name</code></td><td>Unload test fixture data.</td><td><code>php yii fixture/unload User</code></td></tr>
+            <tr><td><code>composer require yiisoft/yii2-redis</code></td><td>Add Redis integration.</td><td><code>composer require yiisoft/yii2-redis</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">4</span>Testing, Queue, and Assets</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small cmd-table">
+          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
+          <tbody>
+            <tr><td><code>vendor/bin/codecept build</code></td><td>Build Codeception support classes.</td><td><code>vendor/bin/codecept build</code></td></tr>
+            <tr><td><code>vendor/bin/codecept run</code></td><td>Run all test suites.</td><td><code>vendor/bin/codecept run</code></td></tr>
+            <tr><td><code>vendor/bin/codecept run unit</code></td><td>Run unit tests only.</td><td><code>vendor/bin/codecept run unit</code></td></tr>
+            <tr><td><code>vendor/bin/codecept run functional</code></td><td>Run functional tests only.</td><td><code>vendor/bin/codecept run functional</code></td></tr>
+            <tr><td><code>php yii queue/listen</code></td><td>Listen continuously for queue jobs.</td><td><code>php yii queue/listen</code></td></tr>
+            <tr><td><code>php yii queue/run</code></td><td>Process queued jobs once.</td><td><code>php yii queue/run</code></td></tr>
+            <tr><td><code>php yii queue/info</code></td><td>Inspect queue details.</td><td><code>php yii queue/info</code></td></tr>
+            <tr><td><code>php yii asset assets.php config/assets-prod.php</code></td><td>Build production asset bundles.</td><td><code>php yii asset assets.php config/assets-prod.php</code></td></tr>
+            <tr><td><code>php yii message/extract config/i18n.php</code></td><td>Extract translation messages.</td><td><code>php yii message/extract config/i18n.php</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">5</span>Deployment and Yii3</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small cmd-table">
+          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
+          <tbody>
+            <tr><td><code>composer install --no-dev --optimize-autoloader</code></td><td>Install optimized production dependencies.</td><td><code>composer install --no-dev --optimize-autoloader</code></td></tr>
+            <tr><td><code>php yii migrate --interactive=0</code></td><td>Run migrations in non-interactive deploy scripts.</td><td><code>php yii migrate --interactive=0</code></td></tr>
+            <tr><td><code>composer outdated</code></td><td>Show outdated packages.</td><td><code>composer outdated</code></td></tr>
+            <tr><td><code>composer remove vendor/package</code></td><td>Remove a Composer package.</td><td><code>composer remove yiisoft/yii2-debug</code></td></tr>
+            <tr><td><code>composer create-project yiisoft/app app</code></td><td>Start a common Yii3-style application skeleton.</td><td><code>composer create-project yiisoft/app app</code></td></tr>
+            <tr><td><code>composer require yiisoft/router</code></td><td>Add a Yii3 router package.</td><td><code>composer require yiisoft/router</code></td></tr>
+            <tr><td><code>composer require yiisoft/validator</code></td><td>Add a Yii3 validation package.</td><td><code>composer require yiisoft/validator</code></td></tr>
+            <tr><td><code>composer require yiisoft/db-mysql</code></td><td>Add a Yii3 MySQL driver package.</td><td><code>composer require yiisoft/db-mysql</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-box mt-4">
+        <p class="mb-0"><strong>Remember the non-command pieces:</strong> `.env` values, database credentials, web server rewrite rules, writable `runtime/` and `web/assets/`, queue workers, and cache strategy matter as much as CLI commands.</p>
+      </div>
+    </section>
+
+    <section id="sec-interview" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-patch-question-fill me-2" style="color:var(--yii-primary);"></i>Yii Interview Questions with Short Answers</h2>
+      <div class="accordion" id="yiiInterviewAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header"><button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#yi1">What is the difference between an ActiveRecord model and a form model in Yii2?</button></h2>
+          <div id="yi1" class="accordion-collapse collapse show" data-bs-parent="#yiiInterviewAccordion"><div class="accordion-body">An ActiveRecord model maps to a database table. A form model is for input validation and workflows that may not directly save to a table.</div></div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#yi2">Why are migrations important in Yii projects?</button></h2>
+          <div id="yi2" class="accordion-collapse collapse" data-bs-parent="#yiiInterviewAccordion"><div class="accordion-body">They keep schema changes versioned, reviewable, and reproducible across local, staging, and production environments.</div></div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#yi3">When should you use Gii and when should you stop relying on it?</button></h2>
+          <div id="yi3" class="accordion-collapse collapse" data-bs-parent="#yiiInterviewAccordion"><div class="accordion-body">Use Gii for fast scaffolding. Stop relying on generated code once domain rules or architectural boundaries become important and require manual design.</div></div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#yi4">How do you avoid N+1 query issues in Yii2?</button></h2>
+          <div id="yi4" class="accordion-collapse collapse" data-bs-parent="#yiiInterviewAccordion"><div class="accordion-body">Define clear relations and eager load them using `with()` or `joinWith()` when listing related data.</div></div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#yi5">What is the practical difference between authentication and RBAC in Yii?</button></h2>
+          <div id="yi5" class="accordion-collapse collapse" data-bs-parent="#yiiInterviewAccordion"><div class="accordion-body">Authentication proves identity. RBAC decides which actions that authenticated identity is allowed to perform.</div></div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#yi6">Why is Yii3 not just a simple upgrade from Yii2?</button></h2>
+          <div id="yi6" class="accordion-collapse collapse" data-bs-parent="#yiiInterviewAccordion"><div class="accordion-body">Yii3 changes the architecture significantly toward package-based and PSR-friendly design, so migration is more like re-architecture than patching one dependency version.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-projects" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-kanban-fill me-2" style="color:var(--yii-primary);"></i>Practice Projects and Mini Labs</h2>
+      <p class="mb-4">The fastest way to actually learn Yii is to build small systems that force you to touch validation, DB work, access control, and deployment.</p>
+      <div class="row g-3">
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Lab 1: Contact CRM</h6><p class="small opacity-75 mb-0">Create lead forms, validation rules, mail notifications, and a small admin listing.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Lab 2: Blog Admin</h6><p class="small opacity-75 mb-0">Build post CRUD with Gii, relations, comments, and role-based edit permissions.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Lab 3: Order API</h6><p class="small opacity-75 mb-0">Expose REST endpoints for orders, products, and customers with token auth.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Lab 4: Queue Worker</h6><p class="small opacity-75 mb-0">Move PDF invoice generation into queue jobs and run them on cron.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Lab 5: Reporting Console</h6><p class="small opacity-75 mb-0">Generate daily sales reports from a console command and cache summary results.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Lab 6: Yii3 Evaluation Sandbox</h6><p class="small opacity-75 mb-0">Create a small package-based Yii3 prototype and compare it with your Yii2 habits.</p></div></div>
+      </div>
+      <div class="note-box mt-4">
+        <p class="mb-0"><strong>Best practice:</strong> keep one sandbox repo where you test migrations, asset builds, queue workers, and deployment scripts before touching the production codebase.</p>
+      </div>
+    </section>
+  </div>
+
+  <footer class="text-center py-4 mt-4" style="border-top:1px solid rgba(128,128,128,0.15);">
+    <p class="small opacity-50 mb-0"><i class="bi bi-grid-1x2-fill me-1" style="color:var(--yii-primary);"></i>Yii2 Complete Guide - Bootstrap 5 + Dark Mode</p>
+  </footer>
+</main>
+
+<div id="backTop">
+  <i class="bi bi-arrow-up"></i>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/highlight.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+
+    const html = document.documentElement;
+    const toggleBtn = document.getElementById('themeToggle');
+    const hljsDark = document.getElementById('hljs-theme-dark');
+    const hljsLight = document.getElementById('hljs-theme-light');
+
+    function applyTheme(theme) {
+      html.setAttribute('data-bs-theme', theme);
+      toggleBtn.innerHTML = theme === 'dark'
+        ? '<i class="bi bi-sun-fill"></i>'
+        : '<i class="bi bi-moon-fill"></i>';
+      hljsDark.disabled = theme !== 'dark';
+      hljsLight.disabled = theme !== 'light';
+      localStorage.setItem('yii-guide-theme', theme);
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      applyTheme(html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
+    });
+
+    const savedTheme = localStorage.getItem('yii-guide-theme');
+    if (savedTheme) {
+      applyTheme(savedTheme);
+    }
+
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('#sidebar .nav-link');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        navLinks.forEach(link => link.classList.remove('active'));
+        const active = document.querySelector(`#sidebar a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+
+    sections.forEach(section => observer.observe(section));
+
+    const backTop = document.getElementById('backTop');
+    backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    window.addEventListener('scroll', () => {
+      backTop.classList.toggle('show', window.scrollY > 400);
+    });
+
+    document.querySelectorAll('[data-copy-btn]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const code = btn.closest('.code-wrapper')?.querySelector('code');
+        if (!code) return;
+
+        try {
+          await navigator.clipboard.writeText(code.innerText);
+          btn.innerHTML = '<i class="bi bi-check-lg me-1"></i>Copied!';
+          setTimeout(() => {
+            btn.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy';
+          }, 1800);
+        } catch (error) {
+          btn.innerHTML = '<i class="bi bi-x-lg me-1"></i>Failed';
+          setTimeout(() => {
+            btn.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy';
+          }, 1800);
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

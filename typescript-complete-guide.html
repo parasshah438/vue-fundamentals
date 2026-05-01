@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TypeScript Complete Tutorial</title>
+  <meta
+    name="description"
+    content="Complete TypeScript tutorial from basics to advanced topics with commands, examples, tsconfig guidance, generics, classes, tooling, and best practices."
+  />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link id="hljs-theme-dark" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css" />
+  <link id="hljs-theme-light" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css" disabled />
+
+  <style>
+    :root {
+      --sidebar-width: 300px;
+      --header-h: 68px;
+      --ts-primary: #3178c6;
+      --ts-secondary: #5ea6ff;
+      --ts-teal: #0aa59a;
+      --ts-amber: #ffb454;
+      --ts-rose: #ef6f8f;
+      --ts-violet: #7f73ff;
+      --ts-ink: #0d1b2a;
+      --font-body: 'IBM Plex Sans', sans-serif;
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: 0.96rem;
+      background:
+        radial-gradient(circle at top left, rgba(49, 120, 198, 0.22), transparent 28%),
+        radial-gradient(circle at 85% 8%, rgba(10, 165, 154, 0.16), transparent 24%),
+        radial-gradient(circle at 50% 100%, rgba(127, 115, 255, 0.14), transparent 30%);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .navbar-brand,
+    .brand-badge {
+      font-family: var(--font-heading);
+      letter-spacing: -0.02em;
+    }
+
+    code,
+    pre,
+    .route-pill,
+    .cmd-table code {
+      font-family: var(--font-mono);
+    }
+
+    #topbar {
+      height: var(--header-h);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      z-index: 1050;
+    }
+
+    [data-bs-theme="dark"] #topbar {
+      background: rgba(7, 14, 26, 0.8);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    [data-bs-theme="light"] #topbar {
+      background: rgba(255, 255, 255, 0.82);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, var(--ts-primary), var(--ts-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    #sidebar {
+      width: var(--sidebar-width);
+      top: var(--header-h);
+      height: calc(100vh - var(--header-h));
+      overflow-y: auto;
+      scrollbar-width: thin;
+      z-index: 1040;
+    }
+
+    [data-bs-theme="dark"] #sidebar {
+      background: rgba(9, 16, 28, 0.92);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    [data-bs-theme="light"] #sidebar {
+      background: rgba(247, 250, 252, 0.92);
+      border-right: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    #sidebar .nav-link,
+    #mobileSidebar .nav-link {
+      color: inherit;
+      border-radius: 10px;
+      font-size: 0.86rem;
+      padding: 0.42rem 0.9rem;
+      transition: transform 0.16s, background 0.16s, color 0.16s;
+    }
+
+    #sidebar .nav-link:hover,
+    #mobileSidebar .nav-link:hover,
+    #sidebar .nav-link.active,
+    #mobileSidebar .nav-link.active {
+      color: var(--ts-primary);
+      background: rgba(49, 120, 198, 0.14);
+      transform: translateX(4px);
+    }
+
+    .nav-section {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 0.8rem 0.95rem 0.35rem;
+      opacity: 0.55;
+    }
+
+    #main-content {
+      margin-left: var(--sidebar-width);
+      min-height: calc(100vh - var(--header-h));
+      padding-top: var(--header-h);
+    }
+
+    @media (max-width: 991.98px) {
+      #sidebar {
+        display: none !important;
+      }
+
+      #main-content {
+        margin-left: 0 !important;
+      }
+    }
+
+    #hero {
+      position: relative;
+      overflow: hidden;
+      padding: 4rem 0 3.2rem;
+      background:
+        linear-gradient(135deg, #1c3f72 0%, #3178c6 35%, #3ca0ff 68%, #0aa59a 100%);
+      clip-path: ellipse(120% 100% at 50% 0%);
+    }
+
+    #hero::before,
+    #hero::after {
+      content: "";
+      position: absolute;
+      inset: auto;
+      border-radius: 999px;
+      opacity: 0.26;
+      pointer-events: none;
+    }
+
+    #hero::before {
+      width: 340px;
+      height: 340px;
+      top: -120px;
+      right: -80px;
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    #hero::after {
+      width: 260px;
+      height: 260px;
+      bottom: -80px;
+      left: 7%;
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    #hero h1 {
+      color: #fff;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    #hero p {
+      color: rgba(255, 255, 255, 0.88);
+      max-width: 760px;
+      font-size: 1.04rem;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-radius: 999px;
+      padding: 0.42rem 0.78rem;
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+      font-size: 0.84rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-stat {
+      border-radius: 18px;
+      padding: 1rem 1.1rem;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #fff;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-stat strong {
+      display: block;
+      font-size: 1.1rem;
+      font-family: var(--font-heading);
+      margin-bottom: 0.2rem;
+    }
+
+    .section-title {
+      font-size: 1.65rem;
+      font-weight: 700;
+      border-left: 4px solid var(--ts-primary);
+      padding-left: 0.8rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .sub-title {
+      font-size: 1.13rem;
+      font-weight: 600;
+      border-left: 3px solid var(--ts-secondary);
+      padding-left: 0.55rem;
+      margin: 1.55rem 0 0.8rem;
+    }
+
+    .feature-card {
+      border-radius: 16px;
+      transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+      border: 1px solid transparent;
+      overflow: hidden;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 34px rgba(49, 120, 198, 0.16);
+      border-color: rgba(49, 120, 198, 0.24);
+    }
+
+    [data-bs-theme="dark"] .feature-card {
+      background: rgba(17, 24, 38, 0.9);
+    }
+
+    [data-bs-theme="light"] .feature-card {
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    }
+
+    .icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      flex-shrink: 0;
+    }
+
+    .tone-primary { background: rgba(49, 120, 198, 0.16); color: var(--ts-primary); }
+    .tone-success { background: rgba(10, 165, 154, 0.16); color: var(--ts-teal); }
+    .tone-warning { background: rgba(255, 180, 84, 0.18); color: #d9822b; }
+    .tone-rose { background: rgba(239, 111, 143, 0.16); color: var(--ts-rose); }
+    .tone-violet { background: rgba(127, 115, 255, 0.18); color: var(--ts-violet); }
+
+    .note-box {
+      border-left: 4px solid var(--ts-primary);
+      padding: 0.95rem 1rem;
+      border-radius: 0 12px 12px 0;
+    }
+
+    [data-bs-theme="dark"] .note-box {
+      background: rgba(49, 120, 198, 0.12);
+    }
+
+    [data-bs-theme="light"] .note-box {
+      background: rgba(49, 120, 198, 0.07);
+    }
+
+    .divider {
+      height: 1px;
+      opacity: 0.14;
+      margin: 2.8rem 0;
+    }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--ts-primary), var(--ts-secondary));
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.82rem;
+      flex-shrink: 0;
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, var(--ts-primary), var(--ts-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .cmd-table th,
+    .cmd-table td {
+      vertical-align: middle;
+    }
+
+    .cmd-table code {
+      font-size: 0.79rem;
+    }
+
+    .compare-badge-js {
+      background: rgba(247, 223, 30, 0.15);
+      color: #9d7b00;
+      border: 1px solid rgba(247, 223, 30, 0.36);
+    }
+
+    .compare-badge-ts {
+      background: rgba(49, 120, 198, 0.16);
+      color: var(--ts-primary);
+      border: 1px solid rgba(49, 120, 198, 0.35);
+    }
+
+    pre {
+      margin: 0;
+      border-radius: 14px;
+      font-size: 0.84rem;
+      overflow: auto;
+    }
+
+    pre code.hljs {
+      border-radius: 14px;
+      padding-top: 1.15rem;
+      padding-bottom: 1.15rem;
+    }
+
+    .code-wrapper {
+      position: relative;
+      margin: 0.85rem 0 1.2rem;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 0.55rem;
+      right: 0.55rem;
+      z-index: 2;
+      font-size: 0.75rem;
+      opacity: 0.88;
+    }
+
+    .copy-btn:hover {
+      opacity: 1;
+    }
+
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 0.9rem;
+    }
+
+    .topic-card {
+      border-radius: 16px;
+      padding: 1rem;
+      min-height: 126px;
+    }
+
+    .topic-letter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(49, 120, 198, 0.14);
+      color: var(--ts-primary);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      margin-bottom: 0.65rem;
+    }
+
+    .check-list {
+      list-style: none;
+      padding-left: 0;
+      margin-bottom: 0;
+    }
+
+    .check-list li {
+      display: flex;
+      gap: 0.7rem;
+      align-items: flex-start;
+      margin-bottom: 0.7rem;
+    }
+
+    .check-list li i {
+      color: var(--ts-teal);
+      margin-top: 0.1rem;
+    }
+
+    #backTop {
+      position: fixed;
+      right: 1.4rem;
+      bottom: 1.4rem;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: linear-gradient(135deg, var(--ts-primary), var(--ts-secondary));
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(49, 120, 198, 0.34);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 9999;
+    }
+
+    #backTop.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+
+    [data-bs-theme="dark"] ::-webkit-scrollbar-track { background: #101826; }
+    [data-bs-theme="dark"] ::-webkit-scrollbar-thumb { background: #2b415e; border-radius: 999px; }
+    [data-bs-theme="light"] ::-webkit-scrollbar-track { background: #edf2f7; }
+    [data-bs-theme="light"] ::-webkit-scrollbar-thumb { background: #c6d2e1; border-radius: 999px; }
+
+    @media (max-width: 767.98px) {
+      #hero {
+        padding: 3.25rem 0 2.8rem;
+      }
+
+      #hero h1 {
+        font-size: 2rem;
+      }
+
+      .section-title {
+        font-size: 1.42rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav id="topbar" class="navbar fixed-top px-3 px-md-4 d-flex justify-content-between align-items-center">
+    <a href="#top" class="text-decoration-none d-flex align-items-center gap-2">
+      <div class="icon-box tone-primary" style="width: 38px; height: 38px; border-radius: 12px;">
+        <i class="bi bi-filetype-tsx" aria-hidden="true"></i>
+      </div>
+      <span class="brand-badge">TypeScript</span>
+      <span class="fw-light opacity-50 d-none d-sm-inline">Tutorial</span>
+    </a>
+
+    <div class="d-flex align-items-center gap-2">
+      <button class="btn btn-sm btn-outline-secondary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-label="Open tutorial navigation">
+        <i class="bi bi-list" aria-hidden="true"></i>
+      </button>
+      <button id="themeToggle" class="btn btn-sm btn-outline-secondary" type="button" title="Toggle dark and light mode" aria-label="Toggle dark and light mode">
+        <i class="bi bi-sun-fill" aria-hidden="true"></i>
+      </button>
+      <span class="badge rounded-pill text-bg-primary d-none d-sm-inline">TS 5.x</span>
+    </div>
+  </nav>
+
+  <aside id="sidebar" class="position-fixed d-none d-lg-block py-3 px-2">
+    <nav class="nav flex-column gap-1" data-guide-nav>
+      <div class="nav-section">Overview</div>
+      <a class="nav-link active" href="#top"><i class="bi bi-house-door me-2" aria-hidden="true"></i>Overview</a>
+      <a class="nav-link" href="#sec-what"><i class="bi bi-info-circle me-2" aria-hidden="true"></i>What is TypeScript?</a>
+      <a class="nav-link" href="#sec-why"><i class="bi bi-stars me-2" aria-hidden="true"></i>Why TypeScript?</a>
+      <a class="nav-link" href="#sec-roadmap"><i class="bi bi-signpost-2 me-2" aria-hidden="true"></i>Learning Roadmap</a>
+
+      <div class="nav-section">Essentials</div>
+      <a class="nav-link" href="#sec-setup"><i class="bi bi-download me-2" aria-hidden="true"></i>Setup &amp; Install</a>
+      <a class="nav-link" href="#sec-commands"><i class="bi bi-terminal me-2" aria-hidden="true"></i>TS/JS Commands</a>
+      <a class="nav-link" href="#sec-tsconfig"><i class="bi bi-sliders me-2" aria-hidden="true"></i>tsconfig.json</a>
+      <a class="nav-link" href="#sec-basics"><i class="bi bi-123 me-2" aria-hidden="true"></i>Type Basics</a>
+
+      <div class="nav-section">Core Syntax</div>
+      <a class="nav-link" href="#sec-functions"><i class="bi bi-braces me-2" aria-hidden="true"></i>Functions</a>
+      <a class="nav-link" href="#sec-objects"><i class="bi bi-diagram-3 me-2" aria-hidden="true"></i>Objects &amp; Interfaces</a>
+      <a class="nav-link" href="#sec-narrowing"><i class="bi bi-funnel me-2" aria-hidden="true"></i>Narrowing &amp; Guards</a>
+
+      <div class="nav-section">Advanced</div>
+      <a class="nav-link" href="#sec-generics"><i class="bi bi-boxes me-2" aria-hidden="true"></i>Generics</a>
+      <a class="nav-link" href="#sec-utility"><i class="bi bi-tools me-2" aria-hidden="true"></i>Utility Types</a>
+      <a class="nav-link" href="#sec-classes"><i class="bi bi-building me-2" aria-hidden="true"></i>Classes &amp; OOP</a>
+      <a class="nav-link" href="#sec-modules"><i class="bi bi-box-arrow-in-right me-2" aria-hidden="true"></i>Modules &amp; d.ts</a>
+
+      <div class="nav-section">Real Projects</div>
+      <a class="nav-link" href="#sec-async"><i class="bi bi-cloud-arrow-down me-2" aria-hidden="true"></i>Async &amp; APIs</a>
+      <a class="nav-link" href="#sec-dom"><i class="bi bi-window me-2" aria-hidden="true"></i>DOM &amp; Forms</a>
+      <a class="nav-link" href="#sec-tooling"><i class="bi bi-cpu me-2" aria-hidden="true"></i>Node, React, Testing</a>
+
+      <div class="nav-section">Reference</div>
+      <a class="nav-link" href="#sec-errors"><i class="bi bi-bug me-2" aria-hidden="true"></i>Common Errors</a>
+      <a class="nav-link" href="#sec-az"><i class="bi bi-grid-3x3-gap me-2" aria-hidden="true"></i>A to Z Topics</a>
+      <a class="nav-link" href="#sec-best"><i class="bi bi-check2-circle me-2" aria-hidden="true"></i>Best Practices</a>
+    </nav>
+  </aside>
+
+  <div class="offcanvas offcanvas-start d-lg-none" id="mobileSidebar" tabindex="-1" aria-labelledby="mobileSidebarLabel">
+    <div class="offcanvas-header">
+      <h6 class="offcanvas-title fw-bold" id="mobileSidebarLabel">TypeScript Tutorial</h6>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close navigation"></button>
+    </div>
+    <div class="offcanvas-body p-2">
+      <nav class="nav flex-column gap-1" data-guide-nav>
+        <div class="nav-section">Overview</div>
+        <a class="nav-link active" href="#top" data-bs-dismiss="offcanvas"><i class="bi bi-house-door me-2" aria-hidden="true"></i>Overview</a>
+        <a class="nav-link" href="#sec-what" data-bs-dismiss="offcanvas"><i class="bi bi-info-circle me-2" aria-hidden="true"></i>What is TypeScript?</a>
+        <a class="nav-link" href="#sec-why" data-bs-dismiss="offcanvas"><i class="bi bi-stars me-2" aria-hidden="true"></i>Why TypeScript?</a>
+        <a class="nav-link" href="#sec-roadmap" data-bs-dismiss="offcanvas"><i class="bi bi-signpost-2 me-2" aria-hidden="true"></i>Learning Roadmap</a>
+
+        <div class="nav-section">Essentials</div>
+        <a class="nav-link" href="#sec-setup" data-bs-dismiss="offcanvas"><i class="bi bi-download me-2" aria-hidden="true"></i>Setup &amp; Install</a>
+        <a class="nav-link" href="#sec-commands" data-bs-dismiss="offcanvas"><i class="bi bi-terminal me-2" aria-hidden="true"></i>TS/JS Commands</a>
+        <a class="nav-link" href="#sec-tsconfig" data-bs-dismiss="offcanvas"><i class="bi bi-sliders me-2" aria-hidden="true"></i>tsconfig.json</a>
+        <a class="nav-link" href="#sec-basics" data-bs-dismiss="offcanvas"><i class="bi bi-123 me-2" aria-hidden="true"></i>Type Basics</a>
+
+        <div class="nav-section">Core Syntax</div>
+        <a class="nav-link" href="#sec-functions" data-bs-dismiss="offcanvas"><i class="bi bi-braces me-2" aria-hidden="true"></i>Functions</a>
+        <a class="nav-link" href="#sec-objects" data-bs-dismiss="offcanvas"><i class="bi bi-diagram-3 me-2" aria-hidden="true"></i>Objects &amp; Interfaces</a>
+        <a class="nav-link" href="#sec-narrowing" data-bs-dismiss="offcanvas"><i class="bi bi-funnel me-2" aria-hidden="true"></i>Narrowing &amp; Guards</a>
+
+        <div class="nav-section">Advanced</div>
+        <a class="nav-link" href="#sec-generics" data-bs-dismiss="offcanvas"><i class="bi bi-boxes me-2" aria-hidden="true"></i>Generics</a>
+        <a class="nav-link" href="#sec-utility" data-bs-dismiss="offcanvas"><i class="bi bi-tools me-2" aria-hidden="true"></i>Utility Types</a>
+        <a class="nav-link" href="#sec-classes" data-bs-dismiss="offcanvas"><i class="bi bi-building me-2" aria-hidden="true"></i>Classes &amp; OOP</a>
+        <a class="nav-link" href="#sec-modules" data-bs-dismiss="offcanvas"><i class="bi bi-box-arrow-in-right me-2" aria-hidden="true"></i>Modules &amp; d.ts</a>
+
+        <div class="nav-section">Real Projects</div>
+        <a class="nav-link" href="#sec-async" data-bs-dismiss="offcanvas"><i class="bi bi-cloud-arrow-down me-2" aria-hidden="true"></i>Async &amp; APIs</a>
+        <a class="nav-link" href="#sec-dom" data-bs-dismiss="offcanvas"><i class="bi bi-window me-2" aria-hidden="true"></i>DOM &amp; Forms</a>
+        <a class="nav-link" href="#sec-tooling" data-bs-dismiss="offcanvas"><i class="bi bi-cpu me-2" aria-hidden="true"></i>Node, React, Testing</a>
+
+        <div class="nav-section">Reference</div>
+        <a class="nav-link" href="#sec-errors" data-bs-dismiss="offcanvas"><i class="bi bi-bug me-2" aria-hidden="true"></i>Common Errors</a>
+        <a class="nav-link" href="#sec-az" data-bs-dismiss="offcanvas"><i class="bi bi-grid-3x3-gap me-2" aria-hidden="true"></i>A to Z Topics</a>
+        <a class="nav-link" href="#sec-best" data-bs-dismiss="offcanvas"><i class="bi bi-check2-circle me-2" aria-hidden="true"></i>Best Practices</a>
+      </nav>
+    </div>
+  </div>
+
+  <main id="main-content">
+    <section id="top">
+      <div id="hero">
+        <div class="container py-2">
+          <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="icon-box" style="width: 64px; height: 64px; border-radius: 18px; background: rgba(255, 255, 255, 0.2); color: #fff;">
+                  <i class="bi bi-filetype-tsx" aria-hidden="true" style="font-size: 1.9rem;"></i>
+                </div>
+                <div>
+                  <h1 class="mb-0">TypeScript Tutorial</h1>
+                  <p class="mb-0 mt-1">Basic to advanced, with real examples, command reference, and production-ready patterns.</p>
+                </div>
+              </div>
+
+              <div class="d-flex flex-wrap gap-2 mb-4">
+                <span class="hero-pill"><i class="bi bi-shield-check" aria-hidden="true"></i>Static typing</span>
+                <span class="hero-pill"><i class="bi bi-cpu" aria-hidden="true"></i>Node + Browser</span>
+                <span class="hero-pill"><i class="bi bi-terminal" aria-hidden="true"></i>Compiler and runtime commands</span>
+                <span class="hero-pill"><i class="bi bi-lightning-charge" aria-hidden="true"></i>TS 5.x workflow</span>
+              </div>
+
+              <p class="mb-0">TypeScript helps you <span class="fw-bold">catch bugs before runtime</span>, makes large codebases easier to refactor, and turns editor autocomplete into a serious productivity tool. This guide starts from the first <code>hello.ts</code> file and ends with advanced types, utility types, modules, testing, and project structure.</p>
+            </div>
+
+            <div class="col-lg-5">
+              <div class="row g-3">
+                <div class="col-sm-6">
+                  <div class="hero-stat h-100">
+                    <strong>18 sections</strong>
+                    <span>From setup and types to generics, classes, and tooling.</span>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="hero-stat h-100">
+                    <strong>30+ commands</strong>
+                    <span>Compiler, runtime, npm, linting, testing, and debugging.</span>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="hero-stat h-100">
+                    <strong>Code-first</strong>
+                    <span>Every important concept includes a short, practical example.</span>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="hero-stat h-100">
+                    <strong>A to Z map</strong>
+                    <span>Alphabetical topic index so you can revise quickly.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container py-4 px-3 px-md-4">
+      <section id="sec-what" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-info-circle-fill me-2 text-primary" aria-hidden="true"></i>What is TypeScript?</h2>
+
+        <div class="note-box mb-4">
+          <p class="mb-0"><strong>TypeScript</strong> is a superset of JavaScript. You write normal JavaScript syntax plus type annotations, interfaces, generics, and compiler rules. TypeScript then checks your code and compiles it to plain JavaScript that browsers and Node.js can run.</p>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6 col-xl-3">
+            <div class="feature-card p-3 h-100">
+              <div class="icon-box tone-primary mb-2"><i class="bi bi-search" aria-hidden="true"></i></div>
+              <h6 class="fw-semibold mb-1">Static Analysis</h6>
+              <p class="small opacity-75 mb-0">Catch type mismatches before code reaches the browser or server.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-3">
+            <div class="feature-card p-3 h-100">
+              <div class="icon-box tone-success mb-2"><i class="bi bi-magic" aria-hidden="true"></i></div>
+              <h6 class="fw-semibold mb-1">Better Autocomplete</h6>
+              <p class="small opacity-75 mb-0">Editors understand object shapes, function signatures, and available APIs.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-3">
+            <div class="feature-card p-3 h-100">
+              <div class="icon-box tone-warning mb-2"><i class="bi bi-arrow-repeat" aria-hidden="true"></i></div>
+              <h6 class="fw-semibold mb-1">Safer Refactors</h6>
+              <p class="small opacity-75 mb-0">Rename fields and move code with compiler feedback instead of guessing.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-3">
+            <div class="feature-card p-3 h-100">
+              <div class="icon-box tone-violet mb-2"><i class="bi bi-filetype-js" aria-hidden="true"></i></div>
+              <h6 class="fw-semibold mb-1">Runs as JavaScript</h6>
+              <p class="small opacity-75 mb-0">Your deployment output is still JavaScript. Types disappear after compilation.</p>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><i class="bi bi-code-square me-2 text-info" aria-hidden="true"></i>JavaScript vs TypeScript in one example</h5>
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="feature-card p-3 h-100">
+              <h6 class="fw-semibold small mb-2 opacity-75">JavaScript</h6>
+              <div class="code-wrapper mb-0">
+                <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-javascript">function totalPrice(price, taxRate) {
+  return price + price * taxRate;
+}
+
+totalPrice(100, 0.18);   // 118
+totalPrice('100', 0.18); // '10018' -> bug</code></pre>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="feature-card p-3 h-100">
+              <h6 class="fw-semibold small mb-2 opacity-75">TypeScript</h6>
+              <div class="code-wrapper mb-0">
+                <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">function totalPrice(price: number, taxRate: number): number {
+  return price + price * taxRate;
+}
+
+totalPrice(100, 0.18);
+// totalPrice('100', 0.18);
+// Error: Argument of type 'string' is not assignable to type 'number'.</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-why" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-stars me-2 text-warning" aria-hidden="true"></i>Why TypeScript?</h2>
+        <p class="mb-4">The short answer: JavaScript gives you flexibility, but TypeScript adds <span class="text-gradient fw-bold">constraints that help teams move faster</span> with fewer runtime surprises.</p>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <div class="feature-card p-4 h-100">
+              <div class="d-flex align-items-center gap-3 mb-2">
+                <div class="step-num">1</div>
+                <h6 class="mb-0 fw-bold">You see bugs during development</h6>
+              </div>
+              <p class="small opacity-75 mb-0">Undefined values, wrong function arguments, missing object fields, and impossible code paths become compile-time errors.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-4 h-100">
+              <div class="d-flex align-items-center gap-3 mb-2">
+                <div class="step-num">2</div>
+                <h6 class="mb-0 fw-bold">Large refactors become realistic</h6>
+              </div>
+              <p class="small opacity-75 mb-0">If you rename a field or change a return type, the compiler tells you exactly where the contract broke.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-4 h-100">
+              <div class="d-flex align-items-center gap-3 mb-2">
+                <div class="step-num">3</div>
+                <h6 class="mb-0 fw-bold">Tooling gets much smarter</h6>
+              </div>
+              <p class="small opacity-75 mb-0">Autocomplete, go-to-definition, rename symbol, and inline docs all become more accurate because the editor knows your shapes.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-4 h-100">
+              <div class="d-flex align-items-center gap-3 mb-2">
+                <div class="step-num">4</div>
+                <h6 class="mb-0 fw-bold">Public APIs become self-documenting</h6>
+              </div>
+              <p class="small opacity-75 mb-0">Well-typed functions explain what they expect and what they return without a second README file.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle">
+            <thead>
+              <tr>
+                <th class="text-center" style="width: 50%;"><span class="badge compare-badge-js px-3 py-2 rounded-pill fs-6">JavaScript</span></th>
+                <th class="text-center" style="width: 50%;"><span class="badge compare-badge-ts px-3 py-2 rounded-pill fs-6">TypeScript</span></th>
+              </tr>
+            </thead>
+            <tbody class="small">
+              <tr><td>Runtime-focused; errors often appear after execution</td><td>Compiler catches many mistakes before execution</td></tr>
+              <tr><td>Flexible object shapes</td><td>Explicit contracts via interfaces and aliases</td></tr>
+              <tr><td>Refactors rely more on tests and manual search</td><td>Refactors are safer with compiler guidance</td></tr>
+              <tr><td>Good for quick scripts</td><td>Great for quick scripts and large applications</td></tr>
+              <tr><td>Documentation is often separate</td><td>Types themselves become documentation</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-roadmap" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-signpost-2-fill me-2 text-info" aria-hidden="true"></i>Learning Roadmap</h2>
+        <p class="mb-4">If you want a practical path from beginner to advanced, follow this order. Each step builds on the previous one.</p>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-6 col-xl-3">
+            <div class="feature-card p-4 h-100 text-center">
+              <div class="icon-box tone-primary mx-auto mb-3"><i class="bi bi-play-circle-fill" aria-hidden="true"></i></div>
+              <h6 class="fw-bold mb-1">1. Setup</h6>
+              <p class="small opacity-75 mb-0">Install TypeScript, create <code>tsconfig.json</code>, compile a file, and run output with Node.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-3">
+            <div class="feature-card p-4 h-100 text-center">
+              <div class="icon-box tone-success mx-auto mb-3"><i class="bi bi-123" aria-hidden="true"></i></div>
+              <h6 class="fw-bold mb-1">2. Fundamentals</h6>
+              <p class="small opacity-75 mb-0">Primitive types, arrays, objects, functions, unions, interfaces, and narrowing.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-3">
+            <div class="feature-card p-4 h-100 text-center">
+              <div class="icon-box tone-warning mx-auto mb-3"><i class="bi bi-layers-fill" aria-hidden="true"></i></div>
+              <h6 class="fw-bold mb-1">3. Advanced Types</h6>
+              <p class="small opacity-75 mb-0">Generics, utility types, mapped types, classes, module boundaries, and declaration files.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-3">
+            <div class="feature-card p-4 h-100 text-center">
+              <div class="icon-box tone-violet mx-auto mb-3"><i class="bi bi-rocket-takeoff-fill" aria-hidden="true"></i></div>
+              <h6 class="fw-bold mb-1">4. Production Usage</h6>
+              <p class="small opacity-75 mb-0">Node APIs, React components, fetch typing, testing, linting, and strict compiler rules.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="feature-card p-4 h-100">
+              <h5 class="sub-title mt-0"><i class="bi bi-check2-square me-2 text-success" aria-hidden="true"></i>Focus order</h5>
+              <ul class="check-list">
+                <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Start with <code>strict: true</code> so you learn the correct patterns early.</span></li>
+                <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Prefer <code>unknown</code> to <code>any</code> when data comes from outside your app.</span></li>
+                <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Learn union types and narrowing before heavy generics.</span></li>
+                <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Types disappear at runtime, so still validate API payloads and user input.</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="feature-card p-4 h-100">
+              <h5 class="sub-title mt-0"><i class="bi bi-lightbulb me-2 text-warning" aria-hidden="true"></i>Mindset shift</h5>
+              <p class="small opacity-75">The best TypeScript code usually is not the most complex type gymnastics. It is the code with the clearest contracts. Use types to make business rules obvious, not to impress yourself.</p>
+              <div class="note-box mt-3">
+                <small><strong>Rule of thumb:</strong> if a type takes longer to understand than the runtime code it protects, simplify it.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-setup" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-download me-2 text-primary" aria-hidden="true"></i>Setup &amp; Installation</h2>
+
+        <h5 class="sub-title"><i class="bi bi-terminal-fill me-2" aria-hidden="true"></i>Create a TypeScript project</h5>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="feature-card p-3 h-100">
+              <h6 class="fw-semibold small mb-2 opacity-60">Minimal Node project</h6>
+              <div class="code-wrapper mb-0">
+                <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-bash">npm init -y
+npm install -D typescript tsx @types/node
+npx tsc --init</code></pre>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-3 h-100">
+              <h6 class="fw-semibold small mb-2 opacity-60">React + TypeScript with Vite</h6>
+              <div class="code-wrapper mb-0">
+                <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-bash">npm create vite@latest my-app -- --template react-ts
+cd my-app
+npm install
+npm run dev</code></pre>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-3 h-100">
+              <h6 class="fw-semibold small mb-2 opacity-60">Fast script runner with tsx</h6>
+              <div class="code-wrapper mb-0">
+                <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-bash">mkdir ts-playground
+cd ts-playground
+npm init -y
+npm install -D typescript tsx @types/node</code></pre>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-3 h-100">
+              <h6 class="fw-semibold small mb-2 opacity-60">First source file</h6>
+              <div class="code-wrapper mb-0">
+                <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">// src/index.ts
+const courseName: string = 'TypeScript Complete Tutorial';
+const students: number = 120;
+
+console.log(`${courseName} has ${students} students.`);</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><i class="bi bi-play-circle-fill me-2 text-success" aria-hidden="true"></i>Run it</h5>
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="feature-card p-3 h-100">
+              <h6 class="fw-semibold">Compile then run</h6>
+              <div class="code-wrapper mb-0">
+                <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-bash">npx tsc
+node dist/index.js</code></pre>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="feature-card p-3 h-100">
+              <h6 class="fw-semibold">Run directly in development</h6>
+              <div class="code-wrapper mb-0">
+                <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-bash">npx tsx src/index.ts
+npx tsx watch src/index.ts</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="note-box mt-4">
+          <p class="mb-0"><strong>Recommended beginner setup:</strong> use <code>tsx</code> for fast local execution, and still keep <code>tsc --noEmit</code> in your workflow so the compiler continues to validate types.</p>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-commands" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-terminal me-2 text-success" aria-hidden="true"></i>TypeScript and JavaScript Commands</h2>
+        <p class="mb-4">These are the commands you will use most often in real projects. Each command below includes a short description and a short example.</p>
+
+        <h5 class="sub-title"><i class="bi bi-hammer me-2 text-primary" aria-hidden="true"></i>Compiler and config commands</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small cmd-table">
+            <thead class="table-dark">
+              <tr><th>Command</th><th>Description</th><th>Short example</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>npm install -D typescript</code></td><td>Install the TypeScript compiler locally.</td><td><code>npm install -D typescript</code></td></tr>
+              <tr><td><code>npx tsc --init</code></td><td>Create a starter <code>tsconfig.json</code>.</td><td><code>npx tsc --init</code></td></tr>
+              <tr><td><code>npx tsc</code></td><td>Compile the whole project using <code>tsconfig.json</code>.</td><td><code>npx tsc</code></td></tr>
+              <tr><td><code>npx tsc src/app.ts</code></td><td>Compile a single file quickly.</td><td><code>npx tsc src/app.ts</code></td></tr>
+              <tr><td><code>npx tsc --watch</code></td><td>Recompile automatically when files change.</td><td><code>npx tsc --watch</code></td></tr>
+              <tr><td><code>npx tsc --noEmit</code></td><td>Type-check without generating JavaScript files.</td><td><code>npx tsc --noEmit</code></td></tr>
+              <tr><td><code>npx tsc -p tsconfig.build.json</code></td><td>Use a specific config file.</td><td><code>npx tsc -p tsconfig.build.json</code></td></tr>
+              <tr><td><code>npx tsc --showConfig</code></td><td>Print the final resolved compiler config.</td><td><code>npx tsc --showConfig</code></td></tr>
+              <tr><td><code>npx tsc --build</code></td><td>Build project references in a monorepo or multi-package setup.</td><td><code>npx tsc --build packages/*</code></td></tr>
+              <tr><td><code>npx tsc --listFiles</code></td><td>Show which files TypeScript includes in compilation.</td><td><code>npx tsc --listFiles</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h5 class="sub-title"><i class="bi bi-lightning-charge me-2 text-warning" aria-hidden="true"></i>Run, watch, and debug commands</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small cmd-table">
+            <thead class="table-dark">
+              <tr><th>Command</th><th>Description</th><th>Short example</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>npx tsx src/index.ts</code></td><td>Run a TypeScript file directly in development.</td><td><code>npx tsx src/index.ts</code></td></tr>
+              <tr><td><code>npx tsx watch src/index.ts</code></td><td>Restart automatically on file changes.</td><td><code>npx tsx watch src/index.ts</code></td></tr>
+              <tr><td><code>npx ts-node src/index.ts</code></td><td>Run TypeScript via <code>ts-node</code>.</td><td><code>npx ts-node src/index.ts</code></td></tr>
+              <tr><td><code>node dist/index.js</code></td><td>Run compiled JavaScript output with Node.</td><td><code>node dist/index.js</code></td></tr>
+              <tr><td><code>node --watch dist/index.js</code></td><td>Rerun a compiled script when output changes.</td><td><code>node --watch dist/index.js</code></td></tr>
+              <tr><td><code>node --inspect dist/index.js</code></td><td>Start the Node debugger.</td><td><code>node --inspect dist/index.js</code></td></tr>
+              <tr><td><code>node -e "console.log('hi')"</code></td><td>Run a quick inline JavaScript command.</td><td><code>node -e "console.log(process.version)"</code></td></tr>
+              <tr><td><code>node --enable-source-maps dist/index.js</code></td><td>Use source maps when reading stack traces.</td><td><code>node --enable-source-maps dist/index.js</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h5 class="sub-title"><i class="bi bi-box-seam me-2 text-info" aria-hidden="true"></i>Package, quality, and test commands</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small cmd-table">
+            <thead class="table-dark">
+              <tr><th>Command</th><th>Description</th><th>Short example</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>npm init -y</code></td><td>Create a new <code>package.json</code>.</td><td><code>npm init -y</code></td></tr>
+              <tr><td><code>npm install -D tsx @types/node</code></td><td>Add local dev dependencies.</td><td><code>npm install -D tsx @types/node</code></td></tr>
+              <tr><td><code>npm run build</code></td><td>Run your build script from <code>package.json</code>.</td><td><code>npm run build</code></td></tr>
+              <tr><td><code>npm run dev</code></td><td>Run your local development script.</td><td><code>npm run dev</code></td></tr>
+              <tr><td><code>npx eslint "src/**/*.{ts,tsx}"</code></td><td>Lint TypeScript files.</td><td><code>npx eslint "src/**/*.{ts,tsx}"</code></td></tr>
+              <tr><td><code>npx prettier . --write</code></td><td>Format files automatically.</td><td><code>npx prettier . --write</code></td></tr>
+              <tr><td><code>npx vitest</code></td><td>Run tests with Vitest.</td><td><code>npx vitest</code></td></tr>
+              <tr><td><code>npx vitest --watch</code></td><td>Run tests in watch mode.</td><td><code>npx vitest --watch</code></td></tr>
+              <tr><td><code>npm pkg set type=module</code></td><td>Switch the package to ESM mode.</td><td><code>npm pkg set type=module</code></td></tr>
+              <tr><td><code>npm outdated</code></td><td>Check dependency versions.</td><td><code>npm outdated</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h5 class="sub-title"><i class="bi bi-file-earmark-code me-2" aria-hidden="true"></i>Recommended scripts</h5>
+        <div class="code-wrapper">
+          <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-json">{
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "eslint \"src/**/*.{ts,tsx}\""
+  }
+}</code></pre>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-tsconfig" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-sliders me-2 text-info" aria-hidden="true"></i>tsconfig.json Explained</h2>
+        <p class="mb-4">This file controls how TypeScript reads your project, which JavaScript version it targets, which files it includes, and how strict the compiler should be.</p>
+
+        <div class="code-wrapper">
+          <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-json">{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "sourceMap": true
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}</code></pre>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>Option</th><th>Why it matters</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>strict</code></td><td>Turns on the most useful type-safety checks. Leave this on for serious projects.</td></tr>
+              <tr><td><code>target</code></td><td>Controls which JavaScript syntax TypeScript emits.</td></tr>
+              <tr><td><code>module</code></td><td>Sets the module system, such as CommonJS or modern ESM.</td></tr>
+              <tr><td><code>moduleResolution</code></td><td>Controls how imports are resolved on disk.</td></tr>
+              <tr><td><code>rootDir</code> / <code>outDir</code></td><td>Keep source files and compiled files separate.</td></tr>
+              <tr><td><code>sourceMap</code></td><td>Maps compiled output back to original source for debugging.</td></tr>
+              <tr><td><code>noUncheckedIndexedAccess</code></td><td>Makes array and dictionary access safer by including <code>undefined</code>.</td></tr>
+              <tr><td><code>exactOptionalPropertyTypes</code></td><td>Makes optional properties behave more precisely.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note-box mt-3">
+          <p class="mb-0"><strong>Good default:</strong> start strict, then relax rules only when you know exactly why a rule hurts your project.</p>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-basics" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-123 me-2 text-primary" aria-hidden="true"></i>Type Basics</h2>
+        <p class="mb-4">These are the building blocks of TypeScript: primitive types, arrays, tuples, literal types, and type inference.</p>
+
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">1</span>Primitives and inference</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">const title = 'TS Basics';   // inferred as string
+let score: number = 95;
+let published: boolean = true;
+
+// Prefer inference when it is obvious.
+const lessonCount = 18;
+
+// Add explicit types when the contract matters.
+let price: number;
+price = 499;</code></pre>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">2</span>Arrays, tuples, and readonly</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">const tags: string[] = ['types', 'generics'];
+const rgb: [number, number, number] = [255, 140, 0];
+
+const points: readonly number[] = [10, 20, 30];
+// points.push(40); // Error: readonly array
+
+type Size = 'sm' | 'md' | 'lg';
+const buttonSize: Size = 'md';</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 mt-1">
+          <div class="col-lg-6">
+            <div class="feature-card p-4 h-100">
+              <h5 class="sub-title mt-0"><i class="bi bi-shield me-2 text-success" aria-hidden="true"></i><code>unknown</code> vs <code>any</code></h5>
+              <p class="small opacity-75 mb-2"><code>any</code> disables type safety. <code>unknown</code> forces you to check before using the value.</p>
+              <div class="code-wrapper mb-0">
+                <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">let rawValue: unknown = JSON.parse('{"name":"Ada"}');
+
+if (typeof rawValue === 'object' && rawValue !== null) {
+  console.log(rawValue);
+}</code></pre>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="feature-card p-4 h-100">
+              <h5 class="sub-title mt-0"><i class="bi bi-exclamation-triangle me-2 text-warning" aria-hidden="true"></i>Type assertions</h5>
+              <p class="small opacity-75 mb-2">Assertions tell the compiler what you believe to be true. Use them carefully.</p>
+              <div class="code-wrapper mb-0">
+                <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">const input = document.getElementById('email') as HTMLInputElement | null;
+
+if (input) {
+  console.log(input.value);
+}</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-functions" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-braces me-2 text-success" aria-hidden="true"></i>Functions</h2>
+        <p class="mb-4">TypeScript functions can describe parameters, return values, optional arguments, rest arguments, overloads, and callbacks.</p>
+
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">1</span>Parameters and return types</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">function greet(name: string, prefix = 'Hello'): string {
+  return `${prefix}, ${name}`;
+}
+
+function sum(...values: number[]): number {
+  return values.reduce((total, value) =&gt; total + value, 0);
+}</code></pre>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">2</span>Function types and callbacks</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">type Formatter = (value: string) =&gt; string;
+
+function runFormatter(value: string, format: Formatter): string {
+  return format(value);
+}
+
+const upper = runFormatter('typescript', text =&gt; text.toUpperCase());</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>Function overloads</h5>
+        <div class="code-wrapper">
+          <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">function format(input: string): string;
+function format(input: number): string;
+function format(input: string | number): string {
+  if (typeof input === 'number') {
+    return `$${input.toFixed(2)}`;
+  }
+
+  return input.trim();
+}
+
+format(' hello ');
+format(49.99);</code></pre>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-objects" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-diagram-3-fill me-2 text-info" aria-hidden="true"></i>Objects, Interfaces, and Type Aliases</h2>
+        <p class="mb-4">Objects are where TypeScript becomes most valuable. Describe shapes clearly, especially for API payloads, props, and service contracts.</p>
+
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">1</span>Interfaces</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">interface User {
+  id: number;
+  name: string;
+  email?: string;
+  readonly role: 'admin' | 'editor' | 'viewer';
+}
+
+const user: User = {
+  id: 1,
+  name: 'Ada Lovelace',
+  role: 'admin'
+};</code></pre>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">2</span>Type aliases</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">type ApiStatus = 'idle' | 'loading' | 'success' | 'error';
+
+type Product = {
+  sku: string;
+  price: number;
+  tags: string[];
+};
+
+type ProductMap = Record&lt;string, Product&gt;;</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>When to use which?</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>Use case</th><th>Prefer</th><th>Reason</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Public object contract</td><td><code>interface</code></td><td>Readable and extendable.</td></tr>
+              <tr><td>Union or intersection</td><td><code>type</code></td><td>Aliases handle composition very well.</td></tr>
+              <tr><td>Function signature</td><td>Either</td><td>Choose the clearer style for the team.</td></tr>
+              <tr><td>Mapped or conditional type</td><td><code>type</code></td><td>Advanced type expressions require aliases.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-narrowing" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-funnel-fill me-2 text-warning" aria-hidden="true"></i>Narrowing and Type Guards</h2>
+        <p class="mb-4">TypeScript often starts with a broad type like <code>string | number</code> or <code>unknown</code>. Narrowing is how you prove which branch is active.</p>
+
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">1</span>Built-in guards</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">function printId(id: string | number) {
+  if (typeof id === 'string') {
+    console.log(id.toUpperCase());
+    return;
+  }
+
+  console.log(id.toFixed(0));
+}</code></pre>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">2</span>Custom predicate</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">type User = { id: number; name: string };
+
+function isUser(value: unknown): value is User {
+  return typeof value === 'object'
+    &amp;&amp; value !== null
+    &amp;&amp; 'id' in value
+    &amp;&amp; 'name' in value;
+}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>Discriminated unions</h5>
+        <div class="code-wrapper">
+          <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">type LoadState =
+  | { status: 'idle' }
+  | { status: 'loading' }
+  | { status: 'success'; data: string[] }
+  | { status: 'error'; message: string };
+
+function render(state: LoadState) {
+  switch (state.status) {
+    case 'idle':
+      return 'Waiting';
+    case 'loading':
+      return 'Loading...';
+    case 'success':
+      return state.data.join(', ');
+    case 'error':
+      return state.message;
+  }
+}</code></pre>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-generics" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-boxes me-2 text-primary" aria-hidden="true"></i>Generics</h2>
+        <p class="mb-4">Generics let you write reusable logic while preserving the specific type flowing through it.</p>
+
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">1</span>Generic functions</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">function firstItem&lt;T&gt;(items: T[]): T | undefined {
+  return items[0];
+}
+
+const firstName = firstItem(['Ada', 'Grace']);
+const firstNumber = firstItem([10, 20, 30]);</code></pre>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">2</span>Generic interfaces</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">interface ApiResponse&lt;T&gt; {
+  success: boolean;
+  data: T;
+  message?: string;
+}
+
+type User = { id: number; name: string };
+
+const response: ApiResponse&lt;User[]&gt; = {
+  success: true,
+  data: [{ id: 1, name: 'Ada' }]
+};</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>Constraints</h5>
+        <div class="code-wrapper">
+          <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">function getId&lt;T extends { id: number }&gt;(value: T): number {
+  return value.id;
+}
+
+getId({ id: 42, name: 'Compiler' });
+// getId({ name: 'Missing id' }); // Error</code></pre>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-utility" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-tools me-2 text-success" aria-hidden="true"></i>Utility and Meta Types</h2>
+        <p class="mb-4">Utility types save you from rewriting the same object transformations over and over.</p>
+
+        <div class="table-responsive mb-4">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>Type</th><th>What it does</th><th>Short example</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>Partial&lt;T&gt;</code></td><td>Makes every property optional.</td><td><code>Partial&lt;User&gt;</code></td></tr>
+              <tr><td><code>Required&lt;T&gt;</code></td><td>Makes every property required.</td><td><code>Required&lt;Settings&gt;</code></td></tr>
+              <tr><td><code>Pick&lt;T, K&gt;</code></td><td>Selects a subset of keys.</td><td><code>Pick&lt;User, 'id' | 'name'&gt;</code></td></tr>
+              <tr><td><code>Omit&lt;T, K&gt;</code></td><td>Removes selected keys.</td><td><code>Omit&lt;User, 'password'&gt;</code></td></tr>
+              <tr><td><code>Record&lt;K, V&gt;</code></td><td>Creates a key-value object type.</td><td><code>Record&lt;string, number&gt;</code></td></tr>
+              <tr><td><code>ReturnType&lt;T&gt;</code></td><td>Extracts a function return type.</td><td><code>ReturnType&lt;typeof fetchUser&gt;</code></td></tr>
+              <tr><td><code>keyof T</code></td><td>Produces a union of property names.</td><td><code>keyof User</code></td></tr>
+              <tr><td><code>typeof value</code></td><td>Builds a type from a real variable.</td><td><code>type Theme = typeof theme</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="feature-card p-4 h-100">
+              <h5 class="sub-title mt-0"><i class="bi bi-pencil-square me-2 text-primary" aria-hidden="true"></i>Patch objects with <code>Partial</code></h5>
+              <div class="code-wrapper mb-0">
+                <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+function updateUser(id: number, patch: Partial&lt;User&gt;) {
+  return { id, ...patch };
+}</code></pre>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="feature-card p-4 h-100">
+              <h5 class="sub-title mt-0"><i class="bi bi-grid me-2 text-warning" aria-hidden="true"></i>Mapped types</h5>
+              <div class="code-wrapper mb-0">
+                <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">type Flags&lt;T&gt; = {
+  [K in keyof T]: boolean;
+};
+
+type FeaturePermissions = Flags&lt;{
+  darkMode: string;
+  exportCsv: string;
+}&gt;;</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-classes" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-building me-2 text-warning" aria-hidden="true"></i>Classes and OOP</h2>
+        <p class="mb-4">Classes are useful when you need instances, state, methods, inheritance, or framework-level class APIs. TypeScript adds strong typing to all of it.</p>
+
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">1</span>Class basics</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">class Wallet {
+  constructor(private balance = 0) {}
+
+  deposit(amount: number) {
+    this.balance += amount;
+  }
+
+  get currentBalance(): number {
+    return this.balance;
+  }
+}</code></pre>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">2</span>Interfaces + abstract classes</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">interface Logger {
+  log(message: string): void;
+}
+
+abstract class BaseService implements Logger {
+  abstract log(message: string): void;
+}
+
+class ConsoleService extends BaseService {
+  log(message: string) {
+    console.log(message);
+  }
+}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="note-box mt-4">
+          <p class="mb-0"><strong>Pragmatic advice:</strong> use classes when they model stateful objects clearly. For small reusable logic, plain functions plus typed objects are often simpler.</p>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-modules" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-box-arrow-in-right me-2 text-primary" aria-hidden="true"></i>Modules, Imports, and Declaration Files</h2>
+        <p class="mb-4">Modern TypeScript projects use ES modules. Declaration files are used to describe types for libraries or globals when TypeScript cannot infer them automatically.</p>
+
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">1</span>Exports and imports</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">// math.ts
+export function add(a: number, b: number): number {
+  return a + b;
+}
+
+export type Currency = 'USD' | 'EUR';
+
+// app.ts
+import { add, type Currency } from './math';
+
+const total = add(10, 5);
+const currency: Currency = 'USD';</code></pre>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">2</span>Declaration files</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">// env.d.ts
+declare namespace NodeJS {
+  interface ProcessEnv {
+    DATABASE_URL: string;
+    APP_ENV: 'development' | 'production';
+  }
+}
+
+// global.d.ts
+declare const APP_VERSION: string;</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="feature-card p-4 mt-3">
+          <h5 class="sub-title mt-0"><i class="bi bi-info-circle me-2 text-info" aria-hidden="true"></i>Namespaces?</h5>
+          <p class="small mb-0">Namespaces still exist in TypeScript, but for modern apps you almost always want modules with <code>import</code> and <code>export</code> instead.</p>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-async" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-cloud-arrow-down-fill me-2 text-info" aria-hidden="true"></i>Async Code, APIs, and JSON</h2>
+        <p class="mb-4">Asynchronous code is where runtime uncertainty meets compile-time types. The key is to type promises clearly and validate unknown external data.</p>
+
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">1</span>Typed async functions</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">type User = { id: number; name: string };
+
+async function fetchUser(id: number): Promise&lt;User&gt; {
+  const response = await fetch(`/api/users/${id}`);
+  const data = (await response.json()) as User;
+  return data;
+}</code></pre>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">2</span>Promise.all</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">const [user, posts] = await Promise.all([
+  fetchUser(1),
+  fetch('/api/posts').then(res =&gt; res.json() as Promise&lt;string[]&gt;)
+]);
+
+console.log(user.name, posts.length);</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="sub-title"><span class="step-num me-2">3</span>Important rule: types disappear at runtime</h5>
+        <div class="code-wrapper">
+          <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">type User = { id: number; name: string };
+
+function parseUser(value: unknown): User {
+  if (
+    typeof value === 'object' &amp;&amp;
+    value !== null &amp;&amp;
+    'id' in value &amp;&amp;
+    'name' in value
+  ) {
+    return value as User;
+  }
+
+  throw new Error('Invalid user payload');
+}</code></pre>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-dom" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-window me-2 text-success" aria-hidden="true"></i>DOM, Events, and Forms</h2>
+        <p class="mb-4">Browser work benefits a lot from TypeScript because the DOM API is large and easy to misuse.</p>
+
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">1</span>Typed form event</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">const form = document.querySelector&lt;HTMLFormElement&gt;('#signup-form');
+
+form?.addEventListener('submit', event =&gt; {
+  event.preventDefault();
+  const data = new FormData(event.currentTarget as HTMLFormElement);
+  console.log(data.get('email'));
+});</code></pre>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">2</span>Safe element access</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">const button = document.querySelector&lt;HTMLButtonElement&gt;('#save-btn');
+
+if (button) {
+  button.disabled = true;
+  button.textContent = 'Saving...';
+}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="feature-card p-4 mt-3">
+          <h5 class="sub-title mt-0"><i class="bi bi-lightbulb me-2 text-warning" aria-hidden="true"></i>Tip</h5>
+          <p class="small mb-0">Prefer selector generics like <code>querySelector&lt;HTMLInputElement&gt;()</code> over a blind assertion when possible. They keep the intent explicit.</p>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-tooling" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-cpu me-2 text-warning" aria-hidden="true"></i>Node, React, and Testing</h2>
+        <p class="mb-4">TypeScript is most useful when it describes boundaries between parts of your application: services, components, APIs, and tests.</p>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-4">
+            <div class="feature-card p-4 h-100 text-center">
+              <div class="icon-box tone-primary mx-auto mb-3"><i class="bi bi-hdd-network" aria-hidden="true"></i></div>
+              <h6 class="fw-bold">Node Services</h6>
+              <p class="small opacity-75 mb-0">Type environment variables, service inputs, and returned domain objects.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card p-4 h-100 text-center">
+              <div class="icon-box tone-success mx-auto mb-3"><i class="bi bi-window-stack" aria-hidden="true"></i></div>
+              <h6 class="fw-bold">React Components</h6>
+              <p class="small opacity-75 mb-0">Props, event handlers, API hooks, and state become easier to reason about.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card p-4 h-100 text-center">
+              <div class="icon-box tone-violet mx-auto mb-3"><i class="bi bi-check2-square" aria-hidden="true"></i></div>
+              <h6 class="fw-bold">Tests</h6>
+              <p class="small opacity-75 mb-0">Typed tests catch misuse of helpers, mocks, and component contracts.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">1</span>React props example</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-tsx">type ButtonProps = {
+  label: string;
+  disabled?: boolean;
+  onClick: () =&gt; void;
+};
+
+export function Button({ label, disabled = false, onClick }: ButtonProps) {
+  return (
+    &lt;button disabled={disabled} onClick={onClick}&gt;
+      {label}
+    &lt;/button&gt;
+  );
+}</code></pre>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <h5 class="sub-title"><span class="step-num me-2">2</span>Vitest example</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">import { describe, expect, it } from 'vitest';
+
+function add(a: number, b: number) {
+  return a + b;
+}
+
+describe('add', () =&gt; {
+  it('returns the total', () =&gt; {
+    expect(add(2, 3)).toBe(5);
+  });
+});</code></pre>
+            </div>
+          </div>
+          <div class="col-12">
+            <h5 class="sub-title"><span class="step-num me-2">3</span>Node service pattern</h5>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">type Order = {
+  id: string;
+  total: number;
+  status: 'pending' | 'paid';
+};
+
+class OrderService {
+  markPaid(order: Order): Order {
+    return { ...order, status: 'paid' };
+  }
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-errors" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-bug-fill me-2 text-danger" aria-hidden="true"></i>Common TypeScript Errors and How to Think About Them</h2>
+        <p class="mb-4">Most compiler errors are not random. They are TypeScript telling you that your code contract is unclear, incomplete, or impossible.</p>
+
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small">
+            <thead class="table-dark">
+              <tr><th>Error shape</th><th>What it usually means</th><th>Typical fix</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>Type 'string | undefined' is not assignable...</code></td><td>A value may be missing.</td><td>Check it, provide a default, or change the target type.</td></tr>
+              <tr><td><code>Object is possibly 'null'</code></td><td>You are using a DOM or API value without checking it exists.</td><td>Narrow with <code>if (value)</code> first.</td></tr>
+              <tr><td><code>Property does not exist on type ...</code></td><td>You used a property before proving the object shape.</td><td>Use narrowing, a better type, or a predicate function.</td></tr>
+              <tr><td><code>Argument of type 'X' is not assignable to 'Y'</code></td><td>You passed the wrong shape into a function.</td><td>Align the caller with the function contract.</td></tr>
+              <tr><td><code>Type 'never'...</code></td><td>Your narrowing reached an impossible branch or a union is fully exhausted.</td><td>Review the union and switch branches.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-wrapper">
+          <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"><i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy</button>
+<pre><code class="language-typescript">type User = { email?: string };
+
+function sendEmail(user: User) {
+  if (!user.email) {
+    throw new Error('Missing email');
+  }
+
+  // From here, TypeScript knows email is string.
+  console.log(user.email.toLowerCase());
+}</code></pre>
+        </div>
+
+        <div class="note-box mt-3">
+          <p class="mb-0"><strong>Debug flow:</strong> read the full compiler message, inspect the source type, inspect the target type, and then decide whether the contract or the data is wrong.</p>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-az" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-grid-3x3-gap-fill me-2 text-primary" aria-hidden="true"></i>A to Z Topic Map</h2>
+        <p class="mb-4">Use this as a fast revision index. Each letter points to a concept worth remembering.</p>
+
+        <div class="topic-grid">
+          <div class="feature-card topic-card"><div class="topic-letter">A</div><h6 class="fw-semibold">Any and Await</h6><p class="small opacity-75 mb-0">Avoid <code>any</code>; understand <code>await</code> return types.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">B</div><h6 class="fw-semibold">Build</h6><p class="small opacity-75 mb-0">Use <code>tsc</code> for production builds and <code>--noEmit</code> for CI checks.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">C</div><h6 class="fw-semibold">Classes</h6><p class="small opacity-75 mb-0">Constructors, access modifiers, getters, setters, abstract classes.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">D</div><h6 class="fw-semibold">Declaration Files</h6><p class="small opacity-75 mb-0">Use <code>.d.ts</code> files for globals, env vars, and untyped libraries.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">E</div><h6 class="fw-semibold">Enums</h6><p class="small opacity-75 mb-0">Available, but literal unions are often simpler in app code.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">F</div><h6 class="fw-semibold">Functions</h6><p class="small opacity-75 mb-0">Type parameters, returns, overloads, callbacks, and rest arguments.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">G</div><h6 class="fw-semibold">Generics</h6><p class="small opacity-75 mb-0">Reusable functions and structures that preserve the caller type.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">H</div><h6 class="fw-semibold">Handlers</h6><p class="small opacity-75 mb-0">Type DOM, form, and React event handlers explicitly.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">I</div><h6 class="fw-semibold">Interfaces</h6><p class="small opacity-75 mb-0">Good for public object contracts and extendable models.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">J</div><h6 class="fw-semibold">JavaScript Interop</h6><p class="small opacity-75 mb-0">TypeScript compiles to JS and works incrementally with existing JS code.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">K</div><h6 class="fw-semibold">keyof</h6><p class="small opacity-75 mb-0">Use <code>keyof</code> to express valid property names.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">L</div><h6 class="fw-semibold">Literal Types</h6><p class="small opacity-75 mb-0">Great for finite states like <code>'idle' | 'loading'</code>.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">M</div><h6 class="fw-semibold">Modules</h6><p class="small opacity-75 mb-0">Prefer ESM import/export over namespaces.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">N</div><h6 class="fw-semibold">Narrowing</h6><p class="small opacity-75 mb-0">Use <code>typeof</code>, <code>in</code>, predicates, and discriminated unions.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">O</div><h6 class="fw-semibold">Optional Properties</h6><p class="small opacity-75 mb-0">Remember optional values usually include <code>undefined</code>.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">P</div><h6 class="fw-semibold">Partial and Pick</h6><p class="small opacity-75 mb-0">Utility types let you reshape existing contracts quickly.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">Q</div><h6 class="fw-semibold">Quick Scripts</h6><p class="small opacity-75 mb-0">Use <code>tsx</code> for local scripts and automation.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">R</div><h6 class="fw-semibold">Record and ReturnType</h6><p class="small opacity-75 mb-0">Useful for dictionaries and deriving types from functions.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">S</div><h6 class="fw-semibold">Strict Mode</h6><p class="small opacity-75 mb-0">The single most important compiler setting for quality.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">T</div><h6 class="fw-semibold">Tuples and Type Aliases</h6><p class="small opacity-75 mb-0">Fixed positions and composable type expressions.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">U</div><h6 class="fw-semibold">Unknown</h6><p class="small opacity-75 mb-0">The safe replacement for <code>any</code> when data is untrusted.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">V</div><h6 class="fw-semibold">Validation</h6><p class="small opacity-75 mb-0">Types do not validate runtime payloads; you still need checks.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">W</div><h6 class="fw-semibold">Watch Mode</h6><p class="small opacity-75 mb-0">Use <code>tsc --watch</code> or <code>tsx watch</code> while developing.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">X</div><h6 class="fw-semibold">JSX / TSX</h6><p class="small opacity-75 mb-0">React components use <code>.tsx</code> files when they contain JSX.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">Y</div><h6 class="fw-semibold">Why Types</h6><p class="small opacity-75 mb-0">Types improve communication as much as they improve safety.</p></div>
+          <div class="feature-card topic-card"><div class="topic-letter">Z</div><h6 class="fw-semibold">Zero Runtime Cost</h6><p class="small opacity-75 mb-0">Most TypeScript types are erased during compilation.</p></div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section id="sec-best" class="mb-5">
+        <h2 class="section-title"><i class="bi bi-check2-circle me-2 text-success" aria-hidden="true"></i>Best Practices</h2>
+
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="feature-card p-4 h-100">
+              <h5 class="sub-title mt-0"><i class="bi bi-check-lg me-2 text-success" aria-hidden="true"></i>Do this</h5>
+              <ul class="check-list">
+                <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Keep <code>strict: true</code> enabled.</span></li>
+                <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Model states with unions instead of booleans and magic strings.</span></li>
+                <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Use interfaces or aliases to document domain models clearly.</span></li>
+                <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Validate API input and JSON data at runtime.</span></li>
+                <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Run <code>tsc --noEmit</code> in CI even when you use a fast bundler.</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="feature-card p-4 h-100">
+              <h5 class="sub-title mt-0"><i class="bi bi-x-lg me-2 text-danger" aria-hidden="true"></i>Avoid this</h5>
+              <ul class="check-list">
+                <li><i class="bi bi-dash-circle-fill text-danger" aria-hidden="true"></i><span>Do not silence errors with <code>any</code> unless you truly have no better boundary.</span></li>
+                <li><i class="bi bi-dash-circle-fill text-danger" aria-hidden="true"></i><span>Do not use type assertions as a substitute for real checks.</span></li>
+                <li><i class="bi bi-dash-circle-fill text-danger" aria-hidden="true"></i><span>Do not write clever generic types when a simpler contract is enough.</span></li>
+                <li><i class="bi bi-dash-circle-fill text-danger" aria-hidden="true"></i><span>Do not ignore compiler warnings and assume tests will catch everything.</span></li>
+                <li><i class="bi bi-dash-circle-fill text-danger" aria-hidden="true"></i><span>Do not forget that browser and Node environments expose different globals and libs.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="feature-card p-4 mt-3">
+          <h5 class="sub-title mt-0"><i class="bi bi-flag me-2 text-primary" aria-hidden="true"></i>Practical project checklist</h5>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <ul class="check-list">
+                <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Use <code>src/</code> and <code>dist/</code> separation.</span></li>
+                <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Add <code>typecheck</code>, <code>lint</code>, and <code>test</code> scripts.</span></li>
+                <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Keep environment variable types in <code>env.d.ts</code>.</span></li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <ul class="check-list">
+                <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Prefer precise unions over generic <code>string</code> when values are finite.</span></li>
+                <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Use runtime validation at API boundaries.</span></li>
+                <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>Document tricky types with examples, not only comments.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="text-center py-4 mt-4" style="border-top: 1px solid rgba(128, 128, 128, 0.16);">
+      <p class="small opacity-50 mb-0"><i class="bi bi-filetype-tsx text-primary me-1" aria-hidden="true"></i>TypeScript Complete Guide &mdash; Bootstrap 5, copy-ready code, and theme toggle</p>
+    </footer>
+  </main>
+
+  <button id="backTop" type="button" aria-label="Back to top">
+    <i class="bi bi-arrow-up" aria-hidden="true"></i>
+  </button>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/highlight.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('pre code').forEach((element) =&gt; hljs.highlightElement(element));
+    });
+
+    const html = document.documentElement;
+    const toggleBtn = document.getElementById('themeToggle');
+    const hljsDark = document.getElementById('hljs-theme-dark');
+    const hljsLight = document.getElementById('hljs-theme-light');
+    const themeStorageKey = 'ts-guide-theme';
+
+    function applyTheme(theme) {
+      html.setAttribute('data-bs-theme', theme);
+      toggleBtn.innerHTML = theme === 'dark'
+        ? '<i class="bi bi-sun-fill" aria-hidden="true"></i>'
+        : '<i class="bi bi-moon-fill" aria-hidden="true"></i>';
+      hljsDark.disabled = theme !== 'dark';
+      hljsLight.disabled = theme !== 'light';
+      localStorage.setItem(themeStorageKey, theme);
+    }
+
+    toggleBtn.addEventListener('click', () =&gt; {
+      const nextTheme = html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+      applyTheme(nextTheme);
+    });
+
+    const savedTheme = localStorage.getItem(themeStorageKey);
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      applyTheme(savedTheme);
+    }
+
+    const navLinks = document.querySelectorAll('[data-guide-nav] .nav-link');
+    const sections = document.querySelectorAll('section[id]');
+
+    const observer = new IntersectionObserver((entries) =&gt; {
+      entries.forEach((entry) =&gt; {
+        if (!entry.isIntersecting) {
+          return;
+        }
+
+        navLinks.forEach((link) =&gt; link.classList.remove('active'));
+        document
+          .querySelectorAll(`[data-guide-nav] a[href="#${entry.target.id}"]`)
+          .forEach((link) =&gt; link.classList.add('active'));
+      });
+    }, { rootMargin: '-40% 0px -50% 0px' });
+
+    sections.forEach((section) =&gt; observer.observe(section));
+
+    const backTop = document.getElementById('backTop');
+    window.addEventListener('scroll', () =&gt; {
+      backTop.classList.toggle('show', window.scrollY &gt; 400);
+    });
+
+    backTop.addEventListener('click', () =&gt; {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    document.querySelectorAll('.copy-btn').forEach((button) =&gt; {
+      button.addEventListener('click', async () =&gt; {
+        const wrapper = button.closest('.code-wrapper');
+        const code = wrapper ? wrapper.querySelector('code') : null;
+        if (!code) {
+          return;
+        }
+
+        const originalLabel = button.innerHTML;
+
+        try {
+          await navigator.clipboard.writeText(code.innerText);
+          button.innerHTML = '<i class="bi bi-check-lg me-1" aria-hidden="true"></i>Copied!';
+        } catch {
+          button.innerHTML = '<i class="bi bi-x-lg me-1" aria-hidden="true"></i>Copy failed';
+        }
+
+        window.setTimeout(() =&gt; {
+          button.innerHTML = originalLabel;
+        }, 1800);
+      });
+    });
+  </script>
+</body>
+</html>
