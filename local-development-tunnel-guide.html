@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Complete Localtunnel local development tunnel guide for Next.js, Laravel, React, Vue, Angular, APIs, Django, PHP, and WordPress.">
+  <title>Local Development Tunnel Guide | Localtunnel</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #6d5dfc;
+      --secondary: #8f6ffc;
+      --dark: #111827;
+      --muted: #6b7280;
+      --soft-bg: #f7f8fc;
+      --border: #e5e7eb;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 90px;
+    }
+
+    body {
+      color: var(--dark);
+      background: var(--soft-bg);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .navbar {
+      background: rgba(17, 24, 39, .94);
+      backdrop-filter: blur(12px);
+    }
+
+    .navbar-brand {
+      font-weight: 800;
+      letter-spacing: -.5px;
+    }
+
+    .hero {
+      min-height: 560px;
+      display: flex;
+      align-items: center;
+      color: #fff;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,.16), transparent 28%),
+        radial-gradient(circle at 90% 10%, rgba(255,255,255,.12), transparent 24%),
+        linear-gradient(135deg, #111827, #312e81 52%, #6d5dfc);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 850;
+      letter-spacing: -3px;
+    }
+
+    .hero p {
+      max-width: 760px;
+      color: rgba(255,255,255,.78);
+      font-size: 1.15rem;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #c4b5fd, #f0abfc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .glass-card {
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.1);
+      backdrop-filter: blur(14px);
+      border-radius: 22px;
+    }
+
+    .section-title {
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .section-subtitle {
+      color: var(--muted);
+    }
+
+    .content-card,
+    .tech-card,
+    .command-card {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 8px 30px rgba(17, 24, 39, .05);
+    }
+
+    .content-card {
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .tech-card {
+      height: 100%;
+      padding: 1.5rem;
+      transition: .25s ease;
+    }
+
+    .tech-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 35px rgba(17, 24, 39, .1);
+    }
+
+    .tech-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      border-radius: 14px;
+      font-size: 1.35rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 100px;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+    }
+
+    .sidebar .nav-link {
+      color: #4b5563;
+      border-radius: 10px;
+      padding: .55rem .75rem;
+      font-size: .92rem;
+    }
+
+    .sidebar .nav-link:hover,
+    .sidebar .nav-link.active {
+      color: var(--primary);
+      background: #ede9fe;
+      font-weight: 600;
+    }
+
+    pre {
+      position: relative;
+      padding: 1.25rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      color: #e5e7eb;
+      background: #111827;
+      border: 1px solid #273449;
+      border-radius: 13px;
+      font-size: .9rem;
+    }
+
+    code {
+      color: #7c3aed;
+    }
+
+    pre code {
+      color: inherit;
+    }
+
+    .terminal-label {
+      display: inline-block;
+      margin-bottom: -1px;
+      padding: .35rem .7rem;
+      color: #c4b5fd;
+      background: #1f2937;
+      border-radius: 8px 8px 0 0;
+      font-size: .78rem;
+      font-weight: 700;
+    }
+
+    .flow-step {
+      position: relative;
+      height: 100%;
+      padding: 1.35rem;
+      text-align: center;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid var(--border);
+    }
+
+    .flow-number {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto .75rem;
+      color: #fff;
+      border-radius: 50%;
+      background: var(--primary);
+      font-weight: 700;
+    }
+
+    .badge-soft {
+      color: #5b21b6;
+      background: #ede9fe;
+    }
+
+    .table {
+      vertical-align: middle;
+    }
+
+    footer {
+      color: #9ca3af;
+      background: #111827;
+    }
+
+    @media (max-width: 991px) {
+      .sidebar {
+        position: static;
+        max-height: none;
+      }
+
+      .hero {
+        min-height: 480px;
+      }
+    }
+  </style>
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#guideNavigation" data-bs-offset="110">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="bi bi-broadcast-pin me-2 text-primary"></i>
+        Tunnel<span class="text-primary">Guide</span>
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item"><a class="nav-link" href="#what-is-localtunnel">What Is Localtunnel?</a></li>
+          <li class="nav-item"><a class="nav-link" href="#install">Install</a></li>
+          <li class="nav-item"><a class="nav-link" href="#frameworks">Frameworks</a></li>
+          <li class="nav-item"><a class="nav-link" href="#troubleshooting">Troubleshooting</a></li>
+          <li class="nav-item">
+            <a class="btn btn-primary btn-sm px-3" href="#cheat-sheet">Cheat Sheet</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="container py-5">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-7">
+          <span class="badge rounded-pill bg-light text-dark px-3 py-2 mb-4">
+            <i class="bi bi-lightning-charge-fill text-warning me-1"></i>
+            Local Development Made Public
+          </span>
+
+          <h1 class="mb-4">
+            Local Development<br>
+            <span class="gradient-text">Tunnel Guide</span>
+          </h1>
+
+          <p class="mb-4">
+            A complete A–Z guide to exposing your local applications publicly
+            using Localtunnel.
+          </p>
+
+          <div class="d-flex flex-wrap gap-3">
+            <a href="#install" class="btn btn-light btn-lg px-4">
+              <i class="bi bi-rocket-takeoff me-2"></i>
+              Get Started
+            </a>
+            <a href="#frameworks" class="btn btn-outline-light btn-lg px-4">
+              Explore Frameworks
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-5">
+          <div class="glass-card p-4">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span class="rounded-circle bg-danger p-1"></span>
+              <span class="rounded-circle bg-warning p-1"></span>
+              <span class="rounded-circle bg-success p-1"></span>
+              <span class="ms-auto small text-white-50">localtunnel</span>
+            </div>
+
+            <pre class="mb-0"><code>$ lt --port 3000
+
+your url is:
+https://your-app.loca.lt</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container py-5">
+    <div class="row g-5">
+
+      <!-- Sidebar -->
+      <aside class="col-lg-3">
+        <div class="sidebar">
+          <div class="content-card p-3">
+            <h6 class="fw-bold mb-3">
+              <i class="bi bi-list-ul me-2 text-primary"></i>
+              On this page
+            </h6>
+
+            <nav id="guideNavigation" class="nav flex-column">
+              <a class="nav-link" href="#what-is-localtunnel">1. What Is Localtunnel?</a>
+              <a class="nav-link" href="#install">2. Install Localtunnel</a>
+              <a class="nav-link" href="#basic-command">3. Basic Command</a>
+              <a class="nav-link" href="#subdomain">4. Custom Subdomain</a>
+              <a class="nav-link" href="#frameworks">5–13. Frameworks</a>
+              <a class="nav-link" href="#ports">14. Common Ports</a>
+              <a class="nav-link" href="#multiple-apps">15. Multiple Apps</a>
+              <a class="nav-link" href="#custom-domain">16. Custom Domains</a>
+              <a class="nav-link" href="#databases">17. Databases</a>
+              <a class="nav-link" href="#troubleshooting">18. Troubleshooting</a>
+              <a class="nav-link" href="#cheat-sheet">19. Cheat Sheet</a>
+              <a class="nav-link" href="#final-concept">Final Concept</a>
+            </nav>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <section class="col-lg-9">
+
+        <!-- What is Localtunnel -->
+        <section id="what-is-localtunnel" class="content-card">
+          <span class="badge badge-soft rounded-pill mb-3">01 — Overview</span>
+          <h2 class="section-title">What Is Localtunnel?</h2>
+          <p class="section-subtitle">
+            Localtunnel creates a public URL that forwards traffic to your local application.
+          </p>
+
+          <div class="row align-items-center g-4 mt-2">
+            <div class="col-md-6">
+              <div class="p-4 rounded-4 bg-light text-center">
+                <div class="fw-bold mb-3">Public Internet</div>
+                <div class="text-primary fs-3">↓</div>
+                <div class="fw-bold text-primary">your-app.loca.lt</div>
+                <div class="text-primary fs-3">↓</div>
+                <div>Localtunnel</div>
+                <div class="text-primary fs-3">↓</div>
+                <div class="fw-bold">localhost:PORT</div>
+                <div class="text-primary fs-3">↓</div>
+                <div>Your Application</div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <p>Localtunnel works with almost any HTTP application, including:</p>
+              <div class="d-flex flex-wrap gap-2">
+                <span class="badge badge-soft">Next.js</span>
+                <span class="badge badge-soft">Laravel</span>
+                <span class="badge badge-soft">React</span>
+                <span class="badge badge-soft">Vue</span>
+                <span class="badge badge-soft">Angular</span>
+                <span class="badge badge-soft">Node.js</span>
+                <span class="badge badge-soft">PHP</span>
+                <span class="badge badge-soft">WordPress</span>
+                <span class="badge badge-soft">Django</span>
+                <span class="badge badge-soft">APIs</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Install -->
+        <section id="install" class="content-card">
+          <span class="badge badge-soft rounded-pill mb-3">02 — Installation</span>
+          <h2 class="section-title">Install Localtunnel</h2>
+
+          <h5 class="mt-4">Requirements</h5>
+          <ul>
+            <li>Node.js</li>
+            <li>npm</li>
+          </ul>
+
+          <p>Check that Node.js and npm are installed:</p>
+
+          <pre><code>node -v
+npm -v</code></pre>
+
+          <p>Install Localtunnel globally:</p>
+
+          <pre><code>npm install -g localtunnel</code></pre>
+
+          <p>Verify the installation:</p>
+
+          <pre><code>lt --version</code></pre>
+        </section>
+
+        <!-- Basic command -->
+        <section id="basic-command" class="content-card">
+          <span class="badge badge-soft rounded-pill mb-3">03 — First Tunnel</span>
+          <h2 class="section-title">Basic Localtunnel Command</h2>
+
+          <p>Use the following format:</p>
+
+          <pre><code>lt --port PORT_NUMBER</code></pre>
+
+          <p>Example:</p>
+
+          <pre><code>lt --port 3000</code></pre>
+
+          <p>Localtunnel will return a public URL similar to:</p>
+
+          <pre><code>your url is:
+https://random-name.loca.lt</code></pre>
+
+          <div class="alert alert-info border-0">
+            <i class="bi bi-info-circle-fill me-2"></i>
+            Open the generated HTTPS URL in your browser.
+          </div>
+        </section>
+
+        <!-- Subdomain -->
+        <section id="subdomain" class="content-card">
+          <span class="badge badge-soft rounded-pill mb-3">04 — Branding</span>
+          <h2 class="section-title">Custom Localtunnel Subdomain</h2>
+
+          <p>Use this format:</p>
+
+          <pre><code>lt --port PORT --subdomain NAME</code></pre>
+
+          <p>Example:</p>
+
+          <pre><code>lt --port 3000 --subdomain myapp</code></pre>
+
+          <p>Your public URL will be:</p>
+
+          <pre><code>https://myapp.loca.lt</code></pre>
+
+          <div class="alert alert-warning border-0">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            A custom subdomain may be unavailable if another user is already using it.
+          </div>
+        </section>
+
+        <!-- Frameworks -->
+        <section id="frameworks">
+          <div class="mb-4">
+            <span class="badge badge-soft rounded-pill mb-3">05–13 — Frameworks</span>
+            <h2 class="section-title">Framework Integrations</h2>
+            <p class="section-subtitle">
+              Start your application first, then expose its local port using Localtunnel.
+            </p>
+          </div>
+
+          <div class="row g-4">
+
+            <!-- Next.js -->
+            <div class="col-md-6">
+              <article class="tech-card">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                  <div class="tech-icon"><i class="bi bi-triangle-fill"></i></div>
+                  <div>
+                    <h4 class="mb-0">Next.js</h4>
+                    <small class="text-muted">Port 3000</small>
+                  </div>
+                </div>
+
+                <pre><code>npm install
+npm run dev</code></pre>
+
+                <p class="small text-muted">Default URL: http://localhost:3000</p>
+
+                <p class="fw-semibold mb-2">Recommended production mode:</p>
+
+                <pre><code>npm run build
+npm start
+lt --port 3000</code></pre>
+
+                <p class="small text-muted mb-0">
+                  Production mode avoids common HMR WebSocket errors.
+                </p>
+              </article>
+            </div>
+
+            <!-- Laravel -->
+            <div class="col-md-6">
+              <article class="tech-card">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                  <div class="tech-icon"><i class="bi bi-droplet-fill"></i></div>
+                  <div>
+                    <h4 class="mb-0">Laravel</h4>
+                    <small class="text-muted">Port 8000</small>
+                  </div>
+                </div>
+
+                <pre><code>php artisan serve
+lt --port 8000</code></pre>
+
+                <p class="small text-muted">Default URL: http://127.0.0.1:8000</p>
+
+                <p class="fw-semibold mb-2">Custom subdomain:</p>
+
+                <pre><code>lt --port 8000 --subdomain laravelapp</code></pre>
+
+                <p class="small text-muted mb-0">
+                  Public URL: https://laravelapp.loca.lt
+                </p>
+              </article>
+            </div>
+
+            <!-- React -->
+            <div class="col-md-6">
+              <article class="tech-card">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                  <div class="tech-icon"><i class="bi bi-atom"></i></div>
+                  <div>
+                    <h4 class="mb-0">React</h4>
+                    <small class="text-muted">Port 5173</small>
+                  </div>
+                </div>
+
+                <pre><code>npm run dev
+lt --port 5173</code></pre>
+
+                <p class="small text-muted mb-0">
+                  Default URL: http://localhost:5173
+                </p>
+              </article>
+            </div>
+
+            <!-- Vue -->
+            <div class="col-md-6">
+              <article class="tech-card">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                  <div class="tech-icon"><i class="bi bi-code-slash"></i></div>
+                  <div>
+                    <h4 class="mb-0">Vue</h4>
+                    <small class="text-muted">Port 5173</small>
+                  </div>
+                </div>
+
+                <pre><code>npm run dev
+lt --port 5173</code></pre>
+
+                <p class="small text-muted mb-0">
+                  Default URL: http://localhost:5173
+                </p>
+              </article>
+            </div>
+
+            <!-- Angular -->
+            <div class="col-md-6">
+              <article class="tech-card">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                  <div class="tech-icon"><i class="bi bi-shield-fill"></i></div>
+                  <div>
+                    <h4 class="mb-0">Angular</h4>
+                    <small class="text-muted">Port 4200</small>
+                  </div>
+                </div>
+
+                <pre><code>ng serve
+lt --port 4200</code></pre>
+
+                <p class="small text-muted mb-0">
+                  Default URL: http://localhost:4200
+                </p>
+              </article>
+            </div>
+
+            <!-- Express -->
+            <div class="col-md-6">
+              <article class="tech-card">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                  <div class="tech-icon"><i class="bi bi-server"></i></div>
+                  <div>
+                    <h4 class="mb-0">Express API</h4>
+                    <small class="text-muted">Port 5000</small>
+                  </div>
+                </div>
+
+                <pre><code>node server.js
+lt --port 5000</code></pre>
+
+                <p class="small text-muted mb-0">
+                  Example endpoint: https://api.loca.lt/users
+                </p>
+              </article>
+            </div>
+
+            <!-- PHP -->
+            <div class="col-md-6">
+              <article class="tech-card">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                  <div class="tech-icon"><i class="bi bi-filetype-php"></i></div>
+                  <div>
+                    <h4 class="mb-0">PHP / WordPress</h4>
+                    <small class="text-muted">Port 80</small>
+                  </div>
+                </div>
+
+                <pre><code>lt --port 80</code></pre>
+
+                <p class="small text-muted mb-0">
+                  Example URL: https://wordpress.loca.lt
+                </p>
+              </article>
+            </div>
+
+            <!-- Django -->
+            <div class="col-md-6">
+              <article class="tech-card">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                  <div class="tech-icon"><i class="bi bi-database-fill"></i></div>
+                  <div>
+                    <h4 class="mb-0">Django</h4>
+                    <small class="text-muted">Port 8000</small>
+                  </div>
+                </div>
+
+                <pre><code>python manage.py runserver
+lt --port 8000</code></pre>
+
+                <p class="small text-muted mb-0">
+                  Default URL: http://localhost:8000
+                </p>
+              </article>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Laravel HTTPS -->
+        <section id="laravel-https" class="content-card mt-5">
+          <span class="badge badge-soft rounded-pill mb-3">Laravel Fix</span>
+          <h2 class="section-title">Laravel HTTPS Form Warning Fix</h2>
+
+          <p>You may see this warning:</p>
+
+          <pre><code>The information that you’re about to submit is not secure</code></pre>
+
+          <p>
+            Laravel may generate HTTP URLs while Localtunnel uses HTTPS.
+            Update your Laravel configuration to use the tunnel URL.
+          </p>
+
+          <h5>Update `.env`</h5>
+
+          <pre><code>APP_URL=https://laravelapp.loca.lt</code></pre>
+
+          <h5>Clear Laravel Cache</h5>
+
+          <pre><code>php artisan config:clear
+php artisan cache:clear</code></pre>
+
+          <h5>Force HTTPS</h5>
+
+          <p>Open:</p>
+
+          <pre><code>app/Providers/AppServiceProvider.php</code></pre>
+
+          <p>Add the import:</p>
+
+          <pre><code>use Illuminate\Support\Facades\URL;</code></pre>
+
+          <p>Update the <code>boot()</code> method:</p>
+
+          <pre><code>public function boot(): void
+{
+    URL::forceScheme('https');
+}</code></pre>
+
+          <p>Finally, clear the optimization cache:</p>
+
+          <pre><code>php artisan optimize:clear</code></pre>
+        </section>
+
+        <!-- Ports -->
+        <section id="ports" class="content-card">
+          <span class="badge badge-soft rounded-pill mb-3">14 — Reference</span>
+          <h2 class="section-title">Common Ports</h2>
+
+          <div class="table-responsive mt-4">
+            <table class="table table-hover">
+              <thead class="table-dark">
+                <tr>
+                  <th>Technology</th>
+                  <th>Default Port</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Next.js</td><td><code>3000</code></td></tr>
+                <tr><td>Laravel</td><td><code>8000</code></td></tr>
+                <tr><td>React</td><td><code>5173</code></td></tr>
+                <tr><td>Vue</td><td><code>5173</code></td></tr>
+                <tr><td>Angular</td><td><code>4200</code></td></tr>
+                <tr><td>Express API</td><td><code>5000</code></td></tr>
+                <tr><td>Django</td><td><code>8000</code></td></tr>
+                <tr><td>Apache / WAMP</td><td><code>80</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Multiple Apps -->
+        <section id="multiple-apps" class="content-card">
+          <span class="badge badge-soft rounded-pill mb-3">15 — Scaling</span>
+          <h2 class="section-title">Multiple Applications</h2>
+
+          <p>You can run multiple tunnels at the same time, each pointing to a different local port.</p>
+
+          <div class="row g-3 my-3">
+            <div class="col-md-4">
+              <div class="p-3 rounded-4 bg-light text-center">
+                <strong class="text-primary">nextapp.loca.lt</strong>
+                <div class="small text-muted mt-2">localhost:3000</div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="p-3 rounded-4 bg-light text-center">
+                <strong class="text-primary">laravelapp.loca.lt</strong>
+                <div class="small text-muted mt-2">localhost:8000</div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="p-3 rounded-4 bg-light text-center">
+                <strong class="text-primary">api.loca.lt</strong>
+                <div class="small text-muted mt-2">localhost:5000</div>
+              </div>
+            </div>
+          </div>
+
+          <pre><code># Next.js
+lt --port 3000 --subdomain nextapp
+
+# Laravel
+lt --port 8000 --subdomain laravelapp
+
+# API
+lt --port 5000 --subdomain api</code></pre>
+        </section>
+
+        <!-- Custom Domain -->
+        <section id="custom-domain" class="content-card">
+          <span class="badge badge-soft rounded-pill mb-3">16 — Domains</span>
+          <h2 class="section-title">Custom Domain Information</h2>
+
+          <p>Localtunnel supports subdomains under:</p>
+
+          <pre><code>yourname.loca.lt</code></pre>
+
+          <p>Example:</p>
+
+          <pre><code>laravelapp.loca.lt</code></pre>
+
+          <p>It does not normally provide arbitrary domains such as:</p>
+
+          <pre><code>app.yourdomain.com</code></pre>
+
+          <p>For a real custom domain, consider:</p>
+
+          <ul>
+            <li>Cloudflare Tunnel</li>
+            <li>ngrok with a custom domain</li>
+            <li>A VPS with Nginx</li>
+            <li>Another reverse-proxy service</li>
+          </ul>
+        </section>
+
+        <!-- Databases -->
+        <section id="databases" class="content-card">
+          <span class="badge badge-soft rounded-pill mb-3">17 — Databases</span>
+          <h2 class="section-title">Database Information</h2>
+
+          <p>
+            Localtunnel exposes HTTP applications. It does not directly expose database services.
+          </p>
+
+          <div class="row g-4 mt-2">
+            <div class="col-md-6">
+              <div class="p-4 rounded-4 border border-success-subtle bg-success-subtle h-100">
+                <h5 class="text-success">
+                  <i class="bi bi-check-circle-fill me-2"></i>
+                  Works with Localtunnel
+                </h5>
+                <ul class="mb-0">
+                  <li>Laravel</li>
+                  <li>Next.js</li>
+                  <li>React</li>
+                  <li>Vue</li>
+                  <li>Angular</li>
+                  <li>APIs</li>
+                  <li>WordPress</li>
+                  <li>PHP</li>
+                  <li>Django</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="p-4 rounded-4 border border-danger-subtle bg-danger-subtle h-100">
+                <h5 class="text-danger">
+                  <i class="bi bi-x-circle-fill me-2"></i>
+                  Not Directly Supported
+                </h5>
+                <ul class="mb-0">
+                  <li>MySQL</li>
+                  <li>PostgreSQL</li>
+                  <li>MongoDB</li>
+                  <li>Redis</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <p class="mt-4 mb-2">Database access generally requires:</p>
+
+          <ul>
+            <li>SSH tunneling</li>
+            <li>A VPN</li>
+            <li>A hosted database</li>
+            <li>A database-specific secure access solution</li>
+          </ul>
+        </section>
+
+        <!-- Troubleshooting -->
+        <section id="troubleshooting" class="content-card">
+          <span class="badge badge-soft rounded-pill mb-3">18 — Support</span>
+          <h2 class="section-title">Troubleshooting</h2>
+
+          <h5 class="mt-4">Check the Local Application First</h5>
+
+          <p>
+            Verify that your application works locally before creating the tunnel.
+          </p>
+
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Application</th>
+                  <th>Local URL</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Next.js</td><td><code>http://localhost:3000</code></td></tr>
+                <tr><td>Laravel</td><td><code>http://localhost:8000</code></td></tr>
+                <tr><td>React</td><td><code>http://localhost:5173</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="alert alert-danger border-0 mt-4">
+            <i class="bi bi-exclamation-octagon-fill me-2"></i>
+            If the application does not work locally, the tunnel will not work either.
+          </div>
+
+          <h5 class="mt-4">Use the HTTPS URL</h5>
+
+          <p>Use:</p>
+
+          <pre><code>https://app-name.loca.lt</code></pre>
+
+          <p>Avoid:</p>
+
+          <pre><code>http://app-name.loca.lt</code></pre>
+
+          <h5 class="mt-4">Confirm the Port</h5>
+
+          <p>
+            The port passed to Localtunnel must match the port used by your application.
+          </p>
+
+          <pre><code># Application runs on port 8000
+lt --port 8000</code></pre>
+
+          <h5 class="mt-4">Keep Both Terminals Running</h5>
+
+          <ul>
+            <li>Terminal 1: Run the application</li>
+            <li>Terminal 2: Run Localtunnel</li>
+          </ul>
+        </section>
+
+        <!-- Cheat Sheet -->
+        <section id="cheat-sheet" class="content-card">
+          <span class="badge badge-soft rounded-pill mb-3">19 — Quick Reference</span>
+          <h2 class="section-title">Quick Command Cheat Sheet</h2>
+
+          <div class="row g-4 mt-2">
+            <div class="col-md-6">
+              <div class="command-card p-4 h-100">
+                <h5><i class="bi bi-triangle-fill text-primary me-2"></i>Next.js</h5>
+                <pre><code>npm run build
+npm start
+lt --port 3000</code></pre>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="command-card p-4 h-100">
+                <h5><i class="bi bi-droplet-fill text-danger me-2"></i>Laravel</h5>
+                <pre><code>php artisan serve
+lt --port 8000</code></pre>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="command-card p-4 h-100">
+                <h5><i class="bi bi-atom text-info me-2"></i>React</h5>
+                <pre><code>npm run dev
+lt --port 5173</code></pre>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="command-card p-4 h-100">
+                <h5><i class="bi bi-code-slash text-success me-2"></i>Vue</h5>
+                <pre><code>npm run dev
+lt --port 5173</code></pre>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="command-card p-4 h-100">
+                <h5><i class="bi bi-shield-fill text-danger me-2"></i>Angular</h5>
+                <pre><code>ng serve
+lt --port 4200</code></pre>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="command-card p-4 h-100">
+                <h5><i class="bi bi-server text-warning me-2"></i>Express</h5>
+                <pre><code>node server.js
+lt --port 5000</code></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Final Concept -->
+        <section id="final-concept" class="content-card">
+          <span class="badge badge-soft rounded-pill mb-3">Final Concept</span>
+          <h2 class="section-title">How Localtunnel Works</h2>
+
+          <p class="section-subtitle">
+            Every technology follows the same simple workflow.
+          </p>
+
+          <div class="row g-3 mt-4">
+            <div class="col-md-3">
+              <div class="flow-step">
+                <div class="flow-number">1</div>
+                <h6>Start Application</h6>
+                <p class="small text-muted mb-0">Run your local server.</p>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="flow-step">
+                <div class="flow-number">2</div>
+                <h6>Find Local Port</h6>
+                <p class="small text-muted mb-0">Identify the server port.</p>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="flow-step">
+                <div class="flow-number">3</div>
+                <h6>Create Tunnel</h6>
+                <p class="small text-muted mb-0">Run the Localtunnel command.</p>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="flow-step">
+                <div class="flow-number">4</div>
+                <h6>Share URL</h6>
+                <p class="small text-muted mb-0">Send the public URL.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive mt-5">
+            <table class="table table-hover">
+              <thead class="table-dark">
+                <tr>
+                  <th>Technology</th>
+                  <th>Local Address</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Next.js</td><td><code>localhost:3000</code></td></tr>
+                <tr><td>Laravel</td><td><code>localhost:8000</code></td></tr>
+                <tr><td>React</td><td><code>localhost:5173</code></td></tr>
+                <tr><td>Vue</td><td><code>localhost:5173</code></td></tr>
+                <tr><td>Angular</td><td><code>localhost:4200</code></td></tr>
+                <tr><td>API</td><td><code>localhost:5000</code></td></tr>
+                <tr><td>Apache</td><td><code>localhost:80</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-5">
+    <div class="container text-center">
+      <i class="bi bi-broadcast-pin fs-2 text-primary"></i>
+      <h5 class="text-white mt-3">Local Development Tunnel Guide</h5>
+      <p class="mb-0">
+        Expose your local HTTP applications publicly with Localtunnel.
+      </p>
+      <small class="d-block mt-3">
+        © <span id="currentYear"></span> TunnelGuide
+      </small>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    document.getElementById("currentYear").textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>

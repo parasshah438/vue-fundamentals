@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CI/CD Workflow Guide</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #6c63ff;
+            --secondary-color: #00c2a8;
+            --dark-color: #111827;
+            --light-bg: #f8fafc;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: #1f2937;
+            background: var(--light-bg);
+        }
+
+        .navbar {
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(12px);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .hero {
+            min-height: 650px;
+            display: flex;
+            align-items: center;
+            color: white;
+            background:
+                linear-gradient(135deg, rgba(17, 24, 39, 0.96), rgba(76, 29, 149, 0.88)),
+                url("https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1800&q=80")
+                center/cover;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 50px;
+            color: #dbeafe;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #a78bfa, #5eead4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-padding {
+            padding: 90px 0;
+        }
+
+        .section-title {
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .section-subtitle {
+            max-width: 700px;
+            color: #64748b;
+        }
+
+        .feature-card,
+        .tool-card,
+        .workflow-card,
+        .example-card {
+            height: 100%;
+            border: 0;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 12px 35px rgba(15, 23, 42, 0.07);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .feature-card:hover,
+        .tool-card:hover,
+        .workflow-card:hover,
+        .example-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.13);
+        }
+
+        .icon-box {
+            width: 58px;
+            height: 58px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            color: white;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+        }
+
+        .icon-box.green {
+            background: linear-gradient(135deg, #00a98f, #22c55e);
+        }
+
+        .icon-box.orange {
+            background: linear-gradient(135deg, #f97316, #facc15);
+        }
+
+        .icon-box.blue {
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+        }
+
+        .flow-wrapper {
+            position: relative;
+        }
+
+        .flow-wrapper::before {
+            content: "";
+            position: absolute;
+            top: 48px;
+            left: 9%;
+            right: 9%;
+            height: 3px;
+            background: linear-gradient(90deg, #6c63ff, #00c2a8);
+            z-index: 0;
+        }
+
+        .flow-step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .flow-number {
+            width: 68px;
+            height: 68px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 18px;
+            border: 6px solid var(--light-bg);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .dark-section {
+            color: white;
+            background: #111827;
+        }
+
+        .code-window {
+            overflow: hidden;
+            border: 1px solid #334155;
+            border-radius: 18px;
+            background: #0f172a;
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 14px 18px;
+            background: #1e293b;
+        }
+
+        .code-dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+        }
+
+        .code-content {
+            padding: 22px;
+            overflow-x: auto;
+            color: #d1fae5;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .tree {
+            padding: 24px;
+            border-radius: 18px;
+            color: #cbd5e1;
+            background: #0f172a;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+            line-height: 1.9;
+        }
+
+        .tree .folder {
+            color: #93c5fd;
+        }
+
+        .tree .file {
+            color: #86efac;
+        }
+
+        .comparison-box {
+            height: 100%;
+            padding: 30px;
+            border-radius: 22px;
+            background: white;
+            box-shadow: 0 12px 35px rgba(15, 23, 42, 0.07);
+        }
+
+        .comparison-box.danger {
+            border-top: 5px solid #ef4444;
+        }
+
+        .comparison-box.success {
+            border-top: 5px solid #22c55e;
+        }
+
+        .check-list {
+            padding: 0;
+            list-style: none;
+        }
+
+        .check-list li {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .check-list i {
+            color: #22c55e;
+            font-size: 1.1rem;
+        }
+
+        .danger-list i {
+            color: #ef4444;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 19px;
+            width: 3px;
+            background: linear-gradient(#6c63ff, #00c2a8);
+        }
+
+        .timeline-item {
+            position: relative;
+            display: flex;
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .timeline-icon {
+            position: relative;
+            z-index: 1;
+            min-width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            color: white;
+            background: var(--primary-color);
+        }
+
+        .cta {
+            color: white;
+            background:
+                linear-gradient(135deg, rgba(76, 29, 149, 0.96), rgba(13, 148, 136, 0.92));
+        }
+
+        footer {
+            color: #94a3b8;
+            background: #0b1120;
+        }
+
+        @media (max-width: 767px) {
+            .hero {
+                min-height: 720px;
+            }
+
+            .flow-wrapper::before {
+                display: none;
+            }
+
+            .flow-step {
+                margin-bottom: 30px;
+            }
+
+            .display-3 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="#home">
+            <i class="bi bi-infinity text-info me-2"></i>
+            CI/CD Guide
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="#concepts">Concepts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#flow">Workflow</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#tools">Tools</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#laravel">Examples</a>
+                </li>
+                <li class="nav-item ms-lg-3">
+                    <a class="btn btn-info rounded-pill px-4" href="#start">
+                        Get Started
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero" id="home">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <span class="hero-badge mb-4">
+                    <i class="bi bi-stars"></i>
+                    Beginner → Professional
+                </span>
+
+                <h1 class="display-3 fw-bold mb-4">
+                    Understand the flow of
+                    <span class="gradient-text">CI/CD</span>
+                </h1>
+
+                <p class="lead text-white-50 mb-4">
+                    Learn how Git, GitHub, automated testing, builds, and deployments
+                    work together to deliver safer software faster.
+                </p>
+
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="#flow" class="btn btn-light btn-lg rounded-pill px-4">
+                        Explore the Workflow
+                    </a>
+                    <a href="#laravel" class="btn btn-outline-light btn-lg rounded-pill px-4">
+                        Laravel Example
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="code-window">
+                    <div class="code-header">
+                        <span class="code-dot bg-danger"></span>
+                        <span class="code-dot bg-warning"></span>
+                        <span class="code-dot bg-success"></span>
+                        <span class="small text-white-50 ms-2">deployment-flow.txt</span>
+                    </div>
+
+                    <div class="code-content">
+                        <span class="text-info">Developer</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;↓ git push<br>
+                        <span class="text-warning">GitHub</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+                        <span class="text-primary">CI Pipeline</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;✓ Install dependencies<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;✓ Run tests<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;✓ Build project<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+                        <span class="text-success">CD Pipeline</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;✓ Deploy to staging<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;✓ Deploy to production
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- What is CI/CD -->
+<section class="section-padding" id="concepts">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="badge rounded-pill text-bg-primary px-3 py-2 mb-3">Core Concepts</span>
+            <h2 class="section-title display-6">What is CI/CD?</h2>
+            <p class="section-subtitle mx-auto">
+                CI/CD is a set of automated practices that helps teams build, test,
+                and deliver software reliably.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="feature-card p-4">
+                    <div class="icon-box mb-4">
+                        <i class="bi bi-arrow-repeat"></i>
+                    </div>
+                    <h3>Continuous Integration</h3>
+                    <p class="text-secondary mb-0">
+                        CI automatically builds and tests your code whenever changes
+                        are pushed to a shared repository.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="feature-card p-4">
+                    <div class="icon-box green mb-4">
+                        <i class="bi bi-rocket-takeoff"></i>
+                    </div>
+                    <h3>Continuous Delivery / Deployment</h3>
+                    <p class="text-secondary mb-0">
+                        CD prepares a successful build for release or automatically
+                        deploys it to staging or production.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mt-4">
+            <div class="col-lg-4">
+                <div class="feature-card p-4">
+                    <div class="icon-box blue mb-4">
+                        <i class="bi bi-git"></i>
+                    </div>
+                    <h4>Git</h4>
+                    <p class="text-secondary mb-0">
+                        A version control system that tracks code changes.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="feature-card p-4">
+                    <div class="icon-box orange mb-4">
+                        <i class="bi bi-github"></i>
+                    </div>
+                    <h4>GitHub</h4>
+                    <p class="text-secondary mb-0">
+                        A platform for hosting Git repositories and collaborating
+                        with other developers.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="feature-card p-4">
+                    <div class="icon-box green mb-4">
+                        <i class="bi bi-check2-circle"></i>
+                    </div>
+                    <h4>CI/CD</h4>
+                    <p class="text-secondary mb-0">
+                        An automated process for building, testing, and deploying
+                        software.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Typical Development Flow -->
+<section class="section-padding bg-white" id="flow">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="badge rounded-pill text-bg-success px-3 py-2 mb-3">Typical Development Flow</span>
+            <h2 class="section-title display-6">From code to production</h2>
+            <p class="section-subtitle mx-auto">
+                A typical project moves through version control, automated validation,
+                and deployment.
+            </p>
+        </div>
+
+        <div class="row flow-wrapper g-4">
+            <div class="col-6 col-lg-2 flow-step">
+                <div class="flow-number">1</div>
+                <h6>Write Code</h6>
+                <p class="small text-secondary">Create a feature or fix a bug.</p>
+            </div>
+
+            <div class="col-6 col-lg-2 flow-step">
+                <div class="flow-number">2</div>
+                <h6>Commit</h6>
+                <p class="small text-secondary">Use Git to save changes.</p>
+            </div>
+
+            <div class="col-6 col-lg-2 flow-step">
+                <div class="flow-number">3</div>
+                <h6>Push</h6>
+                <p class="small text-secondary">Send code to GitHub or GitLab.</p>
+            </div>
+
+            <div class="col-6 col-lg-2 flow-step">
+                <div class="flow-number">4</div>
+                <h6>CI Pipeline</h6>
+                <p class="small text-secondary">Install, test, lint, and build.</p>
+            </div>
+
+            <div class="col-6 col-lg-2 flow-step">
+                <div class="flow-number">5</div>
+                <h6>CD Pipeline</h6>
+                <p class="small text-secondary">Prepare or deploy the application.</p>
+            </div>
+
+            <div class="col-6 col-lg-2 flow-step">
+                <div class="flow-number">6</div>
+                <h6>Users</h6>
+                <p class="small text-secondary">Users receive the update.</p>
+            </div>
+        </div>
+
+        <div class="code-window mt-5">
+            <div class="code-header">
+                <span class="code-dot bg-danger"></span>
+                <span class="code-dot bg-warning"></span>
+                <span class="code-dot bg-success"></span>
+                <span class="small text-white-50 ms-2">terminal</span>
+            </div>
+
+            <div class="code-content">
+                <span class="text-secondary">$</span> git add .<br>
+                <span class="text-secondary">$</span> git commit -m <span class="text-warning">"Add user profile"</span><br>
+                <span class="text-secondary">$</span> git push origin main<br>
+                <br>
+                <span class="text-success">✓ GitHub Actions workflow started</span><br>
+                <span class="text-success">✓ Dependencies installed</span><br>
+                <span class="text-success">✓ Tests passed</span><br>
+                <span class="text-success">✓ Application deployed</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Tools -->
+<section class="section-padding" id="tools">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="badge rounded-pill text-bg-dark px-3 py-2 mb-3">Popular Tools</span>
+            <h2 class="section-title display-6">Common CI/CD platforms</h2>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-sm-6 col-lg-4">
+                <div class="tool-card p-4">
+                    <i class="bi bi-github fs-1 text-dark"></i>
+                    <h4 class="mt-3">GitHub Actions</h4>
+                    <p class="text-secondary mb-0">
+                        Automation workflows built directly into GitHub.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-4">
+                <div class="tool-card p-4">
+                    <i class="bi bi-gitlab fs-1 text-warning"></i>
+                    <h4 class="mt-3">GitLab CI/CD</h4>
+                    <p class="text-secondary mb-0">
+                        Built-in CI/CD features provided by GitLab.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-4">
+                <div class="tool-card p-4">
+                    <i class="bi bi-gear-wide-connected fs-1 text-primary"></i>
+                    <h4 class="mt-3">Jenkins</h4>
+                    <p class="text-secondary mb-0">
+                        A flexible and widely used automation server.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-4">
+                <div class="tool-card p-4">
+                    <i class="bi bi-circle-square fs-1 text-info"></i>
+                    <h4 class="mt-3">CircleCI</h4>
+                    <p class="text-secondary mb-0">
+                        Cloud-based continuous integration and delivery.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-4">
+                <div class="tool-card p-4">
+                    <i class="bi bi-cloud-arrow-up fs-1 text-primary"></i>
+                    <h4 class="mt-3">Azure DevOps</h4>
+                    <p class="text-secondary mb-0">
+                        Microsoft's platform for development and pipelines.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-4">
+                <div class="tool-card p-4">
+                    <i class="bi bi-code-square fs-1 text-success"></i>
+                    <h4 class="mt-3">Bitbucket Pipelines</h4>
+                    <p class="text-secondary mb-0">
+                        CI/CD pipelines integrated with Bitbucket repositories.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- When to use CI/CD -->
+<section class="section-padding bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="badge rounded-pill text-bg-primary px-3 py-2 mb-3">When Should You Use It?</span>
+            <h2 class="section-title display-6">Choose the right level of automation</h2>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="comparison-box danger">
+                    <h3>
+                        <i class="bi bi-person-workspace text-danger me-2"></i>
+                        CI/CD may not be needed
+                    </h3>
+
+                    <p class="text-secondary">
+                        For small or learning projects, manual deployment can be
+                        perfectly acceptable.
+                    </p>
+
+                    <ul class="check-list danger-list">
+                        <li><i class="bi bi-x-circle-fill"></i> Learning projects</li>
+                        <li><i class="bi bi-x-circle-fill"></i> CRUD practice</li>
+                        <li><i class="bi bi-x-circle-fill"></i> Portfolio projects</li>
+                        <li><i class="bi bi-x-circle-fill"></i> Local experiments</li>
+                    </ul>
+
+                    <div class="code-window mt-4">
+                        <div class="code-content">
+                            Local PC<br>
+                            &nbsp;&nbsp;↓<br>
+                            Git<br>
+                            &nbsp;&nbsp;↓<br>
+                            GitHub
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="comparison-box success">
+                    <h3>
+                        <i class="bi bi-rocket-takeoff text-success me-2"></i>
+                        CI/CD is recommended
+                    </h3>
+
+                    <p class="text-secondary">
+                        Automation becomes valuable when deployment is repetitive,
+                        risky, or involves real users.
+                    </p>
+
+                    <ul class="check-list">
+                        <li><i class="bi bi-check-circle-fill"></i> Freelance projects</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Client websites</li>
+                        <li><i class="bi bi-check-circle-fill"></i> SaaS products</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Team development</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Production applications</li>
+                    </ul>
+
+                    <div class="code-window mt-4">
+                        <div class="code-content">
+                            git push<br>
+                            &nbsp;&nbsp;↓<br>
+                            Run tests<br>
+                            &nbsp;&nbsp;↓<br>
+                            Build<br>
+                            &nbsp;&nbsp;↓<br>
+                            Deploy
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why CI/CD -->
+<section class="section-padding dark-section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <span class="badge rounded-pill bg-info text-dark px-3 py-2 mb-3">
+                    Why CI/CD?
+                </span>
+
+                <h2 class="section-title display-6 mb-4">
+                    Automate repetitive work and reduce mistakes
+                </h2>
+
+                <p class="text-white-50">
+                    In a real company project, many developers may push changes every
+                    day. CI/CD automatically checks whether the complete application
+                    still works before it reaches users.
+                </p>
+
+                <ul class="check-list mt-4">
+                    <li>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Install project dependencies automatically.
+                    </li>
+                    <li>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Run tests on every change.
+                    </li>
+                    <li>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Detect broken code early.
+                    </li>
+                    <li>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Prevent failed builds from being deployed.
+                    </li>
+                    <li>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Deploy consistently with fewer human errors.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="code-window">
+                    <div class="code-header">
+                        <span class="code-dot bg-danger"></span>
+                        <span class="code-dot bg-warning"></span>
+                        <span class="code-dot bg-success"></span>
+                        <span class="small text-white-50 ms-2">company-project-flow.txt</span>
+                    </div>
+
+                    <div class="code-content">
+                        Developer<br>
+                        &nbsp;&nbsp;↓ git push<br>
+                        GitHub<br>
+                        &nbsp;&nbsp;↓<br>
+                        GitHub Actions<br>
+                        &nbsp;&nbsp;✓ Install dependencies<br>
+                        &nbsp;&nbsp;✓ Run tests<br>
+                        &nbsp;&nbsp;✓ Check code quality<br>
+                        &nbsp;&nbsp;✓ Build application<br>
+                        &nbsp;&nbsp;✓ Deploy to server<br>
+                        &nbsp;&nbsp;↓<br>
+                        Live website
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Repository Structure -->
+<section class="section-padding" id="structure">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="badge rounded-pill text-bg-success px-3 py-2 mb-3">Repository Structure</span>
+            <h2 class="section-title display-6">Where CI/CD configuration lives</h2>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="example-card p-4">
+                    <h4 class="mb-3">
+                        <i class="bi bi-folder text-warning me-2"></i>
+                        Git only
+                    </h4>
+
+                    <div class="tree">
+                        <span class="folder">project/</span><br>
+                        ├── <span class="folder">.git/</span><br>
+                        ├── <span class="folder">app/</span><br>
+                        ├── <span class="file">composer.json</span><br>
+                        └── <span class="file">...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="example-card p-4">
+                    <h4 class="mb-3">
+                        <i class="bi bi-github text-dark me-2"></i>
+                        GitHub Actions
+                    </h4>
+
+                    <div class="tree">
+                        <span class="folder">project/</span><br>
+                        ├── <span class="folder">.git/</span><br>
+                        ├── <span class="folder">.github/</span><br>
+                        │&nbsp;&nbsp;└── <span class="folder">workflows/</span><br>
+                        │&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="file">ci.yml</span><br>
+                        └── <span class="file">...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="example-card p-4">
+                    <h4 class="mb-3">
+                        <i class="bi bi-gitlab text-warning me-2"></i>
+                        GitLab CI
+                    </h4>
+
+                    <div class="tree">
+                        <span class="folder">project/</span><br>
+                        ├── <span class="folder">.gitlab/</span><br>
+                        ├── <span class="file">.gitlab-ci.yml</span><br>
+                        └── <span class="file">...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="example-card p-4">
+                    <h4 class="mb-3">
+                        <i class="bi bi-file-earmark-code text-primary me-2"></i>
+                        Other platforms
+                    </h4>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item bg-transparent">
+                            <strong>Jenkins:</strong> Jenkinsfile
+                        </li>
+                        <li class="list-group-item bg-transparent">
+                            <strong>Azure DevOps:</strong> azure-pipelines.yml
+                        </li>
+                        <li class="list-group-item bg-transparent">
+                            <strong>CircleCI:</strong> .circleci/config.yml
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- GitHub Actions Explanation -->
+<section class="section-padding bg-white">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <span class="badge rounded-pill text-bg-dark px-3 py-2 mb-3">
+                    GitHub Actions
+                </span>
+
+                <h2 class="section-title display-6 mb-4">
+                    A workflow file starts the automation
+                </h2>
+
+                <p class="text-secondary">
+                    GitHub only runs Actions workflows that exist inside the
+                    <code>.github/workflows/</code> directory.
+                </p>
+
+                <div class="alert alert-warning border-0 rounded-4">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    If you do not create a workflow file such as
+                    <code>.github/workflows/laravel.yml</code>, GitHub Actions CI/CD
+                    will not run.
+                </div>
+
+                <p class="text-secondary">
+                    Your Laravel application will still work normally. You can still
+                    use Git commands and push your code to GitHub. However, no
+                    automatic testing, building, or deployment will happen.
+                </p>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="code-window">
+                    <div class="code-header">
+                        <span class="code-dot bg-danger"></span>
+                        <span class="code-dot bg-warning"></span>
+                        <span class="code-dot bg-success"></span>
+                        <span class="small text-white-50 ms-2">.github/workflows/laravel.yml</span>
+                    </div>
+
+                    <div class="code-content">
+                        name: Laravel CI<br><br>
+
+                        on:<br>
+                        &nbsp;&nbsp;push:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;branches: [ main ]<br>
+                        &nbsp;&nbsp;pull_request:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;branches: [ main ]<br><br>
+
+                        jobs:<br>
+                        &nbsp;&nbsp;test:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;runs-on: ubuntu-latest<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;steps:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Checkout source<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Setup PHP<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Install Composer packages<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Run Laravel tests
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Laravel -->
+<section class="section-padding" id="laravel">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="badge rounded-pill text-bg-danger px-3 py-2 mb-3">
+                Laravel Example
+            </span>
+            <h2 class="section-title display-6">A Laravel CI/CD pipeline</h2>
+            <p class="section-subtitle mx-auto">
+                A Laravel pipeline normally validates the application before deploying
+                it to staging or production.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="workflow-card p-4">
+                    <h4 class="mb-4">Pipeline steps</h4>
+
+                    <ul class="timeline">
+                        <li class="timeline-item">
+                            <div class="timeline-icon"><i class="bi bi-box-arrow-in-right"></i></div>
+                            <div>
+                                <h5>Checkout source</h5>
+                                <p class="text-secondary mb-0">
+                                    Download the latest code from the repository.
+                                </p>
+                            </div>
+                        </li>
+
+                        <li class="timeline-item">
+                            <div class="timeline-icon"><i class="bi bi-code-slash"></i></div>
+                            <div>
+                                <h5>Set up PHP</h5>
+                                <p class="text-secondary mb-0">
+                                    Prepare the PHP runtime and required extensions.
+                                </p>
+                            </div>
+                        </li>
+
+                        <li class="timeline-item">
+                            <div class="timeline-icon"><i class="bi bi-download"></i></div>
+                            <div>
+                                <h5>Install dependencies</h5>
+                                <p class="text-secondary mb-0">
+                                    Install Composer and Node.js packages.
+                                </p>
+                            </div>
+                        </li>
+
+                        <li class="timeline-item">
+                            <div class="timeline-icon"><i class="bi bi-shield-check"></i></div>
+                            <div>
+                                <h5>Run tests and quality checks</h5>
+                                <p class="text-secondary mb-0">
+                                    Execute PHPUnit or Pest tests, linting, and code checks.
+                                </p>
+                            </div>
+                        </li>
+
+                        <li class="timeline-item">
+                            <div class="timeline-icon"><i class="bi bi-hammer"></i></div>
+                            <div>
+                                <h5>Build frontend assets</h5>
+                                <p class="text-secondary mb-0">
+                                    Compile CSS and JavaScript using Vite.
+                                </p>
+                            </div>
+                        </li>
+
+                        <li class="timeline-item mb-0">
+                            <div class="timeline-icon"><i class="bi bi-cloud-upload"></i></div>
+                            <div>
+                                <h5>Deploy application</h5>
+                                <p class="text-secondary mb-0">
+                                    Deploy to staging or production after all checks pass.
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="code-window h-100">
+                    <div class="code-header">
+                        <span class="code-dot bg-danger"></span>
+                        <span class="code-dot bg-warning"></span>
+                        <span class="code-dot bg-success"></span>
+                        <span class="small text-white-50 ms-2">Laravel commands</span>
+                    </div>
+
+                    <div class="code-content">
+                        composer install<br>
+                        npm install<br>
+                        php artisan key:generate<br>
+                        php artisan test<br>
+                        php artisan migrate --pretend<br>
+                        npm run build<br>
+                        php artisan config:cache<br>
+                        php artisan route:cache<br>
+                        php artisan view:cache
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-info border-0 rounded-4 mt-4">
+            <i class="bi bi-info-circle-fill me-2"></i>
+            Production database migrations should be handled carefully. Use backups,
+            approvals, and a controlled deployment process before running
+            <code>php artisan migrate</code> in production.
+        </div>
+    </div>
+</section>
+
+<!-- Framework Examples -->
+<section class="section-padding bg-white" id="examples">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="badge rounded-pill text-bg-info px-3 py-2 mb-3">
+                Framework Examples
+            </span>
+            <h2 class="section-title display-6">Typical pipeline tasks</h2>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="example-card p-4">
+                    <div class="icon-box mb-4">
+                        <i class="bi bi-braces"></i>
+                    </div>
+                    <h4>React / Next.js</h4>
+                    <ol class="text-secondary">
+                        <li>Install Node.js</li>
+                        <li>Run <code>npm install</code></li>
+                        <li>Run <code>npm run lint</code></li>
+                        <li>Run tests</li>
+                        <li>Run <code>npm run build</code></li>
+                        <li>Deploy to Vercel, Netlify, or a VPS</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="example-card p-4">
+                    <div class="icon-box green mb-4">
+                        <i class="bi bi-node-plus"></i>
+                    </div>
+                    <h4>Node.js</h4>
+                    <ol class="text-secondary">
+                        <li>Run <code>npm install</code></li>
+                        <li>Run <code>npm test</code></li>
+                        <li>Run <code>npm run build</code>, if applicable</li>
+                        <li>Deploy the application</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="example-card p-4">
+                    <div class="icon-box orange mb-4">
+                        <i class="bi bi-filetype-php"></i>
+                    </div>
+                    <h4>Laravel</h4>
+                    <ol class="text-secondary">
+                        <li>Set up PHP</li>
+                        <li>Install Composer packages</li>
+                        <li>Install frontend packages</li>
+                        <li>Run PHPUnit or Pest tests</li>
+                        <li>Build frontend assets</li>
+                        <li>Deploy the application</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Failure Example -->
+<section class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="badge rounded-pill text-bg-danger px-3 py-2 mb-3">
+                Real-World Example
+            </span>
+            <h2 class="section-title display-6">CI/CD catches problems early</h2>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="comparison-box danger">
+                    <h3 class="text-danger">
+                        <i class="bi bi-x-octagon-fill me-2"></i>
+                        Without CI/CD
+                    </h3>
+
+                    <p class="text-secondary">
+                        A developer adds the following code but forgets to create the
+                        required database column:
+                    </p>
+
+                    <div class="code-window mb-3">
+                        <div class="code-content">
+                            User::create($data);
+                        </div>
+                    </div>
+
+                    <p class="mb-0">
+                        The code is pushed directly to production and users see:
+                    </p>
+
+                    <div class="alert alert-danger mt-3 mb-0">
+                        SQLSTATE: Unknown column 'phone'
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="comparison-box success">
+                    <h3 class="text-success">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        With CI/CD
+                    </h3>
+
+                    <p class="text-secondary">
+                        Automated tests run before deployment and detect the problem:
+                    </p>
+
+                    <div class="code-window mb-3">
+                        <div class="code-content">
+                            Running tests...<br><br>
+                            <span class="text-danger">❌ User registration test failed</span><br>
+                            <span class="text-warning">Deployment cancelled</span>
+                        </div>
+                    </div>
+
+                    <p class="mb-0">
+                        The developer fixes the issue before users are affected.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Professional Flow -->
+<section class="section-padding dark-section" id="professional">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="badge rounded-pill bg-info text-dark px-3 py-2 mb-3">
+                Professional Workflow
+            </span>
+            <h2 class="section-title display-6">How teams deliver software</h2>
+            <p class="text-white-50 mx-auto" style="max-width: 700px;">
+                Git and GitHub store and collaborate on code. CI/CD validates and
+                delivers that code to users.
+            </p>
+        </div>
+
+        <div class="row g-4 align-items-center text-center">
+            <div class="col-md-2">
+                <i class="bi bi-person-workspace display-4 text-info"></i>
+                <h6 class="mt-3">Developer</h6>
+            </div>
+
+            <div class="col-md-1 text-info fs-2">→</div>
+
+            <div class="col-md-2">
+                <i class="bi bi-github display-4 text-light"></i>
+                <h6 class="mt-3">GitHub</h6>
+            </div>
+
+            <div class="col-md-1 text-info fs-2">→</div>
+
+            <div class="col-md-2">
+                <i class="bi bi-shield-check display-4 text-success"></i>
+                <h6 class="mt-3">CI Tests</h6>
+            </div>
+
+            <div class="col-md-1 text-info fs-2">→</div>
+
+            <div class="col-md-2">
+                <i class="bi bi-eye display-4 text-warning"></i>
+                <h6 class="mt-3">Code Review</h6>
+            </div>
+
+            <div class="col-md-1 text-info fs-2">→</div>
+
+            <div class="col-md-2">
+                <i class="bi bi-cloud-arrow-up display-4 text-primary"></i>
+                <h6 class="mt-3">CD Deployment</h6>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <i class="bi bi-server display-5 text-info"></i>
+            <p class="mt-3 text-white-50">
+                AWS / Cloud / VPS
+                <br>
+                <strong class="text-white">↓</strong>
+                <br>
+                Users
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Naming Workflow Files -->
+<section class="section-padding bg-white" id="start">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <span class="badge rounded-pill text-bg-primary px-3 py-2 mb-3">
+                    Getting Started
+                </span>
+
+                <h2 class="section-title display-6 mb-4">
+                    Workflow filenames are your choice
+                </h2>
+
+                <p class="text-secondary">
+                    GitHub only requires workflow files to be placed inside:
+                </p>
+
+                <div class="code-window mb-4">
+                    <div class="code-content">
+                        .github/workflows/
+                    </div>
+                </div>
+
+                <p class="text-secondary">
+                    The filename itself is flexible. Choose a name that clearly
+                    describes the workflow.
+                </p>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="workflow-card p-4">
+                    <h4 class="mb-4">Common workflow names</h4>
+
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="p-3 rounded-4 bg-light">
+                                <i class="bi bi-file-earmark-code text-primary me-2"></i>
+                                ci.yml
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="p-3 rounded-4 bg-light">
+                                <i class="bi bi-file-earmark-code text-primary me-2"></i>
+                                deploy.yml
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="p-3 rounded-4 bg-light">
+                                <i class="bi bi-file-earmark-code text-primary me-2"></i>
+                                test.yml
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="p-3 rounded-4 bg-light">
+                                <i class="bi bi-file-earmark-code text-primary me-2"></i>
+                                release.yml
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="p-3 rounded-4 bg-light">
+                                <i class="bi bi-file-earmark-code text-primary me-2"></i>
+                                security.yml
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="p-3 rounded-4 bg-light">
+                                <i class="bi bi-file-earmark-code text-primary me-2"></i>
+                                laravel.yml
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="p-3 rounded-4 bg-light">
+                                <i class="bi bi-file-earmark-code text-primary me-2"></i>
+                                react.yml
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="p-3 rounded-4 bg-light">
+                                <i class="bi bi-file-earmark-code text-primary me-2"></i>
+                                node.yml
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Final CTA -->
+<section class="section-padding cta">
+    <div class="container text-center">
+        <i class="bi bi-infinity display-3 mb-4"></i>
+
+        <h2 class="display-6 fw-bold mb-3">
+            Start small, automate gradually
+        </h2>
+
+        <p class="lead mb-4">
+            Begin with automated tests. Add builds and deployment when your project
+            grows and deployments become repetitive or risky.
+        </p>
+
+        <a href="#home" class="btn btn-light btn-lg rounded-pill px-5">
+            Back to Top
+            <i class="bi bi-arrow-up ms-2"></i>
+        </a>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-4">
+    <div class="container">
+        <div class="row align-items-center g-3">
+            <div class="col-md-6">
+                <strong class="text-white">
+                    <i class="bi bi-infinity text-info me-2"></i>
+                    CI/CD Workflow Guide
+                </strong>
+                <p class="small mb-0 mt-2">
+                    Git tracks. CI validates. CD delivers.
+                </p>
+            </div>
+
+            <div class="col-md-6 text-md-end">
+                <p class="small mb-0">
+                    Built with HTML5 and Bootstrap 5
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

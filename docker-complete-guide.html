@@ -1,0 +1,2374 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Docker Complete Tutorial</title>
+
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <!-- highlight.js for code coloring -->
+  <link id="hljs-theme-dark"  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css" />
+  <link id="hljs-theme-light" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css" disabled />
+
+  <style>
+    :root { --sidebar-width: 280px; --header-h: 64px; }
+    body { font-size: .95rem; scroll-behavior: smooth; }
+
+    /* Top nav */
+    #topbar {
+      height: var(--header-h);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1050;
+    }
+    [data-bs-theme="dark"]  #topbar { background: rgba(13,17,23,.85);  border-bottom: 1px solid rgba(255,255,255,.08); }
+    [data-bs-theme="light"] #topbar { background: rgba(255,255,255,.9); border-bottom: 1px solid rgba(0,0,0,.1); }
+
+    .brand-badge { font-weight: 800; font-size: 1.25rem; }
+    #sidebar {
+      width: var(--sidebar-width);
+      top: var(--header-h);
+      height: calc(100vh - var(--header-h));
+      overflow-y: auto;
+      scrollbar-width: thin;
+      z-index: 1040;
+    }
+    [data-bs-theme="dark"]  #sidebar { background: #0d1117; border-right: 1px solid rgba(255,255,255,.08); }
+    [data-bs-theme="light"] #sidebar { background: #f8f9fa;  border-right: 1px solid #dee2e6; }
+
+    #sidebar .nav-link {
+      font-size: .85rem;
+      padding: .38rem 1rem;
+      border-radius: 8px;
+      color: inherit;
+      transition: background .15s, color .15s, padding-left .15s;
+    }
+    #sidebar .nav-link:hover  { background: rgba(0,200,150,.12); color: #00c89a; padding-left: 1.3rem; }
+    #sidebar .nav-link.active { background: rgba(0,200,150,.18); color: #00c89a; font-weight: 600; }
+
+    #sidebar .nav-section {
+      font-size: .7rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: .75rem 1rem .3rem;
+      opacity: .5;
+    }
+
+    #main-content { margin-left: var(--sidebar-width); min-height: calc(100vh - var(--header-h)); padding-top: var(--header-h); }
+    @media (max-width: 991.98px) { #sidebar { display:none !important; } #main-content { margin-left:0 !important; } }
+
+    .section-title { font-size: 1.6rem; font-weight: 700; border-left: 4px solid #00c89a; padding-left: .75rem; margin-bottom: 1.25rem; }
+    .sub-title { font-size: 1.15rem; font-weight: 600; padding-left: .5rem; border-left: 3px solid #33d17a; margin: 1.5rem 0 .75rem; }
+
+    .feature-card {
+      border-radius: 12px;
+      transition: transform .2s, box-shadow .2s;
+      border: 1px solid transparent;
+    }
+    .feature-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,200,150,.18); border-color: rgba(0,200,150,.25); }
+    [data-bs-theme="dark"]  .feature-card { background: #161b22; }
+    [data-bs-theme="light"] .feature-card { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.07); }
+
+    .icon-box {
+      width: 46px; height: 46px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.35rem;
+      flex-shrink: 0;
+    }
+
+    pre { border-radius: 10px; position: relative; font-size: .83rem; margin: 0; }
+    pre code.hljs { border-radius: 10px; }
+
+    .code-wrapper { position: relative; margin: .75rem 0 1.25rem; }
+    .copy-btn {
+      position: absolute; top: .5rem; right: .5rem;
+      font-size: .75rem;
+      padding: .2rem .55rem;
+      opacity: .7;
+      z-index: 2;
+    }
+    .copy-btn:hover { opacity: 1; }
+
+    .cmd-table th { white-space: nowrap; }
+    .cmd-table code { font-size: .8rem; }
+
+    .step-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: linear-gradient(135deg,#00c89a,#33d17a);
+      color: #fff; font-weight: 700; font-size: .8rem;
+      flex-shrink: 0;
+    }
+
+    .divider { height: 1px; opacity: .1; margin: 2.5rem 0; }
+    .note-box {
+      border-left: 4px solid #00c89a;
+      padding: .75rem 1rem;
+      border-radius: 0 8px 8px 0;
+    }
+    [data-bs-theme="dark"]  .note-box { background: rgba(0,200,150,.10); }
+    [data-bs-theme="light"] .note-box { background: rgba(0,200,150,.05); }
+
+    #hero {
+      background: linear-gradient(135deg, rgba(0,200,150,.25) 0%, rgba(51,209,122,.18) 50%, rgba(34,197,94,.14) 100%);
+      padding: 3.5rem 0 3rem;
+      clip-path: ellipse(120% 100% at 50% 0%);
+    }
+    #hero h1 { font-size: 2.4rem; font-weight: 800; color: #fff; }
+    #hero p  { color: rgba(255,255,255,.88); font-size: 1.05rem; }
+
+    #backTop {
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: #00c89a; color: #0b1220;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0,200,150,.35);
+      opacity: 0; transition: opacity .25s;
+      z-index: 9999;
+    }
+    #backTop.show { opacity: 1; }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    [data-bs-theme="dark"]  ::-webkit-scrollbar-track  { background: #161b22; }
+    [data-bs-theme="dark"]  ::-webkit-scrollbar-thumb  { background: #30363d; border-radius: 3px; }
+    [data-bs-theme="light"] ::-webkit-scrollbar-track  { background: #f1f1f1; }
+    [data-bs-theme="light"] ::-webkit-scrollbar-thumb  { background: #ccc; border-radius: 3px; }
+
+    .cmd-pill { font-family: monospace; font-size: .83rem; }
+    .pill-soft { background: rgba(0,200,150,.12); border: 1px solid rgba(0,200,150,.25); color: #00c89a; }
+    [data-bs-theme="light"] .pill-soft { background: rgba(0,200,150,.08); }
+
+    /* Code language labels */
+    .code-label {
+      font-size: .7rem; opacity:.75; letter-spacing:.02em;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin: 0 0 .35rem .25rem;
+      color: rgba(255,255,255,.75);
+    }
+    [data-bs-theme="light"] .code-label { color: rgba(0,0,0,.55); }
+  </style>
+</head>
+
+<body>
+
+<!-- ═══════════════════════════════════════════ TOP NAV ══════════════════════════════════════════ -->
+<nav id="topbar" class="navbar fixed-top px-3 px-md-4 d-flex justify-content-between align-items-center">
+  <a href="#top" class="text-decoration-none d-flex align-items-center gap-2">
+    <div style="background:rgba(0,200,150,.2);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(0,200,150,.35);">
+      <i class="bi bi-box-seam-fill" style="color:#00c89a;"></i>
+    </div>
+    <span class="brand-badge">Docker</span>
+    <span class="fw-light opacity-50 d-none d-sm-inline">Tutorial</span>
+  </a>
+
+  <div class="d-flex align-items-center gap-2">
+    <button class="btn btn-sm btn-outline-secondary d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+      <i class="bi bi-list"></i>
+    </button>
+
+    <button id="themeToggle" class="btn btn-sm btn-outline-secondary" title="Toggle Dark / Light mode">
+      <i class="bi bi-sun-fill"></i>
+    </button>
+
+    <span class="badge rounded-pill text-bg-primary d-none d-sm-inline">Basic → Advanced</span>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════ DESKTOP SIDEBAR ═════════════════════════════════ -->
+<aside id="sidebar" class="position-fixed d-none d-lg-block py-3 px-2">
+  <nav class="nav flex-column gap-1">
+    <div class="nav-section">Introduction</div>
+    <a class="nav-link active" href="#sec-what"><i class="bi bi-info-circle me-2"></i>What is Docker?</a>
+    <a class="nav-link" href="#sec-why"><i class="bi bi-star me-2"></i>Why we use it</a>
+    <a class="nav-link" href="#sec-basics-flow"><i class="bi bi-diagram-3 me-2"></i>How it works (Flow)</a>
+
+    <div class="nav-section">Core Concepts</div>
+    <a class="nav-link" href="#sec-objects"><i class="bi bi-cube me-2"></i>Images / Containers / Volumes</a>
+    <a class="nav-link" href="#sec-dockerfile"><i class="bi bi-file-earmark-code me-2"></i>Dockerfile</a>
+    <a class="nav-link" href="#sec-arg-env" style="padding-left:1.8rem;font-size:.8rem;"><i class="bi bi-chevron-right me-1 opacity-50"></i>ARG vs ENV / ENTRYPOINT</a>
+    <a class="nav-link" href="#sec-healthcheck" style="padding-left:1.8rem;font-size:.8rem;"><i class="bi bi-chevron-right me-1 opacity-50"></i>HEALTHCHECK / .dockerignore</a>
+    <a class="nav-link" href="#sec-compose"><i class="bi bi-diagram-2 me-2"></i>Docker Compose</a>
+    <a class="nav-link" href="#sec-networking"><i class="bi bi-diagram-3 me-2"></i>Networking basics</a>
+    <a class="nav-link" href="#sec-network-types" style="padding-left:1.8rem;font-size:.8rem;"><i class="bi bi-chevron-right me-1 opacity-50"></i>Network types &amp; commands</a>
+    <a class="nav-link" href="#sec-network-compose" style="padding-left:1.8rem;font-size:.8rem;"><i class="bi bi-chevron-right me-1 opacity-50"></i>Custom networks (Compose)</a>
+
+    <div class="nav-section">Docker Setup</div>
+    <a class="nav-link" href="#sec-install"><i class="bi bi-download me-2"></i>Install Docker</a>
+    <a class="nav-link" href="#sec-verify"><i class="bi bi-check2-circle me-2"></i>Verify & configure</a>
+
+    <div class="nav-section">Docker: Use It</div>
+    <a class="nav-link" href="#sec-run"><i class="bi bi-play-circle me-2"></i>Run containers</a>
+    <a class="nav-link" href="#sec-build"><i class="bi bi-braces me-2"></i>Build images</a>
+    <a class="nav-link" href="#sec-volumes"><i class="bi bi-database me-2"></i>Volumes & persistence</a>
+    <a class="nav-link" href="#sec-volume-types" style="padding-left:1.8rem;font-size:.8rem;"><i class="bi bi-chevron-right me-1 opacity-50"></i>Bind / Named / tmpfs</a>
+    <a class="nav-link" href="#sec-docker-cp" style="padding-left:1.8rem;font-size:.8rem;"><i class="bi bi-chevron-right me-1 opacity-50"></i>docker cp</a>
+    <a class="nav-link" href="#sec-env"><i class="bi bi-key me-2"></i>Environment & secrets (basic)</a>
+    <a class="nav-link" href="#sec-debug"><i class="bi bi-bug me-2"></i>Debugging tricks</a>
+
+    <div class="nav-section">Projects</div>
+    <a class="nav-link" href="#sec-new-project"><i class="bi bi-plus-circle me-2"></i>Setup new project</a>
+    <a class="nav-link" href="#sec-existing-project"><i class="bi bi-arrow-left-right me-2"></i>Containerize existing project</a>
+    <a class="nav-link" href="#sec-multi-stage"><i class="bi bi-layers me-2"></i>Multi-stage builds</a>
+
+    <div class="nav-section">Advanced</div>
+    <a class="nav-link" href="#sec-best-practices"><i class="bi bi-award me-2"></i>Best practices</a>
+    <a class="nav-link" href="#sec-security"><i class="bi bi-shield-check me-2"></i>Security basics</a>
+    <a class="nav-link" href="#sec-performance"><i class="bi bi-speedometer2 me-2"></i>Performance tips</a>
+    <a class="nav-link" href="#sec-buildkit"><i class="bi bi-tools me-2"></i>BuildKit & Advanced</a>
+    <a class="nav-link" href="#sec-ci-cd" style="padding-left:1.8rem;font-size:.8rem;"><i class="bi bi-chevron-right me-1 opacity-50"></i>CI/CD Integration</a>
+    <a class="nav-link" href="#sec-resources" style="padding-left:1.8rem;font-size:.8rem;"><i class="bi bi-chevron-right me-1 opacity-50"></i>Resource Limits</a>
+    <a class="nav-link" href="#sec-security-scanning" style="padding-left:1.8rem;font-size:.8rem;"><i class="bi bi-chevron-right me-1 opacity-50"></i>Security Scanning</a>
+    <a class="nav-link" href="#sec-cheatsheet"><i class="bi bi-card-list me-2"></i>Command cheatsheet</a>
+  </nav>
+</aside>
+
+<!-- ═══════════════════════════════════════════ MOBILE OFFCANVAS ═════════════════════════════════ -->
+<div class="offcanvas offcanvas-start d-lg-none" id="mobileSidebar" tabindex="-1">
+  <div class="offcanvas-header">
+    <h6 class="offcanvas-title fw-bold">Docker Tutorial</h6>
+    <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body p-2">
+    <nav class="nav flex-column gap-1">
+      <div class="nav-section">Introduction</div>
+      <a class="nav-link" href="#sec-what" data-bs-dismiss="offcanvas"><i class="bi bi-info-circle me-2"></i>What is Docker?</a>
+      <a class="nav-link" href="#sec-why" data-bs-dismiss="offcanvas"><i class="bi bi-star me-2"></i>Why we use it</a>
+      <a class="nav-link" href="#sec-basics-flow" data-bs-dismiss="offcanvas"><i class="bi bi-diagram-3 me-2"></i>How it works</a>
+
+      <div class="nav-section">Core Concepts</div>
+      <a class="nav-link" href="#sec-objects" data-bs-dismiss="offcanvas"><i class="bi bi-cube me-2"></i>Images/Containers/Volumes</a>
+      <a class="nav-link" href="#sec-dockerfile" data-bs-dismiss="offcanvas"><i class="bi bi-file-earmark-code me-2"></i>Dockerfile</a>
+      <a class="nav-link" href="#sec-arg-env" data-bs-dismiss="offcanvas" style="padding-left:1.8rem;font-size:.8rem;"><i class="bi bi-chevron-right me-1 opacity-50"></i>ARG vs ENV / ENTRYPOINT</a>
+      <a class="nav-link" href="#sec-healthcheck" data-bs-dismiss="offcanvas" style="padding-left:1.8rem;font-size:.8rem;"><i class="bi bi-chevron-right me-1 opacity-50"></i>HEALTHCHECK / .dockerignore</a>
+      <a class="nav-link" href="#sec-compose" data-bs-dismiss="offcanvas"><i class="bi bi-diagram-2 me-2"></i>Docker Compose</a>
+      <a class="nav-link" href="#sec-networking" data-bs-dismiss="offcanvas"><i class="bi bi-diagram-3 me-2"></i>Networking</a>
+      <a class="nav-link" href="#sec-network-types" data-bs-dismiss="offcanvas" style="padding-left:1.8rem;font-size:.8rem;"><i class="bi bi-chevron-right me-1 opacity-50"></i>Network types &amp; commands</a>
+      <a class="nav-link" href="#sec-network-compose" data-bs-dismiss="offcanvas" style="padding-left:1.8rem;font-size:.8rem;"><i class="bi bi-chevron-right me-1 opacity-50"></i>Custom networks (Compose)</a>
+
+      <div class="nav-section">Docker Setup</div>
+      <a class="nav-link" href="#sec-install" data-bs-dismiss="offcanvas"><i class="bi bi-download me-2"></i>Install Docker</a>
+      <a class="nav-link" href="#sec-verify" data-bs-dismiss="offcanvas"><i class="bi bi-check2-circle me-2"></i>Verify</a>
+
+      <div class="nav-section">Docker: Use It</div>
+      <a class="nav-link" href="#sec-run" data-bs-dismiss="offcanvas"><i class="bi bi-play-circle me-2"></i>Run containers</a>
+      <a class="nav-link" href="#sec-build" data-bs-dismiss="offcanvas"><i class="bi bi-braces me-2"></i>Build images</a>
+      <a class="nav-link" href="#sec-volumes" data-bs-dismiss="offcanvas"><i class="bi bi-database me-2"></i>Volumes</a>
+      <a class="nav-link" href="#sec-volume-types" data-bs-dismiss="offcanvas" style="padding-left:1.8rem;font-size:.8rem;"><i class="bi bi-chevron-right me-1 opacity-50"></i>Bind / Named / tmpfs</a>
+      <a class="nav-link" href="#sec-docker-cp" data-bs-dismiss="offcanvas" style="padding-left:1.8rem;font-size:.8rem;"><i class="bi bi-chevron-right me-1 opacity-50"></i>docker cp</a>
+      <a class="nav-link" href="#sec-env" data-bs-dismiss="offcanvas"><i class="bi bi-key me-2"></i>Env & secrets</a>
+      <a class="nav-link" href="#sec-debug" data-bs-dismiss="offcanvas"><i class="bi bi-bug me-2"></i>Debugging</a>
+
+      <div class="nav-section">Projects</div>
+      <a class="nav-link" href="#sec-new-project" data-bs-dismiss="offcanvas"><i class="bi bi-plus-circle me-2"></i>New project</a>
+      <a class="nav-link" href="#sec-existing-project" data-bs-dismiss="offcanvas"><i class="bi bi-arrow-left-right me-2"></i>Existing project</a>
+      <a class="nav-link" href="#sec-multi-stage" data-bs-dismiss="offcanvas"><i class="bi bi-layers me-2"></i>Multi-stage builds</a>
+
+      <div class="nav-section">Advanced</div>
+      <a class="nav-link" href="#sec-best-practices" data-bs-dismiss="offcanvas"><i class="bi bi-award me-2"></i>Best practices</a>
+      <a class="nav-link" href="#sec-security" data-bs-dismiss="offcanvas"><i class="bi bi-shield-check me-2"></i>Security</a>
+      <a class="nav-link" href="#sec-performance" data-bs-dismiss="offcanvas"><i class="bi bi-speedometer2 me-2"></i>Performance</a>
+      <a class="nav-link" href="#sec-buildkit" data-bs-dismiss="offcanvas"><i class="bi bi-tools me-2"></i>BuildKit & Advanced</a>
+      <a class="nav-link" href="#sec-ci-cd" data-bs-dismiss="offcanvas" style="padding-left:1.8rem;font-size:.8rem;"><i class="bi bi-chevron-right me-1 opacity-50"></i>CI/CD Integration</a>
+      <a class="nav-link" href="#sec-resources" data-bs-dismiss="offcanvas" style="padding-left:1.8rem;font-size:.8rem;"><i class="bi bi-chevron-right me-1 opacity-50"></i>Resource Limits</a>
+      <a class="nav-link" href="#sec-security-scanning" data-bs-dismiss="offcanvas" style="padding-left:1.8rem;font-size:.8rem;"><i class="bi bi-chevron-right me-1 opacity-50"></i>Security Scanning</a>
+      <a class="nav-link" href="#sec-cheatsheet" data-bs-dismiss="offcanvas"><i class="bi bi-card-list me-2"></i>Cheatsheet</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ MAIN CONTENT ═════════════════════════════════ -->
+<main id="main-content">
+
+  <section id="top" id="hero">
+    <div id="hero">
+      <div class="container py-2">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div style="background:rgba(0,200,150,.2);width:60px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(0,200,150,.35);">
+            <i class="bi bi-box-seam-fill text-white" style="font-size:1.8rem;"></i>
+          </div>
+          <div>
+            <h1 class="mb-0">Docker Tutorial</h1>
+            <p class="mb-0 mt-1">A → Z: from basics to advanced, with real examples</p>
+          </div>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">Images</span>
+          <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">Containers</span>
+          <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">Dockerfile</span>
+          <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">Compose</span>
+          <span class="badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;">Dev + Prod</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container py-4 px-3 px-md-4">
+
+    <!-- SECTION 1 -->
+    <section id="sec-what" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-info-circle-fill me-2 text-success"></i>What is Docker?</h2>
+
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>Docker</strong> is a platform for packaging and running applications in <strong>containers</strong>. A container includes the app code + runtime dependencies + configuration, so it runs the same on any machine.</p>
+      </div>
+
+      <p class="mb-4">Think of Docker like a <strong>portable runtime box</strong>. Instead of “works on my laptop”, you get repeatable environments across dev, testing, and production.</p>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="icon-box" style="background:rgba(0,200,150,.15);color:#00c89a;"><i class="bi bi-cube"></i></div>
+              <h6 class="fw-bold mb-0">Container = app + dependencies</h6>
+            </div>
+            <p class="small opacity-75 mb-0">Your app runs in isolation with consistent libraries and OS-level settings (within the container runtime model).</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="icon-box" style="background:rgba(0,200,150,.15);color:#00c89a;"><i class="bi bi-boxes"></i></div>
+              <h6 class="fw-bold mb-0">Image = template</h6>
+            </div>
+            <p class="small opacity-75 mb-0">An <strong>image</strong> is a read-only blueprint used to create containers.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 2 -->
+    <section id="sec-why" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-star-fill me-2 text-warning"></i>Why we use Docker</h2>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">1</div>
+              <h6 class="fw-bold mb-0">Consistency</h6>
+            </div>
+            <p class="small opacity-75 mb-1">Same app environment everywhere.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Build once → run anywhere
+docker build -t myapp:latest .
+docker run --rm -p 8080:8080 myapp:latest</code></pre></div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">2</div>
+              <h6 class="fw-bold mb-0">Faster setup for dev teams</h6>
+            </div>
+            <p class="small opacity-75 mb-1">Spin up full dependencies (DB, cache, app) quickly.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># One command for many services
+docker compose up -d</code></pre></div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">3</div>
+              <h6 class="fw-bold mb-0">Isolation</h6>
+            </div>
+            <p class="small opacity-75 mb-1">Apps don’t fight over ports, libraries, or dependency versions.</p>
+            <p class="small mb-0 opacity-75">Useful for running multiple versions and testing.</p>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">4</div>
+              <h6 class="fw-bold mb-0">Production-ready workflow</h6>
+            </div>
+            <p class="small opacity-75 mb-1">Better deployment repeatability and rollback patterns.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Push image to registry
+docker tag myapp:latest registry.example.com/myapp:1.0.0
+docker push registry.example.com/myapp:1.0.0</code></pre></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 3 -->
+    <section id="sec-basics-flow" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-diagram-3-fill me-2 text-info"></i>How Docker works (Flow)</h2>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">A typical flow</h6>
+            <ol class="small opacity-75 mb-0 ps-3">
+              <li><strong>Create an image</strong> (Dockerfile → layers)</li>
+              <li><strong>Run a container</strong> from that image</li>
+              <li><strong>Expose ports</strong> to access the app</li>
+              <li><strong>Persist data</strong> using volumes</li>
+            </ol>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Minimal example</h6>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># 1) Run a public image
+docker run --rm -p 8080:80 nginx:latest</code></pre></div>
+            <p class="small opacity-75 mb-0"><strong>Short description:</strong> downloads <code>nginx:latest</code>, then runs a container that serves HTML on port 8080.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 4 -->
+    <section id="sec-objects" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-cube-fill me-2 text-success"></i>Core Concepts (Images, Containers, Volumes)</h2>
+
+      <div class="row g-3">
+        <div class="col-lg-4">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="icon-box" style="background:rgba(0,200,150,.15);color:#00c89a;"><i class="bi bi-images"></i></div>
+              <h6 class="fw-bold mb-0">Images</h6>
+            </div>
+            <p class="small opacity-75 mb-2">Read-only templates containing your app and dependencies.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker images</code></pre></div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="icon-box" style="background:rgba(0,200,150,.15);color:#00c89a;"><i class="bi bi-box"></i></div>
+              <h6 class="fw-bold mb-0">Containers</h6>
+            </div>
+            <p class="small opacity-75 mb-2">Running instances of images.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker ps
+docker ps -a</code></pre></div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="icon-box" style="background:rgba(0,200,150,.15);color:#00c89a;"><i class="bi bi-hdd"></i></div>
+              <h6 class="fw-bold mb-0">Volumes</h6>
+            </div>
+            <p class="small opacity-75 mb-2">Persist data even if containers are removed.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker volume ls</code></pre></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 5 -->
+    <section id="sec-dockerfile" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-file-earmark-code-fill me-2 text-info"></i>Dockerfile (How to build your image)</h2>
+
+      <p class="mb-3"><strong>Short description:</strong> A Dockerfile is a script that defines how to build an image (base image, install deps, copy code, build app, set command).</p>
+
+      <div class="code-label">Example Dockerfile (simple Node.js app)</div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-dockerfile"># Use an official Node runtime as a parent image
+FROM node:20-alpine
+
+# Create app directory
+WORKDIR /app
+
+# Copy package files first (better caching)
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy the rest of the application
+COPY . .
+
+# Build (if you have a build step)
+# RUN npm run build
+
+# Expose app port (change if needed)
+EXPOSE 3000
+
+# Start the app
+CMD ["npm", "run", "dev"]</code></pre></div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Key idea:</strong> Docker builds in layers. Copying <code>package*.json</code> before the rest lets Docker reuse cached layers when only app code changes.</p>
+      </div>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- ARG vs ENV -->
+      <h5 class="sub-title" id="sec-arg-env"><i class="bi bi-toggles me-2 text-success"></i>ARG vs ENV</h5>
+      <div class="row g-3 mb-3">
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="icon-box" style="background:rgba(0,200,150,.15);color:#00c89a;"><i class="bi bi-sliders"></i></div>
+              <h6 class="fw-bold mb-0">ARG — build-time only</h6>
+            </div>
+            <p class="small opacity-75 mb-2">Available only during <code>docker build</code>. Not present in the running container.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-dockerfile">ARG NODE_VERSION=20
+FROM node:${NODE_VERSION}-alpine
+
+ARG BUILD_ENV=production
+RUN echo "Building for: $BUILD_ENV"</code></pre></div>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Override at build time
+docker build --build-arg NODE_VERSION=18 -t myapp .</code></pre></div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="icon-box" style="background:rgba(0,200,150,.15);color:#00c89a;"><i class="bi bi-gear"></i></div>
+              <h6 class="fw-bold mb-0">ENV — runtime variable</h6>
+            </div>
+            <p class="small opacity-75 mb-2">Persists inside the running container as an environment variable.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-dockerfile">FROM node:20-alpine
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# App can read process.env.NODE_ENV at runtime
+CMD ["node", "server.js"]</code></pre></div>
+          </div>
+        </div>
+      </div>
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>Rule of thumb:</strong> Use <code>ARG</code> for build config (versions, feature flags). Use <code>ENV</code> for runtime config (NODE_ENV, PORT, API URLs). Never put secrets in either — they can be read via <code>docker inspect</code>.</p>
+      </div>
+
+      <!-- ENTRYPOINT vs CMD -->
+      <h5 class="sub-title" id="sec-entrypoint-cmd"><i class="bi bi-terminal me-2 text-info"></i>ENTRYPOINT vs CMD</h5>
+      <div class="row g-3 mb-3">
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">CMD — default command (overridable)</h6>
+            <p class="small opacity-75 mb-2">Provides defaults. Easily replaced at runtime by passing a command after the image name.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-dockerfile">FROM node:20-alpine
+WORKDIR /app
+COPY . .
+CMD ["npm", "start"]</code></pre></div>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Overrides CMD entirely at runtime
+docker run myapp npm run dev</code></pre></div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">ENTRYPOINT — fixed executable</h6>
+            <p class="small opacity-75 mb-2">Container always runs this executable. Runtime arguments are passed as params to it, not a replacement.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-dockerfile">FROM node:20-alpine
+WORKDIR /app
+COPY . .
+ENTRYPOINT ["node", "server.js"]
+# CMD provides default args to ENTRYPOINT
+CMD ["--port", "3000"]</code></pre></div>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Replaces only the CMD args (--port 8080 instead of 3000)
+docker run myapp --port 8080</code></pre></div>
+          </div>
+        </div>
+      </div>
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle cmd-table small">
+          <thead><tr><th></th><th>CMD</th><th>ENTRYPOINT</th></tr></thead>
+          <tbody>
+            <tr><td>Overridable?</td><td>Yes — pass a command after image name</td><td>Only with <code>--entrypoint</code> flag</td></tr>
+            <tr><td>Best for</td><td>Default commands, dev containers</td><td>Executable / CLI tool containers</td></tr>
+            <tr><td>Combined use</td><td colspan="2">ENTRYPOINT = the executable &nbsp;|&nbsp; CMD = its default arguments</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- HEALTHCHECK -->
+      <h5 class="sub-title" id="sec-healthcheck"><i class="bi bi-heart-pulse me-2 text-danger"></i>HEALTHCHECK instruction</h5>
+      <p class="small opacity-75 mb-2">Tells Docker how to test if the container is healthy. Used by Compose <code>depends_on: condition: service_healthy</code> and orchestrators.</p>
+      <div class="code-wrapper mb-3"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-dockerfile">FROM node:20-alpine
+WORKDIR /app
+COPY . .
+RUN npm ci
+EXPOSE 3000
+CMD ["node", "server.js"]
+
+# Test every 30s, timeout 5s, 3 retries before marked "unhealthy"
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+  CMD wget -qO- http://localhost:3000/health || exit 1</code></pre></div>
+      <div class="code-wrapper mb-4"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># See health status
+docker ps          # shows (healthy) / (unhealthy) / (starting)
+docker inspect --format='{{json .State.Health}}' &lt;container_id&gt;</code></pre></div>
+
+      <!-- .dockerignore -->
+      <h5 class="sub-title" id="sec-dockerignore"><i class="bi bi-file-earmark-x me-2 text-warning"></i>.dockerignore</h5>
+      <p class="small opacity-75 mb-2">Excludes files from the build context sent to the Docker daemon. Speeds up builds and prevents accidentally baking in secrets, logs, or large folders.</p>
+      <div class="code-label">.dockerignore (example)</div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Dependencies (re-installed inside container)
+node_modules/
+vendor/
+
+# Build output
+dist/
+build/
+.next/
+
+# Local env / secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Logs & temp
+*.log
+npm-debug.log*
+tmp/
+
+# VCS / IDE
+.git/
+.gitignore
+.vscode/
+.idea/
+
+# Docker files (avoid confusion)
+Dockerfile*
+docker-compose*.yml</code></pre></div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 6 -->
+    <section id="sec-compose" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-diagram-2-fill me-2 text-success"></i>Docker Compose (Multi-container apps)</h2>
+
+      <p class="mb-3">Compose is used to define and run <strong>multiple containers</strong> (app + database + redis) together using a single YAML file.</p>
+
+      <div class="code-label">docker-compose.yml (example: app + Postgres)</div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-yaml">services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app123
+      POSTGRES_DB: appdb
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://app:app123@db:5432/appdb
+    depends_on:
+      - db
+
+volumes:
+  db_data:</code></pre></div>
+
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Start everything
+docker compose up -d
+
+# Stop everything
+docker compose down</code></pre>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 7 -->
+    <section id="sec-networking" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-diagram-3-fill me-2 text-info"></i>Networking Basics</h2>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Container-to-container</h6>
+            <p class="small opacity-75 mb-2">Compose creates a private network. Services can reach each other by <strong>service name</strong>.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># example from app container
+DATABASE_URL=postgres://user:pass@db:5432/appdb</code></pre></div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Host-to-container</h6>
+            <p class="small opacity-75 mb-2">Use <code>-p hostPort:containerPort</code> to expose your service on the host machine.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker run --rm -p 8080:80 nginx:latest</code></pre></div>
+          </div>
+        </div>
+      </div>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- Network types -->
+      <h5 class="sub-title" id="sec-network-types"><i class="bi bi-hdd-network me-2 text-success"></i>Network Types</h5>
+      <div class="table-responsive mb-3">
+        <table class="table table-bordered align-middle cmd-table small">
+          <thead><tr><th>Type</th><th>Description</th><th>When to use</th></tr></thead>
+          <tbody>
+            <tr><td><code>bridge</code></td><td>Default. Private internal network on the host. Containers on the same custom bridge can reach each other by service name.</td><td>Most local / dev use cases</td></tr>
+            <tr><td><code>host</code></td><td>Container shares the host network stack directly. No port mapping needed.</td><td>High-performance networking on Linux</td></tr>
+            <tr><td><code>none</code></td><td>Disables all networking for the container.</td><td>Isolated batch jobs, security-sensitive tasks</td></tr>
+            <tr><td><code>overlay</code></td><td>Multi-host network spanning multiple Docker daemons (Swarm / distributed services).</td><td>Docker Swarm, multi-node clusters</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="code-wrapper mb-4"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Run on host network (Linux only — no port mapping needed)
+docker run --rm --network host nginx
+
+# Run with no network access
+docker run --rm --network none alpine ping google.com  # fails as expected</code></pre></div>
+
+      <!-- docker network commands -->
+      <h5 class="sub-title" id="sec-network-commands"><i class="bi bi-terminal me-2 text-info"></i>docker network commands</h5>
+      <div class="table-responsive mb-3">
+        <table class="table table-bordered align-middle cmd-table small">
+          <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><code>docker network ls</code></td><td>List all networks</td></tr>
+            <tr><td><code>docker network create mynet</code></td><td>Create a custom bridge network</td></tr>
+            <tr><td><code>docker network inspect mynet</code></td><td>Detailed info: connected containers, subnet, gateway</td></tr>
+            <tr><td><code>docker network connect mynet &lt;container&gt;</code></td><td>Attach a running container to a network</td></tr>
+            <tr><td><code>docker network disconnect mynet &lt;container&gt;</code></td><td>Detach a container from a network</td></tr>
+            <tr><td><code>docker network rm mynet</code></td><td>Remove a network (no connected containers allowed)</td></tr>
+            <tr><td><code>docker network prune</code></td><td>Remove all unused networks</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="code-wrapper mb-4"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Create a custom network
+docker network create mynet
+
+# Run two containers on it — they can reach each other by name
+docker run -d --name db  --network mynet postgres:16-alpine
+docker run -d --name app --network mynet -p 3000:3000 myapp:latest
+
+# Inside app container: connect to db on db:5432 (by service name)</code></pre></div>
+
+      <!-- Custom named networks in Compose -->
+      <h5 class="sub-title" id="sec-network-compose"><i class="bi bi-diagram-2 me-2 text-success"></i>Custom named networks in Compose</h5>
+      <div class="code-wrapper mb-3"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-yaml">services:
+  db:
+    image: postgres:16-alpine
+    networks:
+      - backend
+
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    networks:
+      - backend
+      - frontend
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    networks:
+      - frontend
+
+# All custom networks must be declared here
+networks:
+  frontend:
+  backend:
+    internal: true   # containers only — no outbound internet access</code></pre></div>
+      <div class="note-box mt-2">
+        <p class="mb-0"><strong>Tip:</strong> <code>internal: true</code> isolates the network — containers on it cannot reach the internet. Great for locking down your database network so it is never exposed.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 8 -->
+    <section id="sec-install" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-download-fill me-2 text-success"></i>Docker Setup (Install Docker)</h2>
+
+      <p class="mb-3">This section is cross-platform. For Windows/macOS, Docker Desktop is the common approach. For Linux servers, Docker Engine is typical.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Windows / macOS (Docker Desktop)</h6>
+            <p class="small opacity-75 mb-3">Install Docker Desktop, enable “Use WSL 2 backend” on Windows if prompted.</p>
+            <div class="note-box">
+              <p class="mb-0"><strong>Short checklist:</strong> Install → open Docker Desktop → wait for engine to become “Running”.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Linux (Docker Engine)</h6>
+            <p class="small opacity-75 mb-2">If your distro supports it, use the official docs. (Different distros require slightly different commands.)</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Common verification step (after install)
+docker --version</code></pre></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 9 -->
+    <section id="sec-verify" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-check2-circle-fill me-2 text-success"></i>Verify & Configure Docker</h2>
+
+      <div class="code-label">Basic verification</div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker --version
+docker info
+docker run --rm hello-world</code></pre></div>
+
+      <div class="note-box">
+        <p class="mb-0"><strong>If it fails:</strong> check the Docker daemon/engine is running, and on Windows confirm WSL 2 integration if you’re using Docker Desktop.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 10 -->
+    <section id="sec-run" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-play-circle-fill me-2 text-info"></i>Run containers (daily commands)</h2>
+
+      <h5 class="sub-title"><i class="bi bi-play-circle me-2 text-success"></i>Examples</h5>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">1</div>
+              <h6 class="fw-bold mb-0">Run Nginx</h6>
+            </div>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker run --rm -p 8080:80 nginx:latest</code></pre></div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">2</div>
+              <h6 class="fw-bold mb-0">Interactive shell</h6>
+            </div>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker run --rm -it alpine:latest sh
+# inside:
+# ls
+# uname -a</code></pre></div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">3</div>
+              <h6 class="fw-bold mb-0">Restart policy (keep running)</h6>
+            </div>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker run -d --restart unless-stopped -p 8080:80 nginx:latest</code></pre></div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">4</div>
+              <h6 class="fw-bold mb-0">Stop / remove</h6>
+            </div>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker ps
+docker stop <container_id>
+docker rm <container_id></code></pre></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 11 -->
+    <section id="sec-build" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-braces-asterisk me-2 text-success"></i>Build images (Docker build)</h2>
+
+      <p class="mb-3"><strong>Short description:</strong> <code>docker build</code> reads your Dockerfile and produces an image you can run.</p>
+
+      <div class="code-wrapper">
+        <button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Build image from current directory
+docker build -t myapp:1.0 .
+
+# Run it
+docker run --rm -p 3000:3000 myapp:1.0</code></pre>
+      </div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Tip:</strong> Use <code>.dockerignore</code> (not a real built-in, usually <code>.dockerignore</code> in some tools; standard is <code>.dockerignore</code> actually named <code>.dockerignore</code> or <code>.dockerignore</code>? In Docker it’s <code>.dockerignore</code>) to exclude files and speed up builds. In practice the file is named <code>.dockerignore</code> in older docs; the correct name is <code>.dockerignore</code> (no “i”).</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 12 -->
+    <section id="sec-volumes" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-database-fill me-2 text-info"></i>Volumes & Persistence</h2>
+
+      <p class="mb-3">Containers are ephemeral. Use volumes to keep data across restarts/removals.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Create and inspect volumes</h6>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker volume create mydata
+docker volume ls
+docker volume inspect mydata</code></pre></div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Use a named volume</h6>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker run --rm -it \
+  -v mydata:/data \
+  alpine:latest sh -c "echo hello > /data/msg.txt; cat /data/msg.txt"</code></pre></div>
+          </div>
+        </div>
+      </div>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- Volume Types -->
+      <h5 class="sub-title" id="sec-volume-types"><i class="bi bi-layers me-2 text-info"></i>Volume Types: Named vs Bind Mount vs tmpfs</h5>
+      <div class="table-responsive mb-3">
+        <table class="table table-bordered align-middle cmd-table small">
+          <thead><tr><th>Type</th><th>Syntax</th><th>Managed by</th><th>Best for</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Named volume</strong></td><td><code>-v mydata:/app/data</code></td><td>Docker</td><td>DB data, persistent app state</td></tr>
+            <tr><td><strong>Bind mount</strong></td><td><code>-v /host/path:/container/path</code></td><td>Host filesystem</td><td>Dev hot-reload, sharing source code</td></tr>
+            <tr><td><strong>tmpfs</strong></td><td><code>--tmpfs /tmp</code></td><td>Host RAM (in-memory)</td><td>Ephemeral scratch space, secrets in RAM</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row g-3 mb-4">
+        <div class="col-lg-4">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Named volume</h6>
+            <p class="small opacity-75 mb-2">Docker manages the storage location. Data survives container deletion.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker run -d \
+  -v pgdata:/var/lib/postgresql/data \
+  postgres:16-alpine</code></pre></div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Bind mount</h6>
+            <p class="small opacity-75 mb-2">Maps a host directory directly. Changes on the host are instantly visible inside the container — ideal for local dev.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker run -d \
+  -v $(pwd):/app \
+  -p 3000:3000 \
+  myapp:dev</code></pre></div>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-yaml"># Compose bind mount
+services:
+  app:
+    volumes:
+      - ./src:/app/src</code></pre></div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">tmpfs mount</h6>
+            <p class="small opacity-75 mb-2">In-memory only. Lost on container stop. Fast and secure for temporary data that must not touch disk.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker run -d \
+  --tmpfs /tmp \
+  --tmpfs /run:rw,noexec,nosuid,size=64m \
+  myapp:latest</code></pre></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- docker cp -->
+      <h5 class="sub-title" id="sec-docker-cp"><i class="bi bi-files me-2 text-warning"></i>docker cp — copy files to/from containers</h5>
+      <div class="code-wrapper mb-2"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Copy FROM container TO host
+docker cp &lt;container_id&gt;:/app/logs/error.log ./error.log
+
+# Copy FROM host TO container
+docker cp ./config.json &lt;container_id&gt;:/app/config.json
+
+# Copy an entire directory from container
+docker cp &lt;container_id&gt;:/app/dist ./dist-from-container</code></pre></div>
+      <div class="note-box">
+        <p class="mb-0"><strong>Tip:</strong> <code>docker cp</code> works on both running and stopped containers. Useful for pulling build artifacts out of a container without mounting a volume.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 13 -->
+    <section id="sec-env" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-key-fill me-2 text-success"></i>Environment Variables & Secrets (basic)</h2>
+
+      <p class="mb-3">Use env vars for configuration. For real secrets, prefer secret management in your deployment platform (Docker secrets in Swarm, Kubernetes secrets, or cloud secret managers).</p>
+
+      <div class="code-label">Run with -e</div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker run --rm -e NODE_ENV=production -p 3000:3000 myapp:1.0</code></pre></div>
+
+      <div class="code-label">Compose env section</div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-yaml">services:
+  app:
+    image: myapp:1.0
+    environment:
+      NODE_ENV: production
+      PORT: "3000"</code></pre></div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 14 -->
+    <section id="sec-debug" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-bug-fill me-2 text-info"></i>Debugging inside containers</h2>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Check logs</h6>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker ps
+docker logs <container_id></code></pre></div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Exec into a running container</h6>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker exec -it <container_id> sh
+# or bash if installed:
+docker exec -it <container_id> bash</code></pre></div>
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Verify ports and network</h6>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker port <container_id>
+docker inspect <container_id> --format '{{json .NetworkSettings.Networks}}'</code></pre></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 15 -->
+    <section id="sec-new-project" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-plus-circle-fill me-2 text-success"></i>Setup a new Docker project (New project flow)</h2>
+
+      <p class="mb-3"><strong>Goal:</strong> Start from code → add Dockerfile → run locally → optionally add Compose.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-4">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">1</div>
+              <h6 class="fw-bold mb-0">Create app</h6>
+            </div>
+            <p class="small opacity-75 mb-0">Example: Node.js app.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Example only
+npm init -y
+npm i express</code></pre></div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">2</div>
+              <h6 class="fw-bold mb-0">Add Dockerfile</h6>
+            </div>
+            <p class="small opacity-75 mb-2">Copy a minimal Dockerfile like in the Dockerfile section.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># build later
+# create Dockerfile</code></pre></div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">3</div>
+              <h6 class="fw-bold mb-0">Build + run</h6>
+            </div>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker build -t myapp:dev .
+docker run --rm -p 3000:3000 myapp:dev</code></pre></div>
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Optional: add Docker Compose</h6>
+            <p class="small opacity-75 mb-3">If you need DB/Redis, Compose gives you one command to run the whole stack.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker compose up -d
+docker compose logs -f</code></pre></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 16 -->
+    <section id="sec-existing-project" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-arrow-left-right-circle-fill me-2 text-info"></i>Containerize an Existing Project (Existing project flow)</h2>
+
+      <p class="mb-3"><strong>Short description:</strong> Turn an existing app into a Docker-ready app by creating a Dockerfile, wiring ports, and handling data/config.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">1</div>
+              <h6 class="fw-bold mb-0">Inspect your runtime needs</h6>
+            </div>
+            <ul class="small opacity-75 ps-3 mb-0">
+              <li>Which language/runtime? (Node, Python, Java, etc.)</li>
+              <li>How do you start the app? (npm start, uvicorn, java -jar…)</li>
+              <li>Which port does it listen on?</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">2</div>
+              <h6 class="fw-bold mb-0">Create Dockerfile that mirrors your setup</h6>
+            </div>
+            <p class="small opacity-75 mb-3">Example pattern (Node): install deps → copy code → run start script.</p>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-dockerfile">FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+EXPOSE 3000
+CMD ["npm","start"]</code></pre></div>
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="step-num">3</div>
+              <h6 class="fw-bold mb-0">Run and fix mismatches</h6>
+            </div>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker build -t myapp:latest .
+docker run --rm -p 3000:3000 myapp:latest</code></pre></div>
+            <p class="small opacity-75 mb-0">If it fails: check logs, check env vars, ensure your app binds to <code>0.0.0.0</code> inside the container.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 17 -->
+    <section id="sec-multi-stage" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-layers-fill me-2 text-success"></i>Multi-stage builds (Advanced Docker)</h2>
+
+      <p class="mb-3">Multi-stage builds reduce final image size and improve security by excluding build tools from the runtime image.</p>
+
+      <div class="code-label">Example (build + run)</div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-dockerfile"># 1) Build stage
+FROM node:20-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+# 2) Runtime stage
+FROM node:20-alpine
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=build /app/dist ./dist
+# If using Express, adjust CMD accordingly.
+EXPOSE 3000
+CMD ["node", "dist/server.js"]</code></pre></div>
+
+      <p class="note-box mb-0"><strong>Short example outcome:</strong> final image contains only runtime artifacts (like <code>dist</code>), not dev dependencies and build tools.</p>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 18 -->
+    <section id="sec-best-practices" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-award-fill me-2 text-warning"></i>Best practices (Basic → Advanced)</h2>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">1) Keep images small</h6>
+            <ul class="small opacity-75 ps-3 mb-0">
+              <li>Use slim/alpine variants when appropriate</li>
+              <li>Use multi-stage builds</li>
+              <li>Clean up caches (package manager)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">2) Leverage layer caching</h6>
+            <ul class="small opacity-75 ps-3 mb-0">
+              <li>Copy lockfiles/package files first</li>
+              <li>Install deps before copying frequently changing code</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">3) Avoid running as root</h6>
+            <p class="small opacity-75 mb-0">Prefer a non-root user in production images.</p>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">4) Use .dockerignore</h6>
+            <p class="small opacity-75 mb-0">Exclude node_modules, logs, build output, local env files to speed builds.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 19 -->
+    <section id="sec-security" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-shield-check-fill me-2 text-info"></i>Security basics</h2>
+
+      <ul class="small opacity-75 ps-3 mb-0">
+        <li><strong>Pin image versions</strong> instead of using only <code>:latest</code></li>
+        <li><strong>Minimize attack surface</strong> (small images, multi-stage builds)</li>
+        <li><strong>Don’t bake secrets</strong> into images or Dockerfile layers</li>
+        <li><strong>Use read-only root filesystem</strong> where possible</li>
+        <li><strong>Limit capabilities</strong> and run as non-root</li>
+      </ul>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Short description:</strong> Docker security is mostly about building safer images and controlling runtime privileges.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 20 -->
+    <section id="sec-performance" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-speedometer2 me-2 text-success"></i>Performance tips</h2>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Build speed</h6>
+            <ul class="small opacity-75 ps-3 mb-0">
+              <li>Use caching by copying package files first</li>
+              <li>Exclude junk via ignore files</li>
+              <li>Keep Dockerfile instructions ordered from stable → changing</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Runtime speed</h6>
+            <ul class="small opacity-75 ps-3 mb-0">
+              <li>Choose correct base images</li>
+              <li>Reduce layers and image size</li>
+              <li>Use health checks to manage readiness (Compose supports it)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- SECTION 21A -->
+    <section id="sec-trending-missing" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-lightning-fill me-2 text-warning"></i>Trending topics (the “most asked” Docker parts)</h2>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="icon-box" style="background:rgba(0,200,150,.15);color:#00c89a;"><i class="bi bi-building"></i></div>
+              <h6 class="fw-bold mb-0">Docker containers vs VMs (quick difference)</h6>
+            </div>
+            <ul class="small opacity-75 ps-3 mb-0">
+              <li><strong>VMs</strong>: virtualize hardware (run a full guest OS per VM)</li>
+              <li><strong>Containers</strong>: share the host kernel; only package app + dependencies</li>
+              <li><strong>Overhead</strong>: containers are usually lighter/faster to start</li>
+              <li><strong>Isolation</strong>: both isolate workloads, but containers share more OS-level resources</li>
+            </ul>
+            <div class="note-box mt-3">
+              <p class="mb-0"><strong>Short description:</strong> Containers are like “app sandbox + runtime”; VMs are like “mini computers”.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="icon-box" style="background:rgba(0,200,150,.15);color:#00c89a;"><i class="bi bi-cloud-arrow-up-fill"></i></div>
+              <h6 class="fw-bold mb-0">Docker registries (Docker Hub / private registry)</h6>
+            </div>
+            <p class="small opacity-75 mb-2"><strong>Short description:</strong> A registry stores images so you can <em>pull</em> and <em>push</em> them across machines.</p>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Login (needed for private images)
+docker login
+
+# Pull an image
+docker pull nginx:latest
+
+# Tag your local image with the registry name
+docker tag myapp:1.0.0 registry.example.com/myapp:1.0.0
+
+# Push it
+docker push registry.example.com/myapp:1.0.0</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="icon-box" style="background:rgba(0,200,150,.15);color:#00c89a;"><i class="bi bi-eye-fill"></i></div>
+              <h6 class="fw-bold mb-0">Inspect images (understand what’s inside)</h6>
+            </div>
+            <ul class="small opacity-75 ps-3 mb-3">
+              <li><code>docker inspect</code> — detailed metadata</li>
+              <li><code>docker history</code> — layer-by-layer build history</li>
+            </ul>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">docker inspect nginx:latest
+docker history nginx:latest
+
+# Example (containers health example — you already have this in your file):
+docker inspect <container_id> --format='{{json .State.Health}}'</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="icon-box" style="background:rgba(0,200,150,.15);color:#00c89a;"><i class="bi bi-clipboard-data-fill"></i></div>
+              <h6 class="fw-bold mb-0">Operational commands (day-to-day)</h6>
+            </div>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Live resource usage
+docker stats
+
+# Disk usage by images/containers/volumes
+docker system df
+
+# Safer cleanup than system prune (removes stopped containers only)
+docker container prune
+
+# Full cleanup (use carefully)
+docker system prune -f</code></pre>
+            </div>
+            <div class="note-box mt-3">
+              <p class="mb-0"><strong>Short description:</strong> These help you debug performance and reclaim disk space.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="icon-box" style="background:rgba(0,200,150,.15);color:#00c89a;"><i class="bi bi-file-earmark-text"></i></div>
+              <h6 class="fw-bold mb-0">Compose: .env / env_file + restart + health</h6>
+            </div>
+            <p class="small opacity-75 mb-2"><strong>Short description:</strong> Keep configuration outside YAML and make services start in the right order.</p>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-yaml"># docker-compose.yml
+services:
+  db:
+    image: postgres:16-alpine
+    env_file:
+      - ./db.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  app:
+    build: .
+    environment:
+      DATABASE_URL: postgres://postgres:pass@db:5432/appdb
+    depends_on:
+      db:
+        condition: service_healthy</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="icon-box" style="background:rgba(0,200,150,.15);color:#00c89a;"><i class="bi bi-code-slash"></i></div>
+              <h6 class="fw-bold mb-0">Local dev workflow (bind mount for live reload)</h6>
+            </div>
+            <p class="small opacity-75 mb-2"><strong>Short description:</strong> Mount your source folder into the container so changes are reflected immediately.</p>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Example (run your dev server with code mounted)
+# On Linux/macOS:
+docker run --rm -it -p 3000:3000 -v $(pwd):/app myapp:dev
+
+# On Windows, $(pwd) may not work like Linux.
+# Use your actual path:
+# -v C:\path\to\project:/app</code></pre>
+            </div>
+            <div class="note-box mt-3">
+              <p class="mb-0"><strong>Important:</strong> For node apps, ensure your container command runs dev mode (e.g. <code>npm run dev</code>).</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 21A (added trending gaps) -->
+    <section id="sec-trending-gaps" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-lightning-fill me-2 text-warning"></i>Trending gaps added (the most asked Docker topics)</h2>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="icon-box" style="background:rgba(0,200,150,.15);color:#00c89a;"><i class="bi bi-cpu"></i></div>
+              <h6 class="fw-bold mb-0">Containers vs VMs (quick difference)</h6>
+            </div>
+            <ul class="small opacity-75 ps-3 mb-0">
+              <li><strong>VMs:</strong> virtualize hardware → run a full guest OS per VM</li>
+              <li><strong>Containers:</strong> share the host kernel → package only app + dependencies</li>
+              <li><strong>Overhead:</strong> containers are usually lighter and faster to start</li>
+              <li><strong>Isolation:</strong> both isolate workloads, but at different layers</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="icon-box" style="background:rgba(0,200,150,.15);color:#00c89a;"><i class="bi bi-cloud-arrow-up-fill"></i></div>
+              <h6 class="fw-bold mb-0">Registries (Docker Hub / private registry)</h6>
+            </div>
+            <p class="small opacity-75 mb-2"><strong>Short description:</strong> A registry stores images so you can <em>pull</em> and <em>push</em> across machines.</p>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># login (private registries / Docker Hub when pushing)
+docker login
+
+# pull an image
+docker pull nginx:latest
+
+# tag to match your registry namespace
+docker tag myapp:1.0.0 registry.example.com/myapp:1.0.0
+
+# push
+docker push registry.example.com/myapp:1.0.0</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="icon-box" style="background:rgba(0,200,150,.15);color:#00c89a;"><i class="bi bi-eye-fill"></i></div>
+              <h6 class="fw-bold mb-0">Inspect images (inspect + history)</h6>
+            </div>
+            <p class="small opacity-75 mb-2"><strong>Short description:</strong> Understand what’s inside an image and how it was built.</p>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># detailed metadata
+docker inspect nginx:latest
+
+# build history (layers)
+docker history nginx:latest
+
+# container health info (you already use this)
+docker inspect <container_id> --format='{{json .State.Health}}'</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="icon-box" style="background:rgba(0,200,150,.15);color:#00c89a;"><i class="bi bi-speedometer2"></i></div>
+              <h6 class="fw-bold mb-0">Ops: stats + disk usage + cleanup</h6>
+            </div>
+            <div class="code-wrapper mb-0">
+              <button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># live CPU/RAM/network usage
+docker stats
+
+# disk usage (images/containers/volumes)
+docker system df
+
+# safer: remove stopped containers only
+docker container prune
+
+# aggressive: remove unused images/containers/networks (use carefully)
+docker system prune -f</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="icon-box" style="background:rgba(0,200,150,.15);color:#00c89a;"><i class="bi bi-gear-fill"></i></div>
+              <h6 class="fw-bold mb-0">Compose trending extras (env_file + health + restart)</h6>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="code-wrapper mb-0">
+                  <button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-yaml">services:
+  db:
+    image: postgres:16-alpine
+    env_file:
+      - ./db.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped</code></pre>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="code-wrapper mb-0">
+                  <button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-yaml">services:
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy</code></pre>
+                </div>
+              </div>
+            </div>
+            <div class="note-box mt-3">
+              <p class="mb-0"><strong>Short description:</strong> Using <code>healthcheck</code> + <code>depends_on.condition: service_healthy</code> avoids “DB not ready yet” startup failures.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 21B: BuildKit Features -->
+    <section id="sec-buildkit" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-tools me-2 text-warning"></i>BuildKit & Advanced Build Features</h2>
+
+      <p class="mb-3">BuildKit is Docker's next-generation build engine with improved performance, security, and flexibility. Enable it by adding <code># syntax=docker/dockerfile:1</code> at the top of your Dockerfile.</p>
+
+      <div class="code-label">Enable BuildKit syntax</div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-dockerfile"># syntax=docker/dockerfile:1
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+EXPOSE 3000
+CMD ["node", "server.js"]</code></pre></div>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- Build Secrets -->
+      <h5 class="sub-title"><i class="bi bi-key-fill me-2 text-success"></i>Build Secrets (Secure secret handling)</h5>
+      <p class="small opacity-75 mb-2">Mount secrets during build without baking them into the image. Secrets are only available during the build step and never appear in image layers.</p>
+
+      <div class="code-label">Dockerfile with secrets</div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-dockerfile"># syntax=docker/dockerfile:1
+FROM node:20-alpine
+WORKDIR /app
+
+# Mount secret during build (only available in this RUN step)
+RUN --mount=type=secret,id=npm_token \
+    export NPM_TOKEN=$(cat /run/secrets/npm_token) && \
+    npm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN && \
+    npm install
+
+COPY . .
+EXPOSE 3000
+CMD ["node", "server.js"]</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Build with secret (secret is NOT stored in image)
+echo "npm_secret_token_123" > .npm_token
+docker build --secret id=npm_token,src=.npm_token -t myapp .
+rm .npm_token</code></pre></div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Important:</strong> Secrets are only available during the specific <code>RUN</code> step where they're mounted. They're automatically removed after the step completes.</p>
+      </div>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- Cache Mounts -->
+      <h5 class="sub-title"><i class="bi bi-hdd-rack me-2 text-info"></i>Cache Mounts (Faster builds)</h5>
+      <p class="small opacity-75 mb-2">Persist cache between builds to dramatically speed up dependency installation. Cache is stored on the host and reused across builds.</p>
+
+      <div class="code-label">Dockerfile with cache mounts</div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-dockerfile"># syntax=docker/dockerfile:1
+FROM node:20-alpine
+WORKDIR /app
+
+# Cache npm dependencies between builds
+RUN --mount=type=cache,target=/root/.npm \
+    --mount=type=cache,target=/app/node_modules \
+    npm install
+
+COPY . .
+EXPOSE 3000
+CMD ["node", "server.js"]</code></pre></div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Cache types</h6>
+            <ul class="small opacity-75 ps-3 mb-0">
+              <li><code>inline</code> — Cache stored in image layers (default)</li>
+              <li><code>registry</code> — Cache pushed to registry for CI/CD sharing</li>
+              <li><code>local</code> — Cache stored in local directory</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Cache targets</h6>
+            <ul class="small opacity-75 ps-3 mb-0">
+              <li><code>/root/.npm</code> — npm cache</li>
+              <li><code>/app/node_modules</code> — Dependencies</li>
+              <li><code>/var/cache/apt</code> — APT cache (Debian/Ubuntu)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- Docker Buildx -->
+      <h5 class="sub-title"><i class="bi bi-cpu me-2 text-warning"></i>Docker Buildx (Multi-platform builds)</h5>
+      <p class="small opacity-75 mb-2">Build images for multiple architectures (amd64, arm64, arm/v7) from a single Dockerfile. Essential for supporting Apple Silicon, Raspberry Pi, etc.</p>
+
+      <div class="code-wrapper mb-3"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Create a new builder instance
+docker buildx create --name mybuilder --use
+
+# Build for multiple platforms
+docker buildx build --platform linux/amd64,linux/arm64 \
+  -t myapp:latest \
+  --push .
+
+# Build and load to local Docker
+docker buildx build --platform linux/amd64,linux/arm64 \
+  -t myapp:latest \
+  --load .</code></pre></div>
+
+      <div class="note-box">
+        <p class="mb-0"><strong>Tip:</strong> Use <code>--push</code> to push directly to registry, or <code>--load</code> to load into local Docker. For CI/CD, <code>--push</code> is preferred.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 21C: CI/CD Integration -->
+    <section id="sec-ci-cd" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-github me-2 text-info"></i>Docker in CI/CD Pipelines</h2>
+
+      <p class="mb-3">Automate building, testing, and pushing Docker images using CI/CD platforms like GitHub Actions, GitLab CI, or Jenkins.</p>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- GitHub Actions -->
+      <h5 class="sub-title"><i class="bi bi-github me-2 text-success"></i>GitHub Actions Example</h5>
+      <div class="code-label">.github/workflows/docker.yml</div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-yaml">name: Docker Build and Push
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            myuser/myapp:latest
+            myuser/myapp:${{ github.sha }}
+          cache-from: type=registry,ref=myuser/myapp:buildcache
+          cache-to: type=inline
+
+      - name: Run security scan
+        run: docker scan myuser/myapp:latest || true</code></pre></div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Best practices:</strong> Use <code>${{ github.sha }}</code> for unique tags per commit. Store registry credentials as GitHub secrets. Use Buildx cache for faster builds.</p>
+      </div>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- GitLab CI -->
+      <h5 class="sub-title"><i class="bi bi-git me-2 text-warning"></i>GitLab CI Example</h5>
+      <div class="code-label">.gitlab-ci.yml</div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-yaml">stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  DOCKER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+
+build:
+  stage: build
+  image: docker:24
+  services:
+    - docker:24-dind
+  script:
+    - docker build -t $DOCKER_IMAGE .
+    - docker push $DOCKER_IMAGE
+  only:
+    - main
+    - develop
+
+test:
+  stage: test
+  image: docker:24
+  services:
+    - docker:24-dind
+  script:
+    - docker run --rm $DOCKER_IMAGE npm test
+  only:
+    - merge_requests
+
+deploy:
+  stage: deploy
+  image: alpine:latest
+  script:
+    - apk add --no-cache curl
+    - curl -X POST $DEPLOY_WEBHOOK_URL \
+        -H "Content-Type: application/json" \
+        -d "{\"image\":\"$DOCKER_IMAGE\"}"
+  only:
+    - main</code></pre></div>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- Testing Containers -->
+      <h5 class="sub-title"><i class="bi bi-check2-square me-2 text-success"></i>Testing in CI</h5>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Run tests in container</h6>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Run unit tests
+docker run --rm myapp:latest npm test
+
+# Run integration tests with DB
+docker compose -f docker-compose.test.yml up \
+  --abort-on-container-exit \
+  --exit-code-from app</code></pre></div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Multi-stage testing</h6>
+            <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-dockerfile"># syntax=docker/dockerfile:1
+# Build stage
+FROM node:20-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+# Test stage
+FROM build AS test
+RUN npm test
+
+# Production stage
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=build /app/dist ./dist
+CMD ["node", "dist/server.js"]</code></pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-box mt-4">
+        <p class="mb-0"><strong>Pro tip:</strong> Use <code>docker compose</code> for integration tests that need multiple services (app + database + cache). Tag images with commit SHA for traceability.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 21D: Resource Limits -->
+    <section id="sec-resources" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-sliders me-2 text-warning"></i>Resource Limits & Management</h2>
+
+      <p class="mb-3">Control CPU, memory, and other resources to prevent containers from consuming all host resources and affecting other services.</p>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- Memory Limits -->
+      <h5 class="sub-title"><i class="bi bi-memory me-2 text-info"></i>Memory Limits</h5>
+      <div class="table-responsive mb-3">
+        <table class="table table-bordered align-middle cmd-table small">
+          <thead><tr><th>Flag</th><th>Description</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><code>-m, --memory</code></td><td>Maximum memory limit</td><td><code>-m 512m</code></td></tr>
+            <tr><td><code>--memory-swap</code></td><td>Memory + swap limit</td><td><code>--memory-swap=1g</code></td></tr>
+            <tr><td><code>--memory-reservation</code></td><td>Soft limit (recovery point)</td><td><code>--memory-reservation=256m</code></td></tr>
+            <tr><td><code>--oom-kill-disable</code></td><td>Prevent OOM killer</td><td><code>--oom-kill-disable</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-wrapper mb-3"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Limit container to 512MB RAM
+docker run -d -m 512m nginx:latest
+
+# Limit with swap (total 1GB)
+docker run -d -m 512m --memory-swap=1g myapp:latest
+
+# Soft limit (container can exceed if resources available)
+docker run -d --memory-reservation=256m -m 512m myapp:latest</code></pre></div>
+
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>Warning:</strong> If a container exceeds its memory limit, it will be killed by the OOM (Out Of Memory) killer. Set appropriate limits based on your application's needs.</p>
+      </div>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- CPU Limits -->
+      <h5 class="sub-title"><i class="bi bi-cpu me-2 text-success"></i>CPU Limits</h5>
+      <div class="table-responsive mb-3">
+        <table class="table table-bordered align-middle cmd-table small">
+          <thead><tr><th>Flag</th><th>Description</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><code>--cpus</code></td><td>Number of CPU cores</td><td><code>--cpus=1.5</code></td></tr>
+            <tr><td><code>--cpu-shares</code></td><td>CPU weight (relative)</td><td><code>--cpu-shares=512</code></td></tr>
+            <tr><td><code>--cpuset-cpus</code></td><td>Specific CPU cores</td><td><code>--cpuset-cpus="0,1"</code></td></tr>
+            <tr><td><code>--cpu-period</code></td><td>CPU CFS period</td><td><code>--cpu-period=100000</code></td></tr>
+            <tr><td><code>--cpu-quota</code></td><td>CPU CFS quota</td><td><code>--cpu-quota=50000</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-wrapper mb-3"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Limit to 1.5 CPU cores
+docker run -d --cpus=1.5 nginx:latest
+
+# Use specific CPU cores (0 and 1)
+docker run -d --cpuset-cpus="0,1" myapp:latest
+
+# Give 50% of CPU time (relative weight)
+docker run -d --cpu-shares=512 myapp:latest</code></pre></div>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- Compose Resource Limits -->
+      <h5 class="sub-title"><i class="bi bi-diagram-2 me-2 text-info"></i>Compose Resource Limits</h5>
+      <div class="code-label">docker-compose.yml with resource limits</div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-yaml">services:
+  app:
+    build: .
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    ports:
+      - "3000:3000"
+
+  db:
+    image: postgres:16-alpine
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:</code></pre></div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Note:</strong> <code>deploy</code> resources are only enforced in Docker Swarm mode. For single-host Docker, use <code>cpus</code> and <code>memory</code> directly under the service.</p>
+      </div>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- Monitoring Resources -->
+      <h5 class="sub-title"><i class="bi bi-graph-up-arrow me-2 text-warning"></i>Monitoring Resource Usage</h5>
+      <div class="code-wrapper mb-3"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Live resource usage for all containers
+docker stats
+
+# Stats for specific container
+docker stats myapp-container
+
+# One-time stats (no streaming)
+docker stats --no-stream
+
+# Inspect container resource limits
+docker inspect --format='{{.HostConfig.Memory}}' myapp-container
+docker inspect --format='{{.HostConfig.CpuShares}}' myapp-container</code></pre></div>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Best practices</h6>
+            <ul class="small opacity-75 ps-3 mb-0">
+              <li>Set both limits and reservations</li>
+              <li>Monitor actual usage before setting limits</li>
+              <li>Use <code>--memory-reservation</code> for soft limits</li>
+              <li>Consider OOM score adjustments</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Common issues</h6>
+            <ul class="small opacity-75 ps-3 mb-0">
+              <li>Container killed by OOM → increase memory limit</li>
+              <li>High CPU usage → check for infinite loops</li>
+              <li>Slow performance → check if limits are too restrictive</li>
+              <li>Swap usage → consider disabling swap in container</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 21E: Security Scanning -->
+    <section id="sec-security-scanning" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-shield-check me-2 text-danger"></i>Security Scanning & Vulnerability Management</h2>
+
+      <p class="mb-3">Regularly scan your Docker images for vulnerabilities, misconfigurations, and security issues before deploying to production.</p>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- Docker Scan -->
+      <h5 class="sub-title"><i class="bi bi-radar me-2 text-info"></i>Docker Scan (Built-in)</h5>
+      <p class="small opacity-75 mb-2">Docker's built-in scanning tool powered by Snyk. Scans for vulnerabilities in OS packages and application dependencies.</p>
+
+      <div class="code-wrapper mb-3"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Scan an image for vulnerabilities
+docker scan myapp:latest
+
+# Scan with full output
+docker scan --file /app/package.json myapp:latest
+
+# Accept or ignore specific vulnerabilities
+docker scan --accept HIGH myapp:latest
+
+# Login to Snyk for more features
+docker login --username <snyk-user> snyk</code></pre></div>
+
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>Note:</strong> Docker Scan requires a free Snyk account for full functionality. Limited scans are available without authentication.</p>
+      </div>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- Trivy -->
+      <h5 class="sub-title"><i class="bi bi-bug me-2 text-warning"></i>Trivy (Comprehensive Scanner)</h5>
+      <p class="small opacity-75 mb-2">A simple and comprehensive vulnerability scanner for containers, filesystems, and repositories. Supports OS packages and language-specific dependencies.</p>
+
+      <div class="code-wrapper mb-3"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Run Trivy scanner in a container
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+  aquasec/trivy image myapp:latest
+
+# Scan with specific severity levels
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+  aquasec/trivy image --severity HIGH,CRITICAL myapp:latest
+
+# Generate JSON report
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+  aquasec/trivy image --format json -o report.json myapp:latest
+
+# Scan filesystem (without Docker socket)
+trivy fs /path/to/project</code></pre></div>
+
+      <div class="code-label">Trivy in CI/CD</div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-yaml"># GitHub Actions example
+- name: Run Trivy vulnerability scanner
+  uses: aquasecurity/trivy-action@master
+  with:
+    image-ref: 'myapp:latest'
+    format: 'sarif'
+    output: 'trivy-results.sarif'
+    severity: 'CRITICAL,HIGH'
+
+- name: Upload Trivy scan results
+  uses: github/codeql-action/upload-sarif@v3
+  with:
+    sarif_file: 'trivy-results.sarif'</code></pre></div>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- Clair -->
+      <h5 class="sub-title"><i class="bi bi-eye me-2 text-success"></i>Clair (Static Analysis)</h5>
+      <p class="small opacity-75 mb-2">An open-source static analysis engine for container vulnerabilities. Often used with Quay.io registry.</p>
+
+      <div class="code-wrapper mb-3"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Run Clair scanner
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+  quay.io/projectquay/clair-scanner:latest \
+  scan myapp:latest
+
+# Using klar (simpler Clair client)
+klar myapp:latest</code></pre></div>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- SBOM (Software Bill of Materials) -->
+      <h5 class="sub-title"><i class="bi bi-file-earmark-text me-2 text-info"></i>SBOM Generation</h5>
+      <p class="small opacity-75 mb-2">Generate a complete inventory of all software components in your container image. Essential for supply chain security.</p>
+
+      <div class="code-wrapper mb-3"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Generate SBOM with Syft
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+  anchore/syft myapp:latest -o spdx-json > sbom.json
+
+# Generate SBOM with Docker Scout (Docker CLI plugin)
+docker scout cves myapp:latest
+
+# Generate SBOM with Trivy
+trivy image --format spdx-json -o sbom.json myapp:latest
+
+# View SBOM contents
+cat sbom.json | jq '.packages[] | {name, version, licenses}'</code></pre></div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">SBOM formats</h6>
+            <ul class="small opacity-75 ps-3 mb-0">
+              <li><strong>SPDX</strong> — Linux Foundation standard</li>
+              <li><strong>CycloneDX</strong> — OWASP standard</li>
+              <li><strong>SWID</strong> — ISO/IEC standard</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Why SBOM matters</h6>
+            <ul class="small opacity-75 ps-3 mb-0">
+              <li>Track all dependencies and licenses</li>
+              <li>Quickly respond to vulnerabilities (like Log4j)</li>
+              <li>Meet compliance requirements</li>
+              <li>Supply chain transparency</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- Image Signing -->
+      <h5 class="sub-title"><i class="bi bi-signature me-2 text-warning"></i>Image Signing & Verification</h5>
+      <p class="small opacity-75 mb-2">Cryptographically sign your images to ensure they haven't been tampered with and come from a trusted source.</p>
+
+      <div class="code-wrapper mb-3"><button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyCode(this)"><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Sign image with Docker Content Trust
+export DOCKER_CONTENT_TRUST=1
+docker push myapp:latest
+
+# Verify signature
+docker pull myapp:latest
+
+# Sign with Cosign (Sigstore project)
+cosign sign myapp:latest
+
+# Verify with Cosign
+cosign verify myapp:latest \
+  --certificate-identity-regexp=.* \
+  --certificate-oidc-issuer-regexp=.*</code></pre></div>
+
+      <div class="note-box">
+        <p class="mb-0"><strong>Best practice:</strong> Enable Docker Content Trust in production environments to ensure only signed images can be pulled and run.</p>
+      </div>
+
+      <hr style="opacity:.06;margin:2rem 0;" />
+
+      <!-- Security Best Practices -->
+      <h5 class="sub-title"><i class="bi bi-shield-lock me-2 text-success"></i>Security Scanning Best Practices</h5>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">CI/CD Integration</h6>
+            <ul class="small opacity-75 ps-3 mb-0">
+              <li>Scan on every pull request</li>
+              <li>Fail builds on critical vulnerabilities</li>
+              <li>Generate SBOMs for all releases</li>
+              <li>Sign images before pushing to registry</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <h6 class="fw-bold mb-2">Regular Scanning</h6>
+            <ul class="small opacity-75 ps-3 mb-0">
+              <li>Schedule daily/weekly scans</li>
+              <li>Monitor for new CVEs in dependencies</li>
+              <li>Update base images regularly</li>
+              <li>Use vulnerability databases</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 21 -->
+    <section id="sec-cheatsheet" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-card-list-fill me-2 text-info"></i>Docker Command Cheatsheet (A → Z quick reference)</h2>
+
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle cmd-table">
+          <thead>
+            <tr>
+              <th style="width:22%">Category</th>
+              <th style="width:39%">Command</th>
+              <th style="width:39%">Short purpose</th>
+            </tr>
+          </thead>
+          <tbody class="small">
+            <tr><td>Images</td><td><code>docker images</code></td><td>List images</td></tr>
+            <tr><td>Run</td><td><code>docker run --rm -p 8080:80 nginx</code></td><td>Run and map ports</td></tr>
+            <tr><td>Build</td><td><code>docker build -t app:1.0 .</code></td><td>Build image from Dockerfile</td></tr>
+            <tr><td>BuildKit</td><td><code>docker buildx build --platform linux/amd64,linux/arm64 -t app:1.0 .</code></td><td>Multi-platform build</td></tr>
+            <tr><td>Secrets</td><td><code>docker build --secret id=mysecret,src=secret.txt .</code></td><td>Build with secret</td></tr>
+            <tr><td>Containers</td><td><code>docker ps -a</code></td><td>List all containers</td></tr>
+            <tr><td>Resources</td><td><code>docker run -m 512m --cpus=1.5 nginx</code></td><td>Limit memory & CPU</td></tr>
+            <tr><td>Logs</td><td><code>docker logs <id></code></td><td>Show container output</td></tr>
+            <tr><td>Exec</td><td><code>docker exec -it <id> sh</code></td><td>Interactive shell</td></tr>
+            <tr><td>Stats</td><td><code>docker stats</code></td><td>Live resource usage</td></tr>
+            <tr><td>Scan</td><td><code>docker scan myapp:latest</code></td><td>Scan for vulnerabilities</td></tr>
+            <tr><td>Trivy</td><td><code>docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image myapp:latest</code></td><td>Comprehensive security scan</td></tr>
+            <tr><td>SBOM</td><td><code>docker run --rm -v /var/run/docker.sock:/var/run/docker.sock anchore/syft myapp:latest</code></td><td>Generate SBOM</td></tr>
+            <tr><td>Volumes</td><td><code>docker volume ls</code></td><td>List volumes</td></tr>
+            <tr><td>Compose</td><td><code>docker compose up -d</code></td><td>Start multi-service stack</td></tr>
+            <tr><td>Compose</td><td><code>docker compose down</code></td><td>Stop and remove containers</td></tr>
+            <tr><td>Cleanup</td><td><code>docker system prune -f</code></td><td>Remove unused data (use carefully)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-box mt-3">
+        <p class="mb-0"><strong>Important:</strong> <code>docker system prune</code> can delete images/containers not in use. Use it when you know what you’re cleaning.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="container pb-5">
+    <div class="alert alert-success border-0 rounded-3">
+      <i class="bi bi-check2-circle me-2"></i>
+      <strong>Next step:</strong> Pick a real app you have, create a Dockerfile, and run it with <code>docker build</code> + <code>docker run</code>. Then add Compose for DB/Redis.
+    </div>
+  </div>
+</main>
+
+<!-- Back to top -->
+<div id="backTop" title="Back to top" onclick="scrollToTop()">
+  <i class="bi bi-chevron-up"></i>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/highlight.min.js"></script>
+<script>
+  // highlight
+  document.addEventListener('DOMContentLoaded', function () {
+    const themeDark = document.getElementById('hljs-theme-dark');
+    const themeLight = document.getElementById('hljs-theme-light');
+
+    const applyHljsTheme = () => {
+      const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+      if (isDark) { themeDark.disabled = false; themeLight.disabled = true; }
+      else { themeDark.disabled = true; themeLight.disabled = false; }
+    };
+
+    // init code highlighting
+    if (window.hljs) {
+      window.hljs.highlightAll();
+    }
+
+    applyHljsTheme();
+
+    // back to top
+    const backTop = document.getElementById('backTop');
+    const onScroll = () => {
+      backTop.classList.toggle('show', window.scrollY > 400);
+    };
+    window.addEventListener('scroll', onScroll);
+    onScroll();
+  });
+
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function copyCode(btn) {
+    const pre = btn.parentElement.querySelector('pre');
+    const text = pre ? pre.innerText : '';
+    if (!text) return;
+
+    navigator.clipboard.writeText(text).then(() => {
+      btn.innerHTML = '<i class="bi bi-check2 me-1"></i>Copied';
+      setTimeout(() => {
+        btn.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy';
+      }, 1100);
+    }).catch(() => {
+      // fallback: select
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    });
+  }
+
+  // Theme toggle
+  document.addEventListener('DOMContentLoaded', () => {
+    const themeToggle = document.getElementById('themeToggle');
+    if (!themeToggle) return;
+
+    themeToggle.addEventListener('click', () => {
+      const curr = document.documentElement.getAttribute('data-bs-theme') || 'dark';
+      const next = curr === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-bs-theme', next);
+
+      // toggle icon
+      const icon = themeToggle.querySelector('i');
+      if (icon) {
+        icon.classList.toggle('bi-sun-fill', next === 'light');
+        icon.classList.toggle('bi-moon-fill', next === 'dark');
+        icon.classList.add(next === 'dark' ? 'bi-moon-fill' : 'bi-sun-fill');
+      }
+
+      // update hljs theme
+      const themeDark = document.getElementById('hljs-theme-dark');
+      const themeLight = document.getElementById('hljs-theme-light');
+      if (themeDark && themeLight) {
+        const isDark = next === 'dark';
+        themeDark.disabled = !isDark;
+        themeLight.disabled = isDark;
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

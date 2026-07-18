@@ -1,0 +1,2056 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <meta
+    name="description"
+    content="Complete cross-platform Ollama guide for Windows, macOS, Linux, VS Code, mobile apps, models, commands, and API usage."
+  >
+
+  <meta name="theme-color" content="#101322">
+
+  <title>Ollama Complete Guide</title>
+
+  <!-- Bootstrap 5 -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+  <!-- Bootstrap Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+  >
+
+  <style>
+    :root {
+      --brand: #6c5ce7;
+      --brand-dark: #4834d4;
+      --dark: #101322;
+      --muted: #7d8498;
+      --surface: #f7f8fc;
+      --border: #e8eaf1;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      color: #202334;
+      background: #fff;
+      font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    }
+
+    section,
+    header {
+      scroll-margin-top: 80px;
+    }
+
+    .navbar {
+      background: rgba(255, 255, 255, .92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .navbar-brand {
+      font-weight: 800;
+      letter-spacing: -.04em;
+    }
+
+    .navbar-toggler {
+      border: 0;
+      font-size: 1.4rem;
+    }
+
+    .navbar-toggler:focus {
+      box-shadow: none;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      display: inline-grid;
+      place-items: center;
+      color: #fff;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--brand), #00b894);
+      box-shadow: 0 8px 22px rgba(108, 92, 231, .25);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 130px 0 90px;
+      color: #fff;
+      background:
+        radial-gradient(
+          circle at 85% 20%,
+          rgba(0, 206, 201, .22),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 10% 10%,
+          rgba(108, 92, 231, .4),
+          transparent 35%
+        ),
+        linear-gradient(135deg, #101322, #171a37 65%, #22204b);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 520px;
+      height: 520px;
+      right: -180px;
+      bottom: -280px;
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: 50%;
+      box-shadow:
+        0 0 0 45px rgba(255, 255, 255, .025),
+        0 0 0 90px rgba(255, 255, 255, .025);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      color: #a9a2ff;
+      font-size: .8rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      max-width: 800px;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 850;
+      letter-spacing: -.065em;
+      line-height: 1;
+    }
+
+    .hero .lead {
+      max-width: 700px;
+      color: #c8cbe0;
+      font-size: 1.15rem;
+    }
+
+    .btn-brand {
+      color: #fff;
+      background: var(--brand);
+      border: 0;
+      box-shadow: 0 10px 24px rgba(108, 92, 231, .3);
+      transition: .25s ease;
+    }
+
+    .btn-brand:hover,
+    .btn-brand:focus {
+      color: #fff;
+      background: var(--brand-dark);
+      transform: translateY(-1px);
+    }
+
+    .section {
+      padding: 90px 0;
+    }
+
+    .section-soft {
+      background: var(--surface);
+    }
+
+    .section-title {
+      font-weight: 800;
+      letter-spacing: -.045em;
+    }
+
+    .section-subtitle {
+      max-width: 680px;
+      color: var(--muted);
+    }
+
+    .feature-card,
+    .model-card,
+    .workflow-card,
+    .info-card {
+      height: 100%;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: #fff;
+      transition: .25s ease;
+    }
+
+    .feature-card:hover,
+    .model-card:hover,
+    .workflow-card:hover,
+    .info-card:hover {
+      border-color: rgba(108, 92, 231, .4);
+      box-shadow: 0 18px 45px rgba(31, 35, 56, .08);
+      transform: translateY(-4px);
+    }
+
+    .icon-box {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      color: var(--brand);
+      background: #efedff;
+      border-radius: 14px;
+      font-size: 1.35rem;
+    }
+
+    .code-box {
+      position: relative;
+      overflow: hidden;
+      color: #e9ecff;
+      background: #111522;
+      border: 1px solid #29304a;
+      border-radius: 16px;
+    }
+
+    .code-box pre {
+      margin: 0;
+      padding: 22px;
+      overflow-x: auto;
+      font-size: .9rem;
+      line-height: 1.7;
+    }
+
+    .code-box code {
+      color: inherit;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+      color: #cbd0e9;
+      background: #252b42;
+      border: 1px solid #39425f;
+    }
+
+    .copy-btn:hover {
+      color: #fff;
+      background: var(--brand);
+    }
+
+    .badge-soft {
+      color: var(--brand-dark);
+      background: #efedff;
+    }
+
+    .platform-tabs .nav-link {
+      color: var(--brand-dark);
+      background: #efedff;
+      border: 1px solid transparent;
+      font-weight: 700;
+      transition: .25s ease;
+    }
+
+    .platform-tabs .nav-link:hover {
+      color: #fff;
+      background: var(--brand-dark);
+    }
+
+    .platform-tabs .nav-link.active {
+      color: #fff;
+      background: var(--brand);
+      box-shadow: 0 8px 20px rgba(108, 92, 231, .25);
+    }
+
+    .architecture {
+      padding: 26px;
+      border-radius: 20px;
+      color: #fff;
+      background: linear-gradient(135deg, #15182a, #282052);
+    }
+
+    .architecture .node {
+      min-width: 130px;
+      padding: 18px 14px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, .15);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .architecture .arrow {
+      color: #aaa3ff;
+      font-size: 1.5rem;
+    }
+
+    .table {
+      --bs-table-bg: transparent;
+    }
+
+    .table thead th {
+      color: var(--muted);
+      font-size: .78rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      border-bottom-color: var(--border);
+    }
+
+    .table td {
+      padding: 1rem .75rem;
+      vertical-align: middle;
+      border-bottom-color: var(--border);
+    }
+
+    .accordion-item {
+      overflow: hidden;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px !important;
+    }
+
+    .accordion-button {
+      font-weight: 700;
+    }
+
+    .accordion-button:not(.collapsed) {
+      color: var(--brand-dark);
+      background: #f5f3ff;
+      box-shadow: none;
+    }
+
+    .accordion-button:focus {
+      box-shadow: 0 0 0 .25rem rgba(108, 92, 231, .15);
+    }
+
+    .alert-security {
+      color: #664d03;
+      background: #fff8df;
+      border: 1px solid #f4df9b;
+      border-radius: 16px;
+    }
+
+    footer {
+      color: #aeb3c7;
+      background: var(--dark);
+    }
+
+    footer a {
+      color: #c9c5ff;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: #fff;
+    }
+
+    @media (max-width: 767px) {
+      .hero {
+        padding: 110px 0 70px;
+      }
+
+      .section {
+        padding: 65px 0;
+      }
+
+      .architecture .arrow {
+        transform: rotate(90deg);
+      }
+
+      .hero h1 {
+        letter-spacing: -.05em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#home">
+        <span class="brand-mark">
+          <i class="bi bi-cpu"></i>
+        </span>
+        Ollama Guide
+      </a>
+
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#mainNav"
+        aria-controls="mainNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <i class="bi bi-list"></i>
+      </button>
+
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item">
+            <a class="nav-link" href="#installation">Install</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="#commands">Commands</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="#models">Models</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="#vscode">VS Code</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="#mobile">Mobile</a>
+          </li>
+
+          <li class="nav-item ms-lg-2">
+            <a
+              class="btn btn-sm btn-brand rounded-pill px-3"
+              href="https://ollama.com/download"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download Ollama
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero" id="home">
+    <div class="container hero-content">
+      <div class="eyebrow mb-3">
+        Windows · macOS · Linux · VS Code · Mobile
+      </div>
+
+      <h1 class="mb-4">
+        Run powerful AI locally with Ollama.
+      </h1>
+
+      <p class="lead mb-4">
+        A practical guide to installing Ollama, running local models,
+        connecting VS Code, using mobile clients, and building applications
+        with the API.
+      </p>
+
+      <div class="d-flex flex-wrap gap-3">
+        <a
+          href="#installation"
+          class="btn btn-brand btn-lg rounded-pill px-4"
+        >
+          Start setup
+          <i class="bi bi-arrow-down-short"></i>
+        </a>
+
+        <a
+          href="https://ollama.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-outline-light btn-lg rounded-pill px-4"
+        >
+          Official website
+          <i class="bi bi-box-arrow-up-right"></i>
+        </a>
+      </div>
+
+      <div class="row g-3 mt-5">
+        <div class="col-6 col-lg-3">
+          <div class="small text-white-50">Runtime</div>
+          <strong>Free & local</strong>
+        </div>
+
+        <div class="col-6 col-lg-3">
+          <div class="small text-white-50">Privacy</div>
+          <strong>Runs on your device</strong>
+        </div>
+
+        <div class="col-6 col-lg-3">
+          <div class="small text-white-50">Platforms</div>
+          <strong>Windows, macOS, Linux</strong>
+        </div>
+
+        <div class="col-6 col-lg-3">
+          <div class="small text-white-50">Integration</div>
+          <strong>VS Code & API</strong>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- What is Ollama -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="row align-items-end mb-5">
+        <div class="col-lg-7">
+          <div class="eyebrow">Why Ollama?</div>
+
+          <h2 class="section-title display-6 mt-2">
+            Your own local AI runtime.
+          </h2>
+        </div>
+
+        <div class="col-lg-5">
+          <p class="section-subtitle mb-0">
+            Ollama lets you download and run large language models on your own
+            computer. After downloading a model, local inference can work
+            offline.
+          </p>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+          <div class="feature-card p-4">
+            <div class="icon-box mb-4">
+              <i class="bi bi-wallet2"></i>
+            </div>
+
+            <h5>Free local inference</h5>
+
+            <p class="text-secondary mb-0">
+              No token charges or monthly fee for local models.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <div class="feature-card p-4">
+            <div class="icon-box mb-4">
+              <i class="bi bi-shield-lock"></i>
+            </div>
+
+            <h5>Private by design</h5>
+
+            <p class="text-secondary mb-0">
+              Your prompts and files stay on your machine.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <div class="feature-card p-4">
+            <div class="icon-box mb-4">
+              <i class="bi bi-wifi-off"></i>
+            </div>
+
+            <h5>Works offline</h5>
+
+            <p class="text-secondary mb-0">
+              Use downloaded models without an internet connection.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <div class="feature-card p-4">
+            <div class="icon-box mb-4">
+              <i class="bi bi-plug"></i>
+            </div>
+
+            <h5>Easy integrations</h5>
+
+            <p class="text-secondary mb-0">
+              Connect VS Code, mobile apps, Open WebUI, and custom apps.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cross-Platform Installation -->
+  <section class="section section-soft" id="installation">
+    <div class="container">
+      <div class="row mb-5">
+        <div class="col-lg-8">
+          <div class="eyebrow">Cross-platform installation</div>
+
+          <h2 class="section-title display-6 mt-2">
+            Install Ollama on your operating system.
+          </h2>
+
+          <p class="section-subtitle">
+            Choose your platform below and follow the installation steps.
+            Ollama supports Windows, macOS, and Linux.
+          </p>
+        </div>
+      </div>
+
+      <!-- Platform Tabs -->
+      <ul
+        class="nav nav-pills platform-tabs mb-4"
+        id="platformTabs"
+        role="tablist"
+      >
+        <li class="nav-item me-2 mb-2" role="presentation">
+          <button
+            class="nav-link active rounded-pill px-4"
+            id="windows-tab"
+            data-bs-toggle="pill"
+            data-bs-target="#windows-panel"
+            type="button"
+            role="tab"
+            aria-controls="windows-panel"
+            aria-selected="true"
+          >
+            <i class="bi bi-windows me-2"></i>
+            Windows
+          </button>
+        </li>
+
+        <li class="nav-item me-2 mb-2" role="presentation">
+          <button
+            class="nav-link rounded-pill px-4"
+            id="macos-tab"
+            data-bs-toggle="pill"
+            data-bs-target="#macos-panel"
+            type="button"
+            role="tab"
+            aria-controls="macos-panel"
+            aria-selected="false"
+          >
+            <i class="bi bi-apple me-2"></i>
+            macOS
+          </button>
+        </li>
+
+        <li class="nav-item mb-2" role="presentation">
+          <button
+            class="nav-link rounded-pill px-4"
+            id="linux-tab"
+            data-bs-toggle="pill"
+            data-bs-target="#linux-panel"
+            type="button"
+            role="tab"
+            aria-controls="linux-panel"
+            aria-selected="false"
+          >
+            <i class="bi bi-terminal me-2"></i>
+            Linux
+          </button>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="platformTabsContent">
+
+        <!-- Windows -->
+        <div
+          class="tab-pane fade show active"
+          id="windows-panel"
+          role="tabpanel"
+          aria-labelledby="windows-tab"
+          tabindex="0"
+        >
+          <div class="row g-4">
+            <div class="col-lg-6">
+              <div class="info-card p-4">
+                <span class="badge badge-soft rounded-pill mb-3">
+                  Windows 10 / 11
+                </span>
+
+                <h5>Install Ollama on Windows</h5>
+
+                <ol class="text-secondary">
+                  <li>
+                    Visit the official
+                    <a
+                      href="https://ollama.com/download/windows"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Windows download page
+                    </a>.
+                  </li>
+
+                  <li>
+                    Download <strong>OllamaSetup.exe</strong>.
+                  </li>
+
+                  <li>Run the installer.</li>
+
+                  <li>Click <strong>Install</strong>.</li>
+
+                  <li>Ollama will run in the background.</li>
+                </ol>
+
+                <a
+                  href="https://ollama.com/download/windows"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="btn btn-brand rounded-pill"
+                >
+                  Download for Windows
+                  <i class="bi bi-box-arrow-up-right ms-1"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="info-card p-4">
+                <h5>Verify the installation</h5>
+
+                <p class="text-secondary">
+                  Open Command Prompt, PowerShell, or Windows Terminal:
+                </p>
+
+                <div class="code-box">
+                  <button
+                    class="btn btn-sm copy-btn"
+                    data-copy-target="windowsVerifyCode"
+                    type="button"
+                  >
+                    <i class="bi bi-clipboard"></i>
+                    Copy
+                  </button>
+
+                  <pre id="windowsVerifyCode"><code>ollama --version
+ollama list</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="info-card p-4">
+                <h5>Run your first model</h5>
+
+                <div class="code-box">
+                  <button
+                    class="btn btn-sm copy-btn"
+                    data-copy-target="windowsModelCode"
+                    type="button"
+                  >
+                    <i class="bi bi-clipboard"></i>
+                    Copy
+                  </button>
+
+                  <pre id="windowsModelCode"><code># General-purpose model
+ollama run qwen3:4b
+
+# Lightweight alternative
+ollama run gemma3:4b
+
+# Coding model
+ollama run qwen2.5-coder:1.5b</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- macOS -->
+        <div
+          class="tab-pane fade"
+          id="macos-panel"
+          role="tabpanel"
+          aria-labelledby="macos-tab"
+          tabindex="0"
+        >
+          <div class="row g-4">
+            <div class="col-lg-6">
+              <div class="info-card p-4">
+                <span class="badge badge-soft rounded-pill mb-3">
+                  macOS
+                </span>
+
+                <h5>Install Ollama on macOS</h5>
+
+                <ol class="text-secondary">
+                  <li>
+                    Visit the official
+                    <a
+                      href="https://ollama.com/download/mac"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      macOS download page
+                    </a>.
+                  </li>
+
+                  <li>Download the Ollama application.</li>
+
+                  <li>Open the downloaded file.</li>
+
+                  <li>
+                    Move Ollama to the Applications folder.
+                  </li>
+
+                  <li>
+                    Launch Ollama from Applications.
+                  </li>
+                </ol>
+
+                <a
+                  href="https://ollama.com/download/mac"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="btn btn-brand rounded-pill"
+                >
+                  Download for macOS
+                  <i class="bi bi-box-arrow-up-right ms-1"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="info-card p-4">
+                <h5>Optional Homebrew installation</h5>
+
+                <p class="text-secondary">
+                  If Homebrew is installed, you can use:
+                </p>
+
+                <div class="code-box">
+                  <button
+                    class="btn btn-sm copy-btn"
+                    data-copy-target="macInstallCode"
+                    type="button"
+                  >
+                    <i class="bi bi-clipboard"></i>
+                    Copy
+                  </button>
+
+                  <pre id="macInstallCode"><code>brew install --cask ollama</code></pre>
+                </div>
+
+                <p class="text-secondary mt-4 mb-0">
+                  Launch Ollama, then open Terminal to verify it.
+                </p>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="info-card p-4">
+                <h5>Verify and run a model</h5>
+
+                <div class="code-box">
+                  <button
+                    class="btn btn-sm copy-btn"
+                    data-copy-target="macModelCode"
+                    type="button"
+                  >
+                    <i class="bi bi-clipboard"></i>
+                    Copy
+                  </button>
+
+                  <pre id="macModelCode"><code>ollama --version
+ollama list
+
+ollama run qwen3:4b</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Linux -->
+        <div
+          class="tab-pane fade"
+          id="linux-panel"
+          role="tabpanel"
+          aria-labelledby="linux-tab"
+          tabindex="0"
+        >
+          <div class="row g-4">
+            <div class="col-lg-6">
+              <div class="info-card p-4">
+                <span class="badge badge-soft rounded-pill mb-3">
+                  Linux
+                </span>
+
+                <h5>Install Ollama on Linux</h5>
+
+                <p class="text-secondary">
+                  Open a Terminal and run the official installation script:
+                </p>
+
+                <div class="code-box">
+                  <button
+                    class="btn btn-sm copy-btn"
+                    data-copy-target="linuxInstallCode"
+                    type="button"
+                  >
+                    <i class="bi bi-clipboard"></i>
+                    Copy
+                  </button>
+
+                  <pre id="linuxInstallCode"><code>curl -fsSL https://ollama.com/install.sh | sh</code></pre>
+                </div>
+
+                <div class="alert alert-warning mt-4 mb-0">
+                  Review any installation script before running it on your
+                  system.
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="info-card p-4">
+                <h5>Start the Ollama service</h5>
+
+                <p class="text-secondary">
+                  If your Linux distribution uses systemd and the Ollama
+                  service was installed, you can manage it with:
+                </p>
+
+                <div class="code-box">
+                  <button
+                    class="btn btn-sm copy-btn"
+                    data-copy-target="linuxServiceCode"
+                    type="button"
+                  >
+                    <i class="bi bi-clipboard"></i>
+                    Copy
+                  </button>
+
+                  <pre id="linuxServiceCode"><code>sudo systemctl enable ollama
+sudo systemctl start ollama
+sudo systemctl status ollama</code></pre>
+                </div>
+
+                <p class="text-secondary mt-4 mb-0">
+                  You can also start Ollama manually with:
+                </p>
+
+                <code>ollama serve</code>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="info-card p-4">
+                <h5>Verify and run a model</h5>
+
+                <div class="code-box">
+                  <button
+                    class="btn btn-sm copy-btn"
+                    data-copy-target="linuxModelCode"
+                    type="button"
+                  >
+                    <i class="bi bi-clipboard"></i>
+                    Copy
+                  </button>
+
+                  <pre id="linuxModelCode"><code>ollama --version
+ollama list
+
+ollama run qwen3:4b</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Common commands -->
+      <div class="mt-5">
+        <h4 class="section-title mb-3">
+          Common commands on all platforms
+        </h4>
+
+        <div class="code-box">
+          <button
+            class="btn btn-sm copy-btn"
+            data-copy-target="commonCommandsCode"
+            type="button"
+          >
+            <i class="bi bi-clipboard"></i>
+            Copy
+          </button>
+
+          <pre id="commonCommandsCode"><code># List installed models
+ollama list
+
+# Download a model
+ollama pull gemma3:4b
+
+# Run a model
+ollama run qwen3:4b
+
+# Show running models
+ollama ps
+
+# Stop a model
+ollama stop qwen3:4b
+
+# Remove a model
+ollama rm qwen3:4b
+
+# Download an embedding model
+ollama pull nomic-embed-text:latest</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Commands -->
+  <section class="section" id="commands">
+    <div class="container">
+      <div class="row align-items-end mb-5">
+        <div class="col-lg-7">
+          <div class="eyebrow">Command reference</div>
+
+          <h2 class="section-title display-6 mt-2">
+            Essential Ollama commands.
+          </h2>
+        </div>
+
+        <div class="col-lg-5">
+          <p class="section-subtitle mb-0">
+            Use these commands in Command Prompt, PowerShell, Windows Terminal,
+            macOS Terminal, or Linux Terminal.
+          </p>
+        </div>
+      </div>
+
+      <div class="code-box">
+        <button
+          class="btn btn-sm copy-btn"
+          data-copy-target="commandsCode"
+          type="button"
+        >
+          <i class="bi bi-clipboard"></i>
+          Copy
+        </button>
+
+        <pre id="commandsCode"><code># Show installed models
+ollama list
+
+# Run a model
+ollama run qwen3:4b
+
+# Download a model without starting chat
+ollama pull gemma3:4b
+
+# Download an embedding model
+ollama pull nomic-embed-text:latest
+
+# Show currently running models
+ollama ps
+
+# Stop a model
+ollama stop qwen3:4b
+
+# Remove a model
+ollama rm mistral:latest
+
+# Show Ollama version
+ollama --version</code></pre>
+      </div>
+
+      <div class="row g-4 mt-4">
+        <div class="col-md-6">
+          <div class="info-card p-4">
+            <h5>
+              <i class="bi bi-chat-dots text-primary me-2"></i>
+              Exit the chat
+            </h5>
+
+            <p class="text-secondary mb-2">
+              Inside an Ollama chat, use:
+            </p>
+
+            <code>/bye</code>
+
+            <p class="text-secondary mt-3 mb-0">
+              You can also press
+              <kbd>Ctrl</kbd> + <kbd>D</kbd>.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="info-card p-4">
+            <h5>
+              <i class="bi bi-globe2 text-primary me-2"></i>
+              Check the local API
+            </h5>
+
+            <p class="text-secondary mb-2">
+              Open the following address in your browser:
+            </p>
+
+            <code>http://localhost:11434</code>
+
+            <p class="text-secondary mt-3 mb-0">
+              A running Ollama server returns a confirmation message.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Models -->
+  <section class="section section-soft" id="models">
+    <div class="container">
+      <div class="row mb-5">
+        <div class="col-lg-8">
+          <div class="eyebrow">Model selection</div>
+
+          <h2 class="section-title display-6 mt-2">
+            Pick the right model for the job.
+          </h2>
+
+          <p class="section-subtitle">
+            Smaller models are usually better for autocomplete and devices with
+            limited memory. Larger models may provide stronger answers but
+            require more RAM.
+          </p>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Purpose</th>
+              <th>Recommended model</th>
+              <th>Approximate size</th>
+              <th>Best for</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>
+                <strong>General chat</strong>
+              </td>
+
+              <td>
+                <span class="badge text-bg-primary">
+                  qwen3:4b
+                </span>
+              </td>
+
+              <td>Small to medium</td>
+              <td>Chat, explanations, daily tasks</td>
+            </tr>
+
+            <tr>
+              <td>
+                <strong>Coding</strong>
+              </td>
+
+              <td>
+                <span class="badge text-bg-success">
+                  qwen3:4b
+                </span>
+              </td>
+
+              <td>Small to medium</td>
+              <td>Laravel, React, Next.js, Node.js</td>
+            </tr>
+
+            <tr>
+              <td>
+                <strong>Autocomplete</strong>
+              </td>
+
+              <td>
+                <span class="badge text-bg-warning">
+                  qwen2.5-coder:1.5b
+                </span>
+              </td>
+
+              <td>Lightweight</td>
+              <td>Fast inline code completion</td>
+            </tr>
+
+            <tr>
+              <td>
+                <strong>Alternative chat</strong>
+              </td>
+
+              <td>
+                <span class="badge text-bg-info">
+                  gemma3:4b
+                </span>
+              </td>
+
+              <td>Small to medium</td>
+              <td>General-purpose local AI</td>
+            </tr>
+
+            <tr>
+              <td>
+                <strong>Embeddings</strong>
+              </td>
+
+              <td>
+                <span class="badge text-bg-dark">
+                  nomic-embed-text:latest
+                </span>
+              </td>
+
+              <td>Lightweight</td>
+              <td>Search, RAG, document indexing</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hardware -->
+  <section class="section" id="hardware">
+    <div class="container">
+      <div class="row g-5 align-items-center">
+        <div class="col-lg-5">
+          <div class="eyebrow">Hardware guide</div>
+
+          <h2 class="section-title display-6 mt-2">
+            Choose models your device can handle.
+          </h2>
+
+          <p class="section-subtitle">
+            Ollama works with CPU-only systems, although a compatible dedicated
+            GPU can significantly improve performance.
+          </p>
+        </div>
+
+        <div class="col-lg-7">
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead>
+                <tr>
+                  <th>System RAM</th>
+                  <th>Recommended models</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>
+                    <strong>8 GB</strong>
+                  </td>
+
+                  <td>
+                    Gemma3 4B, Qwen3 4B
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <strong>16 GB</strong>
+                  </td>
+
+                  <td>
+                    Qwen3 4B or 8B, depending on free memory
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <strong>32 GB+</strong>
+                  </td>
+
+                  <td>
+                    Larger 14B or higher models
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="alert alert-warning mb-0">
+            On a device with 16 GB RAM and integrated graphics, avoid very large
+            12B+ models for everyday development. They may be slow and leave too
+            little memory for the operating system and development tools.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VS Code -->
+  <section class="section section-soft" id="vscode">
+    <div class="container">
+      <div class="row mb-5">
+        <div class="col-lg-8">
+          <div class="eyebrow">Developer workflow</div>
+
+          <h2 class="section-title display-6 mt-2">
+            Connect Ollama to VS Code.
+          </h2>
+
+          <p class="section-subtitle">
+            Continue, Cline, and Roo Code can connect to Ollama through its
+            local API at
+            <code>http://localhost:11434</code>.
+          </p>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-lg-5">
+          <div class="info-card p-4">
+            <h5>Recommended extensions</h5>
+
+            <div class="d-flex flex-wrap gap-2 mt-3">
+              <span class="badge rounded-pill text-bg-primary">
+                Continue
+              </span>
+
+              <span class="badge rounded-pill text-bg-dark">
+                Cline
+              </span>
+
+              <span class="badge rounded-pill text-bg-secondary">
+                Roo Code
+              </span>
+            </div>
+
+            <hr>
+
+            <h6>Connection details</h6>
+
+            <ul class="text-secondary mb-0">
+              <li>
+                Provider:
+                <strong>Ollama</strong>
+              </li>
+
+              <li>
+                Base URL:
+                <code>http://localhost:11434</code>
+              </li>
+
+              <li>
+                Chat model:
+                <code>qwen3:4b</code>
+              </li>
+
+              <li>
+                Autocomplete:
+                <code>qwen2.5-coder:1.5b</code>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-lg-7">
+          <div class="code-box">
+            <button
+              class="btn btn-sm copy-btn"
+              data-copy-target="continueCode"
+              type="button"
+            >
+              <i class="bi bi-clipboard"></i>
+              Copy
+            </button>
+
+            <pre id="continueCode"><code>name: Local Agent
+version: 1.0.0
+schema: v1
+
+models:
+  - name: Qwen3 4B
+    provider: ollama
+    model: qwen3:4b
+    roles:
+      - chat
+      - edit
+      - apply
+
+  - name: Qwen2.5 Coder
+    provider: ollama
+    model: qwen2.5-coder:1.5b
+    roles:
+      - autocomplete
+
+  - name: Nomic Embed
+    provider: ollama
+    model: nomic-embed-text:latest
+    roles:
+      - embed
+
+context:
+  - provider: code
+  - provider: docs
+  - provider: diff
+  - provider: terminal
+  - provider: problems
+  - provider: folder
+  - provider: codebase</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture -->
+  <section class="section" id="workflow">
+    <div class="container">
+      <div class="row mb-5">
+        <div class="col-lg-8">
+          <div class="eyebrow">Daily workflow</div>
+
+          <h2 class="section-title display-6 mt-2">
+            A simple local development stack.
+          </h2>
+        </div>
+      </div>
+
+      <div class="architecture">
+        <div
+          class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-3"
+        >
+          <div class="node">
+            <i class="bi bi-code-slash fs-3 d-block mb-2"></i>
+            VS Code
+          </div>
+
+          <div class="arrow">
+            <i class="bi bi-arrow-right"></i>
+          </div>
+
+          <div class="node">
+            <i class="bi bi-window-stack fs-3 d-block mb-2"></i>
+            Continue
+          </div>
+
+          <div class="arrow">
+            <i class="bi bi-arrow-right"></i>
+          </div>
+
+          <div class="node">
+            <i class="bi bi-cpu fs-3 d-block mb-2"></i>
+            Ollama
+          </div>
+
+          <div class="arrow">
+            <i class="bi bi-arrow-right"></i>
+          </div>
+
+          <div class="node">
+            <i class="bi bi-stars fs-3 d-block mb-2"></i>
+            Qwen3 4B
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mobile -->
+  <section class="section section-soft" id="mobile">
+    <div class="container">
+      <div class="row g-5 align-items-center">
+        <div class="col-lg-6">
+          <div class="eyebrow">Mobile access</div>
+
+          <h2 class="section-title display-6 mt-2">
+            Use your phone as a local AI client.
+          </h2>
+
+          <p class="section-subtitle">
+            The phone acts as a client. It connects over Wi-Fi to Ollama
+            running on your computer.
+          </p>
+
+          <div class="d-flex flex-wrap gap-2 mt-4">
+            <span class="badge rounded-pill badge-soft p-2 px-3">
+              SwiftChat
+            </span>
+
+            <span class="badge rounded-pill badge-soft p-2 px-3">
+              Maid
+            </span>
+
+            <span class="badge rounded-pill badge-soft p-2 px-3">
+              Enchanted
+            </span>
+
+            <span class="badge rounded-pill badge-soft p-2 px-3">
+              Reins
+            </span>
+
+            <span class="badge rounded-pill badge-soft p-2 px-3">
+              ConfiChat
+            </span>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="workflow-card p-4">
+            <h5>Connection architecture</h5>
+
+            <div
+              class="d-flex align-items-center justify-content-center gap-3 my-4"
+            >
+              <div class="text-center">
+                <i class="bi bi-laptop fs-1 text-primary"></i>
+
+                <div class="small fw-bold mt-2">
+                  Computer
+                </div>
+
+                <div class="small text-secondary">
+                  Ollama
+                </div>
+              </div>
+
+              <i class="bi bi-wifi fs-2 text-success"></i>
+
+              <div class="text-center">
+                <i class="bi bi-phone fs-1 text-primary"></i>
+
+                <div class="small fw-bold mt-2">
+                  Phone
+                </div>
+
+                <div class="small text-secondary">
+                  Client app
+                </div>
+              </div>
+            </div>
+
+            <ol class="text-secondary mb-0">
+              <li>
+                Keep Ollama running on your computer.
+              </li>
+
+              <li>
+                Connect the computer and phone to the same Wi-Fi network.
+              </li>
+
+              <li>
+                Configure the app with your computer's local IP address.
+              </li>
+
+              <li>
+                Allow the connection through your operating system firewall
+                if required.
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-security mt-5 mb-0">
+        <i class="bi bi-shield-exclamation me-2"></i>
+
+        <strong>Security:</strong>
+        Do not expose Ollama directly to the public internet. Use a trusted
+        local network or a secure VPN, and add authentication through a
+        suitable proxy if remote access is required.
+      </div>
+    </div>
+  </section>
+
+  <!-- API -->
+  <section class="section" id="api">
+    <div class="container">
+      <div class="row mb-5">
+        <div class="col-lg-8">
+          <div class="eyebrow">Application API</div>
+
+          <h2 class="section-title display-6 mt-2">
+            Call Ollama from your own app.
+          </h2>
+
+          <p class="section-subtitle">
+            Ollama provides a local HTTP API. This example uses the native
+            <code>/api/chat</code> endpoint.
+          </p>
+        </div>
+      </div>
+
+      <div class="code-box">
+        <button
+          class="btn btn-sm copy-btn"
+          data-copy-target="apiCode"
+          type="button"
+        >
+          <i class="bi bi-clipboard"></i>
+          Copy
+        </button>
+
+        <pre id="apiCode"><code>fetch("http://localhost:11434/api/chat", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    model: "qwen3:4b",
+    messages: [
+      {
+        role: "user",
+        content: "Explain dependency injection in Laravel."
+      }
+    ],
+    stream: false
+  })
+})
+  .then(response => response.json())
+  .then(data => console.log(data.message.content))
+  .catch(error => console.error(error));</code></pre>
+      </div>
+
+      <div class="alert alert-danger mt-4">
+        <i class="bi bi-key-fill me-2"></i>
+
+        Never include OpenRouter, OpenAI, or any other cloud API key in public
+        frontend code. Store secrets in environment variables and use a backend
+        server. If a key has already been shared publicly, revoke it
+        immediately.
+      </div>
+    </div>
+  </section>
+
+  <!-- Alternatives -->
+  <section class="section section-soft" id="alternatives">
+    <div class="container">
+      <div class="row mb-5">
+        <div class="col-lg-8">
+          <div class="eyebrow">Ecosystem</div>
+
+          <h2 class="section-title display-6 mt-2">
+            Other tools worth exploring.
+          </h2>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="model-card p-4">
+            <i class="bi bi-window fs-3 text-primary"></i>
+            <h6 class="mt-3 mb-0">LM Studio</h6>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="model-card p-4">
+            <i class="bi bi-chat-square-text fs-3 text-primary"></i>
+            <h6 class="mt-3 mb-0">Open WebUI</h6>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="model-card p-4">
+            <i class="bi bi-database fs-3 text-primary"></i>
+            <h6 class="mt-3 mb-0">AnythingLLM</h6>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="model-card p-4">
+            <i class="bi bi-terminal fs-3 text-primary"></i>
+            <h6 class="mt-3 mb-0">llama.cpp</h6>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="model-card p-4">
+            <i class="bi bi-boxes fs-3 text-primary"></i>
+            <h6 class="mt-3 mb-0">LocalAI</h6>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="model-card p-4">
+            <i class="bi bi-lightning-charge fs-3 text-primary"></i>
+            <h6 class="mt-3 mb-0">vLLM</h6>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="model-card p-4">
+            <i class="bi bi-stars fs-3 text-primary"></i>
+            <h6 class="mt-3 mb-0">Jan</h6>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="model-card p-4">
+            <i class="bi bi-cpu fs-3 text-primary"></i>
+            <h6 class="mt-3 mb-0">GPT4All</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Best Practices -->
+  <section class="section" id="best-practices">
+    <div class="container">
+      <div class="row mb-5">
+        <div class="col-lg-8">
+          <div class="eyebrow">Recommended practices</div>
+
+          <h2 class="section-title display-6 mt-2">
+            Keep your local AI stack reliable.
+          </h2>
+        </div>
+      </div>
+
+      <div class="accordion" id="bestPractices">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#practiceOne"
+              aria-expanded="true"
+              aria-controls="practiceOne"
+            >
+              Use small models for autocomplete
+            </button>
+          </h2>
+
+          <div
+            id="practiceOne"
+            class="accordion-collapse collapse show"
+            data-bs-parent="#bestPractices"
+          >
+            <div class="accordion-body text-secondary">
+              Use lightweight coding models for fast inline completion and
+              reserve larger models for chat, debugging, and architecture
+              questions.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#practiceTwo"
+              aria-expanded="false"
+              aria-controls="practiceTwo"
+            >
+              Manage disk space
+            </button>
+          </h2>
+
+          <div
+            id="practiceTwo"
+            class="accordion-collapse collapse"
+            data-bs-parent="#bestPractices"
+          >
+            <div class="accordion-body text-secondary">
+              Download only the models you use regularly. Check them with
+              <code>ollama list</code> and remove unused models with
+              <code>ollama rm model-name</code>.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#practiceThree"
+              aria-expanded="false"
+              aria-controls="practiceThree"
+            >
+              Protect network access
+            </button>
+          </h2>
+
+          <div
+            id="practiceThree"
+            class="accordion-collapse collapse"
+            data-bs-parent="#bestPractices"
+          >
+            <div class="accordion-body text-secondary">
+              Keep Ollama on localhost whenever possible. For mobile access,
+              use a trusted Wi-Fi network or VPN and avoid public exposure.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#practiceFour"
+              aria-expanded="false"
+              aria-controls="practiceFour"
+            >
+              Keep Ollama updated
+            </button>
+          </h2>
+
+          <div
+            id="practiceFour"
+            class="accordion-collapse collapse"
+            data-bs-parent="#bestPractices"
+          >
+            <div class="accordion-body text-secondary">
+              Update Ollama periodically to benefit from bug fixes, model
+              compatibility improvements, and new features.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Learning Path -->
+  <section class="section section-soft" id="learning">
+    <div class="container">
+      <div class="row g-5 align-items-center">
+        <div class="col-lg-5">
+          <div class="eyebrow">Learning path</div>
+
+          <h2 class="section-title display-6 mt-2">
+            Build your local AI toolkit step by step.
+          </h2>
+
+          <p class="section-subtitle">
+            Start with the runtime, then add interfaces, document search, and
+            production tools as your needs grow.
+          </p>
+        </div>
+
+        <div class="col-lg-7">
+          <div class="row g-3">
+            <div class="col-6 col-md-4">
+              <div class="workflow-card p-3 text-center">
+                <span class="badge rounded-pill text-bg-primary">
+                  01
+                </span>
+
+                <div class="fw-bold mt-2">
+                  Ollama
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 col-md-4">
+              <div class="workflow-card p-3 text-center">
+                <span class="badge rounded-pill text-bg-primary">
+                  02
+                </span>
+
+                <div class="fw-bold mt-2">
+                  Continue
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 col-md-4">
+              <div class="workflow-card p-3 text-center">
+                <span class="badge rounded-pill text-bg-primary">
+                  03
+                </span>
+
+                <div class="fw-bold mt-2">
+                  Open WebUI
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 col-md-4">
+              <div class="workflow-card p-3 text-center">
+                <span class="badge rounded-pill text-bg-primary">
+                  04
+                </span>
+
+                <div class="fw-bold mt-2">
+                  Jan
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 col-md-4">
+              <div class="workflow-card p-3 text-center">
+                <span class="badge rounded-pill text-bg-primary">
+                  05
+                </span>
+
+                <div class="fw-bold mt-2">
+                  AnythingLLM
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 col-md-4">
+              <div class="workflow-card p-3 text-center">
+                <span class="badge rounded-pill text-bg-primary">
+                  06
+                </span>
+
+                <div class="fw-bold mt-2">
+                  Production tools
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-5">
+    <div class="container">
+      <div class="row g-4 align-items-center">
+        <div class="col-md-7">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <span class="brand-mark">
+              <i class="bi bi-cpu"></i>
+            </span>
+
+            <strong class="fs-5 text-white">
+              Ollama Guide
+            </strong>
+          </div>
+
+          <p class="mb-0">
+            A local-first AI workflow for developers using Windows, macOS,
+            Linux, VS Code, mobile clients, and custom applications.
+          </p>
+        </div>
+
+        <div class="col-md-5 text-md-end">
+          <a
+            href="https://ollama.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Ollama
+          </a>
+
+          <span class="mx-2">·</span>
+
+          <a
+            href="https://code.visualstudio.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            VS Code
+          </a>
+
+          <span class="mx-2">·</span>
+
+          <a href="#home">
+            Back to top
+          </a>
+        </div>
+      </div>
+
+      <hr class="border-secondary my-4">
+
+      <small>
+        © <span id="currentYear"></span>
+        Ollama Guide. Built with Bootstrap 5.
+      </small>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Page JavaScript -->
+  <script>
+    /*
+     * Set the current year automatically.
+     */
+    document.getElementById("currentYear").textContent =
+      new Date().getFullYear();
+
+
+    /*
+     * Copy code blocks to the clipboard.
+     * Includes a fallback for local file usage.
+     */
+    document.querySelectorAll("[data-copy-target]").forEach(button => {
+      button.addEventListener("click", async () => {
+        const targetId = button.getAttribute("data-copy-target");
+        const target = document.getElementById(targetId);
+
+        if (!target) {
+          return;
+        }
+
+        const text = target.innerText;
+        const originalText = button.innerHTML;
+
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            const textarea = document.createElement("textarea");
+
+            textarea.value = text;
+            textarea.style.position = "fixed";
+            textarea.style.opacity = "0";
+
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+
+            document.execCommand("copy");
+            textarea.remove();
+          }
+
+          button.innerHTML =
+            '<i class="bi bi-check2"></i> Copied';
+
+          button.classList.add("btn-success");
+
+          setTimeout(() => {
+            button.innerHTML = originalText;
+            button.classList.remove("btn-success");
+          }, 1600);
+
+        } catch (error) {
+          console.error("Copy failed:", error);
+
+          button.innerHTML =
+            '<i class="bi bi-x-circle"></i> Failed';
+
+          setTimeout(() => {
+            button.innerHTML = originalText;
+          }, 1600);
+        }
+      });
+    });
+
+
+    /*
+     * Close the mobile navbar after clicking an internal link.
+     */
+    document.querySelectorAll('.navbar .nav-link[href^="#"]').forEach(link => {
+      link.addEventListener("click", () => {
+        const menu = document.getElementById("mainNav");
+
+        if (menu.classList.contains("show")) {
+          bootstrap.Collapse
+            .getOrCreateInstance(menu)
+            .hide();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

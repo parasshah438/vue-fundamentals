@@ -1754,32 +1754,56 @@ const isProduction = import.meta.env.PROD;</code></pre></div>
 
       <p>Nuxt is the production framework layer on top of Vue when you need file-based routing, server rendering, static generation, data-loading conventions, server API handlers, middleware, and SEO-aware page structure.</p>
 
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>Nuxt 4 update:</strong> current official starters use <code>npm create nuxt@latest</code> and default to an <code>app/</code> source directory. Older root-level structures still work, but new projects should generally follow the newer layout.</p>
+      </div>
+
       <h5 class="sub-title"><span class="step-num me-2">1</span>What Nuxt Adds</h5>
       <div class="row g-3 mb-3">
-        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">File routing</h6><p class="small opacity-75 mb-0">Pages become routes automatically under <code>pages/</code>.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">File routing</h6><p class="small opacity-75 mb-0">Pages become routes automatically under <code>app/pages/</code> in current Nuxt 4 starters.</p></div></div>
         <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Server routes</h6><p class="small opacity-75 mb-0">Add backend handlers under <code>server/api</code> without building a separate Express app.</p></div></div>
         <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">SEO structure</h6><p class="small opacity-75 mb-0">Use <code>useHead()</code>, meta config, and SSR for crawler-friendly pages.</p></div></div>
         <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-semibold mb-1">Hybrid rendering</h6><p class="small opacity-75 mb-0">Mix static, cached, and server-rendered routes based on each page’s needs.</p></div></div>
       </div>
 
-      <h5 class="sub-title"><span class="step-num me-2">2</span>Core Folder Layout</h5>
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Current Nuxt 4 Create Flow</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Node.js 22.x+ recommended
+
+# npm
+npm create nuxt@latest my-nuxt-app
+
+# yarn
+yarn create nuxt my-nuxt-app
+
+# pnpm
+pnpm create nuxt@latest my-nuxt-app
+
+cd my-nuxt-app
+npm run dev -- -o</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>Core Folder Layout</h5>
       <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
 <pre><code class="language-bash">my-nuxt-app/
-  app.vue
-  components/
-  composables/
-  layouts/
-  middleware/
-  pages/
-    index.vue
-    products/[slug].vue
-  plugins/
+  app/
+    app.vue
+    components/
+    composables/
+    layouts/
+    middleware/
+    pages/
+      index.vue
+      products/[slug].vue
+    plugins/
+    utils/
+    error.vue
+  shared/
   server/
     api/
       products.get.ts
   nuxt.config.ts</code></pre></div>
 
-      <h5 class="sub-title"><span class="step-num me-2">3</span>Route and Data Example</h5>
+      <h5 class="sub-title"><span class="step-num me-2">4</span>Route and Data Example</h5>
       <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
 <pre><code class="language-html">&lt;script setup lang="ts"&gt;
 const route = useRoute();

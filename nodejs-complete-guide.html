@@ -188,6 +188,48 @@
       font-size: 0.8rem;
     }
 
+    .command-group {
+      border: 1px solid rgba(60, 135, 58, 0.2);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    [data-bs-theme="dark"] .command-group {
+      background: rgba(60, 135, 58, 0.08);
+    }
+    [data-bs-theme="light"] .command-group {
+      background: rgba(60, 135, 58, 0.03);
+    }
+
+    .cmd-copy-btn {
+      min-width: 92px;
+      font-size: 0.74rem;
+      white-space: nowrap;
+    }
+
+    .os-tabs-box {
+      border: 1px solid rgba(60, 135, 58, 0.22);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    [data-bs-theme="dark"] .os-tabs-box {
+      background: rgba(60, 135, 58, 0.06);
+    }
+    [data-bs-theme="light"] .os-tabs-box {
+      background: rgba(60, 135, 58, 0.03);
+    }
+    .os-tab-nav .nav-link {
+      border: 0;
+      border-radius: 0;
+      color: inherit;
+      font-weight: 600;
+    }
+    .os-tab-nav .nav-link.active {
+      background: linear-gradient(135deg, var(--node-primary), var(--node-secondary));
+      color: #fff;
+    }
+
     .step-num {
       display: inline-flex;
       align-items: center;
@@ -2348,158 +2390,270 @@ CMD ["node", "dist/main.js"]</code></pre></div>
     </section>
 
     <section id="sec-command-reference" class="mb-5">
-      <h2 class="section-title"><i class="bi bi-terminal-fill me-2" style="color:var(--node-primary);"></i>Node.js Cheat Sheet: Commands, Short Description, Short Example</h2>
-      <p class="mb-4">Use this as a fast lookup table. It covers Node runtime commands, npm and npx work, TypeScript and Prisma tooling, NestJS CLI flow, Redis and BullMQ setup, cron and Docker Compose commands, debugging flags, PM2, Docker, and package publishing commands that show up in real projects.</p>
+      <h2 class="section-title"><i class="bi bi-terminal-fill me-2" style="color:var(--node-primary);"></i>Node.js Commands Reference: Separated Sections with Copy</h2>
+      <p class="mb-2">Each command is grouped by use-case, includes a short description, and has a dedicated copy button. Your provided list has been merged, normalized, and expanded with practical missing commands used in modern Node.js workflows.</p>
+      <p class="small opacity-75 mb-4">OS note: commands like <code>PORT=3000 node app.js</code> are for Linux/Mac shells. Use <code>set PORT=3000 &amp;&amp; node app.js</code> in Windows CMD and <code>$env:PORT=3000; node app.js</code> in PowerShell.</p>
 
-      <div class="d-flex flex-wrap gap-2 mb-4">
-        <span class="node-pill">Runtime</span>
-        <span class="node-pill">npm</span>
-        <span class="node-pill">npx</span>
-        <span class="node-pill">TypeScript</span>
-        <span class="node-pill">Prisma</span>
-        <span class="node-pill">NestJS</span>
-        <span class="node-pill">Redis</span>
-        <span class="node-pill">Queues</span>
-        <span class="node-pill">Compose</span>
-        <span class="node-pill">Debug</span>
-        <span class="node-pill">PM2</span>
-        <span class="node-pill">Docker</span>
-        <span class="node-pill">Publish</span>
+      <div class="os-tabs-box mb-4">
+        <ul class="nav nav-pills os-tab-nav" id="osCommandTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="os-linux-tab" data-bs-toggle="tab" data-bs-target="#os-linux" type="button" role="tab" aria-controls="os-linux" aria-selected="true">Linux/Mac</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="os-windows-tab" data-bs-toggle="tab" data-bs-target="#os-windows" type="button" role="tab" aria-controls="os-windows" aria-selected="false">Windows</button>
+          </li>
+        </ul>
+        <div class="tab-content p-3">
+          <div class="tab-pane fade show active" id="os-linux" role="tabpanel" aria-labelledby="os-linux-tab" tabindex="0">
+            <div class="table-responsive">
+              <table class="table table-bordered align-middle small cmd-table mb-0">
+                <thead class="table-dark"><tr><th>Command</th><th>Copy</th><th>Short description</th></tr></thead>
+                <tbody>
+                  <tr><td><code>which node</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="which node"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Find installed Node executable path.</td></tr>
+                  <tr><td><code>PORT=3000 node app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="PORT=3000 node app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Run app with a temporary PORT variable.</td></tr>
+                  <tr><td><code>NODE_ENV=production node app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="NODE_ENV=production node app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Run app in production mode.</td></tr>
+                  <tr><td><code>export PORT=3000</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="export PORT=3000"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Set environment variable in current shell.</td></tr>
+                  <tr><td><code>export NODE_ENV=production</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="export NODE_ENV=production"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Set environment mode in current shell.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="os-windows" role="tabpanel" aria-labelledby="os-windows-tab" tabindex="0">
+            <div class="table-responsive">
+              <table class="table table-bordered align-middle small cmd-table mb-0">
+                <thead class="table-dark"><tr><th>Command</th><th>Copy</th><th>Short description</th></tr></thead>
+                <tbody>
+                  <tr><td><code>where node</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="where node"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Find installed Node executable path.</td></tr>
+                  <tr><td><code>set PORT=3000 &amp;&amp; node app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="set PORT=3000 &amp;&amp; node app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Set PORT and run app in CMD.</td></tr>
+                  <tr><td><code>set NODE_ENV=production &amp;&amp; node app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="set NODE_ENV=production &amp;&amp; node app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Set NODE_ENV and run app in CMD.</td></tr>
+                  <tr><td><code>$env:PORT=3000; node app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="$env:PORT=3000; node app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Set PORT and run app in PowerShell.</td></tr>
+                  <tr><td><code>$env:NODE_ENV='production'; node app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="$env:NODE_ENV='production'; node app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Set NODE_ENV and run app in PowerShell.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <h5 class="sub-title"><span class="step-num me-2">1</span>Runtime and Version Checks</h5>
-      <div class="table-responsive">
-        <table class="table table-bordered align-middle small cmd-table">
-          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
-          <tbody>
-            <tr><td><code>node --version</code></td><td>Show installed Node.js version.</td><td><code>node --version</code></td></tr>
-            <tr><td><code>npm --version</code></td><td>Show installed npm version.</td><td><code>npm --version</code></td></tr>
-            <tr><td><code>corepack enable</code></td><td>Enable Corepack for package-manager shims.</td><td><code>corepack enable</code></td></tr>
-            <tr><td><code>node app.js</code></td><td>Run a Node file normally.</td><td><code>node src/server.js</code></td></tr>
-            <tr><td><code>node --watch file</code></td><td>Restart automatically when watched files change.</td><td><code>node --watch src/server.js</code></td></tr>
-            <tr><td><code>node --env-file=.env file</code></td><td>Load environment variables from a file.</td><td><code>node --env-file=.env src/server.js</code></td></tr>
-            <tr><td><code>node --check file</code></td><td>Check syntax without executing the file.</td><td><code>node --check src/jobs/sendMail.js</code></td></tr>
-            <tr><td><code>node -e "code"</code></td><td>Run a short inline snippet.</td><td><code>node -e "console.log(process.pid)"</code></td></tr>
-            <tr><td><code>node -p "expr"</code></td><td>Print the result of an expression.</td><td><code>node -p "process.platform"</code></td></tr>
-            <tr><td><code>node --test</code></td><td>Run the built-in Node test runner.</td><td><code>node --test</code></td></tr>
-          </tbody>
-        </table>
+      <div class="command-group">
+        <h5 class="fw-bold mb-3">1. Node Runtime and REPL</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small cmd-table mb-0">
+            <thead class="table-dark"><tr><th>Command</th><th>Copy</th><th>Short description</th></tr></thead>
+            <tbody>
+              <tr><td><code>node --version</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --version"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Show installed Node.js version.</td></tr>
+              <tr><td><code>node -v</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -v"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Short alias for Node version.</td></tr>
+              <tr><td><code>node -p process.versions</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -p process.versions"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Print detailed runtime versions.</td></tr>
+              <tr><td><code>node -p process.execPath</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -p process.execPath"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Show Node executable path.</td></tr>
+              <tr><td><code>node app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Run a JavaScript file.</td></tr>
+              <tr><td><code>node app.js arg1 arg2</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node app.js arg1 arg2"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Pass CLI arguments to your script.</td></tr>
+              <tr><td><code>node</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Open interactive Node REPL.</td></tr>
+              <tr><td><code>node -e "console.log('Hello World')"</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -e \&quot;console.log('Hello World')\&quot;"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Execute one-line JavaScript.</td></tr>
+              <tr><td><code>node -p "5+10"</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -p \&quot;5+10\&quot;"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Evaluate and print expression output.</td></tr>
+              <tr><td><code>node -i -e "$(cat app.js)"</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -i -e \&quot;$(cat app.js)\&quot;"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Load file content into interactive session.</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <h5 class="sub-title"><span class="step-num me-2">2</span>Project Init, npm, and Package Files</h5>
-      <div class="table-responsive">
-        <table class="table table-bordered align-middle small cmd-table">
-          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
-          <tbody>
-            <tr><td><code>npm init -y</code></td><td>Create a package.json with defaults.</td><td><code>npm init -y</code></td></tr>
-            <tr><td><code>npm pkg set type=module</code></td><td>Set the project to use ES modules.</td><td><code>npm pkg set type=module</code></td></tr>
-            <tr><td><code>npm pkg get scripts</code></td><td>Read the scripts block from package.json.</td><td><code>npm pkg get scripts</code></td></tr>
-            <tr><td><code>npm pkg set scripts.dev="..."</code></td><td>Add or update a script entry.</td><td><code>npm pkg set scripts.dev="node --watch src/server.js"</code></td></tr>
-            <tr><td><code>npm install package</code></td><td>Install a runtime dependency.</td><td><code>npm install express</code></td></tr>
-            <tr><td><code>npm install -D package</code></td><td>Install a dev dependency.</td><td><code>npm install -D nodemon</code></td></tr>
-            <tr><td><code>npm uninstall package</code></td><td>Remove an installed dependency.</td><td><code>npm uninstall express</code></td></tr>
-            <tr><td><code>npm update</code></td><td>Update packages within allowed version ranges.</td><td><code>npm update</code></td></tr>
-            <tr><td><code>npm outdated</code></td><td>List packages with newer versions available.</td><td><code>npm outdated</code></td></tr>
-            <tr><td><code>npm ci</code></td><td>Do a clean lockfile-based install.</td><td><code>npm ci</code></td></tr>
-            <tr><td><code>npm ls</code></td><td>Show the installed dependency tree.</td><td><code>npm ls</code></td></tr>
-            <tr><td><code>npm prune</code></td><td>Remove extraneous packages.</td><td><code>npm prune</code></td></tr>
-          </tbody>
-        </table>
+      <div class="command-group">
+        <h5 class="fw-bold mb-3">2. Environment, Watch, and Run Modes</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small cmd-table mb-0">
+            <thead class="table-dark"><tr><th>Command</th><th>Copy</th><th>Short description</th></tr></thead>
+            <tbody>
+              <tr><td><code>PORT=3000 node app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="PORT=3000 node app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Set env variable on Linux/Mac and run app.</td></tr>
+              <tr><td><code>set PORT=3000 &amp;&amp; node app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="set PORT=3000 &amp;&amp; node app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Set env variable and run app in Windows CMD.</td></tr>
+              <tr><td><code>$env:PORT=3000; node app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="$env:PORT=3000; node app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Set env variable and run app in PowerShell.</td></tr>
+              <tr><td><code>NODE_ENV=production node app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="NODE_ENV=production node app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Run app with production mode (Linux/Mac).</td></tr>
+              <tr><td><code>set NODE_ENV=production &amp;&amp; node app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="set NODE_ENV=production &amp;&amp; node app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Run app with production mode (Windows CMD).</td></tr>
+              <tr><td><code>node --watch app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --watch app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Auto-restart app on file changes.</td></tr>
+              <tr><td><code>node --watch-path=src app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --watch-path=src app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Watch a specific path for restart events.</td></tr>
+              <tr><td><code>node --env-file=.env app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --env-file=.env app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Load environment variables from .env file.</td></tr>
+              <tr><td><code>node --run dev</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --run dev"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Run package script directly with Node.</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <h5 class="sub-title"><span class="step-num me-2">3</span>Scripts, npx, Formatting, and Day-to-Day Dev</h5>
-      <div class="table-responsive">
-        <table class="table table-bordered align-middle small cmd-table">
-          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
-          <tbody>
-            <tr><td><code>npm run dev</code></td><td>Run the development script.</td><td><code>npm run dev</code></td></tr>
-            <tr><td><code>npm start</code></td><td>Run the start script.</td><td><code>npm start</code></td></tr>
-            <tr><td><code>npm test</code></td><td>Run the test script.</td><td><code>npm test</code></td></tr>
-            <tr><td><code>npm run build</code></td><td>Run the build script.</td><td><code>npm run build</code></td></tr>
-            <tr><td><code>npx nodemon file</code></td><td>Run a file with auto-restart using Nodemon.</td><td><code>npx nodemon src/server.js</code></td></tr>
-            <tr><td><code>npx eslint .</code></td><td>Lint files in the current project.</td><td><code>npx eslint .</code></td></tr>
-            <tr><td><code>npx prettier . --write</code></td><td>Format files in place.</td><td><code>npx prettier src --write</code></td></tr>
-            <tr><td><code>npm cache verify</code></td><td>Verify npm cache integrity.</td><td><code>npm cache verify</code></td></tr>
-            <tr><td><code>npm audit</code></td><td>Show dependency security issues.</td><td><code>npm audit</code></td></tr>
-            <tr><td><code>npm audit fix</code></td><td>Apply safe audit fixes when available.</td><td><code>npm audit fix</code></td></tr>
-          </tbody>
-        </table>
+      <div class="command-group">
+        <h5 class="fw-bold mb-3">3. Debugging, Tracing, and Performance</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small cmd-table mb-0">
+            <thead class="table-dark"><tr><th>Command</th><th>Copy</th><th>Short description</th></tr></thead>
+            <tbody>
+              <tr><td><code>node inspect app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node inspect app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Start Node CLI debugger.</td></tr>
+              <tr><td><code>node --inspect app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --inspect app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Enable Chrome DevTools debugging.</td></tr>
+              <tr><td><code>node --inspect-brk app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --inspect-brk app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Break before running first line.</td></tr>
+              <tr><td><code>node --trace-warnings app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --trace-warnings app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Show warning trace stack details.</td></tr>
+              <tr><td><code>node --trace-deprecation app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --trace-deprecation app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Trace deprecated API usage.</td></tr>
+              <tr><td><code>node --trace-uncaught app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --trace-uncaught app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Print stacks for uncaught exceptions.</td></tr>
+              <tr><td><code>node --max-old-space-size=4096 app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --max-old-space-size=4096 app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Increase V8 memory heap limit.</td></tr>
+              <tr><td><code>node --expose-gc app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --expose-gc app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Expose manual garbage collector API.</td></tr>
+              <tr><td><code>node --trace-gc app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --trace-gc app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Print garbage collection logs.</td></tr>
+              <tr><td><code>node --cpu-prof app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --cpu-prof app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Generate CPU performance profile.</td></tr>
+              <tr><td><code>node --heap-prof app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --heap-prof app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Generate heap allocation profile.</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <h5 class="sub-title"><span class="step-num me-2">4</span>Debugging, Profiling, and Built-in Test Flags</h5>
-      <div class="table-responsive">
-        <table class="table table-bordered align-middle small cmd-table">
-          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
-          <tbody>
-            <tr><td><code>node --inspect file</code></td><td>Start the process with inspector enabled.</td><td><code>node --inspect src/server.js</code></td></tr>
-            <tr><td><code>node --inspect-brk file</code></td><td>Start the process and pause on line one.</td><td><code>node --inspect-brk src/server.js</code></td></tr>
-            <tr><td><code>node --trace-warnings file</code></td><td>Show stack traces for runtime warnings.</td><td><code>node --trace-warnings src/server.js</code></td></tr>
-            <tr><td><code>node --cpu-prof file</code></td><td>Collect a CPU profile while the app runs.</td><td><code>node --cpu-prof src/server.js</code></td></tr>
-            <tr><td><code>node --heap-prof file</code></td><td>Collect heap profile data.</td><td><code>node --heap-prof src/server.js</code></td></tr>
-            <tr><td><code>node --test --watch</code></td><td>Watch tests using Node's built-in runner.</td><td><code>node --test --watch</code></td></tr>
-            <tr><td><code>npx autocannon url</code></td><td>Run a quick load test against an endpoint.</td><td><code>npx autocannon http://localhost:3000/api/health</code></td></tr>
-            <tr><td><code>node --trace-gc file</code></td><td>Show garbage collection activity.</td><td><code>node --trace-gc src/server.js</code></td></tr>
-          </tbody>
-        </table>
+      <div class="command-group">
+        <h5 class="fw-bold mb-3">4. Syntax, Modules, and Process Info</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small cmd-table mb-0">
+            <thead class="table-dark"><tr><th>Command</th><th>Copy</th><th>Short description</th></tr></thead>
+            <tbody>
+              <tr><td><code>node --check app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --check app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Check syntax without running script.</td></tr>
+              <tr><td><code>node app.mjs</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node app.mjs"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Run ES module file directly.</td></tr>
+              <tr><td><code>node --experimental-modules app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --experimental-modules app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Legacy ESM flag for old versions.</td></tr>
+              <tr><td><code>node --help</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --help"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Show Node command help menu.</td></tr>
+              <tr><td><code>node --v8-options</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --v8-options"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>List V8 engine options.</td></tr>
+              <tr><td><code>node -p process.cwd()</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -p process.cwd()"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Print current working directory.</td></tr>
+              <tr><td><code>node -p process.pid</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -p process.pid"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Print current process id.</td></tr>
+              <tr><td><code>node -p process.platform</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -p process.platform"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Print operating system platform.</td></tr>
+              <tr><td><code>node -p process.arch</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -p process.arch"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Print CPU architecture.</td></tr>
+              <tr><td><code>node -p process.uptime()</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -p process.uptime()"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Print process uptime in seconds.</td></tr>
+              <tr><td><code>node -p process.memoryUsage()</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -p process.memoryUsage()"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Print memory usage breakdown.</td></tr>
+              <tr><td><code>node -p process.env</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -p process.env"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Print environment variables object.</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <h5 class="sub-title"><span class="step-num me-2">5</span>TypeScript, Prisma, and API Tooling</h5>
-      <div class="table-responsive">
-        <table class="table table-bordered align-middle small cmd-table">
-          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
-          <tbody>
-            <tr><td><code>npm install -D typescript tsx @types/node</code></td><td>Install base TypeScript tooling.</td><td><code>npm install -D typescript tsx @types/node</code></td></tr>
-            <tr><td><code>npx tsc --init</code></td><td>Create a tsconfig.json file.</td><td><code>npx tsc --init</code></td></tr>
-            <tr><td><code>npx tsx src/server.ts</code></td><td>Run a TypeScript file directly.</td><td><code>npx tsx src/server.ts</code></td></tr>
-            <tr><td><code>npx tsx watch src/server.ts</code></td><td>Run and restart a TS file on changes.</td><td><code>npx tsx watch src/server.ts</code></td></tr>
-            <tr><td><code>npx prisma init</code></td><td>Scaffold Prisma config and schema files.</td><td><code>npx prisma init</code></td></tr>
-            <tr><td><code>npx prisma migrate dev --name init</code></td><td>Create and apply a local migration.</td><td><code>npx prisma migrate dev --name init</code></td></tr>
-            <tr><td><code>npx prisma generate</code></td><td>Generate the Prisma client.</td><td><code>npx prisma generate</code></td></tr>
-            <tr><td><code>npx prisma studio</code></td><td>Open Prisma Studio to inspect data visually.</td><td><code>npx prisma studio</code></td></tr>
-          </tbody>
-        </table>
+      <div class="command-group">
+        <h5 class="fw-bold mb-3">5. npm Project and Package Management</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small cmd-table mb-0">
+            <thead class="table-dark"><tr><th>Command</th><th>Copy</th><th>Short description</th></tr></thead>
+            <tbody>
+              <tr><td><code>npm --version</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm --version"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Show installed npm version.</td></tr>
+              <tr><td><code>npm -v</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm -v"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Short alias for npm version.</td></tr>
+              <tr><td><code>npm init</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm init"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Create package.json interactively.</td></tr>
+              <tr><td><code>npm init -y</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm init -y"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Create package.json with defaults.</td></tr>
+              <tr><td><code>npm install express</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm install express"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Install a package locally.</td></tr>
+              <tr><td><code>npm i express</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm i express"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Short install form.</td></tr>
+              <tr><td><code>npm install express mongoose dotenv</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm install express mongoose dotenv"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Install multiple packages together.</td></tr>
+              <tr><td><code>npm install -g nodemon</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm install -g nodemon"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Install package globally.</td></tr>
+              <tr><td><code>npm install --save-dev nodemon</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm install --save-dev nodemon"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Install development dependency.</td></tr>
+              <tr><td><code>npm i -D nodemon</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm i -D nodemon"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Short dev dependency command.</td></tr>
+              <tr><td><code>npm install express@4.18.2</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm install express@4.18.2"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Install a specific package version.</td></tr>
+              <tr><td><code>npm install express@latest</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm install express@latest"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Install latest package release.</td></tr>
+              <tr><td><code>npm install</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm install"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Install from package.json dependencies.</td></tr>
+              <tr><td><code>npm ci</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm ci"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Clean install using lockfile.</td></tr>
+              <tr><td><code>npm uninstall express</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm uninstall express"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Remove installed package.</td></tr>
+              <tr><td><code>npm uninstall -g nodemon</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm uninstall -g nodemon"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Remove globally installed package.</td></tr>
+              <tr><td><code>npm update</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm update"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Update all allowed dependencies.</td></tr>
+              <tr><td><code>npm update express</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm update express"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Update only one package.</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <h5 class="sub-title"><span class="step-num me-2">6</span>NestJS, Redis, Queues, Cron, and Docker Compose</h5>
-      <div class="table-responsive">
-        <table class="table table-bordered align-middle small cmd-table">
-          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
-          <tbody>
-            <tr><td><code>npx @nestjs/cli new app-name</code></td><td>Scaffold a new NestJS application.</td><td><code>npx @nestjs/cli new commerce-api</code></td></tr>
-            <tr><td><code>npx nest g resource name --no-spec</code></td><td>Generate a NestJS resource with controller and service files.</td><td><code>npx nest g resource orders --no-spec</code></td></tr>
-            <tr><td><code>npm install redis bullmq node-cron</code></td><td>Add Redis, BullMQ, and cron packages for an Express-style capstone.</td><td><code>npm install redis bullmq node-cron</code></td></tr>
-            <tr><td><code>npm install redis bullmq @nestjs/config @nestjs/schedule</code></td><td>Add capstone infrastructure packages to a NestJS app.</td><td><code>npm install redis bullmq @nestjs/config @nestjs/schedule</code></td></tr>
-            <tr><td><code>redis-cli ping</code></td><td>Check whether the Redis server is reachable.</td><td><code>redis-cli ping</code></td></tr>
-            <tr><td><code>node src/jobs/workers.js</code></td><td>Run BullMQ workers for the Express capstone locally.</td><td><code>node src/jobs/workers.js</code></td></tr>
-            <tr><td><code>node dist/src/jobs/bootstrap-workers.js</code></td><td>Run compiled NestJS worker bootstrap code.</td><td><code>node dist/src/jobs/bootstrap-workers.js</code></td></tr>
-            <tr><td><code>docker compose up -d --build</code></td><td>Build and start API, worker, Redis, and database services.</td><td><code>docker compose up -d --build</code></td></tr>
-            <tr><td><code>docker compose logs -f api</code></td><td>Stream logs from one compose service.</td><td><code>docker compose logs -f api</code></td></tr>
-            <tr><td><code>docker compose down</code></td><td>Stop and remove the compose stack.</td><td><code>docker compose down</code></td></tr>
-          </tbody>
-        </table>
+      <div class="command-group">
+        <h5 class="fw-bold mb-3">6. npm Info, Scripts, Cache, Config, and Security</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small cmd-table mb-0">
+            <thead class="table-dark"><tr><th>Command</th><th>Copy</th><th>Short description</th></tr></thead>
+            <tbody>
+              <tr><td><code>npm list</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm list"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>List installed local packages.</td></tr>
+              <tr><td><code>npm list -g</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm list -g"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>List globally installed packages.</td></tr>
+              <tr><td><code>npm view express</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm view express"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Show package metadata from npm.</td></tr>
+              <tr><td><code>npm outdated</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm outdated"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Show outdated dependencies.</td></tr>
+              <tr><td><code>npm explain express</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm explain express"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Explain why dependency is installed.</td></tr>
+              <tr><td><code>npm search express</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm search express"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Search npm registry packages.</td></tr>
+              <tr><td><code>npm run start</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm run start"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Run named script with run keyword.</td></tr>
+              <tr><td><code>npm start</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm start"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Shortcut for start script.</td></tr>
+              <tr><td><code>npm test</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm test"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Shortcut for test script.</td></tr>
+              <tr><td><code>npm restart</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm restart"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Run restart script lifecycle.</td></tr>
+              <tr><td><code>npm stop</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm stop"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Run stop script lifecycle.</td></tr>
+              <tr><td><code>npm cache verify</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm cache verify"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Verify npm cache data.</td></tr>
+              <tr><td><code>npm cache clean --force</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm cache clean --force"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Clear npm cache forcefully.</td></tr>
+              <tr><td><code>npm config list</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm config list"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Display npm configuration values.</td></tr>
+              <tr><td><code>npm config get registry</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm config get registry"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Read current npm registry URL.</td></tr>
+              <tr><td><code>npm config set registry https://registry.npmjs.org/</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm config set registry https://registry.npmjs.org/"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Set npm registry endpoint.</td></tr>
+              <tr><td><code>npm config delete registry</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm config delete registry"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Remove custom registry setting.</td></tr>
+              <tr><td><code>npm audit</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm audit"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Run dependency security audit.</td></tr>
+              <tr><td><code>npm audit fix</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm audit fix"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Auto-fix non-breaking vulnerabilities.</td></tr>
+              <tr><td><code>npm audit fix --force</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm audit fix --force"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Force risky vulnerability updates.</td></tr>
+              <tr><td><code>npm doctor</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm doctor"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Check npm and environment health.</td></tr>
+              <tr><td><code>npm dedupe</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm dedupe"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Reduce duplicate dependency copies.</td></tr>
+              <tr><td><code>npm fund</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm fund"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Show funding links for packages.</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <h5 class="sub-title"><span class="step-num me-2">7</span>PM2, Docker, and Release Commands</h5>
-      <div class="table-responsive">
-        <table class="table table-bordered align-middle small cmd-table">
-          <thead class="table-dark"><tr><th>Command</th><th>Short description</th><th>Short example</th></tr></thead>
-          <tbody>
-            <tr><td><code>pm2 start file --name app</code></td><td>Start a Node app under PM2.</td><td><code>pm2 start dist/server.js --name api</code></td></tr>
-            <tr><td><code>pm2 logs app</code></td><td>View PM2 logs for one process.</td><td><code>pm2 logs api</code></td></tr>
-            <tr><td><code>pm2 restart app</code></td><td>Restart a PM2-managed process.</td><td><code>pm2 restart api</code></td></tr>
-            <tr><td><code>pm2 save</code></td><td>Persist the current PM2 process list.</td><td><code>pm2 save</code></td></tr>
-            <tr><td><code>pm2 startup</code></td><td>Generate the command to auto-start PM2 on boot.</td><td><code>pm2 startup</code></td></tr>
-            <tr><td><code>docker build -t image .</code></td><td>Build a Docker image for the app.</td><td><code>docker build -t node-api .</code></td></tr>
-            <tr><td><code>docker run -p 3000:3000 image</code></td><td>Run the container locally.</td><td><code>docker run -p 3000:3000 node-api</code></td></tr>
-            <tr><td><code>npm pack</code></td><td>Create a tarball of the package contents.</td><td><code>npm pack</code></td></tr>
-            <tr><td><code>npm version patch</code></td><td>Bump patch version and create a tag.</td><td><code>npm version patch</code></td></tr>
-            <tr><td><code>npm publish --access public</code></td><td>Publish a public npm package.</td><td><code>npm publish --access public</code></td></tr>
-          </tbody>
-        </table>
+      <div class="command-group">
+        <h5 class="fw-bold mb-3">7. npx, Utility, and Publish Flow</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small cmd-table mb-0">
+            <thead class="table-dark"><tr><th>Command</th><th>Copy</th><th>Short description</th></tr></thead>
+            <tbody>
+              <tr><td><code>npx create-react-app myapp</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npx create-react-app myapp"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Run package binary without global install.</td></tr>
+              <tr><td><code>npx nodemon app.js</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npx nodemon app.js"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Run nodemon from local dependencies.</td></tr>
+              <tr><td><code>npx cowsay Hello</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npx cowsay Hello"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Execute one-off package command.</td></tr>
+              <tr><td><code>npm exec eslint .</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm exec eslint ."><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Run local package binary via npm exec.</td></tr>
+              <tr><td><code>npm login</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm login"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Authenticate to npm registry.</td></tr>
+              <tr><td><code>npm whoami</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm whoami"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Display currently logged in account.</td></tr>
+              <tr><td><code>npm publish</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm publish"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Publish package to npm registry.</td></tr>
+              <tr><td><code>npm unpublish package-name</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm unpublish package-name"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Remove package version from npm.</td></tr>
+              <tr><td><code>npm logout</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm logout"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Sign out from npm registry.</td></tr>
+              <tr><td><code>npm pack</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm pack"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Create local package tarball.</td></tr>
+              <tr><td><code>npm version patch</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm version patch"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Bump patch version and tag.</td></tr>
+              <tr><td><code>npm publish --access public</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npm publish --access public"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Publish scoped package as public.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="command-group">
+        <h5 class="fw-bold mb-3">8. TypeScript, Testing, and Linters</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small cmd-table mb-0">
+            <thead class="table-dark"><tr><th>Command</th><th>Copy</th><th>Short description</th></tr></thead>
+            <tbody>
+              <tr><td><code>npx eslint --init</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npx eslint --init"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Initialize ESLint config quickly.</td></tr>
+              <tr><td><code>npx eslint .</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npx eslint ."><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Run ESLint checks on project.</td></tr>
+              <tr><td><code>npx eslint . --fix</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npx eslint . --fix"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Auto-fix lint issues where possible.</td></tr>
+              <tr><td><code>npx prettier . --write</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npx prettier . --write"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Format code files in-place.</td></tr>
+              <tr><td><code>npx prettier . --check</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npx prettier . --check"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Validate formatting without rewriting.</td></tr>
+              <tr><td><code>npx tsc --init</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npx tsc --init"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Create TypeScript config file.</td></tr>
+              <tr><td><code>npx tsc</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npx tsc"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Compile TypeScript project.</td></tr>
+              <tr><td><code>npx tsc --watch</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npx tsc --watch"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Compile continuously in watch mode.</td></tr>
+              <tr><td><code>npx tsc app.ts</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npx tsc app.ts"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Compile a single TypeScript file.</td></tr>
+              <tr><td><code>npx ts-node app.ts</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npx ts-node app.ts"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Run TypeScript directly with ts-node.</td></tr>
+              <tr><td><code>node --test</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --test"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Use Node built-in test runner.</td></tr>
+              <tr><td><code>node --test --watch</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node --test --watch"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Watch mode for built-in tests.</td></tr>
+              <tr><td><code>npx jest</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npx jest"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Run Jest test suite.</td></tr>
+              <tr><td><code>npx jest --watch</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npx jest --watch"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Run Jest in watch mode.</td></tr>
+              <tr><td><code>npx jest --coverage</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="npx jest --coverage"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Generate test coverage report.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="command-group">
+        <h5 class="fw-bold mb-3">9. Useful One-Liners and Exit Codes</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle small cmd-table mb-0">
+            <thead class="table-dark"><tr><th>Command</th><th>Copy</th><th>Short description</th></tr></thead>
+            <tbody>
+              <tr><td><code>node -p "new Date()"</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -p \&quot;new Date()\&quot;"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Print current date and time.</td></tr>
+              <tr><td><code>node -p "require('./package.json')"</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -p \&quot;require('./package.json')\&quot;"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Read package.json quickly.</td></tr>
+              <tr><td><code>node -p "Math.random()"</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -p \&quot;Math.random()\&quot;"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Print random number sample.</td></tr>
+              <tr><td><code>node -p "__dirname"</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -p \&quot;__dirname\&quot;"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Print current script directory path.</td></tr>
+              <tr><td><code>node -p "__filename"</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -p \&quot;__filename\&quot;"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Print current script filename path.</td></tr>
+              <tr><td><code>node -e "(async()=&gt;{console.log(await Promise.resolve('Done'))})()"</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -e \&quot;(async()=&gt;{console.log(await Promise.resolve('Done'))})()\&quot;"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Execute async inline JavaScript.</td></tr>
+              <tr><td><code>node -e "process.exit(0)"</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -e \&quot;process.exit(0)\&quot;"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Exit with success status code.</td></tr>
+              <tr><td><code>node -e "process.exit(1)"</code></td><td><button class="btn btn-sm btn-outline-secondary cmd-copy-btn" data-copy-btn data-copy-text="node -e \&quot;process.exit(1)\&quot;"><i class="bi bi-clipboard me-1"></i>Copy</button></td><td>Exit with error status code.</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div class="note-box mt-4">
-        <p class="mb-0"><strong>Config files to remember:</strong> a complete Node app often depends on <code>package.json</code>, <code>.env</code>, <code>tsconfig.json</code>, <code>prisma/schema.prisma</code>, <code>ecosystem.config.cjs</code>, and a <code>Dockerfile</code>. Not every important thing is a command.</p>
+        <p class="mb-0"><strong>Also added missing practical commands:</strong> <code>node --env-file</code>, <code>node --run</code>, <code>npm doctor</code>, <code>npm dedupe</code>, <code>npm fund</code>, and <code>npm exec</code>. These are commonly used in modern Node.js projects but often missing from older cheat sheets.</p>
       </div>
     </section>
 
@@ -2620,11 +2774,13 @@ CMD ["node", "dist/main.js"]</code></pre></div>
 
     document.querySelectorAll('[data-copy-btn]').forEach(btn => {
       btn.addEventListener('click', async () => {
+        const explicitText = btn.getAttribute('data-copy-text');
         const code = btn.closest('.code-wrapper')?.querySelector('code');
-        if (!code) return;
+        const textToCopy = explicitText || code?.innerText;
+        if (!textToCopy) return;
 
         try {
-          await navigator.clipboard.writeText(code.innerText);
+          await navigator.clipboard.writeText(textToCopy);
           btn.innerHTML = '<i class="bi bi-check-lg me-1"></i>Copied!';
           setTimeout(() => {
             btn.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy';

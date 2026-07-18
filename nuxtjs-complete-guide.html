@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nuxt.js Complete Tutorial</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link id="hljs-theme-dark" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css" />
+  <link id="hljs-theme-light" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css" disabled />
+
+  <style>
+    :root {
+      --sidebar-width: 286px;
+      --header-h: 64px;
+      --nuxt-primary: #00dc82;
+      --nuxt-secondary: #0f766e;
+      --nuxt-accent: #38bdf8;
+      --nuxt-deep: #062c2b;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      overflow-x: hidden;
+      scroll-padding-top: calc(var(--header-h) + 18px);
+    }
+
+    html,
+    body {
+      max-width: 100%;
+    }
+
+    body {
+      font-size: 0.95rem;
+      scroll-behavior: smooth;
+    }
+
+    #topbar {
+      height: var(--header-h);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1050;
+    }
+    [data-bs-theme="dark"] #topbar {
+      background: rgba(13, 17, 23, 0.88);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    [data-bs-theme="light"] #topbar {
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, var(--nuxt-primary), var(--nuxt-accent));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+
+    #sidebar {
+      width: var(--sidebar-width);
+      top: var(--header-h);
+      height: calc(100vh - var(--header-h));
+      overflow-y: auto;
+      scrollbar-width: thin;
+      z-index: 1040;
+    }
+    [data-bs-theme="dark"] #sidebar {
+      background: #0d1117;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    [data-bs-theme="light"] #sidebar {
+      background: #f8f9fa;
+      border-right: 1px solid #dee2e6;
+    }
+
+    #sidebar .nav-link {
+      font-size: 0.85rem;
+      padding: 0.38rem 1rem;
+      border-radius: 8px;
+      color: inherit;
+      transition: background 0.15s, color 0.15s, padding-left 0.15s;
+    }
+    #sidebar .nav-link:hover {
+      background: rgba(0, 220, 130, 0.13);
+      color: var(--nuxt-primary);
+      padding-left: 1.3rem;
+    }
+    #sidebar .nav-link.active {
+      background: rgba(0, 220, 130, 0.17);
+      color: var(--nuxt-primary);
+      font-weight: 600;
+    }
+
+    #sidebar .nav-section {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 0.75rem 1rem 0.3rem;
+      opacity: 0.5;
+    }
+
+    #main-content {
+      margin-left: var(--sidebar-width);
+      min-height: calc(100vh - var(--header-h));
+      padding-top: var(--header-h);
+      width: auto;
+      min-width: 0;
+    }
+
+    #main-content .row,
+    #main-content .row > *,
+    .hero-section,
+    .feature-card,
+    .workflow-step,
+    .note-box,
+    .check-card {
+      min-width: 0;
+    }
+
+    section[id] {
+      scroll-margin-top: calc(var(--header-h) + 18px);
+    }
+
+    @media (max-width: 991.98px) {
+      #sidebar {
+        display: none !important;
+      }
+      #main-content {
+        margin-left: 0 !important;
+      }
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      border-left: 4px solid var(--nuxt-primary);
+      padding-left: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .sub-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      padding-left: 0.5rem;
+      border-left: 3px solid var(--nuxt-accent);
+      margin: 1.4rem 0 0.8rem;
+    }
+
+    .feature-card,
+    .check-card {
+      border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid transparent;
+    }
+    .feature-card:hover,
+    .check-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(0, 220, 130, 0.14);
+      border-color: rgba(0, 220, 130, 0.22);
+    }
+    [data-bs-theme="dark"] .feature-card,
+    [data-bs-theme="dark"] .check-card {
+      background: #161b22;
+    }
+    [data-bs-theme="light"] .feature-card,
+    [data-bs-theme="light"] .check-card {
+      background: #ffffff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+    }
+
+    .icon-box {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--nuxt-primary), var(--nuxt-secondary));
+      color: #fff;
+    }
+
+    pre {
+      border-radius: 10px;
+      position: relative;
+      font-size: 0.83rem;
+      margin: 0;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+    pre code {
+      display: block;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    pre code.hljs {
+      border-radius: 10px;
+    }
+
+    .code-wrapper {
+      position: relative;
+      margin: 0.75rem 0 1.25rem;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .table-responsive {
+      max-width: 100%;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    img,
+    svg,
+    iframe {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.55rem;
+      opacity: 0.75;
+      z-index: 2;
+    }
+    .copy-btn:hover {
+      opacity: 1;
+    }
+
+    .cmd-table th {
+      white-space: nowrap;
+    }
+    .cmd-table code {
+      font-size: 0.8rem;
+    }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--nuxt-primary), var(--nuxt-secondary));
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .nuxt-pill {
+      display: inline-block;
+      font-family: monospace;
+      font-size: 0.79rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+    }
+    [data-bs-theme="dark"] .nuxt-pill {
+      background: #1f2937;
+    }
+    [data-bs-theme="light"] .nuxt-pill {
+      background: #edf9f3;
+    }
+
+    .workflow-step {
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      border: 1px solid rgba(0, 220, 130, 0.18);
+    }
+    [data-bs-theme="dark"] .workflow-step {
+      background: rgba(0, 220, 130, 0.07);
+    }
+    [data-bs-theme="light"] .workflow-step {
+      background: rgba(0, 220, 130, 0.04);
+    }
+
+    .check-list,
+    .tip-list {
+      padding-left: 1.15rem;
+    }
+    .check-list li,
+    .tip-list li {
+      margin-bottom: 0.4rem;
+    }
+
+    .note-box {
+      border-left: 4px solid var(--nuxt-primary);
+      padding: 0.75rem 1rem;
+      border-radius: 0 8px 8px 0;
+    }
+    [data-bs-theme="dark"] .note-box {
+      background: rgba(0, 220, 130, 0.09);
+    }
+    [data-bs-theme="light"] .note-box {
+      background: rgba(0, 220, 130, 0.05);
+    }
+
+    .setup-grid > [class*="col-"] {
+      display: flex;
+    }
+
+    .setup-card {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      border-color: rgba(0, 220, 130, 0.14);
+    }
+
+    .setup-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.62;
+      margin-bottom: 0.9rem;
+    }
+
+    .setup-card .code-wrapper {
+      margin: 0;
+      flex: 1;
+    }
+
+    .setup-card .copy-btn {
+      top: 0.75rem;
+      right: 0.75rem;
+    }
+
+    .setup-card pre,
+    .setup-card pre code,
+    .setup-inline pre,
+    .setup-inline pre code {
+      white-space: pre;
+    }
+
+    .hero-section {
+      background:
+        radial-gradient(circle at top right, rgba(56, 189, 248, 0.18), transparent 28%),
+        linear-gradient(135deg, rgba(0, 220, 130, 0.22), rgba(15, 118, 110, 0.2));
+      border-radius: 22px;
+      padding: 2.4rem;
+      margin-top: 1.25rem;
+      border: 1px solid rgba(0, 220, 130, 0.16);
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, var(--nuxt-primary), var(--nuxt-accent));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .divider {
+      height: 1px;
+      opacity: 0.12;
+      margin: 2.4rem 0;
+    }
+
+    .badge-soft {
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+    }
+
+    .flow-line {
+      font-size: 0.9rem;
+      opacity: 0.78;
+    }
+
+    #backTop {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--nuxt-primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 220, 130, 0.45);
+      opacity: 0;
+      transition: opacity 0.25s;
+      z-index: 9999;
+    }
+    #backTop.show {
+      opacity: 1;
+    }
+
+    #themeToggle i {
+      font-size: 1.1rem;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    [data-bs-theme="dark"] ::-webkit-scrollbar-track {
+      background: #161b22;
+    }
+    [data-bs-theme="dark"] ::-webkit-scrollbar-thumb {
+      background: #30363d;
+      border-radius: 3px;
+    }
+    [data-bs-theme="light"] ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    [data-bs-theme="light"] ::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 3px;
+    }
+
+    @media (max-width: 767.98px) {
+      .hero-section {
+        padding: 1.5rem 1rem;
+        border-radius: 16px;
+      }
+
+      .section-title {
+        font-size: 1.35rem;
+      }
+
+      .sub-title {
+        font-size: 1rem;
+      }
+
+      .copy-btn {
+        top: 0.4rem;
+        right: 0.4rem;
+        font-size: 0.7rem;
+        padding: 0.15rem 0.45rem;
+      }
+
+      .setup-card .copy-btn {
+        top: 0.5rem;
+        right: 0.5rem;
+      }
+
+      pre,
+      pre code.hljs {
+        font-size: 0.78rem;
+      }
+
+      pre code,
+      pre code.hljs,
+      .setup-card pre code,
+      .setup-card pre code.hljs,
+      .setup-inline pre code,
+      .setup-inline pre code.hljs {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        padding-right: 3.25rem;
+        box-sizing: border-box;
+      }
+
+      .cmd-table th,
+      .cmd-table td {
+        white-space: normal;
+      }
+
+      .cmd-table code {
+        white-space: normal;
+        word-break: break-word;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<nav id="topbar" class="navbar fixed-top px-3 px-md-4 d-flex justify-content-between align-items-center">
+  <a href="#top" class="text-decoration-none d-flex align-items-center gap-2">
+    <div style="background:linear-gradient(135deg,var(--nuxt-primary),var(--nuxt-secondary));width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+      <i class="bi bi-triangle-half text-white" style="font-size:1rem;"></i>
+    </div>
+    <span class="brand-badge">Nuxt.js</span>
+    <span class="fw-light opacity-50 d-none d-sm-inline">Tutorial</span>
+  </a>
+
+  <div class="d-flex align-items-center gap-2">
+    <button class="btn btn-sm btn-outline-secondary d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+      <i class="bi bi-list"></i>
+    </button>
+    <button id="themeToggle" class="btn btn-sm btn-outline-secondary" title="Toggle Dark / Light mode">
+      <i class="bi bi-sun-fill"></i>
+    </button>
+    <span class="badge rounded-pill" style="background:var(--nuxt-primary);color:#03231b;">Nuxt 4 + Nitro</span>
+  </div>
+</nav>
+
+<aside id="sidebar" class="position-fixed d-none d-lg-block py-3 px-2">
+  <nav class="nav flex-column gap-1">
+    <div class="nav-section">Introduction</div>
+    <a class="nav-link active" href="#sec-what"><i class="bi bi-info-circle me-2"></i>What is Nuxt?</a>
+    <a class="nav-link" href="#sec-where"><i class="bi bi-bullseye me-2"></i>Where We Use Nuxt</a>
+    <a class="nav-link" href="#sec-why"><i class="bi bi-star me-2"></i>Why Nuxt.js</a>
+    <a class="nav-link" href="#sec-flow"><i class="bi bi-diagram-3 me-2"></i>Working Flow</a>
+
+    <div class="nav-section">Getting Started</div>
+    <a class="nav-link" href="#sec-requirements"><i class="bi bi-check2-square me-2"></i>Requirements</a>
+    <a class="nav-link" href="#sec-install"><i class="bi bi-download me-2"></i>New Project Setup</a>
+    <a class="nav-link" href="#sec-existing"><i class="bi bi-arrow-left-right me-2"></i>Existing Project Flow</a>
+    <a class="nav-link" href="#sec-laravel"><i class="bi bi-layers me-2"></i>Laravel + Nuxt Flow</a>
+    <a class="nav-link" href="#sec-v4"><i class="bi bi-stars me-2"></i>Nuxt 4 What Changed</a>
+    <a class="nav-link" href="#sec-commands"><i class="bi bi-terminal me-2"></i>Core Commands</a>
+    <a class="nav-link" href="#sec-structure"><i class="bi bi-folder-symlink me-2"></i>Folder Structure</a>
+
+    <div class="nav-section">Core App</div>
+    <a class="nav-link" href="#sec-routing"><i class="bi bi-signpost-split me-2"></i>Routing</a>
+    <a class="nav-link" href="#sec-layouts"><i class="bi bi-layout-split me-2"></i>Layouts and Special Files</a>
+    <a class="nav-link" href="#sec-components"><i class="bi bi-grid me-2"></i>Components and Auto Imports</a>
+    <a class="nav-link" href="#sec-composables"><i class="bi bi-bezier2 me-2"></i>Composables and State</a>
+    <a class="nav-link" href="#sec-data"><i class="bi bi-cloud-download me-2"></i>Data Fetching</a>
+    <a class="nav-link" href="#sec-server"><i class="bi bi-hdd-network me-2"></i>Nitro Server API</a>
+    <a class="nav-link" href="#sec-middleware"><i class="bi bi-funnel me-2"></i>Middleware</a>
+
+    <div class="nav-section">Production</div>
+    <a class="nav-link" href="#sec-modules"><i class="bi bi-box-seam me-2"></i>Modules and Plugins</a>
+    <a class="nav-link" href="#sec-seo"><i class="bi bi-tags me-2"></i>SEO and Head</a>
+    <a class="nav-link" href="#sec-render"><i class="bi bi-lightning-charge me-2"></i>SSR, SSG, ISR</a>
+    <a class="nav-link" href="#sec-auth"><i class="bi bi-person-lock me-2"></i>Auth and Security</a>
+    <a class="nav-link" href="#sec-config"><i class="bi bi-gear me-2"></i>Runtime Config and Env</a>
+    <a class="nav-link" href="#sec-deploy"><i class="bi bi-rocket-takeoff me-2"></i>Deployment</a>
+    <a class="nav-link" href="#sec-testing"><i class="bi bi-check2-circle me-2"></i>Testing</a>
+    <a class="nav-link" href="#sec-performance"><i class="bi bi-speedometer me-2"></i>Performance</a>
+
+    <div class="nav-section">Practical</div>
+    <a class="nav-link" href="#sec-mini"><i class="bi bi-kanban me-2"></i>Project Flow Example</a>
+    <a class="nav-link" href="#sec-cheatsheet"><i class="bi bi-terminal-fill me-2"></i>Command Cheat Sheet</a>
+    <a class="nav-link" href="#sec-interview"><i class="bi bi-patch-question me-2"></i>Interview Q and A</a>
+  </nav>
+</aside>
+
+<div class="offcanvas offcanvas-start d-lg-none" id="mobileSidebar" tabindex="-1">
+  <div class="offcanvas-header">
+    <h6 class="offcanvas-title fw-bold">Nuxt.js Tutorial</h6>
+    <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body p-2">
+    <nav class="nav flex-column gap-1">
+      <div class="nav-section">Introduction</div>
+      <a class="nav-link" href="#sec-what" data-bs-dismiss="offcanvas"><i class="bi bi-info-circle me-2"></i>What is Nuxt?</a>
+      <a class="nav-link" href="#sec-where" data-bs-dismiss="offcanvas"><i class="bi bi-bullseye me-2"></i>Where We Use Nuxt</a>
+      <a class="nav-link" href="#sec-why" data-bs-dismiss="offcanvas"><i class="bi bi-star me-2"></i>Why Nuxt.js</a>
+      <a class="nav-link" href="#sec-flow" data-bs-dismiss="offcanvas"><i class="bi bi-diagram-3 me-2"></i>Working Flow</a>
+
+      <div class="nav-section">Getting Started</div>
+      <a class="nav-link" href="#sec-requirements" data-bs-dismiss="offcanvas"><i class="bi bi-check2-square me-2"></i>Requirements</a>
+      <a class="nav-link" href="#sec-install" data-bs-dismiss="offcanvas"><i class="bi bi-download me-2"></i>New Project Setup</a>
+      <a class="nav-link" href="#sec-existing" data-bs-dismiss="offcanvas"><i class="bi bi-arrow-left-right me-2"></i>Existing Project Flow</a>
+      <a class="nav-link" href="#sec-laravel" data-bs-dismiss="offcanvas"><i class="bi bi-layers me-2"></i>Laravel + Nuxt Flow</a>
+      <a class="nav-link" href="#sec-v4" data-bs-dismiss="offcanvas"><i class="bi bi-stars me-2"></i>Nuxt 4 What Changed</a>
+      <a class="nav-link" href="#sec-commands" data-bs-dismiss="offcanvas"><i class="bi bi-terminal me-2"></i>Core Commands</a>
+      <a class="nav-link" href="#sec-structure" data-bs-dismiss="offcanvas"><i class="bi bi-folder-symlink me-2"></i>Folder Structure</a>
+
+      <div class="nav-section">Core App</div>
+      <a class="nav-link" href="#sec-routing" data-bs-dismiss="offcanvas"><i class="bi bi-signpost-split me-2"></i>Routing</a>
+      <a class="nav-link" href="#sec-layouts" data-bs-dismiss="offcanvas"><i class="bi bi-layout-split me-2"></i>Layouts and Special Files</a>
+      <a class="nav-link" href="#sec-components" data-bs-dismiss="offcanvas"><i class="bi bi-grid me-2"></i>Components and Auto Imports</a>
+      <a class="nav-link" href="#sec-composables" data-bs-dismiss="offcanvas"><i class="bi bi-bezier2 me-2"></i>Composables and State</a>
+      <a class="nav-link" href="#sec-data" data-bs-dismiss="offcanvas"><i class="bi bi-cloud-download me-2"></i>Data Fetching</a>
+      <a class="nav-link" href="#sec-server" data-bs-dismiss="offcanvas"><i class="bi bi-hdd-network me-2"></i>Nitro Server API</a>
+      <a class="nav-link" href="#sec-middleware" data-bs-dismiss="offcanvas"><i class="bi bi-funnel me-2"></i>Middleware</a>
+
+      <div class="nav-section">Production</div>
+      <a class="nav-link" href="#sec-modules" data-bs-dismiss="offcanvas"><i class="bi bi-box-seam me-2"></i>Modules and Plugins</a>
+      <a class="nav-link" href="#sec-seo" data-bs-dismiss="offcanvas"><i class="bi bi-tags me-2"></i>SEO and Head</a>
+      <a class="nav-link" href="#sec-render" data-bs-dismiss="offcanvas"><i class="bi bi-lightning-charge me-2"></i>SSR, SSG, ISR</a>
+      <a class="nav-link" href="#sec-auth" data-bs-dismiss="offcanvas"><i class="bi bi-person-lock me-2"></i>Auth and Security</a>
+      <a class="nav-link" href="#sec-config" data-bs-dismiss="offcanvas"><i class="bi bi-gear me-2"></i>Runtime Config and Env</a>
+      <a class="nav-link" href="#sec-deploy" data-bs-dismiss="offcanvas"><i class="bi bi-rocket-takeoff me-2"></i>Deployment</a>
+      <a class="nav-link" href="#sec-testing" data-bs-dismiss="offcanvas"><i class="bi bi-check2-circle me-2"></i>Testing</a>
+      <a class="nav-link" href="#sec-performance" data-bs-dismiss="offcanvas"><i class="bi bi-speedometer me-2"></i>Performance</a>
+
+      <div class="nav-section">Practical</div>
+      <a class="nav-link" href="#sec-mini" data-bs-dismiss="offcanvas"><i class="bi bi-kanban me-2"></i>Project Flow Example</a>
+      <a class="nav-link" href="#sec-cheatsheet" data-bs-dismiss="offcanvas"><i class="bi bi-terminal-fill me-2"></i>Command Cheat Sheet</a>
+      <a class="nav-link" href="#sec-interview" data-bs-dismiss="offcanvas"><i class="bi bi-patch-question me-2"></i>Interview Q and A</a>
+    </nav>
+  </div>
+</div>
+
+<main id="main-content" class="container-fluid px-3 px-md-4 pb-5">
+  <div class="py-4 px-lg-2">
+    <section id="top" class="hero-section mb-5">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <span class="badge rounded-pill text-dark mb-3" style="background:var(--nuxt-primary);">Vue + Nuxt.js Basic to Advanced</span>
+          <h1 class="display-5 fw-bold mb-3 text-gradient">Nuxt.js Complete Guide for Real Projects</h1>
+          <p class="lead mb-4">This guide explains what Nuxt.js is, where to use it, why teams choose it, how to set up a new project, and how to move an existing Vue or frontend codebase into Nuxt. It covers routing, SSR, SSG, Nitro APIs, middleware, modules, SEO, deployment, testing, and production patterns with short examples and clear commands.</p>
+          <div class="d-flex gap-2 flex-wrap">
+            <span class="nuxt-pill">Vue 3</span>
+            <span class="nuxt-pill">Nuxt 4</span>
+            <span class="nuxt-pill">Nitro</span>
+            <span class="nuxt-pill">SSR</span>
+            <span class="nuxt-pill">SSG</span>
+            <span class="nuxt-pill">Full Stack</span>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="icon-box"><i class="bi bi-lightning-charge"></i></div>
+              <div>
+                <h5 class="mb-1">What this page gives you</h5>
+                <p class="mb-0 small opacity-75">A practical map of Nuxt from first install to production deployment.</p>
+              </div>
+            </div>
+            <ul class="tip-list mb-0">
+              <li>Understand where Nuxt fits better than plain Vue SPA.</li>
+              <li>Set up both new Nuxt apps and migration paths for existing projects.</li>
+              <li>Learn routing, layouts, composables, data fetching, and server APIs.</li>
+              <li>Cover SEO, rendering modes, runtime config, deployment, and testing.</li>
+              <li>Use short examples, common commands, and interview-ready answers.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-what" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-info-circle me-2" style="color:var(--nuxt-primary);"></i>What is Nuxt.js?</h2>
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>Nuxt.js</strong> is the application framework built on top of Vue 3. It adds file-based routing, server rendering, static generation, server API handlers, metadata management, layout conventions, auto imports, and deployment-friendly tooling so you can build SEO-aware and production-ready apps faster than wiring everything manually with plain Vue.</p>
+      </div>
+      <div class="row g-3">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Vue first</h6><p class="small opacity-75 mb-0">You still write Vue components with script setup, props, slots, and composables.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Framework layer</h6><p class="small opacity-75 mb-0">Nuxt adds conventions for pages, layouts, middleware, and server code.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold">SEO friendly</h6><p class="small opacity-75 mb-0">SSR, SSG, and head management make content visible to crawlers and social previews.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold">Full stack ready</h6><p class="small opacity-75 mb-0">Nitro server routes, runtime config, and deployment adapters are built in.</p></div></div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-where" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-bullseye me-2" style="color:var(--nuxt-primary);"></i>Where We Use Nuxt.js</h2>
+      <p class="mb-4">Nuxt is strongest when the application needs more than a browser-only SPA. It fits content-heavy websites, marketing pages, product catalogs, SaaS dashboards with public pages, and apps that want frontend and lightweight backend logic in one repo.</p>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark"><tr><th>Project type</th><th>Why Nuxt fits</th><th>Short example</th></tr></thead>
+          <tbody>
+            <tr><td>Marketing or company website</td><td>SSR + SEO + metadata + static generation</td><td>Agency site, service pages, blogs</td></tr>
+            <tr><td>Content platform</td><td>Dynamic routes, cached data, clean URLs, image optimization</td><td>Documentation portal, CMS frontend</td></tr>
+            <tr><td>Ecommerce storefront</td><td>Server rendering, product SEO, hybrid rendering, server API proxy</td><td>Catalog, PDP pages, checkout frontend</td></tr>
+            <tr><td>SaaS app with public and private pages</td><td>Public SEO routes plus authenticated dashboard routes in one app</td><td>Landing pages + user workspace</td></tr>
+            <tr><td>Frontend for existing backend</td><td>Runtime config, composables, middleware, server routes for BFF patterns</td><td>Laravel API + Nuxt frontend</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-why" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-star me-2" style="color:var(--nuxt-primary);"></i>Why Use Nuxt.js?</h2>
+      <p class="mb-4"><strong>Short answer:</strong> Nuxt removes a large amount of manual setup around Vue applications and gives you routing, rendering strategy, SEO, data conventions, and server capabilities in one coherent framework.</p>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2"><div class="step-num">1</div><h6 class="mb-0 fw-bold">Faster setup</h6></div>
+            <p class="small opacity-75 mb-0">You avoid hand-wiring router, SSR infrastructure, head management, and deployment adapters from scratch.</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2"><div class="step-num">2</div><h6 class="mb-0 fw-bold">Better SEO and first load</h6></div>
+            <p class="small opacity-75 mb-0">SSR, prerendering, and hybrid rendering improve discoverability and perceived speed.</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2"><div class="step-num">3</div><h6 class="mb-0 fw-bold">Strong conventions</h6></div>
+            <p class="small opacity-75 mb-0">Pages, layouts, composables, plugins, and server routes live in predictable places.</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2"><div class="step-num">4</div><h6 class="mb-0 fw-bold">One repo, full stack options</h6></div>
+            <p class="small opacity-75 mb-0">Nitro lets you add backend handlers, proxy logic, and scheduled tasks without a separate Express layer.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-flow" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-diagram-3 me-2" style="color:var(--nuxt-primary);"></i>How Nuxt.js Works</h2>
+      <p class="mb-4">Nuxt sits between your Vue components, the server runtime, and the browser. It decides how routes are generated, how data is fetched, and whether a page is rendered on the server, generated ahead of time, or hydrated in the browser.</p>
+      <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-3"><div class="feature-card p-4 h-100 text-center"><div class="icon-box mx-auto mb-3"><i class="bi bi-code-square"></i></div><h6 class="fw-bold mb-1">Vue code</h6><p class="small opacity-75 mb-0">Pages, components, and composables are authored with Vue 3.</p></div></div>
+        <div class="col-sm-6 col-xl-3"><div class="feature-card p-4 h-100 text-center"><div class="icon-box mx-auto mb-3"><i class="bi bi-boxes"></i></div><h6 class="fw-bold mb-1">Nuxt conventions</h6><p class="small opacity-75 mb-0">Nuxt turns files into routes, layouts, plugins, middleware, and server handlers.</p></div></div>
+        <div class="col-sm-6 col-xl-3"><div class="feature-card p-4 h-100 text-center"><div class="icon-box mx-auto mb-3"><i class="bi bi-hdd-network"></i></div><h6 class="fw-bold mb-1">Nitro server</h6><p class="small opacity-75 mb-0">Nitro executes SSR, APIs, caching, and deployment adapters.</p></div></div>
+        <div class="col-sm-6 col-xl-3"><div class="feature-card p-4 h-100 text-center"><div class="icon-box mx-auto mb-3"><i class="bi bi-display"></i></div><h6 class="fw-bold mb-1">Browser</h6><p class="small opacity-75 mb-0">The browser receives HTML, CSS, JS, and hydrated Vue interactivity.</p></div></div>
+      </div>
+      <div class="feature-card p-3">
+        <h6 class="fw-semibold mb-3 text-center opacity-75">Typical Request Pipeline</h6>
+        <div class="d-flex flex-wrap justify-content-center align-items-center gap-2 text-center">
+          <span class="badge rounded-pill text-bg-secondary px-3 py-2">Request</span>
+          <i class="bi bi-arrow-right flow-line"></i>
+          <span class="badge rounded-pill" style="background:var(--nuxt-primary);color:#04251a;">Route match</span>
+          <i class="bi bi-arrow-right flow-line"></i>
+          <span class="badge rounded-pill text-bg-info px-3 py-2">Middleware</span>
+          <i class="bi bi-arrow-right flow-line"></i>
+          <span class="badge rounded-pill text-bg-success px-3 py-2">Fetch data</span>
+          <i class="bi bi-arrow-right flow-line"></i>
+          <span class="badge rounded-pill text-bg-warning px-3 py-2">SSR / SSG</span>
+          <i class="bi bi-arrow-right flow-line"></i>
+          <span class="badge rounded-pill text-bg-primary px-3 py-2">Hydration</span>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-requirements" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-check2-square me-2" style="color:var(--nuxt-primary);"></i>Requirements</h2>
+      <div class="row g-3">
+        <div class="col-md-6 col-xl-3"><div class="check-card p-3 h-100"><h6 class="fw-bold">Node.js 22.x+</h6><p class="small opacity-75 mb-0">The current Nuxt docs require Node.js 22 or newer. Prefer an even-numbered version such as 22 or 24.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="check-card p-3 h-100"><h6 class="fw-bold">Editor support</h6><p class="small opacity-75 mb-0">VS Code with the official Vue extension or WebStorm gives the best Nuxt authoring experience.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="check-card p-3 h-100"><h6 class="fw-bold">Terminal</h6><p class="small opacity-75 mb-0">You need a terminal to run create, dev, build, preview, and module commands.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="check-card p-3 h-100"><h6 class="fw-bold">Windows note</h6><p class="small opacity-75 mb-0">If HMR feels slow on Windows, try WSL and use <code>127.0.0.1:3000</code> instead of <code>localhost:3000</code>.</p></div></div>
+      </div>
+      <div class="code-wrapper mt-4"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">node -v
+npm -v
+npx nuxi info</code></pre></div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-install" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-download me-2" style="color:var(--nuxt-primary);"></i>How to Set Up a New Nuxt Project</h2>
+          <p class="mb-4">The official Nuxt 4 docs now use the package-manager-specific <code>create nuxt</code> flow instead of the older <code>nuxi init</code> starter command. The install flow below matches the current documentation.</p>
+
+          <h5 class="sub-title"><span class="step-num me-2">1</span>Play online first if you just want a quick try</h5>
+          <div class="note-box mb-4">
+      <p class="mb-0">If you only want to experiment without local setup, use the official Nuxt online starter on StackBlitz. For real project work, use the local install flow below.</p>
+          </div>
+
+          <h5 class="sub-title"><span class="step-num me-2">2</span>Create a new project</h5>
+              <div class="row g-3 mb-3 setup-grid">
+          <div class="col-lg-6"><div class="feature-card setup-card p-3 h-100"><h6 class="setup-label">npm and yarn</h6><div class="code-wrapper mb-0"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># npm
+npm create nuxt@latest my-nuxt-app
+
+# yarn
+yarn create nuxt my-nuxt-app</code></pre></div></div></div>
+          <div class="col-lg-6"><div class="feature-card setup-card p-3 h-100"><h6 class="setup-label">pnpm, bun, and deno</h6><div class="code-wrapper mb-0"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># pnpm
+pnpm create nuxt@latest my-nuxt-app
+
+# bun
+bun create nuxt@latest my-nuxt-app
+
+# deno
+deno -A npm:create-nuxt@latest my-nuxt-app</code></pre></div></div></div>
+          </div>
+
+          <h5 class="sub-title"><span class="step-num me-2">3</span>Open the project folder</h5>
+              <div class="row g-3 mb-3 setup-grid">
+          <div class="col-md-6"><div class="feature-card setup-card p-3 h-100"><h6 class="setup-label">Open in VS Code</h6><div class="code-wrapper mb-0"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">code my-nuxt-app</code></pre></div></div></div>
+          <div class="col-md-6"><div class="feature-card setup-card p-3 h-100"><h6 class="setup-label">Or change directory manually</h6><div class="code-wrapper mb-0"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">cd my-nuxt-app</code></pre></div></div></div>
+          </div>
+
+          <h5 class="sub-title"><span class="step-num me-2">4</span>Start the development server</h5>
+              <div class="row g-3 mb-3 setup-grid">
+          <div class="col-lg-6"><div class="feature-card setup-card p-3 h-100"><h6 class="setup-label">npm and yarn</h6><div class="code-wrapper mb-0"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># npm
+npm run dev -- -o
+
+# yarn
+yarn dev --open</code></pre></div></div></div>
+          <div class="col-lg-6"><div class="feature-card setup-card p-3 h-100"><h6 class="setup-label">pnpm, bun, and deno</h6><div class="code-wrapper mb-0"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># pnpm
+pnpm dev -o
+
+# bun
+bun run dev -o
+# bun --bun run dev -o
+
+# deno
+deno run dev -o</code></pre></div></div></div>
+          </div>
+
+          <div class="note-box mb-4">
+      <p class="mb-0"><strong>Result:</strong> the browser should open automatically on <code>http://localhost:3000</code>. On Windows, if that feels slow, try <code>http://127.0.0.1:3000</code> for faster local loading.</p>
+          </div>
+
+          <h5 class="sub-title"><span class="step-num me-2">5</span>Important starter files</h5>
+      <div class="code-wrapper setup-inline"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-text">my-nuxt-app/
+  app/
+    app.vue
+    pages/
+    components/
+    composables/
+    layouts/
+    middleware/
+    plugins/
+    utils/
+  public/
+  shared/
+  server/
+  nuxt.config.ts
+  package.json</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">6</span>First page example</h5>
+      <div class="code-wrapper setup-inline"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- app/pages/index.vue --&gt;
+&lt;script setup lang="ts"&gt;
+useHead({
+  title: 'Home | Nuxt App',
+  meta: [{ name: 'description', content: 'Nuxt starter page' }],
+});
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;section class="container py-5"&gt;
+    &lt;h1&gt;Nuxt Starter&lt;/h1&gt;
+    &lt;p&gt;Your first route is now live at /.&lt;/p&gt;
+  &lt;/section&gt;
+&lt;/template&gt;</code></pre></div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-existing" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-arrow-left-right me-2" style="color:var(--nuxt-primary);"></i>How to Move an Existing Project Into Nuxt</h2>
+      <p class="mb-4">There is no single migration path because existing projects differ. The safest pattern is to create a fresh Nuxt shell, then move views, components, routes, state, and API calls incrementally.</p>
+
+      <div class="row g-3 mb-4">
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">Existing Vue SPA</h6><p class="small opacity-75 mb-0">Move route views into <code>app/pages/</code>, shared UI into <code>app/components/</code>, and router logic into file-based routes.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">Existing static frontend</h6><p class="small opacity-75 mb-0">Use Nuxt for structured routes, SEO, forms, and deployment without a separate SPA router.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">Existing backend API</h6><p class="small opacity-75 mb-0">Keep the backend and let Nuxt consume it via runtime config, composables, and server proxies.</p></div></div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Migration checklist</h5>
+      <div class="workflow-step mb-3">
+        <ol class="mb-0 ps-3">
+          <li>List current routes, layouts, environment variables, and third-party integrations.</li>
+          <li>Create a clean Nuxt app and commit it before moving business logic.</li>
+          <li>Move top-level screens into <code>app/pages/</code> and shared wrappers into <code>app/layouts/default.vue</code>.</li>
+          <li>Move app-side shared logic into <code>app/composables/</code> and server logic into root-level <code>server/api/</code> when it truly belongs in the frontend repo.</li>
+          <li>Replace manual router config with folder names and dynamic segments.</li>
+          <li>Convert global state into Pinia or Nuxt <code>useState()</code> where appropriate.</li>
+        </ol>
+      </div>
+
+      <div class="note-box mb-3">
+        <p class="mb-0"><strong>Nuxt 4 default:</strong> new starters use an <code>app/</code> source directory by default. Existing projects can still keep the older root-level structure because Nuxt auto-detects it, but new work should generally follow the newer layout.</p>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Existing Vue + Vite to Nuxt flow</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># 1) Create new Nuxt shell
+npm create nuxt@latest my-nuxt-migration
+cd my-nuxt-migration
+
+# 2) Copy reusable parts from old app
+# old src/components  -&gt; app/components/
+# old src/assets      -&gt; app/assets/
+# old public files    -&gt; public/
+
+# 3) Start dev server
+npm run dev -- -o</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-text">Old Vue SPA                         Nuxt target
+src/views/HomeView.vue         -&gt;   app/pages/index.vue
+src/views/AboutView.vue        -&gt;   app/pages/about.vue
+src/router/index.ts            -&gt;   remove; use app/pages/ file routing
+src/App.vue                    -&gt;   app/app.vue or app/layouts/default.vue
+src/stores/*                   -&gt;   stores/* (Pinia) or app/composables/*
+src/services/api.ts            -&gt;   app/composables/useApi.ts or server/api/*</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>Keep an existing backend</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">// nuxt.config.ts
+export default defineNuxtConfig({
+  runtimeConfig: {
+    apiSecret: process.env.API_SECRET,
+    public: {
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://api.example.com',
+    },
+  },
+});
+
+// app/composables/useProducts.ts
+export const useProducts = () =&gt;
+  useFetch('/products', {
+    baseURL: useRuntimeConfig().public.apiBase,
+  });</code></pre></div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-laravel" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-layers me-2" style="color:var(--nuxt-primary);"></i>Laravel API and Nuxt.js Project Setup Flow</h2>
+      <p class="mb-4">A very common real-world stack is <strong>Laravel as the backend API</strong> and <strong>Nuxt as the frontend application</strong>. Laravel handles database, authentication, validation, queues, mail, and business logic. Nuxt handles pages, UI, SSR, SEO, routing, and the browser experience.</p>
+
+      <div class="row g-3 mb-4">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">Laravel backend</h6><p class="small opacity-75 mb-0">Owns models, migrations, controllers, policies, jobs, mail, and API endpoints.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">Nuxt frontend</h6><p class="small opacity-75 mb-0">Owns SEO pages, dashboard UI, layouts, route rendering, and user-facing interactions.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">Auth flow</h6><p class="small opacity-75 mb-0">Laravel Sanctum or token auth protects APIs while Nuxt uses middleware and server-aware fetches.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">Deployment split</h6><p class="small opacity-75 mb-0">You can deploy Laravel and Nuxt separately, or place them behind the same domain for easier cookie auth.</p></div></div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Recommended project structure</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-text">workspace/
+  laravel-api/
+  nuxt-frontend/
+
+Browser  -&gt;  Nuxt pages / SSR  -&gt;  Laravel API  -&gt;  MySQL</code></pre></div>
+
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>Recommended responsibility split:</strong> keep business rules, payments, admin logic, and protected data in Laravel. Use Nuxt for public pages, SEO, product UI, dashboards, and rendering strategy.</p>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Set up the Laravel API project</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">composer create-project laravel/laravel laravel-api
+cd laravel-api
+php artisan install:api
+php artisan migrate
+php artisan serve</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// routes/api.php
+use App\Http\Controllers\Api\ProductController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/products', [ProductController::class, 'index']);
+
+Route::middleware('auth:sanctum')-&gt;get('/me', function (Request $request) {
+    return $request-&gt;user();
+});</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-php">// app/Http/Controllers/Api/ProductController.php
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+
+class ProductController extends Controller
+{
+    public function index()
+    {
+        return response()-&gt;json([
+            ['id' =&gt; 1, 'name' =&gt; 'Nuxt Course'],
+            ['id' =&gt; 2, 'name' =&gt; 'Laravel API'],
+        ]);
+    }
+}</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>Create the Nuxt frontend project</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">npm create nuxt@latest nuxt-frontend
+cd nuxt-frontend
+npm install
+npm run dev -- -o</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">// nuxt.config.ts
+export default defineNuxtConfig({
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://127.0.0.1:8000/api',
+    },
+  },
+});</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">4</span>Configure environment and auth basics</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># laravel .env
+APP_URL=http://127.0.0.1:8000
+SESSION_DOMAIN=127.0.0.1
+SANCTUM_STATEFUL_DOMAINS=127.0.0.1:3000,localhost:3000
+
+# nuxt .env
+NUXT_PUBLIC_API_BASE=http://127.0.0.1:8000/api</code></pre></div>
+
+      <div class="note-box mb-4">
+        <p class="mb-0"><strong>Cookie auth note:</strong> if you use Laravel Sanctum with a SPA-style login, make sure Laravel CORS and stateful domains are configured correctly, and send requests from Nuxt with <code>credentials: 'include'</code>.</p>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">5</span>Consume the Laravel API inside Nuxt</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">// app/composables/useProducts.ts
+export const useProducts = () =&gt; {
+  const config = useRuntimeConfig();
+
+  return useFetch('/products', {
+    baseURL: config.public.apiBase,
+    credentials: 'include',
+  });
+};</code></pre></div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">// app/middleware/auth.ts
+export default defineNuxtRouteMiddleware(async () =&gt; {
+  const config = useRuntimeConfig();
+
+  const { data, error } = await useFetch('/me', {
+    baseURL: config.public.apiBase,
+    credentials: 'include',
+  });
+
+  if (error.value || !data.value) {
+    return navigateTo('/login');
+  }
+});</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">6</span>Laravel + Nuxt working flow</h5>
+      <div class="row g-3 mb-4">
+        <div class="col-md-6"><div class="workflow-step h-100"><h6 class="fw-bold">1. Build the backend first</h6><p class="small mb-0">Create Laravel models, migrations, controllers, and API routes before wiring the frontend screens.</p></div></div>
+        <div class="col-md-6"><div class="workflow-step h-100"><h6 class="fw-bold">2. Point Nuxt to the API</h6><p class="small mb-0">Store the backend URL in <code>runtimeConfig.public.apiBase</code> so local, staging, and production environments stay flexible.</p></div></div>
+        <div class="col-md-6"><div class="workflow-step h-100"><h6 class="fw-bold">3. Render SEO pages with Nuxt</h6><p class="small mb-0">Marketing pages, blogs, docs, and public product routes should live in Nuxt for SSR, prerendering, and head management.</p></div></div>
+        <div class="col-md-6"><div class="workflow-step h-100"><h6 class="fw-bold">4. Protect private routes carefully</h6><p class="small mb-0">Use Nuxt middleware for redirects, but keep the real permission checks in Laravel for protected API access.</p></div></div>
+      </div>
+
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-text">Typical request flow
+Visitor opens /products/my-course
+Nuxt route renders page
+Nuxt fetches data from Laravel /api/products
+Laravel reads database and returns JSON
+Nuxt renders SEO-friendly HTML + hydrated UI</code></pre></div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-v4" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-stars me-2" style="color:var(--nuxt-primary);"></i>Nuxt 4 What Changed</h2>
+      <p class="mb-4">Nuxt 4 is a developer-experience-focused major release. The biggest visible changes are the new <code>app/</code> project structure, smarter data fetching behavior, improved TypeScript separation, and faster CLI and development performance.</p>
+
+      <div class="row g-3 mb-4">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">New app/ structure</h6><p class="small opacity-75 mb-0">Fresh projects now place most Vue app code inside <code>app/</code>, while <code>server/</code>, <code>public/</code>, and <code>shared/</code> stay at the root.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">Smarter data layer</h6><p class="small opacity-75 mb-0"><code>useAsyncData</code> and <code>useFetch</code> now share keyed state better, clean up unmounted data, and support reactive keys more consistently.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">Better TypeScript</h6><p class="small opacity-75 mb-0">Nuxt now generates separate TS contexts for app, server, shared, and node/build code for cleaner IntelliSense and safer type checks.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">Faster dev tooling</h6><p class="small opacity-75 mb-0">Cold starts, file watching, and CLI communication are faster, especially on Windows and Linux.</p></div></div>
+      </div>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark"><tr><th>Nuxt 4 change</th><th>What it means in practice</th><th>What you should do</th></tr></thead>
+          <tbody>
+            <tr><td><code>app/</code> default source directory</td><td>Pages, layouts, plugins, components, and composables now default under <code>app/</code>.</td><td>Use the new layout for fresh projects; keep old structure only when maintaining existing apps.</td></tr>
+            <tr><td>Shared data-fetching behavior</td><td>Same-key fetches share refs and fetch options matter more.</td><td>Keep keys stable and avoid conflicting options for the same explicit key.</td></tr>
+            <tr><td>Shallow data defaults</td><td>Fetched data is optimized for performance and should usually be treated as immutable.</td><td>Use <code>deep: true</code> only when you truly need deep reactivity.</td></tr>
+            <tr><td>TS project splitting</td><td>App, server, shared, and builder code are typed in more accurate contexts.</td><td>Run typecheck after upgrade and move shared types into <code>shared/</code> when needed.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Official upgrade flow</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Recommended upgrade
+npx nuxt upgrade --dedupe
+
+# Optional codemod recipe
+npx codemod@latest nuxt/4/migration-recipe</code></pre></div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Nuxt 4 folder example</h5>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-text">my-nuxt-app/
+  app/
+    assets/
+    components/
+    composables/
+    layouts/
+    middleware/
+    pages/
+    plugins/
+    utils/
+    app.vue
+    app.config.ts
+    error.vue
+  public/
+  shared/
+    types/
+    utils/
+  server/
+    api/
+    middleware/
+    utils/
+  nuxt.config.ts</code></pre></div>
+
+      <div class="note-box">
+        <p class="mb-0"><strong>Compatibility note:</strong> Nuxt 4 still detects many older layouts and keeps them working. The guide uses the new structure because that is what the current official starter generates.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-commands" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-terminal me-2" style="color:var(--nuxt-primary);"></i>Nuxt.js Commands</h2>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle cmd-table">
+          <thead class="table-dark"><tr><th>Command</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>npm run dev</code></td><td>Start Nuxt dev server with HMR.</td></tr>
+            <tr><td><code>npm run build</code></td><td>Build production output.</td></tr>
+            <tr><td><code>npm run preview</code></td><td>Preview the production build locally.</td></tr>
+            <tr><td><code>npm create nuxt@latest app-name</code></td><td>Create a new Nuxt project with the current official flow.</td></tr>
+            <tr><td><code>pnpm create nuxt@latest app-name</code></td><td>Create a Nuxt project with pnpm.</td></tr>
+            <tr><td><code>npm run dev -- -o</code></td><td>Start dev server and open the browser automatically.</td></tr>
+            <tr><td><code>npx nuxi module add @pinia/nuxt</code></td><td>Install and register a Nuxt module.</td></tr>
+            <tr><td><code>npx nuxi typecheck</code></td><td>Run TypeScript checks.</td></tr>
+            <tr><td><code>npx nuxi analyze</code></td><td>Analyze bundle and build output.</td></tr>
+            <tr><td><code>npx nuxi cleanup</code></td><td>Remove generated Nuxt cache artifacts.</td></tr>
+            <tr><td><code>npx nuxi info</code></td><td>Show environment and Nuxt runtime information.</td></tr>
+            <tr><td><code>code app-name</code></td><td>Open the created project folder directly in VS Code.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-structure" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-folder-symlink me-2" style="color:var(--nuxt-primary);"></i>Folder Structure</h2>
+      <div class="row g-3">
+        <div class="col-lg-5">
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-text">my-nuxt-app/
+  app/
+    app.vue
+    assets/
+    components/
+    composables/
+    layouts/
+    middleware/
+    pages/
+    plugins/
+    utils/
+    error.vue
+  public/
+  shared/
+    types/
+    utils/
+  server/
+    api/
+    middleware/
+    utils/
+  stores/
+  nuxt.config.ts</code></pre></div>
+        </div>
+        <div class="col-lg-7">
+          <div class="row g-2">
+            <div class="col-12"><div class="feature-card p-3 d-flex gap-3"><div class="icon-box"><i class="bi bi-file-earmark"></i></div><div><code>app/pages/</code><p class="small opacity-75 mb-0 mt-1">Every file becomes a route automatically in the default Nuxt 4 source tree.</p></div></div></div>
+            <div class="col-12"><div class="feature-card p-3 d-flex gap-3"><div class="icon-box"><i class="bi bi-layout-sidebar"></i></div><div><code>app/layouts/</code><p class="small opacity-75 mb-0 mt-1">Shared wrappers for groups of pages.</p></div></div></div>
+            <div class="col-12"><div class="feature-card p-3 d-flex gap-3"><div class="icon-box"><i class="bi bi-boxes"></i></div><div><code>app/components/</code><p class="small opacity-75 mb-0 mt-1">Reusable UI elements with auto import support.</p></div></div></div>
+            <div class="col-12"><div class="feature-card p-3 d-flex gap-3"><div class="icon-box"><i class="bi bi-bezier2"></i></div><div><code>app/composables/</code><p class="small opacity-75 mb-0 mt-1">Shared stateful logic such as <code>useAuth</code> or <code>useApi</code>.</p></div></div></div>
+            <div class="col-12"><div class="feature-card p-3 d-flex gap-3"><div class="icon-box"><i class="bi bi-hdd-network"></i></div><div><code>server/api/</code><p class="small opacity-75 mb-0 mt-1">Nitro API endpoints available at <code>/api/*</code>.</p></div></div></div>
+            <div class="col-12"><div class="feature-card p-3 d-flex gap-3"><div class="icon-box"><i class="bi bi-plug"></i></div><div><code>app/plugins/</code><p class="small opacity-75 mb-0 mt-1">Inject libraries, helpers, or app-wide hooks.</p></div></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-routing" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-signpost-split me-2" style="color:var(--nuxt-primary);"></i>Routing in Nuxt.js</h2>
+      <p class="mb-4">Nuxt uses file-based routing. In current Nuxt 4 starters, you create route files inside <code>app/pages/</code>, and Nuxt maps them to URLs automatically.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+    <pre><code class="language-text">app/pages/index.vue              -&gt; /
+    app/pages/about.vue              -&gt; /about
+    app/pages/blog/index.vue         -&gt; /blog
+    app/pages/blog/[slug].vue        -&gt; /blog/my-post
+    app/pages/users/[id]/edit.vue    -&gt; /users/42/edit</code></pre></div>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark"><tr><th>Pattern</th><th>Meaning</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><code>about.vue</code></td><td>Static route</td><td><code>/about</code></td></tr>
+            <tr><td><code>blog/[slug].vue</code></td><td>Dynamic route</td><td><code>/blog/nuxt-3</code></td></tr>
+            <tr><td><code>docs/[...parts].vue</code></td><td>Catch-all route</td><td><code>/docs/api/auth/login</code></td></tr>
+            <tr><td><code>users/[id]/edit.vue</code></td><td>Nested dynamic route</td><td><code>/users/7/edit</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;script setup lang="ts"&gt;
+const route = useRoute();
+const slug = computed(() =&gt; route.params.slug);
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;h1&gt;Current slug: {{ slug }}&lt;/h1&gt;
+&lt;/template&gt;</code></pre></div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-layouts" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-layout-split me-2" style="color:var(--nuxt-primary);"></i>Layouts and Special Files</h2>
+      <p class="mb-4">Nuxt has a few file conventions that shape the app without manual wiring.</p>
+      <div class="row g-3 mb-4">
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1"><code>app/app.vue</code></h6><p class="small opacity-75 mb-0">Root app shell. Often contains the main layout slot and shared wrappers.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1"><code>app/layouts/default.vue</code></h6><p class="small opacity-75 mb-0">Default layout for pages that do not specify another layout.</p></div></div>
+        <div class="col-md-6 col-xl-4"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1"><code>app/error.vue</code></h6><p class="small opacity-75 mb-0">Global error screen for rendering and route failures.</p></div></div>
+      </div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- app/layouts/default.vue --&gt;
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;header&gt;Main Header&lt;/header&gt;
+    &lt;main&gt;
+      &lt;slot /&gt;
+    &lt;/main&gt;
+    &lt;footer&gt;Main Footer&lt;/footer&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre></div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- app/pages/admin.vue --&gt;
+&lt;script setup lang="ts"&gt;
+definePageMeta({
+  layout: 'default',
+  middleware: ['auth'],
+});
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div&gt;Protected admin page&lt;/div&gt;
+&lt;/template&gt;</code></pre></div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-components" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-grid me-2" style="color:var(--nuxt-primary);"></i>Components and Auto Imports</h2>
+      <p class="mb-4">One of Nuxt's best quality-of-life features is automatic imports for components, composables, and many Nuxt utilities.</p>
+      <div class="row g-3 mb-4">
+        <div class="col-md-6"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">Auto-imported components</h6><p class="small opacity-75 mb-0">Place a component inside <code>app/components/</code> and use it without manual import in most cases.</p></div></div>
+        <div class="col-md-6"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">Built-in helpers</h6><p class="small opacity-75 mb-0">Use <code>useRoute</code>, <code>navigateTo</code>, <code>useFetch</code>, and <code>useRuntimeConfig</code> directly.</p></div></div>
+      </div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;!-- app/components/HeroBanner.vue --&gt;
+&lt;script setup lang="ts"&gt;
+defineProps&lt;{ title: string; subtitle?: string }&gt;();
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;section class="py-5"&gt;
+    &lt;h1&gt;{{ title }}&lt;/h1&gt;
+    &lt;p v-if="subtitle"&gt;{{ subtitle }}&lt;/p&gt;
+  &lt;/section&gt;
+&lt;/template&gt;
+
+&lt;!-- app/pages/index.vue --&gt;
+&lt;template&gt;
+  &lt;HeroBanner title="Nuxt Home" subtitle="Rendered with auto imports" /&gt;
+&lt;/template&gt;</code></pre></div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-composables" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-bezier2 me-2" style="color:var(--nuxt-primary);"></i>Composables and State</h2>
+      <p class="mb-4">Composables are shared logic functions. Nuxt also provides <code>useState()</code> for SSR-safe shared state across requests and hydration.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">// app/composables/useCart.ts
+export const useCart = () =&gt; {
+  const items = useState&lt;{ id: number; name: string; qty: number }[]&gt;('cart', () =&gt; []);
+
+  const addItem = (item: { id: number; name: string; qty: number }) =&gt; {
+    items.value.push(item);
+  };
+
+  const totalQty = computed(() =&gt; items.value.reduce((sum, item) =&gt; sum + item.qty, 0));
+
+  return { items, addItem, totalQty };
+};</code></pre></div>
+      <div class="row g-3 mt-1">
+        <div class="col-md-6"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">Use <code>useState()</code></h6><p class="small opacity-75 mb-0">For lightweight shared state that should work across SSR and client hydration.</p></div></div>
+        <div class="col-md-6"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">Use Pinia</h6><p class="small opacity-75 mb-0">For larger apps needing structured stores, actions, modules, and devtools inspection.</p></div></div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-data" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-cloud-download me-2" style="color:var(--nuxt-primary);"></i>Data Fetching in Nuxt</h2>
+      <p class="mb-4">Nuxt gives you several data utilities. The most common are <code>useFetch()</code>, <code>useAsyncData()</code>, and <code>$fetch()</code>. Choose the right one based on whether you want SSR integration, caching, or manual control.</p>
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark"><tr><th>Utility</th><th>Best use</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><code>useFetch()</code></td><td>Simple SSR-aware API fetching</td><td>Page data, public lists, detail pages</td></tr>
+            <tr><td><code>useAsyncData()</code></td><td>Custom async logic with keys</td><td>Combined queries, custom transform logic</td></tr>
+            <tr><td><code>$fetch()</code></td><td>Direct request without composable state wrapper</td><td>Button click, form submit, plugin helper</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;script setup lang="ts"&gt;
+const { data: posts, pending, error, refresh } = await useFetch('/api/posts');
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div v-if="pending"&gt;Loading posts...&lt;/div&gt;
+  &lt;div v-else-if="error"&gt;Could not load posts.&lt;/div&gt;
+  &lt;div v-else&gt;
+    &lt;article v-for="post in posts" :key="post.id" class="mb-3"&gt;
+      &lt;h3&gt;{{ post.title }}&lt;/h3&gt;
+      &lt;p&gt;{{ post.summary }}&lt;/p&gt;
+    &lt;/article&gt;
+    &lt;button @click="refresh"&gt;Refresh&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre></div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">const { data } = await useAsyncData('dashboard', async () =&gt; {
+  const [stats, users] = await Promise.all([
+    $fetch('/api/stats'),
+    $fetch('/api/users?limit=5'),
+  ]);
+
+  return { stats, users };
+});</code></pre></div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-server" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-hdd-network me-2" style="color:var(--nuxt-primary);"></i>Nitro Server API</h2>
+      <p class="mb-4">Nuxt uses Nitro for server routes. Files inside <code>server/api</code> become backend endpoints, and they can run on Node, serverless, or edge-compatible targets depending on deployment.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">// server/api/posts.get.ts
+export default defineEventHandler(async () =&gt; {
+  return [
+    { id: 1, title: 'Nuxt Basics', summary: 'Routing and layouts' },
+    { id: 2, title: 'Nuxt Server API', summary: 'Nitro handlers' },
+  ];
+});</code></pre></div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">// server/api/contact.post.ts
+export default defineEventHandler(async (event) =&gt; {
+  const body = await readBody(event);
+
+  if (!body.email) {
+    throw createError({ statusCode: 422, statusMessage: 'Email is required' });
+  }
+
+  return { ok: true, message: 'Form received', data: body };
+});</code></pre></div>
+      <div class="note-box">
+        <p class="mb-0"><strong>Rule of thumb:</strong> put simple frontend-adjacent backend tasks in Nitro, but keep heavy domain systems in a dedicated backend if they already exist and are owned independently.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-middleware" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-funnel me-2" style="color:var(--nuxt-primary);"></i>Middleware</h2>
+      <p class="mb-4">Route middleware runs before entering a page. Use it for authentication checks, redirects, locale selection, or guarding dashboard areas.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">// app/middleware/auth.ts
+export default defineNuxtRouteMiddleware((to) =&gt; {
+  const token = useCookie('auth_token');
+
+  if (!token.value &amp;&amp; to.path.startsWith('/dashboard')) {
+    return navigateTo('/login');
+  }
+});</code></pre></div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;script setup lang="ts"&gt;
+definePageMeta({
+  middleware: ['auth'],
+});
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div&gt;Dashboard content&lt;/div&gt;
+&lt;/template&gt;</code></pre></div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-modules" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-box-seam me-2" style="color:var(--nuxt-primary);"></i>Modules and Plugins</h2>
+      <p class="mb-4">Modules extend Nuxt at the framework level. Plugins register app-wide behavior or third-party libraries during startup.</p>
+      <div class="row g-3 mb-4">
+        <div class="col-md-6"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">Popular modules</h6><p class="small opacity-75 mb-0"><code>@pinia/nuxt</code>, <code>@nuxt/image</code>, <code>@nuxtjs/tailwindcss</code>, <code>@nuxtjs/sitemap</code>, <code>@nuxt/content</code>.</p></div></div>
+        <div class="col-md-6"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">Plugin use case</h6><p class="small opacity-75 mb-0">Inject an Axios instance, analytics client, date formatter, or auth helper into the app context.</p></div></div>
+      </div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">// nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@pinia/nuxt', '@nuxt/image'],
+});</code></pre></div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">// app/plugins/api.ts
+export default defineNuxtPlugin(() =&gt; {
+  const config = useRuntimeConfig();
+
+  const api = $fetch.create({
+    baseURL: config.public.apiBase,
+  });
+
+  return {
+    provide: {
+      api,
+    },
+  };
+});</code></pre></div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-seo" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-tags me-2" style="color:var(--nuxt-primary);"></i>SEO and Head Management</h2>
+      <p class="mb-4">Nuxt makes metadata management straightforward with <code>useHead()</code>, <code>useSeoMeta()</code>, and SSR-ready rendering.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-html">&lt;script setup lang="ts"&gt;
+useSeoMeta({
+  title: 'Nuxt Product Page',
+  description: 'SEO friendly page built with Nuxt.js',
+  ogTitle: 'Nuxt Product Page',
+  ogDescription: 'Nuxt SSR and metadata example',
+  ogImage: '/og-product.jpg',
+  twitterCard: 'summary_large_image',
+});
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;h1&gt;Product Page&lt;/h1&gt;
+&lt;/template&gt;</code></pre></div>
+      <div class="note-box">
+        <p class="mb-0"><strong>Use Nuxt when SEO matters:</strong> public routes render real HTML on first response, so crawlers and social scrapers can read the page without depending on client hydration.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-render" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-lightning-charge me-2" style="color:var(--nuxt-primary);"></i>SSR, SSG, ISR, and Hybrid Rendering</h2>
+      <p class="mb-4">Nuxt supports multiple rendering strategies. Pick the one that matches freshness, SEO, and hosting needs.</p>
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark"><tr><th>Mode</th><th>Meaning</th><th>Best for</th></tr></thead>
+          <tbody>
+            <tr><td>SSR</td><td>Render on every request</td><td>Personalized pages, live dashboards, auth-aware content</td></tr>
+            <tr><td>SSG / prerender</td><td>Generate ahead of time</td><td>Landing pages, docs, blogs, static content</td></tr>
+            <tr><td>ISR-style cache</td><td>Rebuild or refresh cached output periodically</td><td>Catalogs, news pages, semi-fresh content</td></tr>
+            <tr><td>Hybrid</td><td>Mix static and dynamic routes in one app</td><td>SaaS apps with marketing pages and protected dashboard</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">// nuxt.config.ts
+export default defineNuxtConfig({
+  routeRules: {
+    '/': { prerender: true },
+    '/blog/**': { prerender: true },
+    '/dashboard/**': { ssr: true },
+    '/products/**': { swr: 300 },
+    '/api/**': { cors: true },
+  },
+});</code></pre></div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-auth" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-person-lock me-2" style="color:var(--nuxt-primary);"></i>Authentication and Security</h2>
+      <p class="mb-4">Nuxt does not force one auth library, which is usually a strength. The common pattern is cookie-based auth via your backend or a module such as sidebase auth, combined with route middleware and server checks.</p>
+      <div class="row g-3 mb-4">
+        <div class="col-md-6"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">Frontend guard</h6><p class="small opacity-75 mb-0">Use route middleware to block pages and redirect guests.</p></div></div>
+        <div class="col-md-6"><div class="feature-card p-3 h-100"><h6 class="fw-bold mb-1">Backend verification</h6><p class="small opacity-75 mb-0">Always validate tokens or sessions in server routes too, not only on the client.</p></div></div>
+      </div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">// server/api/me.get.ts
+export default defineEventHandler(async (event) =&gt; {
+  const token = getCookie(event, 'auth_token');
+
+  if (!token) {
+    throw createError({ statusCode: 401, statusMessage: 'Unauthenticated' });
+  }
+
+  return { id: 1, name: 'Paras', role: 'admin' };
+});</code></pre></div>
+      <div class="note-box">
+        <p class="mb-0"><strong>Security basics:</strong> validate input, keep secrets in runtime config, sanitize uploaded content, protect server handlers, and do not trust client route guards alone.</p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-config" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-gear me-2" style="color:var(--nuxt-primary);"></i>Runtime Config and Environment Variables</h2>
+      <p class="mb-4">Nuxt uses runtime config to separate private server-only values from public client-exposed values.</p>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">// nuxt.config.ts
+export default defineNuxtConfig({
+  runtimeConfig: {
+    apiSecret: process.env.NUXT_API_SECRET,
+    public: {
+      appName: 'Nuxt Commerce',
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://api.example.com',
+    },
+  },
+});</code></pre></div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># .env
+NUXT_API_SECRET=my-private-secret
+NUXT_PUBLIC_API_BASE=https://api.example.com</code></pre></div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">// usage inside app code
+const config = useRuntimeConfig();
+
+console.log(config.public.apiBase); // safe for client
+// config.apiSecret should stay server-side</code></pre></div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-deploy" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-rocket-takeoff me-2" style="color:var(--nuxt-primary);"></i>Deployment</h2>
+      <p class="mb-4">Nuxt can deploy to Node servers, serverless platforms, edge-style targets, and static hosting depending on the rendering mode you choose.</p>
+      <div class="row g-3 mb-4">
+        <div class="col-md-4"><div class="feature-card p-4 h-100"><div class="d-flex align-items-center gap-2 mb-3"><div class="icon-box"><i class="bi bi-cloud-check"></i></div><h6 class="mb-0 fw-bold">Vercel / Netlify</h6></div><p class="small opacity-75 mb-0">Strong option for SSR and hybrid deployment with minimal setup.</p></div></div>
+        <div class="col-md-4"><div class="feature-card p-4 h-100"><div class="d-flex align-items-center gap-2 mb-3"><div class="icon-box"><i class="bi bi-hdd-network"></i></div><h6 class="mb-0 fw-bold">Node VPS</h6></div><p class="small opacity-75 mb-0">Good for predictable SSR hosting, process control, and private infra.</p></div></div>
+        <div class="col-md-4"><div class="feature-card p-4 h-100"><div class="d-flex align-items-center gap-2 mb-3"><div class="icon-box"><i class="bi bi-file-earmark-zip"></i></div><h6 class="mb-0 fw-bold">Static export</h6></div><p class="small opacity-75 mb-0">Best for fully prerendered content sites with no runtime server need.</p></div></div>
+      </div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">npm run build
+npm run preview</code></pre></div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">// nuxt.config.ts
+export default defineNuxtConfig({
+  nitro: {
+    preset: 'node-server',
+  },
+});</code></pre></div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash"># Example PM2 start on a VPS
+pm2 start .output/server/index.mjs --name nuxt-app
+pm2 save</code></pre></div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-testing" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-check2-circle me-2" style="color:var(--nuxt-primary);"></i>Testing</h2>
+      <p class="mb-4">Use unit tests for composables and components, integration tests for server handlers, and end-to-end tests for route flows.</p>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">1</span>Vitest setup</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">npm install -D vitest @vue/test-utils happy-dom</code></pre></div>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">// example composable test
+import { describe, expect, it } from 'vitest';
+
+describe('math sanity', () =&gt; {
+  it('adds values', () =&gt; {
+    expect(2 + 2).toBe(4);
+  });
+});</code></pre></div>
+        </div>
+        <div class="col-lg-6">
+          <h5 class="sub-title"><span class="step-num me-2">2</span>Playwright for routes</h5>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-bash">npm install -D @playwright/test
+npx playwright install</code></pre></div>
+          <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">import { test, expect } from '@playwright/test';
+
+test('home page renders', async ({ page }) =&gt; {
+  await page.goto('http://localhost:3000');
+  await expect(page.locator('h1')).toContainText('Nuxt');
+});</code></pre></div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-performance" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-speedometer me-2" style="color:var(--nuxt-primary);"></i>Performance Tips</h2>
+      <div class="row g-3">
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold small mb-1">Use route rules</h6><p class="small opacity-75 mb-0">Prerender what can be static and cache what changes slowly.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold small mb-1">Keep payloads small</h6><p class="small opacity-75 mb-0">Fetch only fields you need and paginate large lists.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold small mb-1">Use lazy imports</h6><p class="small opacity-75 mb-0">Split heavy client-only widgets and charts when practical.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="feature-card p-3 h-100"><h6 class="fw-bold small mb-1">Use Nuxt Image</h6><p class="small opacity-75 mb-0">Responsive image delivery usually pays back quickly.</p></div></div>
+      </div>
+      <div class="code-wrapper mt-4"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-typescript">export default defineNuxtConfig({
+  experimental: {
+    payloadExtraction: true,
+  },
+  routeRules: {
+    '/blog/**': { prerender: true },
+    '/products/**': { swr: 600 },
+  },
+});</code></pre></div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-mini" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-kanban me-2" style="color:var(--nuxt-primary);"></i>Real Project Flow Example</h2>
+      <p class="mb-4">A common Nuxt project is a content + product site: public SEO pages, product detail pages, and a protected admin or customer dashboard.</p>
+      <div class="row g-3 mb-4">
+        <div class="col-md-6"><div class="workflow-step h-100"><h6 class="fw-bold">Public pages</h6><p class="small mb-0">Use <code>app/pages/</code> with SSR or prerender for home, pricing, docs, and blog pages.</p></div></div>
+        <div class="col-md-6"><div class="workflow-step h-100"><h6 class="fw-bold">Product data</h6><p class="small mb-0">Use <code>useAsyncData()</code> or <code>useFetch()</code> for catalog and detail endpoints.</p></div></div>
+        <div class="col-md-6"><div class="workflow-step h-100"><h6 class="fw-bold">Auth area</h6><p class="small mb-0">Protect dashboard routes with middleware and backend token verification.</p></div></div>
+        <div class="col-md-6"><div class="workflow-step h-100"><h6 class="fw-bold">Deploy hybrid</h6><p class="small mb-0">Prerender static marketing routes and keep authenticated dashboard routes SSR.</p></div></div>
+      </div>
+      <div class="code-wrapper"><button class="btn btn-sm btn-outline-secondary copy-btn" data-copy-btn><i class="bi bi-clipboard me-1"></i>Copy</button>
+<pre><code class="language-text">Example feature map
+/
+/pricing
+/blog/[slug]
+/products/[slug]
+/login
+/dashboard
+/dashboard/orders
+/api/products
+/api/contact</code></pre></div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-cheatsheet" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-terminal-fill me-2" style="color:var(--nuxt-primary);"></i>Nuxt Command Cheat Sheet</h2>
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle small cmd-table">
+          <thead class="table-dark"><tr><th>Command</th><th>Use</th></tr></thead>
+          <tbody>
+            <tr><td><code>npm create nuxt@latest app</code></td><td>Create a new Nuxt app</td></tr>
+            <tr><td><code>pnpm create nuxt@latest app</code></td><td>Create a new Nuxt app with pnpm</td></tr>
+            <tr><td><code>npm install</code></td><td>Install dependencies</td></tr>
+            <tr><td><code>npm run dev</code></td><td>Start development server</td></tr>
+            <tr><td><code>npm run dev -- -o</code></td><td>Start development server and open browser</td></tr>
+            <tr><td><code>npm run build</code></td><td>Build production output</td></tr>
+            <tr><td><code>npm run preview</code></td><td>Run production build locally</td></tr>
+            <tr><td><code>npx nuxi typecheck</code></td><td>Check TypeScript types</td></tr>
+            <tr><td><code>npx nuxi module add @pinia/nuxt</code></td><td>Add Pinia module</td></tr>
+            <tr><td><code>npx nuxi module add @nuxt/image</code></td><td>Add image optimization module</td></tr>
+            <tr><td><code>npx nuxi analyze</code></td><td>Inspect build output and bundle size</td></tr>
+            <tr><td><code>npx nuxi cleanup</code></td><td>Reset generated Nuxt cache</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section id="sec-interview" class="mb-5">
+      <h2 class="section-title"><i class="bi bi-patch-question me-2" style="color:var(--nuxt-primary);"></i>Nuxt Interview Q and A</h2>
+      <p class="mb-4">This section is designed for interview revision from beginner to advanced level. The answers are intentionally short, direct, and easy to speak in an interview, but still technically correct.</p>
+
+      <div class="row g-3 mb-4">
+        <div class="col-md-6 col-xl-3"><div class="check-card p-3 h-100"><h6 class="fw-bold mb-1">Basic</h6><p class="small opacity-75 mb-0">Core Nuxt purpose, folders, rendering, and routing questions.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="check-card p-3 h-100"><h6 class="fw-bold mb-1">Intermediate</h6><p class="small opacity-75 mb-0">Data fetching, state, middleware, modules, plugins, and runtime config.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="check-card p-3 h-100"><h6 class="fw-bold mb-1">Advanced</h6><p class="small opacity-75 mb-0">Hydration, route rules, caching, deployment, performance, and Nuxt 4 changes.</p></div></div>
+        <div class="col-md-6 col-xl-3"><div class="check-card p-3 h-100"><h6 class="fw-bold mb-1">Scenario</h6><p class="small opacity-75 mb-0">Real-world architecture answers for SEO, auth, APIs, and hybrid rendering.</p></div></div>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">1</span>Basic Nuxt Interview Questions</h5>
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark"><tr><th>Question</th><th>Short answer</th></tr></thead>
+          <tbody>
+            <tr><td>What is Nuxt?</td><td>Nuxt is a framework built on top of Vue that gives you file-based routing, rendering modes, server features, SEO helpers, and app structure out of the box.</td></tr>
+            <tr><td>What is the difference between Vue and Nuxt?</td><td>Vue is the core UI library, while Nuxt is the application framework around Vue for building full apps faster.</td></tr>
+            <tr><td>When should you choose Nuxt over Vue + Vite?</td><td>Use Nuxt when you need SSR, SSG, SEO, predictable routing, or backend-style server handlers in the same project.</td></tr>
+            <tr><td>What is file-based routing?</td><td>Nuxt creates routes from files inside <code>app/pages/</code>, so you do not write a large manual router config for common page routes.</td></tr>
+            <tr><td>What is Nitro in Nuxt?</td><td>Nitro is Nuxt's server engine for SSR, server routes, caching, adapters, and deployment targets.</td></tr>
+            <tr><td>What is inside the <code>app/</code> directory in Nuxt 4?</td><td>It usually contains app-side Vue code such as <code>pages</code>, <code>layouts</code>, <code>components</code>, <code>composables</code>, <code>plugins</code>, and <code>app.vue</code>.</td></tr>
+            <tr><td>What is the purpose of <code>app.vue</code>?</td><td>It is the root app shell and often wraps the whole app with common layout-level structure.</td></tr>
+            <tr><td>What does <code>useHead()</code> do?</td><td>It lets you define title, meta tags, canonical tags, and other head elements in a reactive Nuxt-friendly way.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">2</span>Intermediate Nuxt Interview Questions</h5>
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark"><tr><th>Question</th><th>Short answer</th></tr></thead>
+          <tbody>
+            <tr><td>What is <code>useFetch()</code>?</td><td>It is a Nuxt composable for SSR-aware fetching that returns reactive values like <code>data</code>, <code>pending</code>, <code>status</code>, and <code>error</code>.</td></tr>
+            <tr><td>What is the difference between <code>useFetch()</code> and <code>$fetch</code>?</td><td><code>useFetch()</code> integrates with SSR and reactive state, while <code>$fetch</code> is a lower-level fetch utility for imperative requests.</td></tr>
+            <tr><td>What is the difference between <code>useFetch()</code> and <code>useAsyncData()</code>?</td><td><code>useFetch()</code> is focused on HTTP requests, while <code>useAsyncData()</code> is more general and can wrap any async function.</td></tr>
+            <tr><td>How do you protect a route in Nuxt?</td><td>Use route middleware for navigation checks and always re-check auth or permissions on the server or backend side too.</td></tr>
+            <tr><td>What is route middleware?</td><td>It is logic that runs before navigation and is commonly used for auth checks, redirects, or route conditions.</td></tr>
+            <tr><td>What is the difference between a Nuxt module and a Nuxt plugin?</td><td>A module extends the framework during setup and build, while a plugin runs in the app runtime to inject helpers or initialize libraries.</td></tr>
+            <tr><td>When would you use <code>useState()</code> instead of Pinia?</td><td>Use <code>useState()</code> for simple shared SSR-safe state and Pinia for larger, more structured application state.</td></tr>
+            <tr><td>How do you expose env vars to the client?</td><td>Put them in <code>runtimeConfig.public</code> and use the <code>NUXT_PUBLIC_</code> prefix so Nuxt can safely expose them.</td></tr>
+            <tr><td>What is the purpose of <code>server/api/</code>?</td><td>It holds Nitro API handlers that become backend endpoints like <code>/api/products</code> or <code>/api/login</code>.</td></tr>
+            <tr><td>What does <code>definePageMeta()</code> do?</td><td>It lets you attach route-level metadata such as layout, middleware, auth requirements, or page transition settings.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">3</span>Advanced Nuxt Interview Questions</h5>
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark"><tr><th>Question</th><th>Short answer</th></tr></thead>
+          <tbody>
+            <tr><td>What is the difference between SSR, SSG, and CSR in Nuxt?</td><td>SSR renders on request, SSG prerenders at build time, and CSR renders mostly in the browser after the JS loads.</td></tr>
+            <tr><td>What is hybrid rendering in Nuxt?</td><td>It means different routes in the same app can use different rendering or caching strategies based on their needs.</td></tr>
+            <tr><td>What are <code>routeRules</code> used for?</td><td>They let you configure behavior per route such as prerendering, redirects, headers, caching, or stale-while-revalidate.</td></tr>
+            <tr><td>What causes hydration mismatch in Nuxt?</td><td>It usually happens when server HTML and client HTML differ because of random values, browser-only APIs, timezone differences, or unstable rendering logic.</td></tr>
+            <tr><td>How do you avoid duplicate API calls in Nuxt?</td><td>Use stable keys with <code>useAsyncData()</code> or <code>useFetch()</code>, reuse shared fetch state, and avoid triggering the same fetch in multiple uncontrolled places.</td></tr>
+            <tr><td>How does caching work with Nitro?</td><td>Nitro supports caching patterns like SWR and route-level caching so repeated requests can reuse generated responses instead of recomputing every time.</td></tr>
+            <tr><td>How do you keep secrets safe in Nuxt?</td><td>Keep them in server-only runtime config or environment variables and never expose them through <code>runtimeConfig.public</code>.</td></tr>
+            <tr><td>How do you deploy Nuxt?</td><td>You can deploy it as a Node server, serverless output, edge-style target, or static site depending on how the app renders.</td></tr>
+            <tr><td>How do you debug build or performance issues?</td><td>Use <code>npx nuxi analyze</code>, inspect payload sizes, lazy-load heavy UI, use route rules correctly, and verify which routes truly need SSR.</td></tr>
+            <tr><td>What changed in Nuxt 4 that interviewers may ask about?</td><td>Key points are the default <code>app/</code> directory, better TypeScript separation, smarter fetch behavior, and faster tooling.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="sub-title"><span class="step-num me-2">4</span>Scenario-Based Interview Questions</h5>
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle small">
+          <thead class="table-dark"><tr><th>Scenario question</th><th>Expected answer direction</th></tr></thead>
+          <tbody>
+            <tr><td>How would you build a marketing site with blog pages in Nuxt?</td><td>I would usually prerender or statically generate public content routes, use <code>useHead()</code> for SEO, and keep only dynamic parts server-rendered if needed.</td></tr>
+            <tr><td>How would you handle a project with public pages and a protected dashboard?</td><td>I would use hybrid rendering: prerender or cache public pages, protect dashboard routes with middleware, and verify auth again on the server or backend.</td></tr>
+            <tr><td>How would you connect Nuxt to an existing Laravel or Node API?</td><td>I would keep the backend as the source of truth, store base URLs in runtime config, and optionally use Nitro server routes as a proxy or BFF layer.</td></tr>
+            <tr><td>How would you solve an SEO issue in a Vue SPA by moving to Nuxt?</td><td>I would move SEO-critical pages into Nuxt routes, render them with SSR or prerendering, and manage metadata with <code>useHead()</code>.</td></tr>
+            <tr><td>How would you optimize a slow product detail page?</td><td>I would reduce payload size, cache product responses where possible, lazy-load noncritical components, and use route rules for the correct rendering strategy.</td></tr>
+            <tr><td>How would you migrate a Vue + Vite app to Nuxt?</td><td>I would create a fresh Nuxt app, move route views into <code>app/pages/</code>, shared UI into <code>app/components/</code>, and convert fetch/state logic incrementally.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-box">
+        <p class="mb-0"><strong>Interview tip:</strong> do not only define features. Explain <em>why</em> Nuxt helps, which rendering mode you would choose, where the code should live, and what should stay server-only. That makes your answer sound practical instead of memorized.</p>
+      </div>
+    </section>
+  </div>
+
+  <footer class="text-center py-4 mt-4" style="border-top:1px solid rgba(128,128,128,.15);">
+    <p class="small opacity-50 mb-0"><i class="bi bi-triangle-half me-1" style="color:var(--nuxt-primary);"></i>Nuxt.js Complete Guide - Bootstrap 5 + Responsive Shell</p>
+  </footer>
+</main>
+
+<div id="backTop" title="Back to top">
+  <i class="bi bi-arrow-up"></i>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/highlight.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('pre code').forEach((el) => hljs.highlightElement(el));
+  });
+
+  const html = document.documentElement;
+  const toggleBtn = document.getElementById('themeToggle');
+  const hljsDark = document.getElementById('hljs-theme-dark');
+  const hljsLight = document.getElementById('hljs-theme-light');
+
+  function applyTheme(theme) {
+    html.setAttribute('data-bs-theme', theme);
+    toggleBtn.innerHTML = theme === 'dark'
+      ? '<i class="bi bi-sun-fill"></i>'
+      : '<i class="bi bi-moon-fill"></i>';
+    hljsDark.disabled = theme !== 'dark';
+    hljsLight.disabled = theme !== 'light';
+    localStorage.setItem('nuxt-guide-theme', theme);
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    applyTheme(html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  const savedTheme = localStorage.getItem('nuxt-guide-theme');
+  if (savedTheme) applyTheme(savedTheme);
+
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('#sidebar .nav-link');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        navLinks.forEach((link) => link.classList.remove('active'));
+        const active = document.querySelector(`#sidebar a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+
+  sections.forEach((section) => observer.observe(section));
+
+  const backTop = document.getElementById('backTop');
+  window.addEventListener('scroll', () => {
+    backTop.classList.toggle('show', window.scrollY > 400);
+  });
+
+  backTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  document.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-copy-btn]');
+    if (!button) return;
+
+    const code = button.closest('.code-wrapper')?.querySelector('code');
+    if (!code) return;
+
+    try {
+      await navigator.clipboard.writeText(code.innerText);
+      button.innerHTML = '<i class="bi bi-check-lg me-1"></i>Copied!';
+      setTimeout(() => {
+        button.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy';
+      }, 1800);
+    } catch (error) {
+      button.innerHTML = '<i class="bi bi-x-lg me-1"></i>Failed';
+      setTimeout(() => {
+        button.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy';
+      }, 1800);
+    }
+  });
+</script>
+</body>
+</html>
