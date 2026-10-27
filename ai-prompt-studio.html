@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>AI Prompt Studio — Smart Prompt Generator</title>
+<script>
+try { var t = localStorage.getItem('ai-hub-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-bs-theme', t); } catch (e) {}
+</script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+:root{--bg:#0b1020;--panel:rgba(20,28,49,.88);--line:rgba(255,255,255,.12);--muted:#aab4cc;--accent:#818cf8}
+body{min-height:100vh;background:radial-gradient(ellipse at top left,#20265a 0,transparent 38%),linear-gradient(135deg,#0b1020,#111827 60%,#17132e);color:#edf2ff}
+.text-muted,.form-text{color:var(--muted)!important}.app-shell{max-width:1180px}.glass{background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:0 20px 70px #0002;backdrop-filter:blur(14px)}
+.form-control,.form-select{background:#0d1427;border:1px solid #34405b;color:#edf2ff}.form-control::placeholder{color:#7885a3}.form-control:focus,.form-select:focus{background:#101a31;color:#fff;border-color:var(--accent);box-shadow:0 0 0 .2rem #818cf833}.form-select option{background:#101a31;color:#fff}
+.btn-primary{background:linear-gradient(90deg,#6366f1,#8b5cf6);border:0}.btn-primary:hover{filter:brightness(1.1)}.eyebrow{letter-spacing:.14em;text-transform:uppercase;font-size:.75rem;color:#a5b4fc;font-weight:700}
+.pill{border:1px solid var(--line);border-radius:999px;padding:.35rem .7rem;color:#cbd5e1;font-size:.8rem}.output{min-height:390px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9rem;line-height:1.65;white-space:pre-wrap}.metric{background:#0d1427;border:1px solid var(--line);border-radius:14px;padding:12px}.history-item{border:1px solid var(--line);border-radius:12px;padding:10px;cursor:pointer}.history-item:hover{border-color:#818cf8}.small-label{font-size:.84rem;font-weight:600;color:#dbe4ff}.status{min-height:1.3rem;font-size:.85rem;color:#a5b4fc}.section-title{font-size:1rem;font-weight:700}.hint{font-size:.83rem;color:var(--muted)}.required::after{content:" *";color:#fda4af}
+</style>
+<link rel="stylesheet" href="ai-hub.css">
+<style>
+/* ---- Hub look applied to the Prompt Studio (overrides the base styles above) ---- */
+:root{--nav-h:60px;--hub-sticky-top:var(--nav-h)}
+[data-bs-theme]{--bg:var(--hub-bg);--panel:var(--hub-panel);--line:var(--hub-line);--muted:var(--hub-muted);--accent:var(--hub-accent-2)}
+html{scroll-padding-top:calc(var(--nav-h) + 76px);scroll-behavior:smooth}
+body{background:var(--hub-bg)!important;color:var(--hub-body)}
+.navbar-studio{position:sticky;top:0;z-index:1030;background:rgb(var(--hub-bg-rgb)/.86);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--hub-line);height:var(--nav-h);display:flex;align-items:center}
+.brand-logo{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#6366f1,#a855f7);flex-shrink:0}
+.navbar-studio .brand{color:var(--hub-strong);text-decoration:none;font-weight:750;letter-spacing:-.02em}
+[data-bs-theme] .glass{background:var(--hub-panel);border:0;box-shadow:0 0 0 1px var(--hub-line);border-radius:var(--hub-radius);-webkit-backdrop-filter:none;backdrop-filter:none}
+[data-bs-theme] .text-muted,[data-bs-theme] .form-text{color:var(--hub-muted)!important}
+[data-bs-theme] .form-control,[data-bs-theme] .form-select{background:var(--hub-panel-2);border:1px solid var(--hub-line);color:var(--hub-strong)}
+[data-bs-theme] .form-control::placeholder{color:var(--hub-dim)}
+[data-bs-theme] .form-control:focus,[data-bs-theme] .form-select:focus{background:var(--hub-panel-2);color:var(--hub-strong);border-color:var(--hub-accent-2);box-shadow:0 0 0 .2rem rgb(var(--hub-accent-rgb)/.22)}
+[data-bs-theme] .form-select option{background:var(--hub-panel);color:var(--hub-strong)}
+[data-bs-theme] .small-label{color:var(--hub-strong)}
+[data-bs-theme] .metric{background:var(--hub-panel-2);border-radius:14px}
+[data-bs-theme] .pill{background:var(--hub-panel);color:var(--hub-body)}
+[data-bs-theme] .eyebrow{color:var(--hub-dim);letter-spacing:.09em;font-size:.72rem}
+[data-bs-theme] .status{color:var(--hub-link)}
+[data-bs-theme] .required::after{color:#e11d48}
+[data-bs-theme] .history-item:hover{border-color:var(--hub-accent-2)}
+.section-title{color:var(--hub-strong);letter-spacing:-.02em}
+.btn-outline-light{--bs-btn-color:var(--hub-body);--bs-btn-border-color:var(--hub-line);--bs-btn-hover-color:var(--hub-strong);--bs-btn-hover-bg:var(--hub-panel-2);--bs-btn-hover-border-color:var(--hub-dim);--bs-btn-active-color:var(--hub-strong);--bs-btn-active-bg:var(--hub-panel-2);--bs-btn-active-border-color:var(--hub-dim)}
+.btn-outline-info{--bs-btn-color:var(--hub-link);--bs-btn-border-color:rgb(var(--hub-accent-rgb)/.5);--bs-btn-hover-color:#fff;--bs-btn-hover-bg:var(--hub-accent);--bs-btn-hover-border-color:var(--hub-accent);--bs-btn-active-bg:var(--hub-accent);--bs-btn-active-border-color:var(--hub-accent);--bs-btn-active-color:#fff}
+.tips-ic{color:var(--hub-link)}
+.sec-head{margin:2.75rem 0 1.25rem;display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.sec-head h2{font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:760;letter-spacing:-.035em;color:var(--hub-strong);line-height:1.1;margin:0 0 .35rem}
+.fw-card.is-static{cursor:default}
+.hub-callout-wrap{margin-top:0}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.course-card,.iv-card{transition:none}}
+</style>
+</head>
+<body>
+
+<nav class="navbar-studio">
+  <div class="container-xxl d-flex align-items-center justify-content-between">
+    <a class="brand d-flex align-items-center gap-2" href="#top"><span class="brand-logo"><i class="bi bi-stars"></i></span><span>Prompt Studio</span>
+      <span class="hub-divider d-none d-sm-inline-block"></span><span class="d-none d-sm-inline" style="color:var(--hub-muted);font-weight:500;font-size:.92rem">AI tutorials</span></a>
+    <div class="d-flex align-items-center gap-2">
+      <div class="hub-xnav d-none d-md-flex">
+        <a href="ai-complete-guide.html">Guide</a>
+        <a href="ai-prompt-generator.html">Prompt Generator</a>
+        <a href="ai-prompt-studio.html" class="is-current">Prompt Studio</a>
+      </div>
+      <button id="themeBtn" class="hub-iconbtn" type="button" aria-label="Toggle dark or light theme"><i class="bi bi-sun-fill"></i></button>
+    </div>
+  </div>
+</nav>
+
+<main id="top" class="container-xxl py-4 py-lg-5">
+
+  <header class="hub-hero">
+    <div class="row align-items-center g-4 g-xl-5">
+      <div class="col-lg-7">
+        <a class="hub-announce" href="ai-prompt-generator.html"><span class="tag">NEW</span><span>Prompt Generator: auto-detect, batch mode and webhooks</span><i class="bi bi-arrow-right"></i></a>
+        <h1 class="hub-h1">Build a structured <span class="hub-grad">AI prompt</span> in under a minute</h1>
+        <p class="hub-lead">Pick a task category, describe the outcome and get a role, deliverables and quality-check prompt for ChatGPT, Claude, Gemini, Cursor, Midjourney and more. Everything runs in your browser.</p>
+        <div class="d-flex gap-2 flex-wrap mt-4">
+          <a href="#studio" class="hub-btn hub-btn-primary"><i class="bi bi-magic"></i>Start building</a>
+          <a href="#categories" class="hub-btn hub-btn-ghost"><i class="bi bi-grid"></i>Browse categories</a>
+        </div>
+        <div class="hub-stats">
+          <div><div class="n">12</div><div class="l">Task categories</div></div>
+          <div><div class="n">10</div><div class="l">AI tools supported</div></div>
+          <div><div class="n">9</div><div class="l">Output formats</div></div>
+          <div><div class="n">0</div><div class="l">Data sent to servers</div></div>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="hub-callout-wrap">
+          <a class="hub-callout" href="ai-prompt-generator.html">
+            <span class="play"><i class="bi bi-lightning-charge"></i></span>
+            <span>
+              <h3><span class="orb"></span>Want it fully automatic?</h3>
+              <p>The Prompt Generator detects your task, picks the framework, builds 21 ready templates and can batch or send prompts to a webhook.</p>
+              <span class="go">Open the generator &rarr;</span>
+            </span>
+          </a>
+          <a class="hub-callout mt-3" href="ai-complete-guide.html#sec-prompting">
+            <span class="play"><i class="bi bi-mortarboard"></i></span>
+            <span>
+              <h3><span class="orb"></span>Learn the craft</h3>
+              <p>Zero-shot, few-shot, chain-of-thought and prompt chaining explained in the AI Complete Guide.</p>
+              <span class="go">Open the guide &rarr;</span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="hub-bar" id="hubBar">
+    <div class="hub-bar-scroll" id="hubTabs" aria-label="Page sections">
+      <a class="hub-chip active" href="#studio" data-sec="studio"><span class="ic"><i class="bi bi-magic"></i></span>Studio</a>
+      <a class="hub-chip" href="#categories" data-sec="categories" data-tone="blue"><span class="ic"><i class="bi bi-grid"></i></span>Categories<span class="ct">12</span></a>
+      <a class="hub-chip" href="#tips" data-sec="tips" data-tone="green"><span class="ic"><i class="bi bi-lightbulb"></i></span>Tips</a>
+      <a class="hub-chip" href="#more" data-sec="more" data-tone="purple"><span class="ic"><i class="bi bi-compass"></i></span>More tools</a>
+    </div>
+  </div>
+
+  <div id="studio" class="row g-4 mt-1">
+    <section class="col-lg-5">
+      <div class="glass p-3 p-md-4">
+        <div class="d-flex justify-content-between align-items-center mb-3"><h2 class="section-title mb-0">Build your prompt</h2><button id="resetBtn" class="btn btn-sm btn-outline-light"><i class="bi bi-arrow-counterclockwise me-1"></i>Reset</button></div>
+        <form id="promptForm">
+          <div class="row g-3">
+            <div class="col-12 col-sm-6"><label class="small-label mb-1" for="aiTool">Target AI tool</label><select id="aiTool" class="form-select">
+              <option>ChatGPT</option><option>Claude</option><option>Gemini</option><option>Perplexity</option><option>Cursor</option><option>GitHub Copilot</option><option>Midjourney</option><option>Adobe Firefly</option><option>Runway</option><option>General-purpose AI</option>
+            </select></div>
+            <div class="col-12 col-sm-6"><label class="small-label mb-1" for="category">Task category</label><select id="category" class="form-select">
+              <option value="coding">Coding & software</option><option value="writing">Content writing</option><option value="business">Business & strategy</option><option value="marketing">Marketing & social media</option><option value="study">Learning & study</option><option value="research">Research & analysis</option><option value="seo">SEO</option><option value="image">Image generation</option><option value="video">Video creation</option><option value="agent">AI agents & automation</option><option value="rag">LLM, RAG & knowledge bases</option><option value="data">Data analysis</option>
+            </select></div>
+            <div class="col-12 col-sm-6"><label class="small-label mb-1" for="role">Your role / experience</label><select id="role" class="form-select"><option>Beginner</option><option>Student</option><option selected>Developer</option><option>Senior developer</option><option>Business owner</option><option>Marketer</option><option>Content creator</option><option>Researcher</option><option>Product manager</option></select></div>
+            <div class="col-12 col-sm-6"><label class="small-label mb-1" for="format">Output format</label><select id="format" class="form-select"><option>Step-by-step guide</option><option>Detailed explanation</option><option>Bullet points</option><option>Comparison table</option><option>Code with explanation</option><option>Checklist</option><option>Structured report</option><option>JSON (valid JSON only)</option><option>Creative prompt</option></select></div>
+            <div class="col-12 col-sm-6"><label class="small-label mb-1" for="tone">Tone</label><select id="tone" class="form-select"><option>Professional</option><option>Simple and beginner-friendly</option><option>Friendly</option><option>Technical and precise</option><option>Creative</option><option>Persuasive</option><option>Analytical and neutral</option></select></div>
+            <div class="col-12 col-sm-6"><label class="small-label mb-1" for="length">Response depth</label><select id="length" class="form-select"><option>Concise</option><option selected>Balanced</option><option>Detailed</option><option>Comprehensive with examples</option></select></div>
+            <div class="col-12"><label class="small-label mb-1 required" for="topic">What do you want to accomplish?</label><textarea id="topic" class="form-control" rows="3" required placeholder="Example: Build a secure product search and filtering feature in Laravel 12 using Blade, Bootstrap 5 and MySQL."></textarea><div class="form-text">Describe the outcome, not just a topic. Include your current stack or situation if relevant.</div></div>
+            <div class="col-12"><label class="small-label mb-1" for="context">Context / current situation</label><textarea id="context" class="form-control" rows="2" placeholder="Existing project, audience, current code, what you have tried, or relevant background…"></textarea></div>
+            <div class="col-12"><label class="small-label mb-1" for="requirements">Requirements and constraints</label><textarea id="requirements" class="form-control" rows="2" placeholder="Must use Laravel 12; preserve existing features; explain security; avoid paid services…"></textarea></div>
+            <div class="col-12"><label class="small-label mb-1" for="audience">Target audience / end user</label><input id="audience" class="form-control" placeholder="e.g. beginners, Indian ecommerce shoppers, engineering team"></div>
+            <div class="col-12"><label class="small-label mb-1" for="examples">Example or reference (optional)</label><input id="examples" class="form-control" placeholder="e.g. match this style, sample input/output, reference URL"></div>
+            <div class="col-12"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="includeQA" checked><label class="form-check-label" for="includeQA">Include quality checks, assumptions and edge cases</label></div></div>
+            <div class="col-12 d-grid"><button type="submit" class="btn btn-primary btn-lg fw-semibold"><i class="bi bi-magic me-2"></i>Generate optimized prompt</button></div>
+            <div class="col-12 status" id="status" aria-live="polite"></div>
+          </div>
+        </form>
+      </div>
+      <div class="glass p-3 p-md-4 mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-3"><h2 class="section-title mb-0">Prompt library</h2><button id="clearHistory" class="btn btn-sm btn-outline-secondary">Clear</button></div>
+        <p class="hint">Saved in this browser only. Clearing browser storage may remove these prompts.</p>
+        <div id="historyList" class="d-grid gap-2"><p class="text-muted small mb-0">No saved prompts yet.</p></div>
+      </div>
+    </section>
+
+    <section class="col-lg-7">
+      <div class="glass p-3 p-md-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3"><div><div class="eyebrow mb-1">Your result</div><h2 class="section-title mb-0">Generated prompt</h2></div><span class="pill" id="wordCount">0 words</span></div>
+        <textarea id="output" class="form-control output" placeholder="Your optimized prompt will appear here…" aria-label="Generated prompt"></textarea>
+        <div class="row g-2 mt-3">
+          <div class="col-6 col-md-3"><div class="metric"><div class="hint">Task clarity</div><div class="fw-bold fs-5" id="clarity">—</div></div></div>
+          <div class="col-6 col-md-3"><div class="metric"><div class="hint">Context</div><div class="fw-bold fs-5" id="contextScore">—</div></div></div>
+          <div class="col-6 col-md-3"><div class="metric"><div class="hint">Constraints</div><div class="fw-bold fs-5" id="constraintScore">—</div></div></div>
+          <div class="col-6 col-md-3"><div class="metric"><div class="hint">Completeness</div><div class="fw-bold fs-5" id="quality">—</div></div></div>
+        </div>
+        <p class="hint mt-2 mb-0">These are rule-based completeness indicators, not an AI evaluation or a guarantee of output quality.</p>
+        <hr class="border-secondary-subtle my-4">
+        <div class="d-flex flex-wrap gap-2">
+          <button id="copyBtn" class="btn btn-primary"><i class="bi bi-clipboard me-1"></i>Copy prompt</button>
+          <button id="saveBtn" class="btn btn-outline-light"><i class="bi bi-bookmark-plus me-1"></i>Save to library</button>
+          <button id="downloadBtn" class="btn btn-outline-light"><i class="bi bi-download me-1"></i>Download .txt</button>
+          <button id="improveBtn" class="btn btn-outline-info"><i class="bi bi-arrow-repeat me-1"></i>Strengthen structure</button>
+        </div>
+        <div class="hint mt-3">This version generates prompts locally using templates and rules. The “Strengthen structure” action reorganizes the prompt; it does not call an AI model.</div>
+      </div>
+      <div id="tips" class="glass p-3 p-md-4 mt-4">
+        <h2 class="section-title mb-3"><i class="bi bi-lightbulb me-2 tips-ic"></i>Tips for better results</h2>
+        <div class="row g-3">
+          <div class="col-md-6"><div class="d-flex gap-2"><i class="bi bi-check-circle text-info"></i><div><strong>Describe the outcome</strong><div class="hint">“Build a product filter” is better than “Laravel.”</div></div></div></div>
+          <div class="col-md-6"><div class="d-flex gap-2"><i class="bi bi-check-circle text-info"></i><div><strong>Include constraints</strong><div class="hint">Name your framework versions, budget, deadlines or limitations.</div></div></div></div>
+          <div class="col-md-6"><div class="d-flex gap-2"><i class="bi bi-check-circle text-info"></i><div><strong>Specify deliverables</strong><div class="hint">Ask for complete code, tests, migration steps or examples.</div></div></div></div>
+          <div class="col-md-6"><div class="d-flex gap-2"><i class="bi bi-check-circle text-info"></i><div><strong>Iterate with evidence</strong><div class="hint">Share errors or actual results when asking the AI to revise its answer.</div></div></div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section id="categories" class="mb-5">
+    <div class="sec-head">
+      <div><div class="eyebrow mb-1">Task categories</div><h2>Start from the kind of task you have</h2>
+      <p class="text-muted mb-0">Each card selects the category in the studio above and jumps to the task box. Your other fields are not changed.</p></div>
+    </div>
+    <div id="catGrid" class="row g-3"></div>
+  </section>
+
+  <section id="more" class="mb-5">
+    <div class="sec-head">
+      <div><div class="eyebrow mb-1">Keep going</div><h2>More prompt tools and lessons</h2>
+      <p class="text-muted mb-0">Move from a single prompt to automation, agents and safe production use.</p></div>
+    </div>
+    <div class="row g-3">
+      <div class="col-sm-6 col-xl-3"><a class="iv-card" href="ai-prompt-generator.html"><span class="ic"><i class="bi bi-magic"></i></span><div class="t">Prompt Generator</div><p>Auto-detect, 8 frameworks, 21 templates, batch mode and webhooks.</p><div class="meta">Automation &middot; Library &middot; Share links</div><span class="go">Open the generator &rarr;</span></a></div>
+      <div class="col-sm-6 col-xl-3"><a class="iv-card" href="ai-complete-guide.html#sec-prompt-techniques"><span class="ic"><i class="bi bi-diagram-3"></i></span><div class="t">Prompting techniques</div><p>Zero-shot, few-shot, chain-of-thought and prompt chaining with examples.</p><div class="meta">Guide &middot; Prompt engineering</div><span class="go">Read the lesson &rarr;</span></a></div>
+      <div class="col-sm-6 col-xl-3"><a class="iv-card" href="ai-complete-guide.html#sec-prompt-library"><span class="ic"><i class="bi bi-collection"></i></span><div class="t">Prompt library</div><p>Ready-to-copy prompts for coding, writing, business, study and images.</p><div class="meta">Guide &middot; Copy and use</div><span class="go">Browse prompts &rarr;</span></a></div>
+      <div class="col-sm-6 col-xl-3"><a class="iv-card" href="ai-complete-guide.html#sec-eval-safety"><span class="ic"><i class="bi bi-shield-check"></i></span><div class="t">Evals and safety</div><p>Test prompts for accuracy, add guardrails and defend against prompt injection.</p><div class="meta">Guide &middot; Production use</div><span class="go">Read the lesson &rarr;</span></a></div>
+    </div>
+  </section>
+  <footer class="text-center text-muted small mt-4">AI Prompt Studio · Local-first demo · No prompt is sent to a server by this page · Part of the <a href="ai-complete-guide.html">AI Complete Guide</a></footer>
+</main>
+
+<a class="hub-float" href="ai-prompt-generator.html" aria-label="Open the Prompt Generator">
+  <span class="orb"></span>
+  <span><span class="a d-block">Prompt Generator</span><span class="b d-block">Full automation, 21 templates</span></span>
+</a>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const form = $('promptForm'), output = $('output'), status = $('status');
+  const fields = ['aiTool','category','role','format','tone','length','topic','context','requirements','audience','examples','includeQA'];
+  const labels = {coding:'Coding & software',writing:'Content writing',business:'Business & strategy',marketing:'Marketing & social media',study:'Learning & study',research:'Research & analysis',seo:'SEO',image:'Image generation',video:'Video creation',agent:'AI agents & automation',rag:'LLM, RAG & knowledge bases',data:'Data analysis'};
+  const guidance = {
+    coding:'Act as a senior software engineer. Inspect the existing architecture before proposing changes. Prefer secure, maintainable, idiomatic code. Identify files to create or modify, dependencies, validation, error handling, tests, and migration or deployment steps. Do not invent project details; state assumptions and ask for missing critical information.',
+    writing:'Act as an experienced editor and subject-matter writer. Match the intended audience and purpose. Use a clear structure, specific examples, natural language, and a strong opening. Avoid unsupported claims, filler, clichés, and repetitive wording.',
+    business:'Act as a practical business strategist. Clarify the customer problem, value proposition, operating model, costs, risks, assumptions, success metrics, and next steps. Distinguish verified facts from estimates and make recommendations actionable.',
+    marketing:'Act as a performance-minded marketing strategist. Align the message with audience, channel, brand voice, funnel stage, and desired action. Provide relevant variants and measurable success metrics. Avoid deceptive claims and unsupported guarantees.',
+    study:'Act as a patient tutor. Assess prerequisites, explain concepts progressively, use concrete examples, check understanding, and provide practice exercises with answers or hints. Correct misconceptions without overwhelming the learner.',
+    research:'Act as a careful research analyst. Define the question and scope, compare credible evidence, identify uncertainty and conflicting findings, and separate facts, interpretation, and recommendations. Never fabricate sources, citations, or data.',
+    seo:'Act as an ethical technical and content SEO specialist. Consider search intent, topical relevance, helpful content, internal linking, metadata, structured data where appropriate, accessibility, and performance. Do not promise rankings or recommend keyword stuffing.',
+    image:'Act as an expert visual prompt designer. Specify subject, setting, composition, camera/viewpoint, lighting, palette, mood, materials, style, aspect ratio, and important exclusions. Keep the prompt visually coherent and avoid contradictory instructions.',
+    video:'Act as a video creative director. Specify concept, audience, duration, aspect ratio, scene-by-scene action, camera movement, lighting, transitions, sound, pacing, and continuity. Make motion and timing explicit.',
+    agent:'Act as an AI automation architect. Define the goal, trigger, inputs, tools, permissions, state, decision rules, error recovery, human approval points, logging, evaluation, and stop conditions. Use least privilege and never assume tool access that has not been provided.',
+    rag:'Act as an LLM and retrieval-augmented generation engineer. Define data ingestion, parsing, chunking, embeddings, retrieval, reranking, grounding, citations, access control, evaluation, latency, and cost. Address privacy, prompt injection, stale data, and refusal when evidence is insufficient.',
+    data:'Act as a rigorous data analyst. Clarify the decision to support, inspect data quality, define metrics, document assumptions, select appropriate methods, and explain results with uncertainty. Do not invent data or imply causation from correlation.'
+  };
+  const toolNotes = {
+    'Cursor':'For codebase tasks, inspect relevant files and conventions first. Propose a small, reviewable plan, preserve unrelated behavior, and report files changed and tests run.',
+    'GitHub Copilot':'Use the repository context and existing coding conventions. Keep changes focused, explain assumptions, and include appropriate tests.',
+    'Perplexity':'Research current information when browsing is available. Cite credible sources and publication dates, and distinguish sourced facts from analysis.',
+    'Midjourney':'Prioritize concise visual language, clear subject and composition, lighting, aesthetic direction, and compatible parameters supported by the current tool.',
+    'Adobe Firefly':'Describe the desired subject, composition, lighting, materials, style, and intended use. Keep instructions clear and avoid relying on unsupported parameters.',
+    'Runway':'Describe each shot and the visible motion, camera movement, subject continuity, duration, and aspect ratio. Avoid contradictory motion instructions.'
+  };
+  const categoryDeliverables = {
+    coding:'Deliverables: implementation plan; exact files and code; validation and security considerations; tests; setup or migration instructions.',
+    writing:'Deliverables: proposed title; structured draft; useful examples; final editing checklist.',
+    business:'Deliverables: executive summary; assumptions; options and trade-offs; action plan; risks and metrics.',
+    marketing:'Deliverables: audience insight; core message; content variants; call to action; testing plan and KPIs.',
+    study:'Deliverables: learning objectives; step-by-step explanation; worked example; practice questions; recap.',
+    research:'Deliverables: scope and method; evidence-backed findings; source list if research tools are available; limitations; recommendations.',
+    seo:'Deliverables: search intent; title and meta description; outline or content; internal-link ideas; technical checklist; measurement plan.',
+    image:'Deliverables: one polished generation prompt; optional alternate direction; negative constraints where supported; suggested aspect ratio.',
+    video:'Deliverables: creative brief; shot list with timings; generation prompt per scene; continuity notes; sound and editing notes.',
+    agent:'Deliverables: workflow diagram in text; tool and permission requirements; decision logic; failure handling; human review points; test cases.',
+    rag:'Deliverables: architecture; retrieval pipeline; chunking and indexing strategy; evaluation plan; security and monitoring checklist.',
+    data:'Deliverables: data checks; analysis plan; findings; visualizations or tables where useful; caveats; next actions.'
+  };
+  const read = () => Object.fromEntries(fields.map(id => [id, $(id).type === 'checkbox' ? $(id).checked : $(id).value.trim()]));
+  function buildPrompt(v, strengthened=false) {
+    const category = v.category;
+    let sections = [
+      `ROLE AND APPROACH\n${guidance[category]}`,
+      `TASK\n${v.topic}`,
+      `USER AND AUDIENCE\nMy role/experience: ${v.role}.${v.audience ? '\nTarget audience: '+v.audience+'.' : ''}`,
+      `EXPECTED OUTPUT\nFormat: ${v.format}.\nDepth: ${v.length}.\nTone: ${v.tone}.\n${categoryDeliverables[category]}`,
+    ];
+    if (v.context) sections.push(`CONTEXT\n${v.context}`);
+    if (v.requirements) sections.push(`REQUIREMENTS AND CONSTRAINTS\n${v.requirements}`);
+    if (v.examples) sections.push(`REFERENCE OR EXAMPLE\n${v.examples}`);
+    if (toolNotes[v.aiTool]) sections.push(`TARGET TOOL NOTES (${v.aiTool})\n${toolNotes[v.aiTool]}`);
+    if (v.includeQA) sections.push(`QUALITY CHECKS\n- State important assumptions and identify missing critical information.\n- Cover relevant edge cases, risks, security, privacy, and accessibility where applicable.\n- Do not fabricate facts, citations, APIs, files, or test results.\n- Explain trade-offs and verify that the response satisfies the requested deliverables.\n- If the task is ambiguous, ask focused clarifying questions rather than guessing.`);
+    sections.push(`RESPONSE INSTRUCTIONS\n- Tailor the response to ${v.role.toLowerCase()} level.\n- Organize the answer with clear headings and actionable steps.\n- Make recommendations specific to the stated task and constraints.\n- Avoid generic filler and unnecessary repetition.`);
+    if (strengthened) sections.push(`FINAL SELF-REVIEW\nBefore responding, check for contradictions, missing deliverables, unsupported assumptions, and unnecessary complexity. Improve the answer against the task requirements.`);
+    return `TARGET AI: ${v.aiTool}\nCATEGORY: ${labels[category]}\n\n${sections.join('\n\n')}`;
+  }
+  function updateMetrics() {
+    const v=read(), text=output.value.trim(), words=text ? text.split(/\s+/).length : 0;
+    $('wordCount').textContent = `${words} words`;
+    if (!text) { ['clarity','contextScore','constraintScore','quality'].forEach(id => $(id).textContent='—'); return; }
+    const clarity = v.topic.length >= 80 ? 100 : v.topic.length >= 35 ? 80 : v.topic.length >= 12 ? 60 : 35;
+    const ctx = v.context.length ? 100 : 25, constraints = v.requirements.length ? 100 : 30;
+    const score = Math.round((clarity+ctx+constraints+(v.includeQA?100:55))/4);
+    $('clarity').textContent=clarity+'%'; $('contextScore').textContent=ctx+'%'; $('constraintScore').textContent=constraints+'%'; $('quality').textContent=score+'%';
+  }
+  function generate(strengthened=false) {
+    const v=read();
+    if (!v.topic) { $('topic').focus(); status.textContent='Please describe the task you want the AI to complete.'; return false; }
+    output.value=buildPrompt(v,strengthened); updateMetrics(); status.textContent='Prompt generated locally. Review it before using it.'; return true;
+  }
+  function getHistory() { try { return JSON.parse(localStorage.getItem('promptStudioHistory') || '[]'); } catch { return []; } }
+  function setHistory(items) { try { localStorage.setItem('promptStudioHistory',JSON.stringify(items.slice(0,20))); renderHistory(); } catch { status.textContent='Browser storage is unavailable. You can still copy or download the prompt.'; } }
+  function renderHistory() {
+    const list=$('historyList'), items=getHistory(); list.replaceChildren();
+    if (!items.length) { const p=document.createElement('p'); p.className='text-muted small mb-0'; p.textContent='No saved prompts yet.'; list.append(p); return; }
+    items.forEach((item,index)=>{
+      const wrapper=document.createElement('div'); wrapper.className='history-item d-flex justify-content-between align-items-center gap-2';
+      const open=document.createElement('button'); open.type='button'; open.className='btn btn-link text-start text-decoration-none p-0 flex-grow-1'; open.style.color='inherit';
+      const title=document.createElement('div'); title.className='fw-semibold small'; title.textContent=item.title;
+      const meta=document.createElement('div'); meta.className='hint'; meta.textContent=`${item.category} · ${item.date}`;
+      open.append(title,meta); open.addEventListener('click',()=>{output.value=item.prompt; $('topic').value=item.topic || ''; updateMetrics(); status.textContent='Loaded saved prompt.'; window.scrollTo({top:0,behavior:'smooth'});});
+      const del=document.createElement('button'); del.type='button'; del.className='btn btn-sm btn-outline-secondary'; del.setAttribute('aria-label','Delete saved prompt'); del.innerHTML='<i class="bi bi-trash"></i>'; del.addEventListener('click',()=>setHistory(getHistory().filter((_,i)=>i!==index)));
+      wrapper.append(open,del); list.append(wrapper);
+    });
+  }
+  form.addEventListener('submit',e=>{e.preventDefault();generate(false);});
+  $('topic').addEventListener('input',()=>{if(output.value) updateMetrics();});
+  output.addEventListener('input',updateMetrics);
+  $('copyBtn').addEventListener('click',async()=>{
+    if(!output.value.trim()){status.textContent='Generate or load a prompt first.';return;}
+    try {
+      if(navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(output.value);
+      else { output.focus(); output.select(); const ok=document.execCommand('copy'); if(!ok) throw new Error('Copy unavailable'); }
+      status.textContent='Prompt copied to clipboard.';
+    } catch { status.textContent='Copy failed. Select the prompt text and copy it manually.'; output.focus(); output.select(); }
+  });
+  $('saveBtn').addEventListener('click',()=>{
+    if(!output.value.trim()){status.textContent='Generate a prompt before saving.';return;}
+    const v=read(), items=getHistory();
+    items.unshift({title:v.topic.slice(0,70),topic:v.topic,category:labels[v.category],prompt:output.value,date:new Date().toLocaleDateString()});
+    setHistory(items); status.textContent='Saved in this browser.';
+  });
+  $('downloadBtn').addEventListener('click',()=>{
+    if(!output.value.trim()){status.textContent='Generate a prompt before downloading.';return;}
+    const blob=new Blob([output.value],{type:'text/plain;charset=utf-8'}), url=URL.createObjectURL(blob), a=document.createElement('a');
+    a.href=url;a.download='ai-prompt.txt';document.body.append(a);a.click();a.remove();URL.revokeObjectURL(url);status.textContent='Prompt downloaded.';
+  });
+  $('improveBtn').addEventListener('click',()=>generate(true));
+  $('resetBtn').addEventListener('click',()=>{form.reset();output.value='';status.textContent='Form reset.';updateMetrics();});
+  $('clearHistory').addEventListener('click',()=>{if(confirm('Delete all prompts saved in this browser?')){setHistory([]);status.textContent='Saved prompt library cleared.';}});
+  renderHistory(); updateMetrics();
+})();
+</script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const root = document.documentElement;
+
+  const themeBtn = $('themeBtn');
+  const paintTheme = () => { themeBtn.innerHTML = root.getAttribute('data-bs-theme') === 'dark' ? '<i class="bi bi-sun-fill"></i>' : '<i class="bi bi-moon-fill"></i>'; };
+  themeBtn.addEventListener('click', () => {
+    const next = root.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-bs-theme', next);
+    try { localStorage.setItem('ai-hub-theme', next); } catch {}
+    paintTheme();
+  });
+  paintTheme();
+
+  const CATS = [
+    ['coding', 'Coding and software', 'code-slash', 'sky', 'Features, bug fixes, refactors, tests and migrations.'],
+    ['writing', 'Content writing', 'pencil-square', 'peach', 'Articles, emails, scripts and edits in your voice.'],
+    ['business', 'Business and strategy', 'briefcase', 'amber', 'Plans, pricing, positioning and decision memos.'],
+    ['marketing', 'Marketing and social', 'megaphone', 'rose', 'Campaigns, ads, posts and landing page copy.'],
+    ['study', 'Learning and study', 'mortarboard', 'mint', 'Tutor-style explanations, quizzes and revision plans.'],
+    ['research', 'Research and analysis', 'search', 'lav', 'Scoped research with evidence and stated uncertainty.'],
+    ['seo', 'SEO', 'graph-up-arrow', 'mint', 'Search intent, outlines, metadata and content briefs.'],
+    ['image', 'Image generation', 'image', 'rose', 'Subject, style, lighting and aspect ratio for image models.'],
+    ['video', 'Video creation', 'camera-video', 'peach', 'Scene-by-scene shots, motion, pacing and sound.'],
+    ['agent', 'AI agents and automation', 'robot', 'lav', 'Goals, tools, permissions and human approval points.'],
+    ['rag', 'LLM, RAG and knowledge', 'database', 'sky', 'Ingestion, chunking, retrieval and grounded answers.'],
+    ['data', 'Data analysis', 'bar-chart-line', 'amber', 'Data checks, metrics, methods and honest caveats.']
+  ];
+  const grid = $('catGrid');
+  CATS.forEach(([value, title, icon, tone, desc]) => {
+    const col = document.createElement('div'); col.className = 'col-sm-6 col-lg-4 col-xl-3';
+    const a = document.createElement('a'); a.href = '#studio'; a.className = 'course-card tone-' + tone;
+    a.innerHTML = '<div class="course-head"><div><span class="course-badge"></span><div class="course-title"></div></div><div class="course-art"><i class="bi bi-' + icon + '"></i></div></div><div class="course-body"><p></p><div class="course-prog"><div class="lbl"><span></span><span>Use this &rarr;</span></div></div></div>';
+    a.querySelector('.course-badge').textContent = 'Category';
+    a.querySelector('.course-title').textContent = title;
+    a.querySelector('.course-body p').textContent = desc;
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      $('category').value = value;
+      $('category').dispatchEvent(new Event('change', { bubbles: true }));
+      $('studio').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => $('topic').focus({ preventScroll: true }), 450);
+      const s = $('status'); if (s) s.textContent = 'Category set to ' + title + '. Describe your task, then generate.';
+    });
+    col.append(a); grid.append(col);
+  });
+
+  const chips = [...document.querySelectorAll('#hubTabs .hub-chip')];
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((en) => { if (en.isIntersecting) chips.forEach((c) => c.classList.toggle('active', c.dataset.sec === en.target.id)); });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  chips.forEach((c) => { const s = $(c.dataset.sec); if (s) io.observe(s); });
+})();
+</script>
+</body>
+</html>

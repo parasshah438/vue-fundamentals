@@ -1,0 +1,1414 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Prompt Generator: Auto Prompt Builder, Templates and Automation Lab</title>
+<meta name="description" content="Free AI prompt generator. Type an idea, get a structured, ready-to-use prompt for ChatGPT, Claude, Gemini, Cursor, Midjourney, Sora, Suno and more. Auto-detect, live generation, templates, batch mode, AI enhance and webhooks.">
+<script>
+try { var t = localStorage.getItem('ai-hub-theme') || localStorage.getItem('apg.theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-bs-theme', t); } catch (e) {}
+</script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+:root{--accent:#6366f1;--accent2:#8b5cf6;--accent3:#22d3ee;--radius:18px;--nav-h:60px}
+[data-bs-theme=dark]{--page:#0b1020;--panel:rgba(20,28,49,.9);--line:rgba(255,255,255,.12);--field:#0d1427;--muted:#aab4cc;--soft:#141c31}
+[data-bs-theme=light]{--page:#f3f5fb;--panel:#ffffff;--line:rgba(15,23,42,.12);--field:#f8fafc;--muted:#566282;--soft:#eef1fa}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 12px)}
+body{min-height:100vh;background:var(--page)}
+[data-bs-theme=dark] body{background:radial-gradient(ellipse at top left,#20265a 0,transparent 40%),radial-gradient(ellipse at 90% 10%,#0e3a4a 0,transparent 30%),linear-gradient(135deg,#0b1020,#111827 60%,#17132e);background-attachment:fixed}
+[data-bs-theme=light] body{background:radial-gradient(ellipse at top left,#e0e7ff 0,transparent 40%),linear-gradient(135deg,#f3f5fb,#eef2ff);background-attachment:fixed}
+.navbar-apg{height:var(--nav-h);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+[data-bs-theme=dark] .navbar-apg{background:rgba(11,16,32,.8)}
+[data-bs-theme=light] .navbar-apg{background:rgba(255,255,255,.85)}
+.brand-logo{width:34px;height:34px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent3))}
+.grad-text{background:linear-gradient(90deg,var(--accent),var(--accent2) 45%,var(--accent3));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.glass{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 18px 60px rgba(0,0,0,.14);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.text-muted,.form-text,.hint{color:var(--muted)!important}.hint{font-size:.83rem}
+.form-control,.form-select{background-color:var(--field);border-color:var(--line)}
+.form-control:focus,.form-select:focus{border-color:var(--accent);box-shadow:0 0 0 .2rem rgba(99,102,241,.25)}
+.form-label,.small-label{font-size:.84rem;font-weight:600;margin-bottom:.25rem}
+.required::after{content:" *";color:#f43f5e}
+.btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent2));border:0}.btn-primary:hover,.btn-primary:focus{filter:brightness(1.1);background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.eyebrow{letter-spacing:.14em;text-transform:uppercase;font-size:.74rem;color:var(--accent);font-weight:700}
+[data-bs-theme=dark] .eyebrow{color:#a5b4fc}
+.pill{display:inline-flex;align-items:center;gap:.3rem;border:1px solid var(--line);border-radius:999px;padding:.3rem .7rem;font-size:.8rem;color:var(--muted)}
+.section-title{font-size:1.05rem;font-weight:700}
+.sec-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:.5rem;margin-bottom:1rem}
+.output{min-height:340px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.88rem;line-height:1.6;white-space:pre-wrap}
+.detect{min-height:1.4rem;font-size:.82rem;color:var(--accent3);margin:.35rem 0 .6rem}
+.chip{display:inline-flex;align-items:center;gap:.25rem;padding:.15rem .55rem;border-radius:999px;font-size:.76rem;background:rgba(99,102,241,.16);color:inherit;border:1px solid rgba(99,102,241,.35);margin:0 .25rem .25rem 0}
+.score-num{font-size:2.4rem;font-weight:800;line-height:1}
+.check-row{display:flex;gap:.5rem;align-items:start;font-size:.86rem;padding:.3rem 0;border-bottom:1px dashed var(--line)}
+.check-row i{margin-top:.1rem}.ok{color:#22c55e}.no{color:#f59e0b}
+.var-card,.lib-item,.batch-item{border:1px solid var(--line);border-radius:14px;padding:.8rem;background:var(--soft)}
+.var-card pre,.batch-item pre{white-space:pre-wrap;word-break:break-word;font-size:.8rem;max-height:180px;overflow:auto;margin:.4rem 0 .6rem;font-family:ui-monospace,Menlo,Consolas,monospace}
+.tpl-card{height:100%;border:1px solid var(--line);border-radius:16px;padding:1rem;background:var(--panel);transition:transform .15s,border-color .15s,box-shadow .15s;cursor:pointer;text-align:left;width:100%;color:inherit}
+.tpl-card:hover,.tpl-card:focus-visible{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 10px 30px rgba(99,102,241,.2);outline:none}
+.tpl-icon{width:38px;height:38px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2));flex-shrink:0}
+.nav-pills .nav-link{border-radius:999px;font-size:.86rem;padding:.4rem .9rem}
+.nav-pills .nav-link.active{background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.filter-btn{border:1px solid var(--line);background:transparent;color:inherit;border-radius:999px;padding:.25rem .75rem;font-size:.82rem}
+.filter-btn.active{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
+.snip{max-height:260px;overflow:auto;white-space:pre;font-size:.78rem;background:var(--field);border:1px solid var(--line);border-radius:12px;padding:.75rem;font-family:ui-monospace,Menlo,Consolas,monospace}
+.step-n{width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent3));flex-shrink:0}
+.toast-box{position:fixed;right:1rem;bottom:1rem;z-index:2000;display:flex;flex-direction:column;gap:.5rem;max-width:calc(100vw - 2rem)}
+.toast-lite{background:#111827;color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:.6rem .9rem;font-size:.86rem;box-shadow:0 10px 30px rgba(0,0,0,.35);animation:tin .2s ease}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.busy{opacity:.65;pointer-events:none}
+footer a{color:inherit}
+:focus-visible{outline:2px solid var(--accent3);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.toast-lite,.tpl-card{animation:none;transition:none}}
+@media (max-width:575.98px){.score-num{font-size:2rem}.output{min-height:280px}}
+</style>
+<link rel="stylesheet" href="ai-hub.css">
+<style>
+/* ---- Hub look applied to the Prompt Generator (overrides the base styles above) ---- */
+[data-bs-theme]{--page:var(--hub-bg);--panel:var(--hub-panel);--line:var(--hub-line);--field:var(--hub-panel-2);--muted:var(--hub-muted);--soft:var(--hub-panel-2);--accent:var(--hub-accent-2);--accent2:var(--hub-accent);--hub-sticky-top:var(--nav-h)}
+html{scroll-padding-top:calc(var(--nav-h) + 76px)}
+body{background:var(--hub-bg)!important}
+.navbar-apg{background:rgb(var(--hub-bg-rgb)/.86)!important;border-bottom:1px solid var(--hub-line)}
+.brand-logo{border-radius:10px}
+[data-bs-theme] .glass{background:var(--hub-panel);border:0;box-shadow:0 0 0 1px var(--hub-line);border-radius:var(--hub-radius);-webkit-backdrop-filter:none;backdrop-filter:none}
+.section-title{letter-spacing:-.02em;color:var(--hub-strong)}
+.sec-head{margin:2.75rem 0 1.25rem}
+.sec-head h2.h3{font-size:clamp(1.6rem,3.4vw,2.2rem)!important;font-weight:760!important;letter-spacing:-.035em;color:var(--hub-strong);line-height:1.1}
+.eyebrow{color:var(--hub-dim)!important;letter-spacing:.09em;font-size:.72rem}
+.pill{background:var(--hub-panel);border-radius:999px}
+.chip{background:rgb(var(--hub-accent-rgb)/.12);border-color:rgb(var(--hub-accent-rgb)/.3);color:var(--hub-strong)}
+.var-card,.lib-item,.batch-item{border:0;box-shadow:0 0 0 1px var(--hub-line);border-radius:16px;background:var(--hub-panel)}
+.tpl-card{border:0;box-shadow:0 0 0 1px var(--hub-line);border-radius:var(--hub-radius);padding:1.1rem;background:var(--hub-panel)}
+.tpl-card:hover,.tpl-card:focus-visible{border-color:transparent;box-shadow:0 0 0 1px rgb(var(--hub-accent-rgb)/.5),0 16px 38px rgb(var(--hub-accent-rgb)/.16)}
+.tpl-icon{border-radius:12px;width:42px;height:42px}
+.filter-btn{background:var(--hub-panel);color:var(--hub-body);font-weight:600}
+.filter-btn.active{background:var(--hub-strong);color:var(--hub-bg);border-color:var(--hub-strong)}
+.snip{border-radius:14px}
+.step-n{box-shadow:0 0 0 4px rgb(var(--hub-accent-rgb)/.15)}
+.toast-box{bottom:4.8rem}
+.detect{color:var(--hub-link)}
+.hub-wrap{max-width:100%}
+.table{--bs-table-bg:transparent}
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-apg sticky-top">
+  <div class="container-xxl">
+    <a class="navbar-brand d-flex align-items-center gap-2 fw-bold m-0" href="#top"><span class="brand-logo"><i class="bi bi-magic"></i></span><span class="grad-text">Prompt Generator</span>
+      <span class="hub-divider d-none d-sm-inline-block"></span><span class="d-none d-sm-inline" style="color:var(--hub-muted);font-weight:500;font-size:.92rem">AI tutorials</span><span class="hub-beta d-none d-md-inline">Beta</span></a>
+    <div class="d-flex align-items-center gap-2">
+      <div class="hub-xnav d-none d-md-flex">
+        <a href="ai-complete-guide.html">Guide</a>
+        <a href="ai-prompt-generator.html" class="is-current">Prompt Generator</a>
+        <a href="ai-prompt-studio.html">Prompt Studio</a>
+      </div>
+      <button id="themeBtn" class="hub-iconbtn" type="button" aria-label="Toggle dark or light theme"><i class="bi bi-sun-fill"></i></button>
+    </div>
+  </div>
+</nav>
+
+<main id="top" class="container-xxl py-4 py-lg-5">
+
+  <header class="hub-hero">
+    <div class="row align-items-center g-4 g-xl-5">
+      <div class="col-lg-6">
+        <a class="hub-announce" href="#automation"><span class="tag">NEW</span><span>Automation Lab: batch, webhooks and AI enhance</span><i class="bi bi-arrow-right"></i></a>
+        <h1 class="hub-h1">Turn a rough idea into a <span class="hub-grad">perfect AI prompt</span>, automatically</h1>
+        <p class="hub-lead">Type one sentence. The generator detects the task, picks the tool style and prompt framework, and builds a structured, ready-to-paste prompt live. Add templates, batch mode, optional AI enhancement and webhooks when you want full automation.</p>
+        <div class="d-flex gap-2 flex-wrap mt-4">
+          <a href="#generator" class="hub-btn hub-btn-primary"><i class="bi bi-magic"></i>Start generating</a>
+          <a href="#templates" class="hub-btn hub-btn-ghost"><i class="bi bi-grid"></i>Browse templates</a>
+        </div>
+        <div class="hub-stats">
+          <div><div class="n" id="statTpl">21</div><div class="l">Ready-made templates</div></div>
+          <div><div class="n">8</div><div class="l">Prompt frameworks</div></div>
+          <div><div class="n">15</div><div class="l">Task categories</div></div>
+          <div><div class="n">30+</div><div class="l">AI tools supported</div></div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="hub-collage" aria-hidden="true">
+          <div class="cols">
+            <div>
+              <div class="mini-card cover c1">Prompt<br>Frameworks</div>
+              <div class="mini-card"><div class="eyebrow-s">CO-STAR</div><div class="t">Context, Objective, Style, Tone, Audience, Response</div><div class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+              <div class="mini-card"><div class="row-i"><span class="ic"><i class="bi bi-cpu"></i></span><div><div class="t">Auto-detect</div><div>Reads your idea, sets tool and format</div></div></div></div>
+              <div class="mini-card"><div class="eyebrow-s">Quality score</div><div class="t">84 / 100</div><div class="bar"><b style="width:84%"></b></div></div>
+            </div>
+            <div>
+              <div class="mini-card"><div class="eyebrow-s">Midjourney</div><div class="t" style="font-family:var(--hub-mono);font-weight:500;font-size:.75rem">cozy reading nook, golden hour, watercolor --ar 16:9 --no text</div></div>
+              <div class="mini-card cover c3">Automation<br>Lab</div>
+              <div class="mini-card"><div class="eyebrow-s">Webhook payload</div><div class="t" style="font-family:var(--hub-mono);font-weight:500;font-size:.72rem">{ "prompt": "...",<br>&nbsp;&nbsp;"tool": "ChatGPT" }</div></div>
+              <div class="mini-card"><div class="row-i"><span class="ic"><i class="bi bi-list-task"></i></span><div><div class="t">Batch mode</div><div>20 ideas, one click</div></div></div></div>
+              <div class="mini-card cover c2">Image, Video<br>and Music</div>
+            </div>
+          </div>
+        </div>
+        <div class="hub-callout-wrap">
+          <a class="hub-callout" href="ai-complete-guide.html#sec-prompting">
+            <span class="play"><i class="bi bi-mortarboard"></i></span>
+            <span>
+              <h3><span class="orb"></span>Learn the craft behind the prompts</h3>
+              <p>Prompt engineering, context engineering, injection security and evals, with runnable examples in the AI Complete Guide.</p>
+              <span class="go">Open the guide &rarr;</span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="hub-bar" id="hubBar">
+    <div class="hub-search">
+      <i class="bi bi-search"></i>
+      <input id="hubSearch" class="form-control" type="search" placeholder="Search templates" aria-label="Search templates" autocomplete="off">
+      <kbd>/</kbd>
+    </div>
+    <div class="hub-bar-scroll" id="hubTabs" aria-label="Page sections">
+      <a class="hub-chip active" href="#generator" data-sec="generator"><span class="ic"><i class="bi bi-magic"></i></span>Generator</a>
+      <a class="hub-chip" href="#templates" data-sec="templates" data-tone="blue"><span class="ic"><i class="bi bi-grid"></i></span>Templates<span class="ct" id="ctTpl"></span></a>
+      <a class="hub-chip" href="#frameworks" data-sec="frameworks" data-tone="green"><span class="ic"><i class="bi bi-diagram-3"></i></span>Frameworks<span class="ct">8</span></a>
+      <a class="hub-chip" href="#automation" data-sec="automation" data-tone="purple"><span class="ic"><i class="bi bi-lightning-charge"></i></span>Automation Lab</a>
+      <a class="hub-chip" href="#library" data-sec="library" data-tone="orange"><span class="ic"><i class="bi bi-bookmarks"></i></span>Library<span class="ct" id="ctLib">0</span></a>
+      <a class="hub-chip" href="#learn" data-sec="learn" data-tone="rose"><span class="ic"><i class="bi bi-mortarboard"></i></span>Learn</a>
+    </div>
+  </div>
+
+  <!-- ================= GENERATOR ================= -->
+  <section id="generator" class="mb-5">
+    <div class="row g-4">
+
+      <div class="col-xl-5">
+        <div class="glass p-3 p-md-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="section-title mb-0"><i class="bi bi-sliders2 me-2"></i>Build your prompt</h2>
+            <button id="resetBtn" class="btn btn-sm btn-outline-secondary" type="button"><i class="bi bi-arrow-counterclockwise me-1"></i>Reset</button>
+          </div>
+
+          <form id="promptForm" novalidate>
+            <label class="form-label required" for="idea">What do you want to accomplish?</label>
+            <textarea id="idea" class="form-control" rows="3" maxlength="2000" placeholder="Example: Build a secure product search and filter feature in Laravel 12 with Blade, Bootstrap 5 and MySQL."></textarea>
+            <div class="d-flex justify-content-between align-items-start gap-2">
+              <div id="detectChips" class="detect" aria-live="polite"></div>
+              <button id="exampleBtn" class="btn btn-sm btn-link p-0 text-nowrap" type="button">Try an example</button>
+            </div>
+
+            <div class="row g-2 mb-2">
+              <div class="col-sm-6"><label class="form-label" for="tool">Target AI tool</label><select id="tool" class="form-select"></select></div>
+              <div class="col-sm-6"><label class="form-label" for="category">Task category</label><select id="category" class="form-select"></select></div>
+              <div class="col-12" data-kinds="text"><label class="form-label" for="framework">Prompt framework</label>
+                <select id="framework" class="form-select">
+                  <option value="structured">Structured (recommended)</option>
+                  <option value="costar">CO-STAR (Context, Objective, Style, Tone, Audience, Response)</option>
+                  <option value="rtcf">RTCF (Role, Task, Context, Format)</option>
+                  <option value="risen">RISEN (Role, Instructions, Steps, End goal, Narrowing)</option>
+                  <option value="crispe">CRISPE (Role, Insight, Statement, Personality, Experiment)</option>
+                  <option value="xml">XML tags (Claude-friendly)</option>
+                  <option value="json">JSON spec (for pipelines)</option>
+                  <option value="minimal">Minimal one-paragraph</option>
+                </select>
+              </div>
+            </div>
+            <div id="kindHint" class="hint mb-2"></div>
+
+            <button class="btn btn-sm btn-outline-secondary w-100 mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#moreOpts" aria-expanded="true" aria-controls="moreOpts"><i class="bi bi-chevron-expand me-1"></i>Fine-tune options</button>
+
+            <div class="collapse show" id="moreOpts">
+              <div class="row g-2">
+                <div class="col-sm-6" data-kinds="text"><label class="form-label" for="role">Your role / experience</label>
+                  <select id="role" class="form-select"><option>General user</option><option>Beginner</option><option>Student</option><option>Developer</option><option>Senior developer</option><option>Business owner</option><option>Marketer</option><option>Content creator</option><option>Researcher</option><option>Product manager</option></select></div>
+                <div class="col-sm-6" data-kinds="text"><label class="form-label" for="format">Output format</label>
+                  <select id="format" class="form-select"><option>Step-by-step guide</option><option>Detailed explanation</option><option>Bullet points</option><option>Comparison table</option><option>Code with explanation</option><option>Checklist</option><option>Structured report</option><option>JSON (valid JSON only)</option><option>Creative copy</option></select></div>
+                <div class="col-sm-6"><label class="form-label" for="tone">Tone</label>
+                  <select id="tone" class="form-select"><option>Professional</option><option>Simple and beginner-friendly</option><option>Friendly</option><option>Technical and precise</option><option>Creative</option><option>Persuasive</option><option>Analytical and neutral</option><option>Epic</option><option>Calm</option><option>Playful</option></select></div>
+                <div class="col-sm-6" data-kinds="text"><label class="form-label" for="depth">Response depth</label>
+                  <select id="depth" class="form-select"><option>Concise</option><option>Balanced</option><option>Detailed</option><option>Comprehensive with examples</option></select></div>
+                <div class="col-sm-6" data-kinds="text"><label class="form-label" for="language">Response language</label>
+                  <select id="language" class="form-select"><option>English</option><option>Hindi</option><option>Hinglish</option><option>Marathi</option><option>Gujarati</option><option>Tamil</option><option>Bengali</option><option>Spanish</option><option>French</option><option>German</option><option>Arabic</option></select></div>
+                <div class="col-sm-6"><label class="form-label" for="audience">Audience / intended use</label><input id="audience" class="form-control" maxlength="300" placeholder="e.g. beginners, Indian shoppers, Instagram"></div>
+
+                <div class="col-12"><label class="form-label" for="context">Context / current situation</label><textarea id="context" class="form-control" rows="2" maxlength="3000" placeholder="Project, stack, background, what you tried, setting or scene..."></textarea></div>
+                <div class="col-12"><label class="form-label" for="constraints">Requirements and constraints</label><textarea id="constraints" class="form-control" rows="2" maxlength="3000" placeholder="Must use Laravel 12; no paid services; keep existing features; explain security..."></textarea></div>
+                <div class="col-12"><label class="form-label" for="examples">Example or reference (optional)</label><input id="examples" class="form-control" maxlength="1000" placeholder="Match this style, sample input/output, reference link"></div>
+                <div class="col-12 d-none" id="jsonWrap"><label class="form-label" for="jsonShape">JSON shape (optional)</label><input id="jsonShape" class="form-control" maxlength="1000" placeholder='e.g. {"summary": string, "steps": [string], "risks": [string]}'></div>
+
+                <div class="col-sm-6" data-kinds="image video audio"><label class="form-label" id="lblStyle" for="imgStyle">Visual style</label><select id="imgStyle" class="form-select"></select></div>
+                <div class="col-sm-6" data-kinds="image video audio"><label class="form-label" id="lblLight" for="lighting">Lighting</label><select id="lighting" class="form-select"></select></div>
+                <div class="col-sm-6" data-kinds="image video"><label class="form-label" for="aspect">Aspect ratio</label>
+                  <select id="aspect" class="form-select"><option>1:1</option><option>4:5</option><option>3:2</option><option selected>16:9</option><option>9:16</option><option>21:9</option></select></div>
+                <div class="col-sm-6" data-kinds="video"><label class="form-label" for="camera">Camera movement</label>
+                  <select id="camera" class="form-select"><option>Slow push-in</option><option>Static shot</option><option>Pull-back reveal</option><option>Pan left to right</option><option>Orbit around the subject</option><option>Handheld follow</option><option>Drone aerial</option><option>Tracking shot</option><option>Time-lapse</option></select></div>
+                <div class="col-sm-6" data-kinds="video"><label class="form-label" for="duration">Duration (seconds)</label><input id="duration" type="number" min="2" max="60" value="8" class="form-control"></div>
+                <div class="col-sm-6" data-kinds="audio"><label class="form-label" for="vocals">Vocals / voice</label>
+                  <select id="vocals" class="form-select"><option>Instrumental (no vocals)</option><option>Female vocal</option><option>Male vocal</option><option>Duet</option><option>Choir</option><option>Voice-over narration</option></select></div>
+                <div class="col-sm-6" data-kinds="audio"><label class="form-label" for="tempo">Tempo (BPM, optional)</label><input id="tempo" type="number" min="40" max="220" class="form-control" placeholder="e.g. 90"></div>
+                <div class="col-12" data-kinds="image video audio"><label class="form-label" for="negative">Avoid (negative prompt)</label><input id="negative" class="form-control" maxlength="300" placeholder="e.g. text, watermark, blurry, extra fingers"></div>
+              </div>
+
+              <div class="mt-3" data-kinds="text">
+                <div class="small-label mb-1">Smart add-ons</div>
+                <div class="row g-1">
+                  <div class="col-sm-6"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="tgQA" checked><label class="form-check-label small" for="tgQA">Quality checks and edge cases</label></div></div>
+                  <div class="col-sm-6"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="tgClarify"><label class="form-check-label small" for="tgClarify">Ask clarifying questions first</label></div></div>
+                  <div class="col-sm-6"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="tgReason"><label class="form-check-label small" for="tgReason">Careful reasoning</label></div></div>
+                  <div class="col-sm-6"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="tgCite"><label class="form-check-label small" for="tgCite">Require sources and citations</label></div></div>
+                  <div class="col-sm-6"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="tgSafe"><label class="form-check-label small" for="tgSafe">Safety and privacy guard</label></div></div>
+                  <div class="col-sm-6"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="tgSelf"><label class="form-check-label small" for="tgSelf">Self-review before answering</label></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-grid d-sm-flex gap-2 mt-4">
+              <button id="generateBtn" class="btn btn-primary btn-lg fw-semibold flex-fill" type="submit"><i class="bi bi-magic me-2"></i>Generate prompt</button>
+            </div>
+            <div class="hint mt-2">Live mode updates the prompt as you type (change it in <a href="#automation">Automation Lab</a>). Shortcut: Ctrl or Cmd + Enter.</div>
+          </form>
+        </div>
+      </div>
+
+      <div class="col-xl-7">
+        <div class="glass p-3 p-md-4">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+            <div><div class="eyebrow mb-1">Your result</div><h2 class="section-title mb-0">Generated prompt</h2></div>
+            <div class="d-flex gap-2 flex-wrap"><span class="pill" id="wordCount">0 words</span><span class="pill" id="tokenCount">~0 tokens</span></div>
+          </div>
+
+          <ul class="nav nav-pills gap-1 mb-3 flex-wrap" role="tablist">
+            <li class="nav-item" role="presentation"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-prompt" type="button" role="tab"><i class="bi bi-chat-square-text me-1"></i>Prompt</button></li>
+            <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-variants" type="button" role="tab"><i class="bi bi-layers me-1"></i>Variations</button></li>
+            <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-quality" type="button" role="tab"><i class="bi bi-speedometer2 me-1"></i>Quality</button></li>
+            <li class="nav-item" role="presentation"><button class="nav-link" id="aiTabBtn" data-bs-toggle="pill" data-bs-target="#tab-ai" type="button" role="tab"><i class="bi bi-robot me-1"></i>AI assist</button></li>
+          </ul>
+
+          <div class="tab-content">
+            <div class="tab-pane fade show active" id="tab-prompt" role="tabpanel">
+              <div id="dirtyBanner" class="alert alert-warning py-2 small d-none" role="status">
+                You edited the prompt by hand, so live updates are paused to protect your changes.
+                <button id="regenBtn" type="button" class="btn btn-sm btn-warning ms-2">Regenerate and replace my edits</button>
+              </div>
+              <label class="visually-hidden" for="output">Generated prompt</label>
+              <textarea id="output" class="form-control output" placeholder="Your prompt appears here as you type your idea..."></textarea>
+              <div id="toolHint" class="hint mt-2"></div>
+              <div class="d-flex flex-wrap gap-2 mt-3">
+                <button id="copyBtn" class="btn btn-primary" type="button"><i class="bi bi-clipboard me-1"></i>Copy</button>
+                <button id="saveBtn" class="btn btn-outline-secondary" type="button"><i class="bi bi-bookmark-plus me-1"></i>Save</button>
+                <div class="dropdown">
+                  <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-download me-1"></i>Download</button>
+                  <ul class="dropdown-menu">
+                    <li><button class="dropdown-item" id="dlTxt" type="button">Text (.txt)</button></li>
+                    <li><button class="dropdown-item" id="dlMd" type="button">Markdown (.md)</button></li>
+                    <li><button class="dropdown-item" id="dlJson" type="button">JSON (.json)</button></li>
+                  </ul>
+                </div>
+                <button id="shareBtn" class="btn btn-outline-secondary" type="button"><i class="bi bi-link-45deg me-1"></i>Share link</button>
+                <div class="dropdown">
+                  <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-box-arrow-up-right me-1"></i>Open in</button>
+                  <ul class="dropdown-menu">
+                    <li><button class="dropdown-item" data-open="chatgpt" type="button">ChatGPT</button></li>
+                    <li><button class="dropdown-item" data-open="claude" type="button">Claude</button></li>
+                    <li><button class="dropdown-item" data-open="perplexity" type="button">Perplexity</button></li>
+                    <li><button class="dropdown-item" data-open="gemini" type="button">Gemini (copies, then opens)</button></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="tab-variants" role="tabpanel">
+              <p class="hint">Alternative versions of the same prompt. Use the one that works best with your tool.</p>
+              <div id="variantList" class="d-grid gap-3"><p class="text-muted small mb-0">Variations appear after you describe your goal.</p></div>
+            </div>
+
+            <div class="tab-pane fade" id="tab-quality" role="tabpanel">
+              <div class="row g-3 align-items-center mb-2">
+                <div class="col-sm-4 text-center"><div class="score-num grad-text" id="scoreVal">0</div><div class="hint" id="scoreLabel">Add your idea to see a score</div></div>
+                <div class="col-sm-8"><div class="progress" role="progressbar" aria-label="Prompt completeness" aria-valuemin="0" aria-valuemax="100" id="scoreProgress" style="height:10px"><div class="progress-bar" id="scoreBar" style="width:0%;background:linear-gradient(90deg,var(--accent),var(--accent3))"></div></div>
+                  <p class="hint mt-2 mb-0">A rule-based completeness check of this prompt, not an evaluation of the AI's answer. Edit the prompt and the checks update.</p></div>
+              </div>
+              <div id="checks"></div>
+            </div>
+
+            <div class="tab-pane fade" id="tab-ai" role="tabpanel">
+              <p class="hint">Optional. Sends your prompt to the AI endpoint you configure in the <a href="#automation">Automation Lab</a> (a local Ollama model needs no key).</p>
+              <div class="d-flex flex-wrap gap-2 mb-2">
+                <button id="enhanceBtn" class="btn btn-primary" type="button"><i class="bi bi-stars me-1"></i>Enhance with AI</button>
+                <button id="runBtn" class="btn btn-outline-secondary" type="button"><i class="bi bi-play-fill me-1"></i>Test run this prompt</button>
+                <button id="stopBtn" class="btn btn-outline-danger d-none" type="button"><i class="bi bi-stop-fill me-1"></i>Stop</button>
+              </div>
+              <div id="aiStatus" class="hint mb-2" aria-live="polite"></div>
+              <label class="form-label" for="enhancedOut">AI-enhanced prompt</label>
+              <textarea id="enhancedOut" class="form-control output" style="min-height:160px" placeholder="The improved prompt appears here..."></textarea>
+              <div class="d-flex flex-wrap gap-2 mt-2 mb-3">
+                <button id="useEnhancedBtn" class="btn btn-sm btn-outline-secondary" type="button">Use as my prompt</button>
+                <button id="copyEnhancedBtn" class="btn btn-sm btn-outline-secondary" type="button">Copy</button>
+              </div>
+              <label class="form-label" for="runOut">Test run result</label>
+              <textarea id="runOut" class="form-control output" style="min-height:160px" readonly placeholder="The model's answer to your prompt appears here..."></textarea>
+              <div class="hint mt-1" id="runMeta"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= TEMPLATES ================= -->
+  <section id="templates" class="mb-5">
+    <div class="sec-head">
+      <div><div class="eyebrow mb-1">Trending and useful</div><h2 class="h3 fw-bold mb-0">Ready-made prompt templates</h2></div>
+      <div class="d-flex flex-wrap gap-2 align-items-center">
+        <div id="tplChips" class="d-flex flex-wrap gap-1"></div>
+        <label class="visually-hidden" for="tplSearch">Search templates</label>
+        <input id="tplSearch" class="form-control form-control-sm" style="width:12rem" type="search" placeholder="Search templates...">
+      </div>
+    </div>
+    <div id="tplGrid" class="row g-3"></div>
+  </section>
+
+  <!-- ================= FRAMEWORKS ================= -->
+  <section id="frameworks" class="mb-5">
+    <div class="sec-head">
+      <div><div class="eyebrow mb-1">Prompt frameworks</div><h2 class="h3 fw-bold mb-1">Pick a framework in one click</h2>
+      <p class="text-muted mb-0">Each card applies that structure to your prompt. Your idea and fields stay exactly as they are.</p></div>
+      <a class="hub-all" href="#learn">Compare them &rarr;</a>
+    </div>
+    <div id="fwGrid" class="row g-3"></div>
+  </section>
+
+  <!-- ================= AUTOMATION LAB ================= -->
+  <section id="automation" class="mb-5">
+    <div class="sec-head">
+      <div><div class="eyebrow mb-1">New section</div><h2 class="h3 fw-bold mb-1">Automation Lab</h2>
+      <p class="text-muted mb-0">Everything that makes prompt creation hands-free: auto-detect, live generation, AI enhancement, batch mode, webhooks (n8n, Zapier, Make) and API code.</p></div>
+    </div>
+
+    <div class="row g-4 mb-4">
+      <div class="col-lg-4">
+        <div class="glass p-3 p-md-4 h-100">
+          <h3 class="section-title"><i class="bi bi-toggles me-2"></i>Auto pipeline</h3>
+          <div class="d-grid gap-2">
+            <div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="autoDetect"><label class="form-check-label" for="autoDetect"><strong>Auto-detect</strong><span class="d-block hint">Reads your idea and sets category, tool style, format, tone, depth, language and audience. Never overrides fields you changed yourself.</span></label></div>
+            <div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="autoLive"><label class="form-check-label" for="autoLive"><strong>Live generate</strong><span class="d-block hint">Rebuilds the prompt as you type. Pauses if you edit the prompt by hand.</span></label></div>
+            <div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="autoEnhance"><label class="form-check-label" for="autoEnhance"><strong>Auto-enhance with AI</strong><span class="d-block hint">After you press Generate, send the prompt to your AI endpoint for a rewrite. Uses your API quota.</span></label></div>
+            <div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="autoSave"><label class="form-check-label" for="autoSave"><strong>Auto-save to library</strong><span class="d-block hint">Saves every prompt you generate with the Generate button.</span></label></div>
+            <div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="autoWebhook"><label class="form-check-label" for="autoWebhook"><strong>Auto-send to webhook</strong><span class="d-block hint">Posts each generated prompt to your webhook URL (right).</span></label></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="glass p-3 p-md-4 h-100">
+          <h3 class="section-title"><i class="bi bi-cpu me-2"></i>AI engine (optional)</h3>
+          <p class="hint">Any OpenAI-compatible endpoint: Ollama, LM Studio, OpenAI, OpenRouter, Groq, Gemini and others.</p>
+          <label class="form-label" for="llmPreset">Preset</label>
+          <select id="llmPreset" class="form-select mb-2">
+            <option value="">Choose a preset...</option>
+            <option value="ollama">Ollama (local, no key)</option>
+            <option value="lmstudio">LM Studio (local, no key)</option>
+            <option value="openai">OpenAI</option>
+            <option value="openrouter">OpenRouter</option>
+            <option value="groq">Groq</option>
+            <option value="gemini">Google Gemini (OpenAI-compatible)</option>
+          </select>
+          <label class="form-label" for="llmBase">Base URL</label>
+          <input id="llmBase" class="form-control mb-2" placeholder="http://localhost:11434/v1" autocomplete="off" spellcheck="false">
+          <div class="row g-2 mb-2">
+            <div class="col-6"><label class="form-label" for="llmModel">Model</label><input id="llmModel" class="form-control" placeholder="llama3.2" autocomplete="off" spellcheck="false"></div>
+            <div class="col-6"><label class="form-label" for="llmKey">API key</label><input id="llmKey" class="form-control" type="password" placeholder="optional" autocomplete="off"></div>
+          </div>
+          <div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="llmRemember"><label class="form-check-label small" for="llmRemember">Remember the key for this browser tab only</label></div>
+          <div class="d-flex gap-2 align-items-center"><button id="llmTest" class="btn btn-sm btn-outline-secondary" type="button">Test connection</button><span id="llmStatus" class="hint" aria-live="polite"></span></div>
+          <div class="alert alert-warning small mt-3 mb-0 py-2"><i class="bi bi-exclamation-triangle me-1"></i>A key typed into any web page can be read by browser extensions. For production, call the model from your own backend (see the code on the right) and keep keys on the server. Model names change, so check your provider's list.</div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="glass p-3 p-md-4 h-100">
+          <h3 class="section-title"><i class="bi bi-send me-2"></i>Webhook push</h3>
+          <p class="hint">Send each prompt to n8n, Zapier, Make or your own API as JSON, so it can drive your workflows (post to Slack, save to Notion, run an agent).</p>
+          <label class="form-label" for="hookUrl">Webhook URL</label>
+          <input id="hookUrl" class="form-control mb-2" type="url" placeholder="https://your-n8n.example.com/webhook/prompts" autocomplete="off" spellcheck="false">
+          <div class="d-flex gap-2 align-items-center mb-3"><button id="hookSend" class="btn btn-sm btn-primary" type="button">Send current prompt</button><span id="hookStatus" class="hint" aria-live="polite"></span></div>
+          <div class="small-label">Payload</div>
+          <pre class="snip mb-2" style="max-height:140px">{
+  "prompt": "...",
+  "tool": "ChatGPT",
+  "category": "coding",
+  "framework": "structured",
+  "fields": { ... },
+  "createdAt": "ISO date"
+}</pre>
+          <p class="hint mb-0">The browser sends a normal JSON POST, so the receiver must allow CORS (in n8n set <em>Allowed Origins</em> on the Webhook node). Otherwise trigger the webhook from your backend. Use HTTPS and a secret path.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <div class="glass p-3 p-md-4 h-100">
+          <h3 class="section-title"><i class="bi bi-list-task me-2"></i>Batch generator</h3>
+          <p class="hint">Paste up to 20 ideas, one per line. Each gets its own detected category, using your current tool, framework and tone settings.</p>
+          <label class="visually-hidden" for="batchInput">Ideas, one per line</label>
+          <textarea id="batchInput" class="form-control mb-2" rows="5" placeholder="Write a product description for a stainless steel water bottle&#10;Create a Midjourney prompt for a cozy reading nook&#10;Explain REST APIs to a beginner&#10;Design an n8n workflow that scores incoming leads"></textarea>
+          <div class="d-flex flex-wrap gap-2 align-items-center mb-2">
+            <button id="batchRun" class="btn btn-primary btn-sm" type="button"><i class="bi bi-play-fill me-1"></i>Generate all</button>
+            <button id="batchStop" class="btn btn-outline-danger btn-sm d-none" type="button">Stop</button>
+            <div class="form-check ms-1 mb-0"><input class="form-check-input" type="checkbox" id="batchEnhance"><label class="form-check-label small" for="batchEnhance">Also enhance each with AI</label></div>
+            <span id="batchStatus" class="hint ms-auto" aria-live="polite"></span>
+          </div>
+          <div id="batchList" class="d-grid gap-2 mb-2"></div>
+          <div class="d-flex flex-wrap gap-2">
+            <button id="batchCopyAll" class="btn btn-outline-secondary btn-sm" type="button">Copy all</button>
+            <button id="batchJson" class="btn btn-outline-secondary btn-sm" type="button">Download JSON</button>
+            <button id="batchMd" class="btn btn-outline-secondary btn-sm" type="button">Download Markdown</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="glass p-3 p-md-4 h-100">
+          <h3 class="section-title"><i class="bi bi-code-slash me-2"></i>Automate it in your own app</h3>
+          <p class="hint">Server-side code that turns an idea into a prompt using the same system prompt as the AI engine.</p>
+          <ul class="nav nav-pills gap-1 mb-2 flex-wrap" role="tablist">
+            <li class="nav-item" role="presentation"><button class="nav-link active py-1" data-bs-toggle="pill" data-bs-target="#snip-curl" type="button" role="tab">cURL</button></li>
+            <li class="nav-item" role="presentation"><button class="nav-link py-1" data-bs-toggle="pill" data-bs-target="#snip-py" type="button" role="tab">Python</button></li>
+            <li class="nav-item" role="presentation"><button class="nav-link py-1" data-bs-toggle="pill" data-bs-target="#snip-php" type="button" role="tab">Laravel</button></li>
+            <li class="nav-item" role="presentation"><button class="nav-link py-1" data-bs-toggle="pill" data-bs-target="#snip-meta" type="button" role="tab">System prompt</button></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane fade show active" id="snip-curl" role="tabpanel"><pre class="snip" id="snipCurl"></pre><button class="btn btn-sm btn-outline-secondary mt-2" data-copy-target="snipCurl" type="button">Copy</button></div>
+            <div class="tab-pane fade" id="snip-py" role="tabpanel"><pre class="snip" id="snipPy"></pre><button class="btn btn-sm btn-outline-secondary mt-2" data-copy-target="snipPy" type="button">Copy</button></div>
+            <div class="tab-pane fade" id="snip-php" role="tabpanel"><pre class="snip" id="snipPhp"></pre><button class="btn btn-sm btn-outline-secondary mt-2" data-copy-target="snipPhp" type="button">Copy</button></div>
+            <div class="tab-pane fade" id="snip-meta" role="tabpanel"><pre class="snip" id="snipMeta" style="white-space:pre-wrap"></pre><button class="btn btn-sm btn-outline-secondary mt-2" data-copy-target="snipMeta" type="button">Copy</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LIBRARY ================= -->
+  <section id="library" class="mb-5">
+    <div class="sec-head">
+      <div><div class="eyebrow mb-1">Saved in this browser</div><h2 class="h3 fw-bold mb-0">My prompt library <span class="badge text-bg-secondary align-middle fs-6" id="libCount">0</span></h2></div>
+      <div class="d-flex flex-wrap gap-2 align-items-center">
+        <label class="visually-hidden" for="libSearch">Search library</label>
+        <input id="libSearch" class="form-control form-control-sm" style="width:12rem" type="search" placeholder="Search saved...">
+        <button id="libExport" class="btn btn-sm btn-outline-secondary" type="button"><i class="bi bi-box-arrow-down me-1"></i>Export</button>
+        <label class="btn btn-sm btn-outline-secondary mb-0" for="libImport"><i class="bi bi-box-arrow-in-up me-1"></i>Import</label>
+        <input id="libImport" type="file" accept="application/json,.json" class="d-none">
+        <button id="libClear" class="btn btn-sm btn-outline-danger" type="button">Clear all</button>
+      </div>
+    </div>
+    <div id="libList" class="row g-3"></div>
+  </section>
+
+  <!-- ================= LEARN ================= -->
+  <section id="learn" class="mb-5">
+    <div class="sec-head"><div><div class="eyebrow mb-1">Understand what you generate</div><h2 class="h3 fw-bold mb-0">How it works and which framework to use</h2></div></div>
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <div class="glass p-3 p-md-4 h-100">
+          <h3 class="section-title mb-3">The 4 steps</h3>
+          <div class="d-flex gap-3 mb-3"><span class="step-n">1</span><div><strong>Describe the outcome</strong><div class="hint">One sentence about what you want, not just a topic.</div></div></div>
+          <div class="d-flex gap-3 mb-3"><span class="step-n">2</span><div><strong>Auto-detect</strong><div class="hint">Keyword rules choose category, tool style, format and tone. Everything stays editable.</div></div></div>
+          <div class="d-flex gap-3 mb-3"><span class="step-n">3</span><div><strong>Compose</strong><div class="hint">A framework turns your fields into a structured prompt, or a compact one for image, video and music tools.</div></div></div>
+          <div class="d-flex gap-3"><span class="step-n">4</span><div><strong>Check and use</strong><div class="hint">See the quality checks, compare variations, optionally enhance with AI, then copy, save or send it onward.</div></div></div>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="glass p-3 p-md-4 h-100">
+          <h3 class="section-title mb-3">Prompt frameworks at a glance</h3>
+          <div class="table-responsive">
+            <table class="table table-sm align-middle small mb-0">
+              <thead><tr><th>Framework</th><th>Parts</th><th>Best for</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Structured</strong></td><td>Role, Task, Context, Constraints, Output, Rules</td><td>Most tasks; the safest default</td></tr>
+                <tr><td><strong>CO-STAR</strong></td><td>Context, Objective, Style, Tone, Audience, Response</td><td>Writing and communication</td></tr>
+                <tr><td><strong>RTCF</strong></td><td>Role, Task, Context, Format</td><td>Quick, compact prompts</td></tr>
+                <tr><td><strong>RISEN</strong></td><td>Role, Instructions, Steps, End goal, Narrowing</td><td>Multi-step and process tasks</td></tr>
+                <tr><td><strong>CRISPE</strong></td><td>Capacity and Role, Insight, Statement, Personality, Experiment</td><td>Brainstorming; asks for alternatives</td></tr>
+                <tr><td><strong>XML tags</strong></td><td>&lt;role&gt;, &lt;task&gt;, &lt;context&gt;, &lt;constraints&gt;...</td><td>Claude and long, data-heavy prompts</td></tr>
+                <tr><td><strong>JSON spec</strong></td><td>Machine-readable fields</td><td>Pipelines, agents and APIs</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="hint mt-3">Tips: be specific about the outcome, give context the AI cannot guess, set constraints and format, show an example when style matters, and always verify facts, code and numbers. Never paste passwords, keys or private data into a prompt.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-head" style="margin-top:2.5rem">
+      <div><div class="eyebrow mb-1">Go deeper</div><h2 class="h3 fw-bold mb-1">Roadmap and guides</h2>
+      <p class="text-muted mb-0">Continue in the AI Complete Guide to learn why good prompts work and how to keep them safe.</p></div>
+      <a class="hub-all" href="ai-complete-guide.html">Open the guide &rarr;</a>
+    </div>
+    <div class="row g-3">
+      <div class="col-xl-4">
+        <div class="road-card">
+          <div class="road-top"><span class="road-icon"><i class="bi bi-signpost-split"></i></span>Roadmap · 6 stages</div>
+          <div class="road-title">Prompt Engineer</div>
+          <p class="road-desc">From the anatomy of a prompt to context engineering, evals and security.</p>
+          <div class="stage-list">
+            <a class="stage-pill" href="ai-complete-guide.html#sec-prompting"><b>1</b>Anatomy of a prompt</a>
+            <a class="stage-pill" href="ai-complete-guide.html#sec-prompt-techniques"><b>2</b>Few-shot and chain-of-thought</a>
+            <a class="stage-pill" href="ai-complete-guide.html#sec-prompt-system"><b>3</b>System prompts and templates</a>
+            <a class="stage-pill" href="ai-complete-guide.html#sec-prompt-library"><b>4</b>Prompt library</a>
+            <a class="stage-pill" href="ai-complete-guide.html#sec-memory-context"><b>5</b>Context engineering</a>
+            <a class="stage-pill" href="ai-complete-guide.html#sec-eval-safety"><b>6</b>Evals and injection security</a>
+          </div>
+          <div class="road-foot"><div class="tech"><span>ChatGPT</span><span>Claude</span><span>promptfoo</span></div><a class="open" href="ai-complete-guide.html#sec-prompting">Open roadmap &rarr;</a></div>
+        </div>
+      </div>
+      <div class="col-xl-8">
+        <div class="row g-3 h-100">
+          <div class="col-md-6"><a class="iv-card" href="ai-complete-guide.html#sec-prompting"><span class="ic"><i class="bi bi-pencil-square"></i></span><div class="t">Prompt Engineering</div><p>Role, task, context, constraints and output format, with weak vs strong prompt examples.</p><div class="meta">AI Complete Guide · 4 lessons</div><div class="go">Start learning &rarr;</div></a></div>
+          <div class="col-md-6"><a class="iv-card" href="ai-complete-guide.html#sec-prompt-library"><span class="ic"><i class="bi bi-journal-code"></i></span><div class="t">Ready-to-use Prompt Library</div><p>Copyable prompts for coding, writing, business, study and image tools, plus common mistakes to avoid.</p><div class="meta">AI Complete Guide · prompts for 5 areas</div><div class="go">Open the library &rarr;</div></a></div>
+          <div class="col-md-6"><a class="iv-card" href="ai-complete-guide.html#sec-memory-context"><span class="ic"><i class="bi bi-layers"></i></span><div class="t">Context Engineering</div><p>Budget instructions, memory, documents and tools so the model sees what matters at each step.</p><div class="meta">AI Complete Guide · memory and context budgets</div><div class="go">Start learning &rarr;</div></a></div>
+          <div class="col-md-6"><a class="iv-card" href="ai-complete-guide.html#sec-eval-safety"><span class="ic"><i class="bi bi-shield-lock"></i></span><div class="t">Evals, Guardrails and Prompt Injection</div><p>Test your prompts, add guardrails, and defend against malicious instructions hidden in content.</p><div class="meta">AI Complete Guide · security and quality</div><div class="go">Start learning &rarr;</div></a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="container-xxl pb-5 text-center hint">
+  AI Prompt Generator · Prompts are built in your browser. Nothing is sent anywhere unless you use the AI engine or webhook. · Part of the <a href="ai-complete-guide.html">AI Complete Guide</a>
+</footer>
+
+<a class="hub-float" href="ai-complete-guide.html" aria-label="Open the AI Complete Guide">
+  <span class="orb"></span>
+  <span><span class="a d-block">AI Complete Guide</span><span class="b d-block">Learn the craft behind prompts</span></span>
+</a>
+
+<div id="toastBox" class="toast-box" role="status" aria-live="polite"></div>
+
+<noscript><div class="container py-3"><div class="alert alert-warning">This tool needs JavaScript to build prompts.</div></div></noscript>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(() => {
+'use strict';
+const $ = (id) => document.getElementById(id);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } }
+};
+const SS = { get(k) { try { return sessionStorage.getItem(k) || ''; } catch { return ''; } }, set(k, v) { try { v ? sessionStorage.setItem(k, v) : sessionStorage.removeItem(k); } catch {} } };
+
+/* ============ DATA ============ */
+const CATEGORIES = {
+  general:  { label: 'General task', kind: 'text', persona: 'a knowledgeable, practical assistant', role: 'Act as a knowledgeable, practical assistant. Clarify the goal, give accurate and actionable guidance, state your assumptions, and avoid unsupported claims.', deliver: 'Deliverables: direct answer; step-by-step plan or explanation; examples; next steps.' },
+  coding:   { label: 'Coding and debugging', kind: 'text', persona: 'a senior software engineer', role: 'Act as a senior software engineer. Work from the details I provide and state your assumptions. Prefer secure, maintainable, idiomatic code. Cover files to create or change, dependencies, validation, error handling, tests and setup steps.', deliver: 'Deliverables: short plan; exact code with file paths; validation and security notes; tests; setup or migration steps.' },
+  appbuilder:{ label: 'App building (vibe coding)', kind: 'text', persona: 'a product-minded full-stack engineer', role: 'Act as a product-minded full-stack engineer and app builder. Turn the idea into a buildable spec: users, screens, data model, user flows, permissions, and a staged build plan. Build in small, testable steps and keep security (authentication, authorisation, input validation, secrets) in mind.', deliver: 'Deliverables: app summary; user stories; screens and flows; data model; tech stack; step-by-step build prompts; security and launch checklist.' },
+  writing:  { label: 'Content writing', kind: 'text', persona: 'an experienced editor and subject-matter writer', role: 'Act as an experienced editor and subject-matter writer. Match the audience and purpose, use a clear structure and specific examples, and avoid filler, cliches, repetition and unsupported claims.', deliver: 'Deliverables: title options; structured draft; examples; final editing checklist.' },
+  email:    { label: 'Email and communication', kind: 'text', persona: 'a clear, courteous business communicator', role: 'Act as a clear, courteous business communicator. Lead with the purpose, keep it concise, make the call to action explicit, and match the relationship and tone.', deliver: 'Deliverables: subject lines (3 options); the message; a shorter version; a follow-up message.' },
+  business: { label: 'Business and strategy', kind: 'text', persona: 'a practical business strategist', role: 'Act as a practical business strategist. Clarify the customer problem, value proposition, costs, risks, assumptions and success metrics. Separate verified facts from estimates and make recommendations actionable.', deliver: 'Deliverables: executive summary; assumptions; options and trade-offs; action plan; risks and metrics.' },
+  marketing:{ label: 'Marketing and social media', kind: 'text', persona: 'a performance-minded marketing strategist', role: 'Act as a performance-minded marketing strategist. Align message, channel, brand voice, funnel stage and desired action. Offer testable variants and metrics. Avoid deceptive claims, fake reviews and guarantees.', deliver: 'Deliverables: audience insight; core message; content variants; call to action; testing plan and KPIs.' },
+  seo:      { label: 'SEO', kind: 'text', persona: 'an ethical technical and content SEO specialist', role: 'Act as an ethical technical and content SEO specialist. Consider search intent, topical relevance, helpful original content, internal linking, metadata, structured data, accessibility and performance. Do not promise rankings or keyword-stuff.', deliver: 'Deliverables: search intent; title and meta description; outline; FAQs; internal-link ideas; measurement plan.' },
+  study:    { label: 'Learning and study', kind: 'text', persona: 'a patient tutor', role: 'Act as a patient tutor. Check prerequisites, explain progressively with concrete examples, check understanding, and give practice questions with answers or hints. Correct misconceptions gently.', deliver: 'Deliverables: learning goals; step-by-step explanation; worked example; practice questions; recap.' },
+  research: { label: 'Research and analysis', kind: 'text', persona: 'a careful research analyst', role: 'Act as a careful research analyst. Define the question and scope, compare credible evidence, note uncertainty and conflicting findings, and separate facts, interpretation and recommendations. Never fabricate sources or data.', deliver: 'Deliverables: scope and method; evidence-backed findings; sources; limitations; recommendations.' },
+  data:     { label: 'Data analysis', kind: 'text', persona: 'a rigorous data analyst', role: 'Act as a rigorous data analyst. Clarify the decision to support, inspect data quality, define metrics, document assumptions, choose suitable methods and explain results with uncertainty. Do not invent data or imply causation from correlation.', deliver: 'Deliverables: data checks; analysis plan; findings; tables or charts; caveats; next actions.' },
+  agent:    { label: 'AI agents and automation', kind: 'text', persona: 'an AI automation architect', role: 'Act as an AI automation architect. Define the goal, trigger, inputs, tools, permissions, state, decision rules, error recovery, human-approval points, logging, evaluation and stop conditions. Use least privilege and never assume tool access that was not provided.', deliver: 'Deliverables: text workflow diagram; tools and permissions; decision logic; failure handling; human review points; test cases.' },
+  rag:      { label: 'LLM, RAG and knowledge bases', kind: 'text', persona: 'an LLM and retrieval-augmented generation engineer', role: 'Act as an LLM and RAG engineer. Cover ingestion, chunking, embeddings, retrieval, reranking, grounding, citations, access control, evaluation, latency and cost. Address privacy, prompt injection, stale data and refusing when evidence is insufficient.', deliver: 'Deliverables: architecture; retrieval pipeline; chunking and indexing plan; evaluation plan; security and monitoring checklist.' },
+  image:    { label: 'Image generation', kind: 'image', persona: 'a visual prompt designer', role: '', deliver: '' },
+  video:    { label: 'Video creation', kind: 'video', persona: 'a video creative director', role: '', deliver: '' },
+  music:    { label: 'Music and voice', kind: 'audio', persona: 'a music producer', role: '', deliver: '' }
+};
+const CAT_GROUP = { general: 'learn', coding: 'code', appbuilder: 'code', agent: 'ai', rag: 'ai', writing: 'content', email: 'content', seo: 'content', marketing: 'content', business: 'business', data: 'business', study: 'learn', research: 'learn', image: 'creative', video: 'creative', music: 'creative' };
+const GROUPS = [['all', 'All'], ['code', 'Code and apps'], ['ai', 'Agents and RAG'], ['content', 'Content and SEO'], ['business', 'Business and data'], ['learn', 'Learning and research'], ['creative', 'Image, video, music']];
+
+const TOOLS = [
+  ['Chat assistants', [['ChatGPT', 'chat'], ['Claude', 'chat'], ['Gemini', 'chat'], ['Perplexity', 'chat'], ['Microsoft Copilot', 'chat'], ['DeepSeek', 'chat'], ['Grok', 'chat'], ['Local model (Ollama / LM Studio)', 'chat']]],
+  ['Coding tools', [['Cursor', 'code'], ['GitHub Copilot', 'code'], ['Claude Code', 'code'], ['OpenAI Codex', 'code'], ['Windsurf', 'code']]],
+  ['App builders', [['Lovable', 'app'], ['Bolt.new', 'app'], ['v0', 'app'], ['Replit Agent', 'app']]],
+  ['Image generators', [['Midjourney', 'mj'], ['GPT Image / DALL\u00B7E', 'image'], ['Adobe Firefly', 'image'], ['Ideogram', 'image'], ['Stable Diffusion / FLUX', 'sd'], ['Leonardo.Ai', 'image']]],
+  ['Video generators', [['Runway', 'video'], ['Sora', 'video'], ['Veo', 'video'], ['Pika', 'video'], ['Kling', 'video'], ['Luma Dream Machine', 'video']]],
+  ['Audio and music', [['Suno', 'music'], ['Udio', 'music'], ['ElevenLabs', 'voice']]]
+];
+const toolKind = (n) => { for (const [, items] of TOOLS) for (const [name, k] of items) if (name === n) return k; return 'chat'; };
+const toolMedia = (n) => ({ mj: 'image', image: 'image', sd: 'image', video: 'video', music: 'audio', voice: 'audio' })[toolKind(n)] || 'text';
+const DEFAULT_TOOL = { text: 'ChatGPT', image: 'Midjourney', video: 'Runway', audio: 'Suno' };
+const DEFAULT_CAT = { image: 'image', video: 'video', audio: 'music' };
+const CAT_FOR_TOOLKIND = { chat: 'writing', code: 'coding', app: 'appbuilder' };
+
+const TOOL_NOTES = {
+  code: 'Work from the repository context and its conventions. Propose a small, reviewable plan, keep changes focused, preserve unrelated behaviour, and report files changed and tests run.',
+  app: 'Describe screens, data and user flows first, then build in small steps. List assumptions, keep secrets on the server, enforce per-user access rules, and say what to test after each step.',
+  Perplexity: 'Search for current information. Cite credible sources with dates, and separate sourced facts from analysis.',
+  Claude: 'Long or data-heavy inputs are welcome; keep instructions clearly separated from the material to analyse.'
+};
+const TOOL_HINTS = {
+  mj: 'Midjourney: parameters such as --ar and --no go after the text. Check the current version for extra parameters (for example --stylize).',
+  sd: 'Stable Diffusion / FLUX: tag-style prompts work well. Put exclusions in the negative prompt field of your UI.',
+  image: 'This tool understands natural sentences. Keep to one subject and one style, then refine step by step.',
+  video: 'Video tools: describe one shot at a time. Short clips with one clear action and one camera move work best.',
+  music: 'Suno and Udio: genre, mood and structure tags work best. Check the tool\'s licence for commercial use.',
+  voice: 'ElevenLabs: use the voice and tone direction in the settings, and only clone voices you have consent to use.'
+};
+
+const IMG_STYLES = ['Photorealistic', 'Cinematic photography', 'Studio product photography', '3D render', 'Flat vector illustration', 'Watercolor', 'Anime', 'Minimalist', 'Isometric', 'Cyberpunk', 'Oil painting', 'Pencil sketch'];
+const VID_STYLES = ['Cinematic', 'Documentary', 'Commercial product ad', 'Animated 3D', 'Anime', 'Stop-motion', 'Vlog style', 'Slow motion'];
+const MUS_STYLES = ['Lo-fi hip hop', 'Cinematic orchestral', 'Pop', 'Indie acoustic', 'EDM', 'Bollywood-inspired', 'Rock', 'Jazz', 'Ambient', 'Hip hop', 'Classical'];
+const LIGHTS = ['Soft natural', 'Golden hour', 'Studio softbox', 'Dramatic low-key', 'Neon', 'Overcast'];
+const MOODS = ['Uplifting', 'Calm', 'Energetic', 'Melancholic', 'Epic', 'Playful', 'Romantic', 'Dark'];
+
+const META_GENERATE = 'You are an expert prompt engineer. Convert the user\'s rough idea into a complete, ready-to-use prompt for the target AI tool. Return ONLY the prompt text. Include a role, the task, relevant context, constraints, the desired output format and quality checks. Do not answer the task itself. Do not invent facts; use {placeholders} for missing details.';
+const META_ENHANCE = 'You are an expert prompt engineer. Improve the DRAFT PROMPT: keep the user\'s intent and every constraint, remove ambiguity and contradictions, tighten the wording, keep any {placeholders}, and do not add new facts or requirements. Keep the same language. Return ONLY the improved prompt text, with no explanation and no code fences.';
+
+const PRESETS = {
+  ollama: ['http://localhost:11434/v1', 'llama3.2'],
+  lmstudio: ['http://localhost:1234/v1', 'local-model'],
+  openai: ['https://api.openai.com/v1', 'gpt-4o-mini'],
+  openrouter: ['https://openrouter.ai/api/v1', 'openai/gpt-4o-mini'],
+  groq: ['https://api.groq.com/openai/v1', 'llama-3.3-70b-versatile'],
+  gemini: ['https://generativelanguage.googleapis.com/v1beta/openai/', 'gemini-2.0-flash']
+};
+
+/* ============ TEMPLATES ============ */
+const TEMPLATES = [
+  { t: 'Laravel CRUD API', i: 'bi-braces', cat: 'coding', tool: 'Cursor', idea: 'Build a secure Product CRUD REST API in Laravel 12 with migration, model, form requests, API resources, policy, pagination, search and Pest tests.', context: 'Laravel 12, PHP 8.3, MySQL, Sanctum authentication.', constraints: 'Thin controllers; no raw SQL; eager load to avoid N+1; correct HTTP status codes; follow Laravel conventions.', format: 'Code with explanation', depth: 'Detailed', role: 'Developer' },
+  { t: 'Vibe-code a web app', i: 'bi-rocket-takeoff', cat: 'appbuilder', tool: 'Lovable', idea: 'Build a habit tracker web app with email sign-up, daily check-ins, streaks and a weekly progress chart.', context: 'Mobile-first. React, Tailwind and Supabase.', constraints: 'Row-level security so each user sees only their data; clean minimal UI; accessible; no paid services.', audience: 'Busy professionals', format: 'Step-by-step guide', role: 'Beginner' },
+  { t: 'Debug an error', i: 'bi-bug', cat: 'coding', tool: 'ChatGPT', idea: 'Find the root cause of this error, give a minimal fix, and write a test that would have caught it.', context: 'Stack and versions: {PHP/Laravel/Node versions}\nError message: {paste error}\nCode: {paste relevant code}', constraints: 'Explain the cause in plain words; do not rewrite unrelated code.', format: 'Step-by-step guide', depth: 'Balanced', role: 'Developer' },
+  { t: 'Code review', i: 'bi-search', cat: 'coding', tool: 'GitHub Copilot', idea: 'Review this diff for bugs, security issues, performance problems and readability, and return a table of findings.', context: '{paste git diff}', constraints: 'Report only real issues; mark uncertain ones as "needs verification"; suggest a fix for each.', format: 'Comparison table', depth: 'Detailed', role: 'Senior developer' },
+  { t: 'Unit tests', i: 'bi-check2-square', cat: 'coding', tool: 'Claude Code', idea: 'Write Pest unit tests for this class covering normal cases, edge cases and invalid input.', context: '{paste class}', constraints: 'Use factories; fake external HTTP calls; keep tests independent; do not modify the class.', format: 'Code with explanation', depth: 'Balanced', role: 'Developer' },
+  { t: 'Text-to-SQL analyst', i: 'bi-database', cat: 'data', tool: 'ChatGPT', idea: 'Answer a business question with one read-only SQL query and explain the result in three sentences.', context: 'Schema: orders(id, customer_id, total, status, created_at); customers(id, name, city). Question: {your question}', constraints: 'SELECT only; MySQL syntax; add LIMIT; do not invent numbers.', format: 'Code with explanation', depth: 'Concise', role: 'Business owner' },
+  { t: 'RAG chatbot design', i: 'bi-chat-left-text', cat: 'rag', tool: 'Claude', idea: 'Design a RAG chatbot that answers from company PDFs with citations, permission-aware retrieval and an evaluation plan.', context: 'About 2,000 PDFs, 500 users, Laravel backend, PostgreSQL with pgvector.', constraints: 'Refuse when evidence is insufficient; defend against prompt injection; keep cost low.', format: 'Structured report', depth: 'Comprehensive with examples', role: 'Senior developer' },
+  { t: 'AI support agent spec', i: 'bi-headset', cat: 'agent', tool: 'ChatGPT', idea: 'Design an AI agent that triages support emails, drafts replies from the knowledge base, and asks a human to approve before sending.', context: 'Tools available: knowledge-base search, order lookup, email draft.', constraints: 'Least-privilege tools; never send without approval; log every action; stop after 6 steps.', format: 'Structured report', depth: 'Detailed', role: 'Product manager' },
+  { t: 'MCP server builder', i: 'bi-diagram-2', cat: 'agent', tool: 'Claude Code', idea: 'Create a Python MCP server that exposes tools to add and search notes, a resource listing all notes, and one reusable prompt.', context: 'Python 3.12, official MCP Python SDK, stdio transport, notes saved in a JSON file.', constraints: 'Type hints and docstrings on every tool; return clear errors; include client config for VS Code and a test using the MCP Inspector.', format: 'Code with explanation', depth: 'Detailed', role: 'Developer' },
+  { t: 'n8n lead workflow', i: 'bi-lightning-charge', cat: 'agent', tool: 'ChatGPT', idea: 'Design an n8n workflow that scores incoming leads with an LLM, creates a CRM record, alerts Slack for hot leads and drafts a reply for approval.', context: 'Trigger: website form webhook. Apps: HubSpot, Slack, Gmail.', constraints: 'Validate JSON from the LLM; add an error workflow; make steps idempotent.', format: 'Step-by-step guide', depth: 'Detailed', role: 'Marketer' },
+  { t: 'SEO content brief', i: 'bi-graph-up-arrow', cat: 'seo', tool: 'ChatGPT', idea: 'Create an SEO content brief for the keyword "AI chatbot for small business" with outline, FAQs, meta tags and internal-link ideas.', context: 'Audience is non-technical small-business owners in India.', constraints: 'Do not invent statistics; mark claims that need fact-checking; add original value ideas.', audience: 'Small-business owners', format: 'Structured report', depth: 'Detailed', role: 'Marketer' },
+  { t: 'Blog post writer', i: 'bi-pencil', cat: 'writing', tool: 'Claude', idea: 'Write a 900-word blog post explaining AI agents to beginners with one real-world example and a short FAQ.', constraints: 'Simple English; short paragraphs; no hype; no made-up statistics.', audience: 'Beginners', tone: 'Friendly', format: 'Detailed explanation', depth: 'Detailed', role: 'Content creator' },
+  { t: 'One video, five formats', i: 'bi-camera-reels', cat: 'marketing', tool: 'ChatGPT', idea: 'From my video transcript, create 3 title ideas, 4 short-video hooks with timestamps, a blog post, a newsletter intro and 5 social posts.', context: 'Transcript: {paste transcript with timestamps}', constraints: 'Keep my phrases and examples; add no facts that are not in the transcript.', audience: 'Students', tone: 'Friendly', format: 'Structured report', depth: 'Detailed', role: 'Content creator' },
+  { t: 'Cold outreach email', i: 'bi-envelope', cat: 'email', tool: 'ChatGPT', idea: 'Write a short, personalised cold email offering a free website audit to a local business owner.', context: 'Sender: freelance web developer. Recipient: owner of {business type}.', constraints: 'Under 110 words; one clear call to action; no false claims; polite, not pushy.', audience: 'Local business owners', tone: 'Friendly', format: 'Creative copy', depth: 'Concise', role: 'Business owner' },
+  { t: 'Study plan', i: 'bi-mortarboard', cat: 'study', tool: 'ChatGPT', idea: 'Create a 6-week plan to learn Python for data analysis from scratch with weekly goals, practice tasks and free resources.', context: 'I can study 8 hours per week and have no programming background.', constraints: 'End each week with a mini project; include a revision week.', audience: 'Beginners', tone: 'Simple and beginner-friendly', format: 'Checklist', depth: 'Balanced', role: 'Student' },
+  { t: 'Competitor research', i: 'bi-binoculars', cat: 'research', tool: 'Perplexity', idea: 'Compare the top 5 AI note-taking apps by pricing, key features, privacy policy and ideal user, with sources.', constraints: 'Use only current, credible sources with dates; separate facts from opinion; say when information is unavailable.', format: 'Comparison table', depth: 'Detailed', role: 'Product manager' },
+  { t: 'Go-to-market plan', i: 'bi-bullseye', cat: 'business', tool: 'Claude', idea: 'Create a 90-day go-to-market plan for launching an AI-powered invoice scanner for small accountants.', context: 'Budget Rs 3 lakh, team of 2, product is ready for beta.', constraints: 'List assumptions and risks; give weekly milestones and KPIs.', audience: 'Founders', format: 'Structured report', depth: 'Comprehensive with examples', role: 'Business owner' },
+  { t: 'Bias-safe resume screening', i: 'bi-people', cat: 'business', tool: 'ChatGPT', idea: 'Extract skills, years of experience and roles from a resume into JSON for a recruiter to review.', context: 'Role: {job title}. Resume: {paste resume text}', constraints: 'Use only the resume text. Do not infer or output age, gender, religion, caste, nationality or marital status. Use null when missing.', format: 'JSON (valid JSON only)', jsonShape: '{"skills": [string], "total_years": number, "roles": [{"title": string, "company": string}]}', depth: 'Concise', role: 'Business owner' },
+  { t: 'Product photo (Midjourney)', i: 'bi-camera', cat: 'image', tool: 'Midjourney', idea: 'A matte black stainless-steel water bottle on a marble kitchen counter beside a green plant', context: 'Clean negative space on the left for text', imgStyle: 'Studio product photography', lighting: 'Soft natural', aspect: '4:5', negative: 'text, watermark, extra objects' },
+  { t: 'Cinematic video shot', i: 'bi-film', cat: 'video', tool: 'Veo', idea: 'A barista pours steamed milk into a ceramic cup, forming a leaf pattern, in a cosy cafe at sunrise', imgStyle: 'Cinematic', lighting: 'Golden hour', aspect: '16:9', camera: 'Slow push-in', duration: '8', negative: 'text overlays, logos, flicker' },
+  { t: 'Brand jingle (Suno)', i: 'bi-music-note-beamed', cat: 'music', tool: 'Suno', idea: 'A cheerful 30-second jingle for a chai brand about a fresh morning cup', imgStyle: 'Bollywood-inspired', lighting: 'Uplifting', vocals: 'Female vocal', tempo: '100', negative: 'explicit lyrics, harsh distortion' }
+];
+
+/* ============ STATE ============ */
+const FIELDS = ['idea', 'tool', 'category', 'role', 'format', 'tone', 'depth', 'language', 'audience', 'context', 'constraints', 'examples', 'jsonShape', 'framework', 'imgStyle', 'lighting', 'aspect', 'negative', 'camera', 'duration', 'vocals', 'tempo'];
+const TOGGLES = ['tgQA', 'tgClarify', 'tgReason', 'tgCite', 'tgSafe', 'tgSelf'];
+const AUTO_KEYS = ['autoDetect', 'autoLive', 'autoEnhance', 'autoSave', 'autoWebhook'];
+
+let touched = {};
+let dirty = false;
+let DEFAULT_STATE = {};
+let llmBusy = null;
+let batchResults = [];
+let batchStop = false;
+const AUTO = Object.assign({ autoDetect: true, autoLive: true, autoEnhance: false, autoSave: false, autoWebhook: false }, LS.get('apg.auto', {}));
+
+function read() {
+  const s = {};
+  FIELDS.forEach((k) => { s[k] = $(k).value.trim(); });
+  TOGGLES.forEach((k) => { s[k] = $(k).checked; });
+  return s;
+}
+function setSelect(el, v) { if (Array.from(el.options).some((o) => o.value === v)) el.value = v; }
+function write(obj) {
+  if (obj.category && CATEGORIES[obj.category]) $('category').value = obj.category;
+  if (obj.tool) setSelect($('tool'), obj.tool);
+  refreshKindUI();
+  FIELDS.forEach((k) => {
+    if (k === 'category' || k === 'tool' || obj[k] == null) return;
+    const el = $(k), v = String(obj[k]);
+    if (el.tagName === 'SELECT') setSelect(el, v); else el.value = v;
+  });
+  TOGGLES.forEach((k) => { if (obj[k] != null) $(k).checked = !!obj[k]; });
+  syncPair('category');
+  refreshKindUI();
+}
+function sanitizeState(o) {
+  const out = {};
+  if (!o || typeof o !== 'object') return out;
+  FIELDS.forEach((k) => { if (typeof o[k] === 'string' || typeof o[k] === 'number') out[k] = String(o[k]).slice(0, 4000); });
+  TOGGLES.forEach((k) => { if (typeof o[k] === 'boolean') out[k] = o[k]; });
+  if (out.category && !CATEGORIES[out.category]) delete out.category;
+  return out;
+}
+
+/* ============ KIND / UI ============ */
+const kindOfState = (s) => CATEGORIES[s.category].kind;
+function fillOptions(sel, list, keepEmpty) {
+  const cur = sel.value;
+  sel.replaceChildren();
+  if (keepEmpty) { const o = document.createElement('option'); o.value = ''; o.textContent = '(auto)'; sel.append(o); }
+  list.forEach((x) => { const o = document.createElement('option'); o.value = x; o.textContent = x; sel.append(o); });
+  setSelect(sel, cur);
+}
+let lastKind = 'text';
+function refreshKindUI() {
+  const kind = CATEGORIES[$('category').value].kind;
+  if (kind !== lastKind) { $('negative').value = ''; lastKind = kind; }
+  $$('[data-kinds]').forEach((el) => el.classList.toggle('d-none', !el.dataset.kinds.split(' ').includes(kind)));
+  $('jsonWrap').classList.toggle('d-none', !(kind === 'text' && $('format').value.startsWith('JSON')));
+  if (kind === 'image') { fillOptions($('imgStyle'), IMG_STYLES, true); fillOptions($('lighting'), LIGHTS, true); $('lblStyle').textContent = 'Visual style'; $('lblLight').textContent = 'Lighting'; }
+  if (kind === 'video') { fillOptions($('imgStyle'), VID_STYLES, true); fillOptions($('lighting'), LIGHTS, true); $('lblStyle').textContent = 'Video style'; $('lblLight').textContent = 'Lighting'; }
+  if (kind === 'audio') { fillOptions($('imgStyle'), MUS_STYLES, true); fillOptions($('lighting'), MOODS, true); $('lblStyle').textContent = 'Genre'; $('lblLight').textContent = 'Mood'; }
+  const k = toolKind($('tool').value);
+  $('kindHint').textContent = TOOL_HINTS[k] || (kind === 'text' ? '' : 'Media prompts are short and visual. No headings are added.');
+  $('toolHint').textContent = TOOL_HINTS[k] || '';
+}
+function syncPair(changed) {
+  const cat = $('category'), tool = $('tool');
+  const ck = CATEGORIES[cat.value].kind, tk = toolMedia(tool.value);
+  if (ck === tk) return;
+  if (changed === 'tool') {
+    if (tk !== 'text') cat.value = DEFAULT_CAT[tk];
+    else cat.value = CAT_FOR_TOOLKIND[toolKind(tool.value)] || 'writing';
+  } else {
+    setSelect(tool, DEFAULT_TOOL[ck] || 'ChatGPT');
+  }
+}
+
+/* ============ COMPOSE ============ */
+const bullets = (a) => a.map((x) => '- ' + x).join('\n');
+const isJSON = (s) => /^JSON/.test(s.format);
+function toolNote(s) { const k = toolKind(s.tool); return TOOL_NOTES[s.tool] || TOOL_NOTES[k] || ''; }
+function rulesOf(s) {
+  const j = isJSON(s), r = [];
+  if (s.tgQA) r.push('State key assumptions and point out missing critical information.', 'Cover relevant edge cases, risks, security, privacy and accessibility where applicable.', 'Do not fabricate facts, sources, APIs, files, numbers or test results. Say when you are unsure.');
+  if (s.tgClarify) r.push(j ? 'If critical information is missing, list questions in a "questions" field of the JSON instead of guessing.' : 'If critical information is missing, ask up to 3 focused clarifying questions first and wait for my answers before continuing.');
+  if (s.tgReason) r.push('Think through the problem carefully before answering. Give a brief rationale for key decisions, then the final result.');
+  if (s.tgCite) r.push('Support factual claims with credible sources (title, publisher, date, link) and say clearly when something cannot be verified.');
+  if (s.tgSafe) r.push('Do not include or request personal, confidential or sensitive data. For medical, legal or financial topics give general information only and recommend a qualified professional.');
+  if (s.tgSelf) r.push('Before responding, review your draft for contradictions, missing deliverables and unsupported claims, then fix them.');
+  if (!j) r.push('Use clear headings and actionable steps. Avoid filler and repetition.');
+  return r;
+}
+function composeText(s, fw) {
+  fw = fw || s.framework;
+  const cat = CATEGORIES[s.category], j = isJSON(s), rl = rulesOf(s), note = toolNote(s);
+  const lang = s.language && s.language !== 'English' ? `Respond in ${s.language}.` : '';
+  const fmt = j ? 'Return ONLY valid JSON: no Markdown code fences and no commentary before or after.' + (s.jsonShape ? ` Use this shape: ${s.jsonShape}` : '') : `Format: ${s.format}.`;
+  const style = `Depth: ${s.depth}. Tone: ${s.tone}.`;
+  const deliver = j ? cat.deliver.replace(/^Deliverables:/, 'Cover these items as clearly named JSON fields:') : cat.deliver;
+  const goal = cat.deliver.replace(/^Deliverables:\s*/, '');
+  const reader = `Assume the reader is a ${s.role.toLowerCase()}${s.audience ? `; target audience: ${s.audience}` : ''}.`;
+  const none = 'None provided.';
+  switch (fw) {
+    case 'costar': return [
+      `# CONTEXT\n${s.context || 'No extra background provided. State any assumptions you make.'}`,
+      `# OBJECTIVE\n${s.idea}`,
+      `# STYLE\nWrite as ${cat.persona}. ${style.split(' Tone:')[0]}`,
+      `# TONE\n${s.tone}`,
+      `# AUDIENCE\n${s.audience || s.role}`,
+      `# RESPONSE\n${fmt}\n${deliver}${lang ? '\n' + lang : ''}${s.constraints ? '\nConstraints: ' + s.constraints : ''}${s.examples ? '\nReference: ' + s.examples : ''}${note ? '\nTool notes: ' + note : ''}\n${bullets(rl)}`
+    ].join('\n\n');
+    case 'rtcf': return [
+      `Role: You are ${cat.persona}.`, `Task: ${s.idea}`, `Context: ${s.context || none}`,
+      `Format: ${fmt} ${style}${lang ? ' ' + lang : ''}`,
+      `Constraints: ${s.constraints || none}${s.examples ? '\nReference: ' + s.examples : ''}`,
+      rl.length ? `Rules:\n${bullets(rl)}` : ''
+    ].filter(Boolean).join('\n');
+    case 'risen': return [
+      `Role: You are ${cat.persona}. ${reader}`,
+      `Instructions: ${s.idea}${s.context ? '\nContext: ' + s.context : ''}`,
+      `Steps:\n1. Review the task, context and constraints and note your assumptions.\n2. Plan the approach, then produce the deliverables.\n3. Check the result against the requirements and fix any gaps.`,
+      `End goal: ${goal}`,
+      `Narrowing: ${s.constraints || 'No extra constraints.'}\n${fmt} ${style}${lang ? ' ' + lang : ''}${s.examples ? '\nReference: ' + s.examples : ''}\n${bullets(rl)}`
+    ].join('\n\n');
+    case 'crispe': return [
+      `Capacity and Role: You are ${cat.persona}.`,
+      `Insight: ${s.context || none} ${reader}`,
+      `Statement: ${s.idea}${s.constraints ? '\nConstraints: ' + s.constraints : ''}`,
+      `Personality: ${s.tone}. ${s.depth} depth.`,
+      `Experiment: Offer two alternative approaches, then recommend one and explain why.`,
+      `Format: ${fmt}${lang ? ' ' + lang : ''}${s.examples ? '\nReference: ' + s.examples : ''}\n${bullets(rl)}`
+    ].join('\n\n');
+    case 'xml': {
+      const tag = (n, v) => v ? `<${n}>\n${v}\n</${n}>` : '';
+      return [tag('role', cat.role + '\n' + reader), tag('task', s.idea), tag('context', s.context), tag('constraints', s.constraints), tag('examples', s.examples), tag('tool_notes', note),
+        tag('output_format', `${fmt}\n${style}${lang ? '\n' + lang : ''}\n${deliver}`), tag('rules', bullets(rl))].filter(Boolean).join('\n');
+    }
+    case 'json': return 'Follow this specification exactly:\n' + JSON.stringify({
+      role: cat.persona, task: s.idea, context: s.context || null, audience: s.audience || s.role, constraints: s.constraints || null, examples: s.examples || null,
+      output: { format: j ? 'valid JSON only' : s.format, depth: s.depth, tone: s.tone, language: s.language || 'English', deliverables: goal },
+      rules: rl
+    }, null, 2);
+    case 'minimal': return `You are ${cat.persona}. ${s.idea}${s.context ? ' Context: ' + s.context : ''}${s.constraints ? ' Constraints: ' + s.constraints : ''} ${s.audience ? 'Audience: ' + s.audience + '. ' : ''}${j ? fmt : 'Format: ' + s.format + '.'} ${s.tone} tone, ${s.depth.toLowerCase()} depth.${lang ? ' ' + lang : ''}${rl[0] ? ' ' + rl[0] : ''}`;
+    default: {
+      const sec = [`ROLE\n${cat.role}\n${reader}`, `TASK\n${s.idea}`];
+      if (s.context) sec.push(`CONTEXT\n${s.context}`);
+      if (s.constraints) sec.push(`REQUIREMENTS AND CONSTRAINTS\n${s.constraints}`);
+      if (s.examples) sec.push(`EXAMPLE OR REFERENCE\n${s.examples}`);
+      if (note) sec.push(`TOOL NOTES (${s.tool})\n${note}`);
+      sec.push(`OUTPUT\n${fmt}\n${style}${lang ? '\n' + lang : ''}\n${deliver}`);
+      if (rl.length) sec.push(`RULES\n${bullets(rl)}`);
+      return sec.join('\n\n');
+    }
+  }
+}
+function composeImage(s) {
+  const k = toolKind(s.tool), bits = [s.idea];
+  if (s.context) bits.push(s.context);
+  if (s.imgStyle) bits.push(s.imgStyle.toLowerCase());
+  if (s.lighting) bits.push(s.lighting.toLowerCase() + ' lighting');
+  if (s.constraints) bits.push(s.constraints);
+  if (s.audience) bits.push('designed for ' + s.audience);
+  const base = bits.join(', '), neg = s.negative;
+  if (k === 'mj') return `${base} --ar ${s.aspect}${neg ? ' --no ' + neg : ''}`;
+  if (k === 'sd') return `${base}, highly detailed, sharp focus\nNegative prompt: ${neg || 'blurry, low quality, distorted hands, watermark, text'}\nAspect ratio: ${s.aspect}`;
+  return `Create an image: ${base}. Aspect ratio ${s.aspect}.${neg ? ' Avoid: ' + neg + '.' : ''}`;
+}
+function composeVideo(s) {
+  const dur = Math.min(60, Math.max(2, parseInt(s.duration, 10) || 8));
+  const look = [s.imgStyle, s.lighting && s.lighting.toLowerCase() + ' lighting'].filter(Boolean).join(', ') || 'natural, cinematic';
+  return [
+    `Scene (${dur} seconds, ${s.aspect}): ${s.idea}${s.context ? '. ' + s.context : ''}`,
+    `Camera: ${s.camera || 'slow push-in'}`,
+    `Style and lighting: ${look}`,
+    `Mood: ${s.tone}${s.audience ? ' | Intended for: ' + s.audience : ''}`,
+    'Sound: ambient audio that matches the scene (if the tool supports audio)',
+    s.constraints ? `Extra direction: ${s.constraints}` : '',
+    `Avoid: ${s.negative || 'text overlays, logos, flicker, distorted faces or hands'}`
+  ].filter(Boolean).join('\n');
+}
+function composeAudio(s) {
+  if (toolKind(s.tool) === 'voice') return [`Voice direction: ${s.vocals || 'Voice-over narration'}, ${s.tone.toLowerCase()} tone, natural pacing.`, `Script: ${s.idea}${s.context ? '\nNotes: ' + s.context : ''}`, s.negative ? `Avoid: ${s.negative}` : ''].filter(Boolean).join('\n');
+  return [
+    `Style: ${[s.imgStyle, s.lighting && s.lighting.toLowerCase() + ' mood'].filter(Boolean).join(', ') || 'modern, polished'}`,
+    s.tempo ? `Tempo: ${s.tempo} BPM` : '', `Vocals: ${s.vocals || 'Instrumental (no vocals)'}`,
+    `Theme: ${s.idea}${s.context ? '. ' + s.context : ''}`,
+    /Instrumental/.test(s.vocals) ? 'Structure: [Intro] [Main theme] [Variation] [Outro]' : 'Structure: [Intro] [Verse] [Chorus] [Verse] [Chorus] [Outro]',
+    s.constraints ? `Notes: ${s.constraints}` : '', `Avoid: ${s.negative || 'harsh distortion, clipping'}`
+  ].filter(Boolean).join('\n');
+}
+function compose(s) {
+  const k = kindOfState(s);
+  return k === 'image' ? composeImage(s) : k === 'video' ? composeVideo(s) : k === 'audio' ? composeAudio(s) : composeText(s);
+}
+function variantsOf(s) {
+  const k = kindOfState(s);
+  if (k === 'image') return ['Cinematic photography', 'Minimalist', '3D render'].map((st) => ({ label: 'Style: ' + st, text: composeImage({ ...s, imgStyle: st }) }));
+  if (k === 'video') return ['Slow push-in', 'Orbit around the subject', 'Handheld follow'].map((c) => ({ label: 'Camera: ' + c, text: composeVideo({ ...s, camera: c }) }));
+  if (k === 'audio') return ['Uplifting', 'Calm', 'Epic'].map((m) => ({ label: 'Mood: ' + m, text: composeAudio({ ...s, lighting: m }) }));
+  const fwFallback = s.framework === 'json' ? 'structured' : s.framework;
+  return [
+    { label: 'Compact (RTCF)', text: composeText({ ...s, depth: 'Concise' }, 'rtcf') },
+    { label: 'CO-STAR', text: composeText(s, 'costar') },
+    { label: 'XML tags (Claude-friendly)', text: composeText(s, 'xml') },
+    { label: 'Reasoning plus self-review', text: composeText({ ...s, tgReason: true, tgSelf: true, tgQA: true }, fwFallback) }
+  ];
+}
+
+/* ============ ANALYSIS ============ */
+const wc = (t) => (t.trim() ? t.trim().split(/\s+/).length : 0);
+function analyze(s, text) {
+  const k = kindOfState(s), tok = Math.ceil(text.length / 4);
+  let list;
+  if (k === 'text') list = [
+    [20, wc(s.idea) >= 6, 'Specific goal', 'Describe the outcome in at least a full sentence.'],
+    [10, /\b(act as|you are|role|capacity)\b/i.test(text), 'Role or persona', 'Pick a framework that sets a role.'],
+    [15, s.context.length >= 20, 'Context provided', 'Add background: stack, situation, what you tried.'],
+    [8, s.audience.length > 0, 'Audience stated', 'Say who the answer is for.'],
+    [15, s.constraints.length >= 10, 'Constraints', 'Add limits: versions, budget, style, things to avoid.'],
+    [12, /format|valid json|response/i.test(text), 'Output format', 'Choose an output format.'],
+    [8, s.examples.length > 0, 'Example or reference', 'Add a sample or reference when style matters.'],
+    [7, s.tgQA || s.tgSelf || s.tgCite || s.tgSafe, 'Quality guardrails', 'Turn on quality checks or self-review.'],
+    [5, tok >= 30 && tok <= 2000, 'Sensible length', tok < 30 ? 'The prompt is very short.' : 'The prompt is very long; trim it.']
+  ];
+  else list = [
+    [25, wc(s.idea) >= 4, 'Clear subject', 'Name the subject and the action.'],
+    [15, !!s.imgStyle, k === 'audio' ? 'Genre chosen' : 'Style chosen', 'Pick a style or genre.'],
+    [15, !!s.lighting, k === 'audio' ? 'Mood chosen' : 'Lighting chosen', 'Pick lighting or mood.'],
+    [15, k === 'audio' ? !!s.vocals : !!s.aspect, k === 'audio' ? 'Vocals defined' : 'Aspect ratio set', 'Set the format.'],
+    [10, !!s.negative, 'Exclusions listed', 'List what to avoid.'],
+    [10, s.context.length >= 10, 'Setting or detail', 'Add setting, props or story details.'],
+    [10, k === 'video' ? !!s.camera : k === 'audio' ? !!s.tempo : s.constraints.length > 0, k === 'video' ? 'Camera move' : k === 'audio' ? 'Tempo set' : 'Extra direction', 'Add one more directing detail.']
+  ];
+  const total = list.reduce((a, c) => a + c[0], 0), got = list.reduce((a, c) => a + (c[1] ? c[0] : 0), 0);
+  return { score: Math.round((got / total) * 100), checks: list.map((c) => ({ ok: !!c[1], label: c[2], tip: c[3] })), tok };
+}
+
+/* ============ AUTO-DETECT ============ */
+const KW = {
+  image: /\b(image|photo|picture|logo|poster|illustration|thumbnail|wallpaper|banner|mockup|render|portrait|midjourney|dall-?e|firefly|ideogram|stable diffusion|flux)\b/gi,
+  video: /\b(video|reel|short film|clip|animation|animate|trailer|storyboard|b-?roll|cinematic shot|sora|veo|runway|pika|kling)\b/gi,
+  music: /\b(song|music|lyrics|jingle|beat|soundtrack|melody|suno|udio|voice-?over|narration|elevenlabs)\b/gi,
+  appbuilder: /\b(web ?app|mobile app|build an? app|saas|mvp|prototype|landing page|website|admin panel|crm|marketplace|app idea|full-?stack)\b/gi,
+  coding: /\b(code|coding|bug|debug|error|exception|function|class|api|rest|sql|query|database|migration|controller|laravel|php|python|javascript|typescript|react|vue|node|django|docker|git|regex|refactor|unit tests?|pest|phpunit|algorithm|script|backend|frontend)\b/gi,
+  seo: /\b(seo|keywords?|meta (title|description)|backlinks?|serp|ranking|search engine|content brief|organic traffic|schema markup)\b/gi,
+  email: /\b(email|e-mail|cold email|follow-?up|reply to|cover letter|resignation|apology|linkedin message)\b/gi,
+  data: /\b(csv|excel|spreadsheet|dataset|data analysis|analy[sz]e|chart|pandas|pivot|statistics|forecast|insights?)\b/gi,
+  agent: /\b(agents?|agentic|automation|automate|workflow|n8n|zapier|make\.com|mcp|tool calling|function calling|orchestrat\w*|crew ?ai|langgraph|autogen)\b/gi,
+  rag: /\b(rag|embeddings?|vector|knowledge base|chatbot|retrieval|fine-?tun\w*|llm|semantic search|langchain|llamaindex)\b/gi,
+  marketing: /\b(ads?|campaign|instagram|facebook|linkedin|social media|brand|marketing|launch|promo\w*|hashtags?|captions?|influencer|conversion)\b/gi,
+  business: /\b(business plan|startup|pricing|strategy|swot|revenue|go-to-market|gtm|proposal|pitch|okrs?|kpis?|investor|business model|market size|resume screening|hiring)\b/gi,
+  research: /\b(research|compare|comparison|competitors?|literature|trends?|market analysis|whitepaper|survey|pros and cons|evidence|report on)\b/gi,
+  study: /\b(learn|study|explain|exam|quiz|lesson|tutorial|homework|teach|beginners?|roadmap|syllabus|flashcards?|revision)\b/gi,
+  writing: /\b(write|blog|article|story|essay|script|copy|poem|press release|speech|outline)\b/gi
+};
+const CAT_ORDER = ['image', 'video', 'music', 'appbuilder', 'coding', 'seo', 'email', 'data', 'agent', 'rag', 'marketing', 'business', 'research', 'study', 'writing'];
+const TOOL_PATTERNS = [
+  [/midjourney/i, 'Midjourney'], [/dall-?e|gpt image/i, 'GPT Image / DALL\u00B7E'], [/firefly/i, 'Adobe Firefly'], [/ideogram/i, 'Ideogram'], [/stable diffusion|flux/i, 'Stable Diffusion / FLUX'], [/leonardo/i, 'Leonardo.Ai'],
+  [/\brunway\b/i, 'Runway'], [/\bsora\b/i, 'Sora'], [/\bveo\b/i, 'Veo'], [/\bpika\b/i, 'Pika'], [/kling/i, 'Kling'], [/luma/i, 'Luma Dream Machine'],
+  [/\bsuno\b/i, 'Suno'], [/\budio\b/i, 'Udio'], [/elevenlabs/i, 'ElevenLabs'],
+  [/claude code/i, 'Claude Code'], [/\bcursor\b/i, 'Cursor'], [/copilot/i, 'GitHub Copilot'], [/codex/i, 'OpenAI Codex'], [/windsurf/i, 'Windsurf'], [/lovable/i, 'Lovable'], [/\bbolt\b/i, 'Bolt.new'], [/\bv0\b/i, 'v0'], [/replit/i, 'Replit Agent'],
+  [/chatgpt/i, 'ChatGPT'], [/\bclaude\b/i, 'Claude'], [/gemini/i, 'Gemini'], [/perplexity/i, 'Perplexity'], [/deepseek/i, 'DeepSeek'], [/\bgrok\b/i, 'Grok']
+];
+const WEIGHT = { study: 1.5, email: 1.5 };
+function detect(text) {
+  const out = {};
+  if (text.trim().length < 12) return out;
+  let best = null, bestN = 0;
+  CAT_ORDER.forEach((c) => { const m = text.match(KW[c]); const n = (m ? m.length : 0) * (WEIGHT[c] || 1); if (n > bestN) { best = c; bestN = n; } });
+  if (best) out.category = best; else out.category = 'general';
+  for (const [rx, name] of TOOL_PATTERNS) if (rx.test(text)) { out.tool = name; break; }
+  if (/\bjson\b/i.test(text)) out.format = 'JSON (valid JSON only)';
+  else if (/\btable\b|\bcompar(e|ison)\b/i.test(text)) out.format = 'Comparison table';
+  else if (/\bchecklist\b/i.test(text)) out.format = 'Checklist';
+  else if (/\bstep[- ]by[- ]step\b|\bguide\b|\btutorial\b|\bhow to\b/i.test(text)) out.format = 'Step-by-step guide';
+  else if (/\breport\b/i.test(text)) out.format = 'Structured report';
+  else if (/\bbullets?\b/i.test(text)) out.format = 'Bullet points';
+  else if (best === 'coding' && /\bcode\b/i.test(text)) out.format = 'Code with explanation';
+  if (/\b(persuasive|sales|convince)\b/i.test(text)) out.tone = 'Persuasive';
+  else if (/\b(friendly|casual|funny|fun)\b/i.test(text)) out.tone = 'Friendly';
+  else if (/\b(formal|professional)\b/i.test(text)) out.tone = 'Professional';
+  else if (/\b(creative|imaginative)\b/i.test(text)) out.tone = 'Creative';
+  else if (/\b(simple|beginners?|easy|eli5|kids?)\b/i.test(text)) out.tone = 'Simple and beginner-friendly';
+  else if (/\b(technical|precise)\b/i.test(text)) out.tone = 'Technical and precise';
+  if (/\b(short|brief|concise|quick|tl;dr)\b/i.test(text)) out.depth = 'Concise';
+  else if (/\b(detailed|in-depth|deep dive|thorough)\b/i.test(text)) out.depth = 'Detailed';
+  else if (/\b(comprehensive|with examples)\b/i.test(text)) out.depth = 'Comprehensive with examples';
+  [['hinglish', 'Hinglish'], ['hindi', 'Hindi'], ['marathi', 'Marathi'], ['gujarati', 'Gujarati'], ['tamil', 'Tamil'], ['bengali', 'Bengali'], ['spanish', 'Spanish'], ['french', 'French'], ['german', 'German'], ['arabic', 'Arabic']]
+    .some(([w, l]) => { if (new RegExp('\\b' + w + '\\b', 'i').test(text)) { out.language = l; return true; } return false; });
+  const aud = text.match(/\bfor (?:absolute |complete )?(beginners|students|kids|children|managers|developers|engineers|founders|marketers|teachers|customers|seniors|professionals|small business owners)\b/i);
+  if (aud) out.audience = aud[1].charAt(0).toUpperCase() + aud[1].slice(1).toLowerCase();
+  return out;
+}
+function mergeDetected(s, d, respect) {
+  const applied = [];
+  Object.keys(d).forEach((k) => { if (!(respect && touched[k])) { s[k] = d[k]; applied.push(k); } });
+  const ck = CATEGORIES[s.category].kind, tk = toolMedia(s.tool);
+  if (ck !== tk) {
+    const userTool = respect && touched.tool && !d.tool;        // the user's own tool choice wins
+    const textTool = d.tool && !(respect && touched.tool);      // the idea names a tool explicitly
+    if (userTool || textTool) s.category = tk !== 'text' ? DEFAULT_CAT[tk] : (CAT_FOR_TOOLKIND[toolKind(s.tool)] || 'writing');
+    else s.tool = DEFAULT_TOOL[ck];
+  }
+  return applied;
+}
+let autoApplied = new Set();
+const RESETTABLE = ['category', 'tool', 'format', 'tone', 'depth', 'language', 'audience'];
+function runDetect() {
+  if (!AUTO.autoDetect) return;
+  const s = read(), d = detect(s.idea);
+  autoApplied.forEach((k) => { if (!touched[k] && RESETTABLE.includes(k)) s[k] = DEFAULT_STATE[k]; });
+  const applied = mergeDetected(s, d, true);
+  autoApplied = new Set(applied);
+  write(s);
+  const chips = $('detectChips'); chips.replaceChildren();
+  if (!Object.keys(d).length) return;
+  const bits = [CATEGORIES[s.category].label, s.tool];
+  if (applied.includes('format') && kindOfState(s) === 'text') bits.push(s.format);
+  if (applied.includes('tone')) bits.push(s.tone);
+  if (applied.includes('language')) bits.push(s.language);
+  const lab = document.createElement('span'); lab.textContent = 'Auto-detected: '; lab.className = 'me-1';
+  chips.append(lab);
+  bits.forEach((b) => { const c = document.createElement('span'); c.className = 'chip'; c.textContent = b; chips.append(c); });
+}
+
+/* ============ GENERATE / RENDER ============ */
+const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+function setOutput(text) { $('output').value = text; dirty = false; $('dirtyBanner').classList.add('d-none'); }
+function clearResult() {
+  $('output').value = ''; dirty = false; $('dirtyBanner').classList.add('d-none');
+  $('wordCount').textContent = '0 words'; $('tokenCount').textContent = '~0 tokens';
+  $('variantList').innerHTML = '<p class="text-muted small mb-0">Variations appear after you describe your goal.</p>';
+  $('scoreVal').textContent = '0'; $('scoreLabel').textContent = 'Add your idea to see a score'; $('scoreBar').style.width = '0%'; $('scoreProgress').setAttribute('aria-valuenow', '0'); $('checks').replaceChildren();
+}
+function renderMeta() {
+  const s = read(), text = $('output').value;
+  $('wordCount').textContent = wc(text) + ' words';
+  const a = analyze(s, text);
+  $('tokenCount').textContent = '~' + a.tok + ' tokens';
+  $('scoreVal').textContent = a.score;
+  $('scoreLabel').textContent = a.score >= 80 ? 'Strong prompt' : a.score >= 50 ? 'Good, can be improved' : 'Needs more detail';
+  $('scoreBar').style.width = a.score + '%'; $('scoreProgress').setAttribute('aria-valuenow', String(a.score));
+  const box = $('checks'); box.replaceChildren();
+  a.checks.forEach((c) => {
+    const row = document.createElement('div'); row.className = 'check-row';
+    const i = document.createElement('i'); i.className = 'bi ' + (c.ok ? 'bi-check-circle-fill ok' : 'bi-exclamation-circle no');
+    const d = document.createElement('div'); const b = document.createElement('strong'); b.textContent = c.label; d.append(b);
+    if (!c.ok) { const t = document.createElement('div'); t.className = 'hint'; t.textContent = c.tip; d.append(t); }
+    row.append(i, d); box.append(row);
+  });
+}
+function renderVariants(s) {
+  const box = $('variantList'); box.replaceChildren();
+  variantsOf(s).forEach((v) => {
+    const card = document.createElement('div'); card.className = 'var-card';
+    const h = document.createElement('div'); h.className = 'd-flex justify-content-between align-items-center gap-2';
+    const t = document.createElement('strong'); t.className = 'small'; t.textContent = v.label;
+    const w = document.createElement('span'); w.className = 'hint'; w.textContent = wc(v.text) + ' words';
+    h.append(t, w);
+    const pre = document.createElement('pre'); pre.textContent = v.text;
+    const b1 = document.createElement('button'); b1.type = 'button'; b1.className = 'btn btn-sm btn-outline-secondary me-2'; b1.textContent = 'Copy'; b1.addEventListener('click', () => copyText(v.text));
+    const b2 = document.createElement('button'); b2.type = 'button'; b2.className = 'btn btn-sm btn-primary'; b2.textContent = 'Use this'; b2.addEventListener('click', () => { setOutput(v.text); dirty = true; renderMeta(); toast('Variation applied'); bootstrap.Tab.getOrCreateInstance(document.querySelector('[data-bs-target="#tab-prompt"]')).show(); });
+    card.append(h, pre, b1, b2); box.append(card);
+  });
+}
+function generate(opts) {
+  opts = opts || {};
+  const s = read();
+  if (!s.idea) { clearResult(); if (opts.manual) { $('idea').focus(); toast('Describe what you want to accomplish first'); } return false; }
+  if (dirty && !opts.force) { $('dirtyBanner').classList.remove('d-none'); renderMeta(); return false; }
+  setOutput(compose(s)); renderMeta(); renderVariants(s);
+  return true;
+}
+const liveGenerate = debounce(() => { if (AUTO.autoLive) generate(); }, 300);
+const liveDetect = debounce(() => { runDetect(); if (AUTO.autoLive) generate(); }, 400);
+const saveDraft = debounce(() => LS.set('apg.draft', read()), 500);
+
+/* ============ UTILITIES ============ */
+function toast(msg) { const d = document.createElement('div'); d.className = 'toast-lite'; d.textContent = msg; $('toastBox').append(d); setTimeout(() => d.remove(), 2800); }
+async function copyText(t) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(t);
+    else { const ta = document.createElement('textarea'); ta.value = t; ta.style.cssText = 'position:fixed;opacity:0'; document.body.append(ta); ta.select(); const ok = document.execCommand('copy'); ta.remove(); if (!ok) throw new Error('copy'); }
+    toast('Copied to clipboard'); return true;
+  } catch { toast('Copy failed. Select the text and copy it manually.'); return false; }
+}
+function download(name, text, type) {
+  const url = URL.createObjectURL(new Blob([text], { type: (type || 'text/plain') + ';charset=utf-8' }));
+  const a = document.createElement('a'); a.href = url; a.download = name; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 500);
+}
+const b64e = (o) => { const bytes = new TextEncoder().encode(JSON.stringify(o)); let bin = ''; bytes.forEach((b) => { bin += String.fromCharCode(b); }); return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
+const b64d = (str) => { str = str.replace(/-/g, '+').replace(/_/g, '/'); while (str.length % 4) str += '='; const bin = atob(str); return JSON.parse(new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0)))); };
+const payload = () => { const s = read(); return { prompt: $('output').value, tool: s.tool, category: s.category, framework: s.framework, fields: s, tokensEstimate: Math.ceil($('output').value.length / 4), createdAt: new Date().toISOString() }; };
+
+/* ============ LIBRARY ============ */
+const LIB_KEY = 'apg.library.v1';
+const libGet = () => { const v = LS.get(LIB_KEY, []); return Array.isArray(v) ? v : []; };
+function libSet(items) { if (!LS.set(LIB_KEY, items.slice(0, 200))) toast('Browser storage is full or unavailable. Export your library to keep it.'); renderLibrary(); }
+function saveCurrent(silent) {
+  const text = $('output').value.trim(); if (!text) { if (!silent) toast('Generate a prompt before saving'); return; }
+  const s = read(), items = libGet();
+  items.unshift({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), title: (s.idea || text).slice(0, 80), created: new Date().toISOString(), state: s, prompt: text, fav: false });
+  libSet(items); if (!silent) toast('Saved to your library');
+}
+function renderLibrary() {
+  const items = libGet(), q = $('libSearch').value.trim().toLowerCase(), box = $('libList');
+  $('libCount').textContent = items.length; if ($('ctLib')) $('ctLib').textContent = items.length; box.replaceChildren();
+  const shown = items.filter((i) => !q || (i.title + ' ' + i.prompt).toLowerCase().includes(q));
+  if (!shown.length) { const p = document.createElement('p'); p.className = 'text-muted small'; p.textContent = items.length ? 'No saved prompt matches your search.' : 'No saved prompts yet. Generate one and press Save.'; box.append(p); return; }
+  shown.forEach((it) => {
+    const col = document.createElement('div'); col.className = 'col-md-6 col-xl-4';
+    const card = document.createElement('div'); card.className = 'lib-item h-100 d-flex flex-column';
+    const top = document.createElement('div'); top.className = 'd-flex justify-content-between gap-2';
+    const title = document.createElement('strong'); title.className = 'small'; title.textContent = it.title;
+    const fav = document.createElement('button'); fav.type = 'button'; fav.className = 'btn btn-sm p-0 border-0'; fav.setAttribute('aria-label', 'Toggle favourite'); fav.innerHTML = '<i class="bi ' + (it.fav ? 'bi-star-fill text-warning' : 'bi-star') + '"></i>';
+    fav.addEventListener('click', () => libSet(libGet().map((x) => (x.id === it.id ? { ...x, fav: !x.fav } : x))));
+    top.append(title, fav);
+    const meta = document.createElement('div'); meta.className = 'hint mb-2'; const cl = CATEGORIES[it.state && it.state.category]; meta.textContent = (cl ? cl.label : 'Prompt') + ' · ' + (it.state && it.state.tool || '') + ' · ' + new Date(it.created).toLocaleDateString();
+    const pre = document.createElement('div'); pre.className = 'small text-muted flex-grow-1 mb-2'; pre.style.cssText = 'max-height:4.5rem;overflow:hidden'; pre.textContent = it.prompt;
+    const row = document.createElement('div'); row.className = 'd-flex gap-2';
+    const load = document.createElement('button'); load.type = 'button'; load.className = 'btn btn-sm btn-primary'; load.textContent = 'Load'; load.addEventListener('click', () => { write(sanitizeState(it.state)); touched = {}; autoApplied = new Set(); setOutput(it.prompt); dirty = true; renderMeta(); renderVariants(read()); location.hash = '#generator'; toast('Loaded with all your settings'); });
+    const cp = document.createElement('button'); cp.type = 'button'; cp.className = 'btn btn-sm btn-outline-secondary'; cp.textContent = 'Copy'; cp.addEventListener('click', () => copyText(it.prompt));
+    const del = document.createElement('button'); del.type = 'button'; del.className = 'btn btn-sm btn-outline-danger ms-auto'; del.setAttribute('aria-label', 'Delete prompt'); del.innerHTML = '<i class="bi bi-trash"></i>'; del.addEventListener('click', () => libSet(libGet().filter((x) => x.id !== it.id)));
+    row.append(load, cp, del); card.append(top, meta, pre, row); col.append(card); box.append(col);
+  });
+}
+
+/* ============ TEMPLATES ============ */
+let tplGroup = 'all';
+function renderTemplates() {
+  const q = $('tplSearch').value.trim().toLowerCase(), grid = $('tplGrid'); grid.replaceChildren();
+  TEMPLATES.filter((t) => (tplGroup === 'all' || CAT_GROUP[t.cat] === tplGroup) && (!q || (t.t + ' ' + t.idea + ' ' + CATEGORIES[t.cat].label).toLowerCase().includes(q))).forEach((t) => {
+    const col = document.createElement('div'); col.className = 'col-sm-6 col-lg-4 col-xl-3';
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'tpl-card';
+    const head = document.createElement('div'); head.className = 'd-flex align-items-center gap-2 mb-2';
+    const ic = document.createElement('span'); ic.className = 'tpl-icon'; ic.innerHTML = '<i class="bi ' + t.i + '"></i>';
+    const nm = document.createElement('strong'); nm.textContent = t.t; head.append(ic, nm);
+    const d = document.createElement('div'); d.className = 'hint'; d.textContent = t.idea.length > 110 ? t.idea.slice(0, 107) + '...' : t.idea;
+    const tags = document.createElement('div'); tags.className = 'mt-2'; [CATEGORIES[t.cat].label, t.tool].forEach((x) => { const c = document.createElement('span'); c.className = 'chip'; c.textContent = x; tags.append(c); });
+    b.append(head, d, tags); b.addEventListener('click', () => applyTemplate(t)); col.append(b); grid.append(col);
+  });
+  if (!grid.children.length) { const p = document.createElement('p'); p.className = 'text-muted'; p.textContent = 'No template matches. Try another filter.'; grid.append(p); }
+}
+function applyTemplate(t) {
+  const st = Object.assign({}, DEFAULT_STATE, { idea: t.idea, category: t.cat, tool: t.tool, context: '', constraints: '', audience: '', examples: '', jsonShape: '', negative: '' });
+  ['context', 'constraints', 'audience', 'examples', 'jsonShape', 'format', 'depth', 'tone', 'role', 'imgStyle', 'lighting', 'aspect', 'negative', 'camera', 'duration', 'vocals', 'tempo'].forEach((k) => { if (t[k] != null) st[k] = t[k]; });
+  write(st); touched = { category: true, tool: true }; autoApplied = new Set();
+  generate({ force: true }); $('detectChips').replaceChildren();
+  location.hash = '#generator'; toast('Template loaded: ' + t.t);
+}
+
+/* ============ LLM ============ */
+function llmCfg() { return { base: $('llmBase').value.trim().replace(/\/+$/, ''), model: $('llmModel').value.trim(), key: $('llmKey').value.trim() }; }
+function validUrl(u) { try { const x = new URL(u); return x.protocol === 'https:' || x.protocol === 'http:'; } catch { return false; } }
+async function callLLM(messages, signal) {
+  const c = llmCfg();
+  if (!validUrl(c.base) || !c.model) throw new Error('Set a valid Base URL and Model in the Automation Lab first.');
+  const headers = { 'Content-Type': 'application/json' }; if (c.key) headers.Authorization = 'Bearer ' + c.key;
+  let res;
+  try { res = await fetch(c.base + '/chat/completions', { method: 'POST', headers, body: JSON.stringify({ model: c.model, messages, temperature: 0.3, stream: false }), signal }); }
+  catch (e) { if (e.name === 'AbortError') throw e; throw new Error('Could not reach ' + c.base + '. Check that the server is running and allows browser requests (CORS). For Ollama set OLLAMA_ORIGINS, or call the model from a backend.'); }
+  if (!res.ok) { const t = (await res.text()).slice(0, 240); throw new Error('HTTP ' + res.status + (res.status === 401 ? ' (check your API key)' : res.status === 429 ? ' (rate limit or no credit)' : '') + ': ' + t); }
+  const data = await res.json(); const out = data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+  if (!out) throw new Error('The model returned an empty response.');
+  return { text: String(out).trim(), usage: data.usage, model: data.model || c.model };
+}
+function setBusy(on, label) {
+  $('enhanceBtn').disabled = on; $('runBtn').disabled = on; $('stopBtn').classList.toggle('d-none', !on); $('aiStatus').textContent = on ? (label || 'Working...') : $('aiStatus').textContent;
+}
+async function enhance() {
+  const draft = $('output').value.trim(); if (!draft) { toast('Generate a prompt first'); return null; }
+  llmBusy = new AbortController(); setBusy(true, 'Enhancing with AI...');
+  bootstrap.Tab.getOrCreateInstance($('aiTabBtn')).show();
+  try {
+    const s = read();
+    const r = await callLLM([{ role: 'system', content: META_ENHANCE }, { role: 'user', content: `Target tool: ${s.tool}\nCategory: ${CATEGORIES[s.category].label}\n\nDRAFT PROMPT:\n${draft}` }], llmBusy.signal);
+    $('enhancedOut').value = r.text; $('aiStatus').textContent = `Done: ${wc(draft)} words to ${wc(r.text)} words${r.usage ? ' · ' + r.usage.total_tokens + ' tokens' : ''}. Review before using.`;
+    return r.text;
+  } catch (e) { $('aiStatus').textContent = e.name === 'AbortError' ? 'Stopped.' : e.message; return null; }
+  finally { setBusy(false); llmBusy = null; }
+}
+async function runPrompt() {
+  const p = $('output').value.trim(); if (!p) { toast('Generate a prompt first'); return; }
+  llmBusy = new AbortController(); setBusy(true, 'Running your prompt...'); bootstrap.Tab.getOrCreateInstance($('aiTabBtn')).show();
+  try { const r = await callLLM([{ role: 'user', content: p }], llmBusy.signal); $('runOut').value = r.text; $('runMeta').textContent = 'Model: ' + r.model + (r.usage ? ' · ' + r.usage.total_tokens + ' tokens' : ''); $('aiStatus').textContent = 'Done.'; }
+  catch (e) { $('aiStatus').textContent = e.name === 'AbortError' ? 'Stopped.' : e.message; }
+  finally { setBusy(false); llmBusy = null; }
+}
+async function testLLM() {
+  const c = llmCfg(); const st = $('llmStatus');
+  if (!validUrl(c.base)) { st.textContent = 'Enter a valid URL.'; return; }
+  st.textContent = 'Testing...';
+  try { const r = await fetch(c.base + '/models', { headers: c.key ? { Authorization: 'Bearer ' + c.key } : {} }); if (!r.ok) throw new Error('HTTP ' + r.status); const d = await r.json(); st.textContent = 'Connected' + (d && Array.isArray(d.data) ? ` (${d.data.length} models)` : ''); }
+  catch (e) { st.textContent = 'Failed: ' + (e.message.startsWith('HTTP') ? e.message : 'cannot reach server or CORS blocked'); }
+}
+function saveLLM() { LS.set('apg.llm', { base: $('llmBase').value.trim(), model: $('llmModel').value.trim(), preset: $('llmPreset').value }); SS.set('apg.llmkey', $('llmRemember').checked ? $('llmKey').value : ''); }
+const llmConfigured = () => validUrl(llmCfg().base) && !!llmCfg().model;
+
+/* ============ WEBHOOK ============ */
+async function sendHook(silent) {
+  const url = $('hookUrl').value.trim(), st = $('hookStatus');
+  if (!validUrl(url)) { st.textContent = 'Enter a valid webhook URL.'; return; }
+  if (!$('output').value.trim()) { st.textContent = 'Generate a prompt first.'; return; }
+  st.textContent = 'Sending...';
+  const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 10000);
+  try { const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload()), signal: ctl.signal }); st.textContent = r.ok ? 'Sent (HTTP ' + r.status + ')' : 'Receiver replied HTTP ' + r.status; if (!silent && r.ok) toast('Sent to webhook'); }
+  catch (e) { st.textContent = e.name === 'AbortError' ? 'Timed out.' : 'Blocked or unreachable (likely CORS). Allow this origin on the receiver or send from your backend.'; }
+  finally { clearTimeout(timer); }
+}
+
+/* ============ BATCH ============ */
+async function batchRun() {
+  const lines = $('batchInput').value.split('\n').map((x) => x.trim()).filter(Boolean).slice(0, 20);
+  const st = $('batchStatus'), list = $('batchList'); list.replaceChildren(); batchResults = []; batchStop = false;
+  if (!lines.length) { st.textContent = 'Add at least one idea.'; return; }
+  const base = read(), enh = $('batchEnhance').checked && llmConfigured();
+  if ($('batchEnhance').checked && !llmConfigured()) toast('AI engine is not configured, so prompts are generated without enhancement');
+  $('batchStop').classList.remove('d-none'); $('batchRun').disabled = true;
+  for (let n = 0; n < lines.length && !batchStop; n++) {
+    st.textContent = `Working ${n + 1} of ${lines.length}...`;
+    const s = Object.assign({}, base, { idea: lines[n] });
+    if (AUTO.autoDetect) mergeDetected(s, detect(lines[n]), true);
+    let prompt = compose(s), enhanced = false;
+    if (enh) { try { const r = await callLLM([{ role: 'system', content: META_ENHANCE }, { role: 'user', content: `Target tool: ${s.tool}\nCategory: ${CATEGORIES[s.category].label}\n\nDRAFT PROMPT:\n${prompt}` }]); prompt = r.text; enhanced = true; } catch (e) { toast('Enhance failed for item ' + (n + 1) + ': ' + e.message.slice(0, 80)); } }
+    const item = { idea: lines[n], category: s.category, tool: s.tool, prompt, enhanced }; batchResults.push(item);
+    const card = document.createElement('div'); card.className = 'batch-item';
+    const h = document.createElement('div'); h.className = 'd-flex flex-wrap gap-1 align-items-center';
+    const t = document.createElement('strong'); t.className = 'small me-1'; t.textContent = (n + 1) + '. ' + lines[n].slice(0, 70);
+    [CATEGORIES[s.category].label, s.tool].concat(enhanced ? ['AI enhanced'] : []).forEach((x) => { const c = document.createElement('span'); c.className = 'chip'; c.textContent = x; h.append(c); });
+    h.prepend(t);
+    const pre = document.createElement('pre'); pre.textContent = prompt;
+    const cp = document.createElement('button'); cp.type = 'button'; cp.className = 'btn btn-sm btn-outline-secondary me-2'; cp.textContent = 'Copy'; cp.addEventListener('click', () => copyText(item.prompt));
+    const use = document.createElement('button'); use.type = 'button'; use.className = 'btn btn-sm btn-primary'; use.textContent = 'Open in builder'; use.addEventListener('click', () => { write(Object.assign({}, s)); touched = {}; autoApplied = new Set(); setOutput(item.prompt); dirty = true; renderMeta(); renderVariants(read()); location.hash = '#generator'; });
+    card.append(h, pre, cp, use); list.append(card);
+  }
+  $('batchStop').classList.add('d-none'); $('batchRun').disabled = false;
+  st.textContent = batchStop ? `Stopped after ${batchResults.length}.` : `Done: ${batchResults.length} prompts.`;
+}
+
+/* ============ SNIPPETS ============ */
+function renderSnippets() {
+  const c = llmCfg(), base = c.base || 'https://api.openai.com/v1', model = c.model || 'gpt-4o-mini';
+  const userMsg = 'Target tool: ChatGPT\nIdea: Write a product description for a stainless steel water bottle';
+  const body = { model, temperature: 0.3, messages: [{ role: 'system', content: META_GENERATE }, { role: 'user', content: userMsg }] };
+  $('snipCurl').textContent = `curl ${base}/chat/completions \\\n  -H "Content-Type: application/json" \\\n  -H "Authorization: Bearer $LLM_API_KEY" \\\n  -d '${JSON.stringify(body, null, 2).replace(/'/g, "'\\''")}'`;
+  $('snipPy').textContent = `import os, requests\n\nres = requests.post(\n    "${base}/chat/completions",\n    headers={"Authorization": "Bearer " + os.environ["LLM_API_KEY"]},\n    json={\n        "model": ${JSON.stringify(model)},\n        "temperature": 0.3,\n        "messages": [\n            {"role": "system", "content": ${JSON.stringify(META_GENERATE)}},\n            {"role": "user", "content": f"Target tool: {tool}\\nIdea: {idea}"},\n        ],\n    },\n    timeout=60,\n)\nres.raise_for_status()\nprompt = res.json()["choices"][0]["message"]["content"]`;
+  const php = (s) => "'" + s.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "'";
+  $('snipPhp').textContent = `use Illuminate\\Support\\Facades\\Http;\n\n$res = Http::withToken(config('services.llm.key'))\n    ->timeout(60)\n    ->post(config('services.llm.base') . '/chat/completions', [\n        'model' => config('services.llm.model'),   // ${model}\n        'temperature' => 0.3,\n        'messages' => [\n            ['role' => 'system', 'content' => ${php(META_GENERATE)}],\n            ['role' => 'user', 'content' => "Target tool: {$tool}\\nIdea: {$idea}"],\n        ],\n    ])->throw();\n\n$prompt = $res->json('choices.0.message.content');`;
+  $('snipMeta').textContent = 'AUTO-GENERATE (idea to prompt)\n' + META_GENERATE + '\n\nAUTO-ENHANCE (improve a draft)\n' + META_ENHANCE;
+}
+
+/* ============ FRAMEWORK CARDS + CHIP BAR ============ */
+const FRAMEWORKS = [
+  { id: 'structured', t: 'Structured', tone: 'lav', icon: 'layout-text-window', parts: '6 parts', best: 'Most tasks', d: 'Role, task, context, constraints, output and rules in clearly labelled sections. The safest default.' },
+  { id: 'costar', t: 'CO-STAR', tone: 'sky', icon: 'megaphone', parts: '6 parts', best: 'Writing and communication', d: 'Context, Objective, Style, Tone, Audience, Response. Great when voice and audience matter.' },
+  { id: 'rtcf', t: 'RTCF', tone: 'mint', icon: 'lightning', parts: '4 parts', best: 'Quick, compact prompts', d: 'Role, Task, Context, Format. Short and fast for everyday requests.' },
+  { id: 'risen', t: 'RISEN', tone: 'peach', icon: 'list-ol', parts: '5 parts', best: 'Multi-step tasks', d: 'Role, Instructions, Steps, End goal, Narrowing. Good for processes and plans.' },
+  { id: 'crispe', t: 'CRISPE', tone: 'amber', icon: 'lightbulb', parts: '5 parts', best: 'Brainstorming', d: 'Capacity and Role, Insight, Statement, Personality, Experiment. Asks for alternatives.' },
+  { id: 'xml', t: 'XML tags', tone: 'rose', icon: 'code-slash', parts: 'Tagged', best: 'Claude and long inputs', d: 'Wraps each part in tags so instructions stay separate from data. Best for long, data-heavy prompts.' },
+  { id: 'json', t: 'JSON spec', tone: 'sky', icon: 'braces', parts: 'JSON', best: 'Pipelines and agents', d: 'A machine-readable specification of the task, ready for APIs and agent systems.' },
+  { id: 'minimal', t: 'Minimal', tone: 'mint', icon: 'dash-lg', parts: '1 paragraph', best: 'Quick chats', d: 'Everything in one tight paragraph. Fastest to read and to send.' }
+];
+function applyFramework(f) {
+  $('framework').value = f.id; touched.framework = true;
+  if (CATEGORIES[$('category').value].kind !== 'text') { $('category').value = 'general'; syncPair('category'); }
+  refreshKindUI();
+  if ($('idea').value.trim()) generate();
+  saveDraft();
+  $('generator').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  toast('Framework set to ' + f.t);
+}
+function renderFrameworks() {
+  const grid = $('fwGrid'); grid.replaceChildren();
+  FRAMEWORKS.forEach((f) => {
+    const col = document.createElement('div'); col.className = 'col-md-6 col-xl-3';
+    const a = document.createElement('a'); a.href = '#generator'; a.className = 'course-card tone-' + f.tone;
+    a.innerHTML = '<div class="course-head"><div><span class="course-badge"></span><div class="course-title"></div><div class="course-meta"></div></div><div class="course-art"><i class="bi bi-' + f.icon + '"></i></div></div><div class="course-body"><p></p><div class="course-prog"><div class="lbl"><span class="best"></span><span>Use this &rarr;</span></div></div></div>';
+    a.querySelector('.course-badge').textContent = f.parts;
+    a.querySelector('.course-title').textContent = f.t;
+    a.querySelector('.course-meta').textContent = 'Best for ' + f.best.toLowerCase();
+    a.querySelector('.course-body p').textContent = f.d;
+    a.querySelector('.best').textContent = 'Applies to your prompt';
+    a.addEventListener('click', (e) => { e.preventDefault(); applyFramework(f); });
+    col.append(a); grid.append(col);
+  });
+}
+function initChipBar() {
+  const chips = $$('#hubTabs .hub-chip');
+  const secs = chips.map((c) => $(c.dataset.sec));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((en) => {
+      if (!en.isIntersecting) return;
+      chips.forEach((c) => c.classList.toggle('active', c.dataset.sec === en.target.id));
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  secs.forEach((s) => s && io.observe(s));
+  const search = $('hubSearch');
+  search.addEventListener('input', () => { $('tplSearch').value = search.value; $('tplSearch').dispatchEvent(new Event('input', { bubbles: true })); });
+  search.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); $('templates').scrollIntoView({ behavior: 'smooth', block: 'start' }); } if (e.key === 'Escape') { search.value = ''; search.dispatchEvent(new Event('input')); search.blur(); } });
+  $('tplSearch').addEventListener('input', () => { if (search.value !== $('tplSearch').value) search.value = $('tplSearch').value; });
+  document.addEventListener('keydown', (e) => {
+    const el = document.activeElement, typing = el && (/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName) || el.isContentEditable);
+    if (e.key === '/' && !typing && !e.ctrlKey && !e.metaKey && !e.altKey) { e.preventDefault(); search.focus(); }
+  });
+}
+
+/* ============ INIT ============ */
+function init() {
+  // build selects
+  const tsel = $('tool'); TOOLS.forEach(([g, items]) => { const og = document.createElement('optgroup'); og.label = g; items.forEach(([n]) => { const o = document.createElement('option'); o.value = n; o.textContent = n; og.append(o); }); tsel.append(og); });
+  const csel = $('category'); Object.entries(CATEGORIES).forEach(([k, v]) => { const o = document.createElement('option'); o.value = k; o.textContent = v.label; csel.append(o); });
+  csel.value = 'general'; tsel.value = 'ChatGPT';
+  $('role').value = 'General user'; $('format').value = 'Step-by-step guide'; $('depth').value = 'Balanced';
+  fillOptions($('imgStyle'), IMG_STYLES, true); fillOptions($('lighting'), LIGHTS, true);
+  refreshKindUI();
+  DEFAULT_STATE = read();
+
+  // automation toggles
+  AUTO_KEYS.forEach((k) => { $(k).checked = !!AUTO[k]; $(k).addEventListener('change', () => { AUTO[k] = $(k).checked; LS.set('apg.auto', AUTO); if (k === 'autoLive' && AUTO.autoLive) generate(); }); });
+  const llm = LS.get('apg.llm', null); if (llm) { $('llmBase').value = llm.base || ''; $('llmModel').value = llm.model || ''; $('llmPreset').value = llm.preset || ''; }
+  const k0 = SS.get('apg.llmkey'); if (k0) { $('llmKey').value = k0; $('llmRemember').checked = true; }
+
+  // restore draft or share link
+  let restored = false;
+  if (location.hash.startsWith('#s=')) { try { write(sanitizeState(b64d(location.hash.slice(3)))); restored = true; history.replaceState(null, '', location.pathname + location.search); } catch { toast('The share link could not be read'); } }
+  if (!restored) { const d = LS.get('apg.draft', null); if (d) { write(sanitizeState(d)); restored = true; } }
+  if (restored && $('idea').value.trim()) generate({ force: true });
+
+  // form events
+  const form = $('promptForm');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (dirty && !confirm('Replace your manual edits with a freshly generated prompt?')) return;
+    if (!generate({ force: true, manual: true })) return;
+    if (AUTO.autoSave) saveCurrent(true);
+    if (AUTO.autoWebhook && $('hookUrl').value.trim()) sendHook(true);
+    if (AUTO.autoEnhance) { if (llmConfigured()) await enhance(); else toast('Auto-enhance is on, but the AI engine is not configured'); }
+  });
+  const onField = (e) => {
+    const id = e.target.id;
+    if (e.isTrusted && id !== 'idea') touched[id] = true;
+    if (id === 'tool' || id === 'category') { syncPair(id); }
+    if (id === 'tool' || id === 'category' || id === 'format') refreshKindUI();
+    if (id === 'idea') { liveDetect(); } else { liveGenerate(); }
+    if (dirty && AUTO.autoLive && id !== 'idea') $('dirtyBanner').classList.remove('d-none');
+    saveDraft();
+  };
+  form.addEventListener('input', onField); form.addEventListener('change', onField);
+  form.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); form.requestSubmit(); } });
+  $('output').addEventListener('input', () => { dirty = true; $('dirtyBanner').classList.remove('d-none'); renderMeta(); });
+  $('regenBtn').addEventListener('click', () => { generate({ force: true, manual: true }); });
+  $('resetBtn').addEventListener('click', () => { write(DEFAULT_STATE); touched = {}; autoApplied = new Set(); $('detectChips').replaceChildren(); clearResult(); LS.set('apg.draft', null); toast('Reset'); });
+  $('exampleBtn').addEventListener('click', () => { $('idea').value = 'Build a secure product search and filter feature in Laravel 12 with Blade, Bootstrap 5 and MySQL, explained step by step for beginners'; runDetect(); generate({ force: true }); saveDraft(); });
+
+  // result actions
+  $('copyBtn').addEventListener('click', () => { const t = $('output').value.trim(); t ? copyText(t) : toast('Nothing to copy yet'); });
+  $('saveBtn').addEventListener('click', () => saveCurrent(false));
+  const need = () => { const t = $('output').value.trim(); if (!t) toast('Generate a prompt first'); return t; };
+  $('dlTxt').addEventListener('click', () => { const t = need(); if (t) download('ai-prompt.txt', t); });
+  $('dlMd').addEventListener('click', () => { const t = need(); if (!t) return; const s = read(); download('ai-prompt.md', `# ${s.idea.slice(0, 80)}\n\n- Tool: ${s.tool}\n- Category: ${CATEGORIES[s.category].label}\n- Framework: ${s.framework}\n\n\`\`\`text\n${t}\n\`\`\`\n`, 'text/markdown'); });
+  $('dlJson').addEventListener('click', () => { const t = need(); if (t) download('ai-prompt.json', JSON.stringify(payload(), null, 2), 'application/json'); });
+  $('shareBtn').addEventListener('click', () => { if (!$('idea').value.trim()) { toast('Describe your goal first'); return; } copyText(location.origin + location.pathname + '#s=' + b64e(read())); });
+  const OPEN = { chatgpt: ['https://chatgpt.com/', 'https://chatgpt.com/?q='], claude: ['https://claude.ai/new', 'https://claude.ai/new?q='], perplexity: ['https://www.perplexity.ai/', 'https://www.perplexity.ai/search?q='], gemini: ['https://gemini.google.com/app', null] };
+  $$('[data-open]').forEach((b) => b.addEventListener('click', async () => {
+    const t = need(); if (!t) return; const [home, q] = OPEN[b.dataset.open]; const enc = encodeURIComponent(t);
+    if (q && enc.length < 1800) window.open(q + enc, '_blank', 'noopener'); else { await copyText(t); window.open(home, '_blank', 'noopener'); toast('Prompt copied. Paste it into the chat.'); }
+  }));
+
+  // AI assist
+  $('enhanceBtn').addEventListener('click', enhance); $('runBtn').addEventListener('click', runPrompt);
+  $('stopBtn').addEventListener('click', () => { if (llmBusy) llmBusy.abort(); });
+  $('useEnhancedBtn').addEventListener('click', () => { const t = $('enhancedOut').value.trim(); if (!t) { toast('Nothing to use yet'); return; } setOutput(t); dirty = true; renderMeta(); bootstrap.Tab.getOrCreateInstance(document.querySelector('[data-bs-target="#tab-prompt"]')).show(); toast('Enhanced prompt applied'); });
+  $('copyEnhancedBtn').addEventListener('click', () => { const t = $('enhancedOut').value.trim(); t ? copyText(t) : toast('Nothing to copy yet'); });
+
+  // automation lab
+  $('llmPreset').addEventListener('change', () => { const p = PRESETS[$('llmPreset').value]; if (p) { $('llmBase').value = p[0]; $('llmModel').value = p[1]; } saveLLM(); renderSnippets(); });
+  ['llmBase', 'llmModel'].forEach((id) => $(id).addEventListener('input', () => { saveLLM(); renderSnippets(); }));
+  $('llmKey').addEventListener('input', saveLLM); $('llmRemember').addEventListener('change', saveLLM);
+  $('llmTest').addEventListener('click', testLLM);
+  $('hookUrl').value = LS.get('apg.hook', ''); $('hookUrl').addEventListener('change', () => LS.set('apg.hook', $('hookUrl').value.trim()));
+  $('hookSend').addEventListener('click', () => sendHook(false));
+  $('batchRun').addEventListener('click', batchRun); $('batchStop').addEventListener('click', () => { batchStop = true; });
+  $('batchCopyAll').addEventListener('click', () => { if (!batchResults.length) { toast('Generate a batch first'); return; } copyText(batchResults.map((r, i) => `### ${i + 1}. ${r.idea}\n${r.prompt}`).join('\n\n')); });
+  $('batchJson').addEventListener('click', () => { if (!batchResults.length) { toast('Generate a batch first'); return; } download('prompt-batch.json', JSON.stringify(batchResults, null, 2), 'application/json'); });
+  $('batchMd').addEventListener('click', () => { if (!batchResults.length) { toast('Generate a batch first'); return; } download('prompt-batch.md', batchResults.map((r, i) => `## ${i + 1}. ${r.idea}\n\n- Category: ${CATEGORIES[r.category].label}\n- Tool: ${r.tool}\n\n\`\`\`text\n${r.prompt}\n\`\`\`\n`).join('\n'), 'text/markdown'); });
+  $$('[data-copy-target]').forEach((b) => b.addEventListener('click', () => copyText($(b.dataset.copyTarget).textContent)));
+  renderSnippets();
+
+  // templates
+  const chips = $('tplChips'); GROUPS.forEach(([k, l]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'filter-btn' + (k === 'all' ? ' active' : ''); b.textContent = l; b.addEventListener('click', () => { tplGroup = k; $$('.filter-btn', chips).forEach((x) => x.classList.toggle('active', x === b)); renderTemplates(); }); chips.append(b); });
+  $('tplSearch').addEventListener('input', renderTemplates); renderTemplates();
+  $('ctTpl').textContent = TEMPLATES.length; $('statTpl').textContent = TEMPLATES.length;
+  renderFrameworks(); initChipBar();
+
+  // library
+  $('libSearch').addEventListener('input', renderLibrary);
+  $('libExport').addEventListener('click', () => { const items = libGet(); if (!items.length) { toast('Your library is empty'); return; } download('prompt-library.json', JSON.stringify({ app: 'ai-prompt-generator', version: 1, items }, null, 2), 'application/json'); });
+  $('libImport').addEventListener('change', async (e) => {
+    const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+    try {
+      if (f.size > 2 * 1024 * 1024) throw new Error('File too large');
+      const d = JSON.parse(await f.text()); const arr = Array.isArray(d) ? d : d.items;
+      if (!Array.isArray(arr)) throw new Error('Invalid file');
+      const clean = arr.slice(0, 200).filter((x) => x && typeof x.prompt === 'string').map((x) => ({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), title: String(x.title || x.prompt).slice(0, 80), created: typeof x.created === 'string' ? x.created : new Date().toISOString(), state: sanitizeState(x.state), prompt: x.prompt.slice(0, 20000), fav: !!x.fav }));
+      libSet(clean.concat(libGet())); toast(`Imported ${clean.length} prompts`);
+    } catch (err) { toast('Import failed: ' + err.message); }
+  });
+  $('libClear').addEventListener('click', () => { if (libGet().length && confirm('Delete all prompts saved in this browser?')) libSet([]); });
+  renderLibrary();
+
+  // theme
+  const themeBtn = $('themeBtn');
+  const paintTheme = () => { themeBtn.innerHTML = document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '<i class="bi bi-sun-fill"></i>' : '<i class="bi bi-moon-fill"></i>'; };
+  themeBtn.addEventListener('click', () => { const n = document.documentElement.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-bs-theme', n); try { localStorage.setItem('ai-hub-theme', n); } catch {} paintTheme(); });
+  paintTheme();
+  if (!$('output').value) clearResult();
+}
+init();
+})();
+</script>
+</body>
+</html>
