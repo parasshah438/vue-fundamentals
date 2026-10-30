@@ -1,0 +1,3263 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laravel Project Installer</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        (function () {
+            var saved = localStorage.getItem('installer-theme');
+            var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.setAttribute('data-bs-theme', saved || (dark ? 'dark' : 'light'));
+        })();
+    </script>
+
+    <style>
+        :root {
+            --accent: #ff2d20;
+            --accent-2: #7c3aed;
+            --bg: #f3f4fb;
+            --surface: rgba(255, 255, 255, 0.78);
+            --surface-solid: #ffffff;
+            --surface-2: rgba(15, 23, 42, 0.04);
+            --border: rgba(15, 23, 42, 0.09);
+            --text: #0f172a;
+            --muted: #64748b;
+            --ok: #10b981;
+            --warn: #f59e0b;
+            --err: #ef4444;
+            --radius: 20px;
+            --shadow: 0 30px 70px -25px rgba(15, 23, 42, 0.3);
+        }
+
+        [data-bs-theme="dark"] {
+            --bg: #080b17;
+            --surface: rgba(21, 25, 44, 0.78);
+            --surface-solid: #151a2e;
+            --surface-2: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #e8eaf6;
+            --muted: #94a3b8;
+            --shadow: 0 30px 70px -25px rgba(0, 0, 0, 0.8);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 24px;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .aurora {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .aurora::before, .aurora::after {
+            content: '';
+            position: absolute;
+            width: 55vmax;
+            height: 55vmax;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.35;
+        }
+        .aurora::before { background: var(--accent); top: -25vmax; left: -15vmax; }
+        .aurora::after { background: var(--accent-2); bottom: -28vmax; right: -15vmax; }
+        [data-bs-theme="dark"] .aurora::before, [data-bs-theme="dark"] .aurora::after { opacity: 0.22; }
+
+        .app {
+            display: grid;
+            grid-template-columns: 310px 1fr;
+            max-width: 1100px;
+            min-height: calc(100vh - 48px);
+            margin: 0 auto;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            padding: 32px 28px;
+            background: linear-gradient(180deg, rgba(255, 45, 32, 0.1), rgba(124, 58, 237, 0.1));
+            border-right: 1px solid var(--border);
+        }
+
+        .brand { display: flex; align-items: center; gap: 14px; }
+        .brand-logo {
+            display: grid;
+            place-items: center;
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            color: #fff;
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            box-shadow: 0 10px 25px -8px var(--accent);
+        }
+        .brand h1 { margin: 0; font-size: 1.05rem; font-weight: 700; }
+        .brand small { color: var(--muted); }
+
+        .stepper { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+        .stepper li {
+            position: relative;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            padding-bottom: 26px;
+            color: var(--muted);
+        }
+        .stepper li:last-child { padding-bottom: 0; }
+        .stepper li:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: 17px;
+            top: 38px;
+            bottom: 2px;
+            width: 2px;
+            background: var(--border);
+        }
+        .stepper li.done:not(:last-child)::before { background: var(--ok); }
+        .dot {
+            flex: none;
+            display: grid;
+            place-items: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            transition: all 0.25s ease;
+        }
+        .stepper .label { font-weight: 600; font-size: 0.95rem; line-height: 1.2; padding-top: 3px; }
+        .stepper .sub { display: block; font-weight: 400; font-size: 0.78rem; opacity: 0.8; }
+        .stepper li.active { color: var(--text); }
+        .stepper li.active .dot {
+            color: #fff;
+            border-color: transparent;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            box-shadow: 0 8px 20px -6px var(--accent);
+        }
+        .stepper li.done { color: var(--text); }
+        .stepper li.done .dot { color: #fff; background: var(--ok); border-color: transparent; }
+
+        .env-panel {
+            margin-top: auto;
+            padding: 16px;
+            border-radius: 16px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            font-size: 0.82rem;
+        }
+        .env-panel h2 {
+            margin: 0 0 10px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+        .env-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 4px 0; }
+        .env-row .status { display: inline-flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; }
+        .status::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+        .status.ok::before { background: var(--ok); }
+        .status.bad::before { background: var(--err); }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface-2);
+            color: var(--text);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .theme-toggle:hover { background: var(--border); }
+
+        /* Content */
+        .content { padding: 44px 48px; min-width: 0; }
+        .pane { display: none; }
+        .pane.is-active { display: block; animation: rise 0.45s ease both; }
+        @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+        .pane-head { margin-bottom: 28px; }
+        .pane-head .eyebrow {
+            display: inline-block;
+            margin-bottom: 8px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+        .pane-head h2 { margin: 0 0 6px; font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; }
+        .pane-head p { margin: 0; color: var(--muted); }
+
+        .form-label { font-weight: 600; font-size: 0.88rem; margin-bottom: 6px; }
+        .form-control, .form-select {
+            padding: 12px 16px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background-color: var(--surface-solid);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(255, 45, 32, 0.14);
+        }
+        .form-text { color: var(--muted); }
+        .invalid-feedback { font-weight: 500; }
+
+        .input-group .btn-ghost { border-radius: 0 14px 14px 0; padding: 12px 18px; }
+        .input-group .btn-ghost:not(:last-child) { border-radius: 0; }
+        .choice .desc { margin-top: 6px; font-size: 0.78rem; color: var(--muted); }
+        .choice .reason { margin-top: 6px; font-size: 0.74rem; color: #b45309; }
+        [data-bs-theme="dark"] .choice .reason { color: #fbbf24; }
+        .choice .cat { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+        .history-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; max-height: 260px; overflow: auto; }
+        .history-list li { padding: 10px 12px; border-radius: 12px; background: var(--surface-solid); border: 1px solid var(--border); }
+        .history-list .h-name { font-weight: 700; }
+        .history-list .h-meta { font-size: 0.76rem; color: var(--muted); }
+        .history-list .h-path { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; word-break: break-all; }
+        .health-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
+        .health-item { padding: 8px 12px; border-radius: 10px; background: var(--surface-solid); border: 1px solid var(--border); }
+        .health-item .k { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+        .health-item .v { font-weight: 600; font-size: 0.86rem; word-break: break-word; }
+        .route-table { width: 100%; font-size: 0.78rem; }
+        .route-table td { padding: 3px 8px 3px 0; word-break: break-all; }
+        .route-table .m { font-family: 'JetBrains Mono', monospace; color: var(--accent-2); white-space: nowrap; }
+        .tasks li.skipped { color: var(--muted); }
+        .picker { display: none; margin-top: 10px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface-solid); overflow: hidden; }
+        .picker.open { display: block; }
+        .picker-bar { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+        .picker-path { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; word-break: break-all; }
+        .picker-list { max-height: 220px; overflow: auto; padding: 6px; }
+        .picker-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border: 0; border-radius: 10px; background: transparent; color: var(--text); text-align: left; font-size: 0.86rem; }
+        .picker-item:hover, .picker-item:focus-visible { background: var(--surface-2); outline: none; }
+        .picker-item i { color: var(--accent); }
+        .picker-empty { padding: 12px; color: var(--muted); font-size: 0.84rem; }
+        .picker-foot { display: flex; justify-content: flex-end; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--border); }
+
+        .path-chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-radius: 14px;
+            background: var(--surface-2);
+            border: 1px dashed var(--border);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            word-break: break-all;
+        }
+
+        .btn-accent {
+            padding: 12px 24px;
+            border: 0;
+            border-radius: 14px;
+            color: #fff;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            box-shadow: 0 12px 25px -10px var(--accent);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s;
+        }
+        .btn-accent:hover { color: #fff; transform: translateY(-2px); box-shadow: 0 16px 30px -10px var(--accent); }
+        .btn-accent:disabled { opacity: 0.55; transform: none; box-shadow: none; }
+        .btn-ghost {
+            padding: 12px 22px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text);
+            font-weight: 600;
+        }
+        .btn-ghost:hover { background: var(--surface-2); color: var(--text); }
+        .btn-sm { padding: 8px 16px; border-radius: 12px; }
+
+        /* Choice cards */
+        .choice-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+        .choice { position: relative; display: block; margin: 0; cursor: pointer; }
+        .choice input { position: absolute; opacity: 0; pointer-events: none; }
+        .choice .card-body {
+            height: 100%;
+            padding: 16px;
+            border-radius: 16px;
+            background: var(--surface-solid);
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+        .choice:hover .card-body { transform: translateY(-2px); border-color: var(--accent); }
+        .choice input:checked + .card-body {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(255, 45, 32, 0.16), 0 14px 30px -14px var(--accent);
+        }
+        .choice input:focus-visible + .card-body { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+        .choice input:disabled + .card-body { opacity: 0.45; cursor: not-allowed; transform: none; border-color: var(--border); }
+        .choice .title { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: 700; }
+        .choice .meta { margin-top: 4px; font-size: 0.8rem; color: var(--muted); }
+        .choice .icon { font-size: 1.5rem; color: var(--accent); }
+
+        .pill {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            background: var(--surface-2);
+            color: var(--muted);
+        }
+        .pill.success { background: rgba(16, 185, 129, 0.15); color: var(--ok); }
+        .pill.info { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+        .pill.warn { background: rgba(245, 158, 11, 0.15); color: #d97706; }
+
+        .info-card, .check-card {
+            padding: 18px 20px;
+            border-radius: 16px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+        }
+        .info-card h3, .check-card h3 { margin: 0 0 10px; font-size: 0.9rem; font-weight: 700; }
+        .info-card ul { margin: 0; padding-left: 0; list-style: none; }
+        .info-card li { position: relative; padding-left: 22px; margin-bottom: 6px; font-size: 0.88rem; color: var(--muted); }
+        .info-card li::before { content: '\F26A'; font-family: 'bootstrap-icons'; position: absolute; left: 0; color: var(--ok); }
+
+        .check-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+        .check-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.86rem; }
+        .check-list .ico { flex: none; width: 18px; margin-top: 2px; text-align: center; }
+        .check-list .ok .ico { color: var(--ok); }
+        .check-list .warn .ico { color: var(--warn); }
+        .check-list .fail .ico { color: var(--err); }
+        .check-list .pending { color: var(--muted); }
+        .check-list .name { font-weight: 600; }
+        .check-list .detail { display: block; color: var(--muted); font-size: 0.78rem; word-break: break-word; }
+
+        .form-switch .form-check-input { width: 2.6em; height: 1.4em; cursor: pointer; }
+        .form-check-input:checked { background-color: var(--accent); border-color: var(--accent); }
+
+        .test-result { margin-top: 12px; padding: 10px 14px; border-radius: 12px; font-size: 0.86rem; display: none; }
+        .test-result.ok { display: block; background: rgba(16, 185, 129, 0.12); color: var(--ok); }
+        .test-result.bad { display: block; background: rgba(239, 68, 68, 0.12); color: var(--err); }
+        .test-result.warn { display: block; background: rgba(245, 158, 11, 0.14); color: #b45309; }
+        [data-bs-theme="dark"] .test-result.warn { color: #fbbf24; }
+
+        .ext-warn {
+            display: none;
+            margin-bottom: 16px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.84rem;
+            background: rgba(245, 158, 11, 0.12);
+            color: #b45309;
+        }
+        [data-bs-theme="dark"] .ext-warn { color: #fbbf24; }
+
+        /* Review */
+        .review { display: grid; grid-template-columns: 150px 1fr; gap: 10px 16px; margin: 0; }
+        .review dt { color: var(--muted); font-weight: 500; font-size: 0.88rem; }
+        .review dd { margin: 0; font-weight: 600; word-break: break-all; }
+
+        /* Progress */
+        .progress { height: 10px; border-radius: 999px; background: var(--surface-2); }
+        .progress-bar { border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width 0.4s ease; }
+
+        .tasks { list-style: none; padding: 0; margin: 20px 0; display: grid; gap: 8px; }
+        .tasks li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: var(--surface-2);
+            color: var(--muted);
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        .tasks li.running { color: var(--text); background: rgba(124, 58, 237, 0.1); }
+        .tasks li.done { color: var(--text); }
+        .tasks li.failed { color: var(--err); background: rgba(239, 68, 68, 0.1); }
+        .tasks .ico { width: 20px; display: grid; place-items: center; }
+        .tasks .done .ico { color: var(--ok); }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(124, 58, 237, 0.25);
+            border-top-color: var(--accent-2);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .terminal {
+            max-height: 280px;
+            overflow: auto;
+            padding: 16px;
+            border-radius: 16px;
+            background: #0a0e1c;
+            color: #cbd5e1;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .terminal .t-info { color: #60a5fa; }
+        .terminal .t-ok { color: #34d399; }
+        .terminal .t-warn { color: #fbbf24; }
+        .terminal .t-err { color: #f87171; }
+        .terminal .t-dim { color: #8b9ab3; }
+
+        .fail-box {
+            padding: 18px 20px;
+            border-radius: 16px;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .fail-box pre {
+            max-height: 220px;
+            overflow: auto;
+            margin: 12px 0 0;
+            padding: 12px;
+            border-radius: 12px;
+            background: #0a0e1c;
+            color: #fca5a5;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .success-badge {
+            display: grid;
+            place-items: center;
+            width: 84px;
+            height: 84px;
+            margin-bottom: 20px;
+            border-radius: 26px;
+            color: #fff;
+            font-size: 2.6rem;
+            background: linear-gradient(135deg, var(--ok), #06b6d4);
+            box-shadow: 0 18px 40px -14px var(--ok);
+            animation: pop 0.6s cubic-bezier(.2, 1.4, .4, 1) both;
+        }
+        @keyframes pop { from { transform: scale(0.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .code-block {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            background: #0a0e1c;
+            color: #e2e8f0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            word-break: break-all;
+        }
+
+        .banner { display: none; margin-bottom: 20px; padding: 14px 18px; border-radius: 14px; font-weight: 500; }
+        .banner.show { display: block; background: rgba(239, 68, 68, 0.1); color: var(--err); border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .resume-banner {
+            display: none;
+            margin-bottom: 24px;
+            padding: 16px 20px;
+            border-radius: 16px;
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+        }
+        .resume-banner.show { display: block; }
+
+        @media (max-width: 900px) {
+            body { padding: 12px; }
+            .app { grid-template-columns: 1fr; border-radius: 22px; }
+            .sidebar { padding: 20px; gap: 18px; border-right: 0; border-bottom: 1px solid var(--border); }
+            .stepper { flex-direction: row; justify-content: space-between; }
+            .stepper li { padding: 0; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+            .stepper li::before { display: none; }
+            .stepper .sub { display: none; }
+            .stepper .label { font-size: 0.7rem; }
+            .env-panel { margin-top: 0; }
+            .content { padding: 28px 20px; }
+            .review { grid-template-columns: 1fr; gap: 2px; }
+            .review dd { margin-bottom: 10px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="aurora" aria-hidden="true"></div>
+
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-logo"><i class="bi bi-lightning-charge-fill"></i></div>
+                <div>
+                    <h1>Laravel Installer</h1>
+                    <small>Local project wizard</small>
+                </div>
+            </div>
+
+            <ol class="stepper" id="stepper">
+                <li data-step="1"><span class="dot">1</span><span class="label">Project<span class="sub">Name and location</span></span></li>
+                <li data-step="2"><span class="dot">2</span><span class="label">Framework<span class="sub">Laravel version</span></span></li>
+                <li data-step="3"><span class="dot">3</span><span class="label">Database<span class="sub">Connection setup</span></span></li>
+                <li data-step="4"><span class="dot">4</span><span class="label">Features<span class="sub">Kit, packages, tools</span></span></li>
+                <li data-step="5"><span class="dot">5</span><span class="label">Install<span class="sub">Review and run</span></span></li>
+                <li data-step="6"><span class="dot">6</span><span class="label">Done<span class="sub">Next steps</span></span></li>
+            </ol>
+
+            <div class="env-panel" aria-live="polite">
+                <h2>Detected environment</h2>
+                <div class="env-row"><span>PHP (CLI)</span><span class="status" id="envPhp">checking</span></div>
+                <div class="env-row"><span>Composer</span><span class="status" id="envComposer">checking</span></div>
+            </div>
+
+            <button type="button" class="theme-toggle" id="themeToggle">
+                <i class="bi bi-moon-stars" id="themeIcon"></i><span id="themeLabel">Dark mode</span>
+            </button>
+        </aside>
+
+        <main class="content">
+            <div class="resume-banner" id="resumeBanner" role="status">
+                <div class="fw-semibold mb-1"><i class="bi bi-clock-history me-2"></i>Previous session found</div>
+                <div class="small text-secondary mb-3" id="resumeText"></div>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-accent btn-sm" id="resumeBtn">Resume</button>
+                    <button type="button" class="btn btn-ghost btn-sm" id="freshBtn">Start fresh</button>
+                </div>
+            </div>
+
+            <div class="banner" id="banner" role="alert"></div>
+
+            <form id="installerForm" novalidate autocomplete="off">
+
+                <!-- Step 1 -->
+                <section class="pane is-active" data-step="1">
+                    <div class="pane-head">
+                        <span class="eyebrow">Step 1 of 6</span>
+                        <h2>Name your project</h2>
+                        <p>Pick a folder name and where it should be created.</p>
+                    </div>
+
+                    <div style="max-width: 560px;">
+                        <div class="mb-4">
+                            <label for="tplSelect" class="form-label">Start from a template <span class="text-secondary fw-normal">(optional)</span></label>
+                            <div class="input-group">
+                                <select class="form-select" id="tplSelect"></select>
+                                <button type="button" class="btn btn-ghost" id="tplApply">Apply</button>
+                                <button type="button" class="btn btn-ghost" id="tplDelete" disabled title="Delete saved template" aria-label="Delete saved template"><i class="bi bi-trash"></i></button>
+                            </div>
+                            <div class="form-text" id="tplDesc">Fills in version, database, features and packages in one click.</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="projectName" class="form-label">Project name</label>
+                            <input type="text" class="form-control" id="projectName" placeholder="my-awesome-app" maxlength="50" autocomplete="off" spellcheck="false">
+                            <div class="invalid-feedback" id="projectNameError"></div>
+                            <div class="form-text" id="nameStatus" aria-live="polite">3-50 lowercase letters, numbers and hyphens.</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="installPath" class="form-label">Installation directory</label>
+                            <div class="input-group has-validation">
+                                <input type="text" class="form-control" id="installPath" placeholder="C:\wamp64\www" autocomplete="off" spellcheck="false">
+                                <button type="button" class="btn btn-ghost" id="browseBtn"><i class="bi bi-folder2-open me-1"></i>Browse</button>
+                                <div class="invalid-feedback" id="installPathError"></div>
+                            </div>
+                            <div class="picker" id="folderPicker">
+                                <div class="picker-bar">
+                                    <button type="button" class="btn btn-ghost btn-sm" id="pickerUp" aria-label="Parent folder"><i class="bi bi-arrow-up"></i></button>
+                                    <span id="pickerPath" class="picker-path"></span>
+                                </div>
+                                <div class="picker-list" id="pickerList" role="listbox" aria-label="Folders"></div>
+                                <div class="picker-foot">
+                                    <button type="button" class="btn btn-ghost btn-sm" id="pickerCancel">Close</button>
+                                    <button type="button" class="btn btn-accent btn-sm" id="pickerUse">Use this folder</button>
+                                </div>
+                            </div>
+                            <div class="form-text">Absolute path of an existing, writable folder.</div>
+                        </div>
+
+                        <div class="path-chip mb-4"><i class="bi bi-folder2-open"></i><span id="fullPath">Enter a name and directory</span></div>
+
+                        <div class="check-card mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3 class="mb-0"><i class="bi bi-activity me-2"></i>System check</h3>
+                                <button type="button" class="btn btn-ghost btn-sm" id="recheckBtn"><i class="bi bi-arrow-repeat me-1"></i>Re-run</button>
+                            </div>
+                            <ul class="check-list" id="checkList" aria-live="polite">
+                                <li class="pending"><span class="ico"><span class="spinner"></span></span><span>Checking your environment...</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="check-card mb-4" id="historyCard" style="display: none;">
+                            <h3><i class="bi bi-clock-history me-2"></i>Recent installs</h3>
+                            <ul class="history-list" id="historyList"></ul>
+                        </div>
+
+                        <button type="button" class="btn btn-accent" data-action="next">Continue <i class="bi bi-arrow-right ms-1"></i></button>
+                    </div>
+                </section>
+
+                <!-- Step 2 -->
+                <section class="pane" data-step="2">
+                    <div class="pane-head">
+                        <span class="eyebrow">Step 2 of 6</span>
+                        <h2>Framework and app settings</h2>
+                        <p>Choose the PHP and Laravel versions, then set the basics for your <code>.env</code>.</p>
+                    </div>
+
+                    <div class="mb-4" style="max-width: 560px;">
+                        <label for="phpSelect" class="form-label">PHP used for Composer and artisan</label>
+                        <select class="form-select" id="phpSelect" disabled>
+                            <option>Detecting installed PHP versions...</option>
+                        </select>
+                        <div class="form-text">Installed PHP versions are detected automatically (WAMP, Laragon, XAMPP, PATH).</div>
+                    </div>
+
+                    <div class="choice-grid mb-4" id="versionGrid"></div>
+
+                    <div class="info-card mb-4" id="versionInfo" style="display: none;">
+                        <h3>What you get</h3>
+                        <ul id="versionFeatures"></ul>
+                    </div>
+                    <div class="invalid-feedback d-block mb-3" id="laravelVersionError"></div>
+
+                    <div class="check-card mb-4" style="max-width: 720px;">
+                        <h3><i class="bi bi-sliders me-2"></i>Application settings</h3>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="appName" class="form-label">APP_NAME</label>
+                                <input type="text" class="form-control" id="appName" maxlength="100" autocomplete="off">
+                                <div class="invalid-feedback" id="appNameError"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="appUrl" class="form-label">APP_URL</label>
+                                <input type="text" class="form-control" id="appUrl" value="http://localhost:8000" autocomplete="off" spellcheck="false">
+                                <div class="invalid-feedback" id="appUrlError"></div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="appEnv" class="form-label">APP_ENV</label>
+                                <select class="form-select" id="appEnv">
+                                    <option value="local" selected>local</option>
+                                    <option value="development">development</option>
+                                    <option value="staging">staging</option>
+                                    <option value="testing">testing</option>
+                                    <option value="production">production</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="appTimezone" class="form-label">Timezone</label>
+                                <select class="form-select" id="appTimezone"></select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="appLocale" class="form-label">Locale</label>
+                                <select class="form-select" id="appLocale"></select>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="appDebug" checked>
+                                    <label class="form-check-label" for="appDebug">APP_DEBUG (show detailed errors)</label>
+                                </div>
+                                <div class="form-text">Turn debug off for staging and production.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-ghost" data-action="back"><i class="bi bi-arrow-left me-1"></i> Back</button>
+                        <button type="button" class="btn btn-accent" data-action="next">Continue <i class="bi bi-arrow-right ms-1"></i></button>
+                    </div>
+                </section>
+
+                <!-- Step 3 -->
+                <section class="pane" data-step="3">
+                    <div class="pane-head">
+                        <span class="eyebrow">Step 3 of 6</span>
+                        <h2>Connect a database</h2>
+                        <p>Values are written to the project's <code>.env</code>. Connections are tested with the PHP CLI that runs Laravel.</p>
+                    </div>
+
+                    <div class="choice-grid mb-3" id="dbGrid"></div>
+                    <div class="ext-warn" id="dbExtWarn" role="alert"></div>
+
+                    <div id="dbFields" style="max-width: 560px;">
+                        <div class="row g-3">
+                            <div class="col-sm-8">
+                                <label for="dbHost" class="form-label">Host</label>
+                                <input type="text" class="form-control" id="dbHost" value="127.0.0.1" autocomplete="off">
+                                <div class="invalid-feedback" id="dbHostError"></div>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="dbPort" class="form-label">Port</label>
+                                <input type="number" class="form-control" id="dbPort" value="3306" min="1" max="65535">
+                                <div class="invalid-feedback" id="dbPortError"></div>
+                            </div>
+                            <div class="col-12">
+                                <label for="dbDatabase" class="form-label">Database name</label>
+                                <input type="text" class="form-control" id="dbDatabase" placeholder="my_database" autocomplete="off">
+                                <div class="invalid-feedback" id="dbDatabaseError"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="dbUsername" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="dbUsername" value="root" autocomplete="off">
+                                <div class="invalid-feedback" id="dbUsernameError"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="dbPassword" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="dbPassword" placeholder="Leave empty if none" autocomplete="new-password">
+                                <div class="invalid-feedback" id="dbPasswordError"></div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2 mt-3 flex-wrap">
+                            <button type="button" class="btn btn-ghost btn-sm" id="testDbBtn"><i class="bi bi-plug me-1"></i> Test connection</button>
+                            <button type="button" class="btn btn-accent btn-sm" id="createDbBtn" style="display: none;"><i class="bi bi-database-add me-1"></i> Create database</button>
+                        </div>
+                        <div class="test-result" id="dbTestResult" role="status"></div>
+                    </div>
+
+                    <div class="info-card mt-3" id="sqliteNote" style="display: none; max-width: 560px;">
+                        <h3>SQLite</h3>
+                        <p class="mb-0 small text-secondary">A <code>database/database.sqlite</code> file is created inside the project. No credentials are needed.</p>
+                    </div>
+
+                    <div class="form-check form-switch my-4">
+                        <input class="form-check-input" type="checkbox" role="switch" id="runMigrations" checked>
+                        <label class="form-check-label" for="runMigrations">Run database migrations after install</label>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-ghost" data-action="back"><i class="bi bi-arrow-left me-1"></i> Back</button>
+                        <button type="button" class="btn btn-accent" data-action="next">Continue <i class="bi bi-arrow-right ms-1"></i></button>
+                    </div>
+                </section>
+
+                <!-- Step 4 -->
+                <section class="pane" data-step="4">
+                    <div class="pane-head">
+                        <span class="eyebrow">Step 4 of 6</span>
+                        <h2>Features and tooling</h2>
+                        <p>Everything here is optional. Choices that do not fit your Laravel version are disabled.</p>
+                    </div>
+
+                    <div class="ext-warn" id="nodeWarn" role="alert">Node.js or npm was not found, but your choices need them to build the frontend. Install Node.js or turn those options off.</div>
+
+                    <div class="check-card mb-4">
+                        <h3><i class="bi bi-boxes me-2"></i>Starter kit</h3>
+                        <div class="choice-grid mb-3" id="kitGrid"></div>
+                        <div class="row g-3 mb-2">
+                            <div class="col-sm-6" id="breezeRow" style="display: none;">
+                                <label for="breezeStack" class="form-label">Breeze stack</label>
+                                <select class="form-select" id="breezeStack">
+                                    <option value="blade">Blade</option>
+                                    <option value="livewire">Livewire (class)</option>
+                                    <option value="livewire-functional">Livewire (functional)</option>
+                                    <option value="react">React (Inertia)</option>
+                                    <option value="vue">Vue (Inertia)</option>
+                                    <option value="api">API only</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6" id="jetRow" style="display: none;">
+                                <label for="jetStack" class="form-label">Jetstream stack</label>
+                                <select class="form-select" id="jetStack">
+                                    <option value="livewire">Livewire</option>
+                                    <option value="inertia">Inertia (Vue)</option>
+                                </select>
+                                <div class="form-check form-switch mt-2">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="jetTeams">
+                                    <label class="form-check-label" for="jetTeams">Team support</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-text" id="kitNote"></div>
+                    </div>
+
+                    <div class="check-card mb-4">
+                        <h3><i class="bi bi-bug me-2"></i>Testing</h3>
+                        <div class="choice-grid">
+                            <label class="choice"><input type="radio" name="testing" value="phpunit" checked><div class="card-body"><div class="title"><span>PHPUnit</span></div><div class="meta">Laravel's default</div></div></label>
+                            <label class="choice"><input type="radio" name="testing" value="pest"><div class="card-body"><div class="title"><span>Pest</span></div><div class="meta">Expressive syntax on top of PHPUnit</div></div></label>
+                        </div>
+                    </div>
+
+                    <div class="check-card mb-4">
+                        <h3><i class="bi bi-window-stack me-2"></i>Frontend</h3>
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" type="checkbox" role="switch" id="optNpm">
+                            <label class="form-check-label" for="optNpm">Run <code>npm install</code> and <code>npm run build</code></label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="optBootstrap">
+                            <label class="form-check-label" for="optBootstrap">Use Bootstrap 5 instead of Tailwind</label>
+                        </div>
+                        <div class="form-text mt-2" id="frontendNote">Vite is the bundler in every modern Laravel project, so there is nothing to pick. Tailwind is the default styling.</div>
+                    </div>
+
+                    <div class="check-card mb-4">
+                        <h3><i class="bi bi-puzzle me-2"></i>Packages</h3>
+                        <input type="search" class="form-control mb-3" id="pkgSearch" placeholder="Search packages (for example auth, admin, debug)" autocomplete="off" aria-label="Search packages">
+                        <div class="choice-grid" id="pkgGrid"></div>
+                        <div class="form-text mt-2" id="pkgEmpty" style="display: none;">No packages match your search.</div>
+                    </div>
+
+                    <div class="check-card mb-4">
+                        <h3><i class="bi bi-hdd-stack me-2"></i>Environment drivers</h3>
+                        <div class="row g-3">
+                            <div class="col-6 col-md-3">
+                                <label for="rtCache" class="form-label">Cache</label>
+                                <select class="form-select" id="rtCache"><option value="default">Default</option><option value="file">File</option><option value="database">Database</option><option value="redis">Redis</option><option value="array">Array</option></select>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label for="rtQueue" class="form-label">Queue</label>
+                                <select class="form-select" id="rtQueue"><option value="default">Default</option><option value="sync">Sync</option><option value="database">Database</option><option value="redis">Redis</option></select>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label for="rtSession" class="form-label">Session</label>
+                                <select class="form-select" id="rtSession"><option value="default">Default</option><option value="file">File</option><option value="database">Database</option><option value="redis">Redis</option></select>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label for="rtMail" class="form-label">Mail</label>
+                                <select class="form-select" id="rtMail"><option value="default">Default</option><option value="log">Log file</option><option value="mailpit">Mailpit (SMTP 1025)</option></select>
+                            </div>
+                        </div>
+                        <div class="form-text mt-2" id="redisNote">Redis needs a running Redis server. If the PHP CLI has no phpredis extension, <code>predis/predis</code> is installed and used.</div>
+                    </div>
+
+                    <div class="check-card mb-4">
+                        <h3><i class="bi bi-box-seam me-2"></i>Docker (Laravel Sail)</h3>
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" type="checkbox" role="switch" id="optSail">
+                            <label class="form-check-label" for="optSail">Add Sail and a Docker Compose file</label>
+                        </div>
+                        <div class="d-flex flex-wrap gap-3" id="sailServices" hidden>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" name="sailService" value="redis" id="sail-redis"><label class="form-check-label" for="sail-redis">Redis</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" name="sailService" value="mailpit" id="sail-mailpit"><label class="form-check-label" for="sail-mailpit">Mailpit</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" name="sailService" value="memcached" id="sail-memcached"><label class="form-check-label" for="sail-memcached">Memcached</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" name="sailService" value="meilisearch" id="sail-meilisearch"><label class="form-check-label" for="sail-meilisearch">Meilisearch</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" name="sailService" value="selenium" id="sail-selenium"><label class="form-check-label" for="sail-selenium">Selenium</label></div>
+                        </div>
+                        <div class="form-text mt-2">The database service follows your database choice. Sail rewrites <code>.env</code> host names for its containers, so run it after local migrations.</div>
+                    </div>
+
+                    <div class="check-card mb-4">
+                        <h3><i class="bi bi-git me-2"></i>Git</h3>
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" type="checkbox" role="switch" id="optGit">
+                            <label class="form-check-label" for="optGit">Initialise a repository</label>
+                        </div>
+                        <div id="gitOptions" style="display: none;">
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" role="switch" id="gitCommit" checked>
+                                <label class="form-check-label" for="gitCommit">Create the first commit</label>
+                            </div>
+                            <div class="row g-3 align-items-end">
+                                <div class="col-sm-4">
+                                    <label for="gitBranch" class="form-label">Branch</label>
+                                    <input type="text" class="form-control" id="gitBranch" value="main" maxlength="50" autocomplete="off">
+                                </div>
+                                <div class="col-sm-8 d-flex flex-wrap gap-3 pb-2">
+                                    <div class="form-check"><input class="form-check-input" type="checkbox" name="gitIgnore" value="ide" id="ign-ide"><label class="form-check-label" for="ign-ide">Ignore <code>.idea</code> and <code>.vscode</code></label></div>
+                                    <div class="form-check"><input class="form-check-input" type="checkbox" name="gitIgnore" value="os" id="ign-os"><label class="form-check-label" for="ign-os">Ignore OS files</label></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-ghost" data-action="back"><i class="bi bi-arrow-left me-1"></i> Back</button>
+                        <button type="button" class="btn btn-accent" data-action="next">Review <i class="bi bi-arrow-right ms-1"></i></button>
+                    </div>
+                </section>
+
+                <!-- Step 5 -->
+                <section class="pane" data-step="5">
+                    <div class="pane-head">
+                        <span class="eyebrow">Step 5 of 6</span>
+                        <h2 id="installTitle">Review and install</h2>
+                        <p id="installSubtitle">Check the details, then start the installation.</p>
+                    </div>
+
+                    <div id="reviewBox">
+                        <dl class="review mb-4" id="reviewList"></dl>
+
+                        <div class="check-card mb-4" style="max-width: 560px;">
+                            <h3><i class="bi bi-bookmark-star me-2"></i>Save these choices as a template</h3>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="tplName" maxlength="60" placeholder="Template name" autocomplete="off">
+                                <button type="button" class="btn btn-ghost" id="tplSave">Save</button>
+                            </div>
+                            <div class="form-text" id="tplStatus">Saves version, database type, app settings and feature choices. Never passwords.</div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-ghost" data-action="back"><i class="bi bi-arrow-left me-1"></i> Back</button>
+                            <button type="button" class="btn btn-accent" id="startBtn"><i class="bi bi-rocket-takeoff me-1"></i> Start installation</button>
+                        </div>
+                    </div>
+
+                    <div id="runBox" style="display: none;">
+                        <div class="d-flex justify-content-between align-items-center small fw-semibold mb-2 gap-3">
+                            <span id="currentTask" role="status">Starting...</span>
+                            <span class="d-flex align-items-center gap-3">
+                                <span id="progressPercent">0%</span>
+                                <button type="button" class="btn btn-ghost btn-sm" id="cancelBtn" style="display: none;"><i class="bi bi-x-octagon me-1"></i><span>Cancel</span></button>
+                            </span>
+                        </div>
+                        <div class="progress"><div class="progress-bar" id="progressBar" style="width: 0%"></div></div>
+
+                        <ul class="tasks" id="taskList"></ul>
+
+                        <div class="terminal" id="installLog" aria-label="Installation log"></div>
+
+                        <div class="info-card mt-4" id="resumePwBox" style="display: none;">
+                            <h3>Database password needed</h3>
+                            <p class="small text-secondary">Passwords are never saved. Enter it again to continue.</p>
+                            <div class="d-flex gap-2">
+                                <input type="password" class="form-control" id="resumePw" placeholder="Database password" autocomplete="new-password">
+                                <button type="button" class="btn btn-accent btn-sm" id="resumePwBtn">Continue</button>
+                            </div>
+                        </div>
+
+                        <div class="fail-box mt-4" id="failBox" style="display: none;">
+                            <div class="fw-bold text-danger"><i class="bi bi-exclamation-octagon-fill me-2"></i><span id="failMessage"></span></div>
+                            <pre id="failOutput"></pre>
+                            <div class="d-flex gap-2 mt-3 flex-wrap">
+                                <button type="button" class="btn btn-accent btn-sm" id="createDbRetryBtn" style="display: none;"><i class="bi bi-database-add me-1"></i> Create database and retry</button>
+                                <button type="button" class="btn btn-accent btn-sm" id="retryBtn"><i class="bi bi-arrow-repeat me-1"></i> Retry from this step</button>
+                                <button type="button" class="btn btn-ghost btn-sm" id="skipDbBtn" style="display: none;"><i class="bi bi-skip-forward me-1"></i> Skip migrations and finish</button>
+                                <button type="button" class="btn btn-ghost btn-sm" id="skipStepBtn" style="display: none;"><i class="bi bi-skip-forward me-1"></i> Skip this step and continue</button>
+                                <button type="button" class="btn btn-ghost btn-sm" id="editBtn">Edit settings</button>
+                            </div>
+                            <div class="d-flex gap-2 mt-3 flex-wrap align-items-center">
+                                <button type="button" class="btn btn-ghost btn-sm" id="copyReportBtn"><i class="bi bi-clipboard me-1"></i> Copy error report</button>
+                                <button type="button" class="btn btn-ghost btn-sm" id="downloadReportBtn"><i class="bi bi-download me-1"></i> Download report</button>
+                                <span class="small text-secondary">Passwords and your user name are hidden.</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 6 -->
+                <section class="pane" data-step="6">
+                    <div class="success-badge"><i class="bi bi-check-lg"></i></div>
+                    <div class="pane-head">
+                        <h2>Your project is ready</h2>
+                        <p>Laravel was installed and configured successfully.</p>
+                    </div>
+
+                    <dl class="review mb-4" id="doneList"></dl>
+
+                    <div class="info-card mb-4" id="pendingNote" style="display: none;">
+                        <h3><i class="bi bi-database-exclamation me-2"></i>Database not migrated yet</h3>
+                        <p class="small text-secondary" id="pendingText"></p>
+                        <div class="code-block"><code id="cmdMigrate">php artisan migrate</code><button type="button" class="btn btn-sm btn-ghost text-white" data-copy="cmdMigrate" aria-label="Copy command"><i class="bi bi-clipboard"></i></button></div>
+                    </div>
+
+                    <div class="check-card mb-4" id="skippedNote" style="display: none;">
+                        <h3><i class="bi bi-skip-forward me-2"></i>Skipped steps</h3>
+                        <ul class="mb-0 small" id="skippedList"></ul>
+                    </div>
+
+                    <div class="info-card mb-4">
+                        <h3>Open your project</h3>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a class="btn btn-accent btn-sm" id="vscodeLink" href="#"><i class="bi bi-code-slash me-1"></i>Open in VS Code</a>
+                            <button type="button" class="btn btn-ghost btn-sm" id="serveBtn"><i class="bi bi-play-fill me-1"></i><span>Start dev server</span></button>
+                            <a class="btn btn-ghost btn-sm disabled" id="browserLink" href="#" target="_blank" rel="noopener" aria-disabled="true"><i class="bi bi-box-arrow-up-right me-1"></i>Open in browser</a>
+                        </div>
+                        <div class="small text-secondary mt-2" id="serveInfo">The dev server runs <code>php artisan serve</code> from the installer. Stop it when you are done.</div>
+                    </div>
+
+                    <div class="check-card mb-4" id="healthCard">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="mb-0"><i class="bi bi-heart-pulse me-2"></i>Health report</h3>
+                            <button type="button" class="btn btn-ghost btn-sm" id="healthRefresh"><i class="bi bi-arrow-repeat me-1"></i>Refresh</button>
+                        </div>
+                        <div id="healthAbout" class="mb-3"></div>
+                        <div id="healthRoutes" class="mb-3"></div>
+                        <div id="healthMigrations"></div>
+                    </div>
+
+                    <div class="info-card mb-4">
+                        <h3>Next steps</h3>
+                        <div class="code-block mb-2"><code id="cmdCd"></code><button type="button" class="btn btn-sm btn-ghost text-white" data-copy="cmdCd" aria-label="Copy command"><i class="bi bi-clipboard"></i></button></div>
+                        <div class="code-block"><code id="cmdServe">php artisan serve</code><button type="button" class="btn btn-sm btn-ghost text-white" data-copy="cmdServe" aria-label="Copy command"><i class="bi bi-clipboard"></i></button></div>
+                        <p class="small text-secondary mt-3 mb-0">Then open <code>http://localhost:8000</code>.</p>
+                    </div>
+
+                    <div class="info-card mb-4">
+                        <h3>Secure this installer</h3>
+                        <p class="small text-secondary">Lock it when you are finished so it cannot run commands again. Delete <code>installer.lock</code> to unlock.</p>
+                        <button type="button" class="btn btn-ghost btn-sm" id="lockBtn"><i class="bi bi-lock me-1"></i> Lock installer</button>
+                        <span class="small ms-2" id="lockStatus"></span>
+                    </div>
+
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button type="button" class="btn btn-accent" data-copy-path><i class="bi bi-clipboard me-1"></i> Copy project path</button>
+                        <button type="button" class="btn btn-ghost" id="restartBtn"><i class="bi bi-arrow-repeat me-1"></i> Install another</button>
+                    </div>
+                </section>
+            </form>
+        </main>
+    </div>
+
+    <script>
+        const ENDPOINT = 'install-backend.php';
+        const MAX_LOG_LINES = 600;
+
+        // Support windows and PHP ranges checked against laravel.com/docs/13.x/releases on 2026-10-29.
+        // Laravel 8 and 9 are not on that page, so only their minimum PHP is shown.
+        const VERSIONS = [
+            { id: '13.x', php: '8.3', phpMax: '8.5', badge: 'Latest', tone: 'success', features: [
+                'Released March 17, 2026; security fixes until March 17, 2028',
+                'Supports PHP 8.3 - 8.5',
+                'First-party Laravel AI SDK',
+                'JSON:API resources, queue routing and vector search'
+            ]},
+            { id: '12.x', php: '8.2', phpMax: '8.5', badge: 'Security fixes', tone: 'info', features: [
+                'Bug fixes ended August 13, 2026; security fixes until February 24, 2027',
+                'Supports PHP 8.2 - 8.5',
+                'Fine for existing applications; prefer Laravel 13 for new ones'
+            ]},
+            { id: '11.x', php: '8.2', phpMax: '8.4', badge: 'End of life', tone: 'warn', features: [
+                'Security fixes ended March 12, 2026',
+                'Supports PHP 8.2 - 8.4',
+                'Choose Laravel 13 for new projects'
+            ]},
+            { id: '10.x', php: '8.1', phpMax: '8.3', badge: 'End of life', tone: 'warn', features: [
+                'Security fixes ended February 4, 2025',
+                'Supports PHP 8.1 - 8.3',
+                'Use only to maintain a legacy application'
+            ]},
+            { id: '9.x', php: '8.0', phpMax: null, badge: 'End of life', tone: 'warn', features: [
+                'No longer receives security fixes',
+                'Use only to maintain a legacy application'
+            ]},
+            { id: '8.x', php: '7.3', phpMax: null, badge: 'End of life', tone: 'warn', features: [
+                'No longer receives security fixes',
+                'Use only to maintain a legacy application'
+            ]}
+        ];
+
+        const DB_DRIVERS = {
+            mysql:  { label: 'MySQL / MariaDB', icon: 'bi-database', port: 3306, ext: 'pdo_mysql', canCreate: true },
+            pgsql:  { label: 'PostgreSQL', icon: 'bi-diagram-3', port: 5432, ext: 'pdo_pgsql', canCreate: true },
+            sqlite: { label: 'SQLite', icon: 'bi-file-earmark-binary', port: null, ext: 'pdo_sqlite', canCreate: false },
+            sqlsrv: { label: 'SQL Server', icon: 'bi-windows', port: 1433, ext: 'pdo_sqlsrv', canCreate: false }
+        };
+
+        const NAME_RE = /^[a-z0-9][a-z0-9-]{1,48}[a-z0-9]$/;
+        const PATH_RE = /^(?:[A-Za-z]:[\\/]|\/)[^<>"|?*%!^&`\x00-\x1f]*$/;
+        const RESERVED = ['laravel', 'framework', 'app', 'vendor', 'composer', 'artisan'];
+
+        const state = {
+            step: 1,
+            token: null,
+            phpCli: null,
+            cliModules: null,
+            defaultPath: '',
+            running: false,
+            steps: [],
+            currentIndex: 0,
+            failedAt: null,
+            failMessage: '',
+            jobId: null,
+            projectPath: '',
+            savedHasPassword: false,
+            resumePending: false,
+            pendingRun: null,
+            locked: false,
+            phpPath: '',
+            phpList: [],
+            phpDefaultPath: null,
+            nameResult: null,
+            appNameTouched: false,
+            cancelRequested: false,
+            skipMigrations: false,
+            logLines: [],
+            checks: [],
+            skippedSteps: [],
+            serveJob: null,
+            tplList: [],
+            historyList: []
+        };
+
+        class InstallerError extends Error {
+            constructor(message, output = '', result = null) {
+                super(message);
+                this.output = output;
+                this.result = result;
+            }
+        }
+
+        const $ = (id) => document.getElementById(id);
+        const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+        const stripAnsi = (s) => String(s || '').replace(/\x1b\[[0-9;]*[A-Za-z]/g, '');
+        const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+        function cmpVersion(a, b) {
+            const pa = String(a).split('.').map(Number);
+            const pb = String(b).split('.').map(Number);
+            for (let i = 0; i < 3; i++) {
+                const d = (pa[i] || 0) - (pb[i] || 0);
+                if (d !== 0) return d;
+            }
+            return 0;
+        }
+
+        /* ---------- Theme ---------- */
+        function applyThemeLabel() {
+            const dark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+            $('themeIcon').className = 'bi ' + (dark ? 'bi-sun' : 'bi-moon-stars');
+            $('themeLabel').textContent = dark ? 'Light mode' : 'Dark mode';
+        }
+        $('themeToggle').addEventListener('click', () => {
+            const next = document.documentElement.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-bs-theme', next);
+            localStorage.setItem('installer-theme', next);
+            applyThemeLabel();
+        });
+
+        /* ---------- API ---------- */
+        function payload() {
+            return {
+                projectName: $('projectName').value.trim(),
+                installPath: $('installPath').value.trim(),
+                laravelVersion: OFFICIAL_KITS.includes(selectedKit()) ? '' : selectedVersion(),
+                phpBinary: state.phpPath,
+                phpVersion: state.phpCli,
+                db: dbValues(),
+                app: appValues(),
+                opts: collectOpts()
+            };
+        }
+
+        async function api(step, extra = {}) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 3 * 60 * 1000);
+            try {
+                const res = await fetch(ENDPOINT, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json', 'X-Installer-Token': state.token || '' },
+                    body: JSON.stringify({ step, ...payload(), ...extra }),
+                    signal: controller.signal
+                });
+                const text = await res.text();
+                let json;
+                try {
+                    json = JSON.parse(text);
+                } catch (e) {
+                    throw new InstallerError(`Unexpected server response (HTTP ${res.status})`, text);
+                }
+                if (!json.success) {
+                    throw new InstallerError(json.message || 'Request failed', json.output || '', json);
+                }
+                return json;
+            } catch (err) {
+                if (err.name === 'AbortError') throw new InstallerError('The request timed out');
+                throw err;
+            } finally {
+                clearTimeout(timer);
+            }
+        }
+
+        /* ---------- Saved progress (never includes the password) ---------- */
+        let saveTimer = null;
+
+        function snapshot() {
+            const db = dbValues();
+            const hasPassword = db.password !== '' || state.savedHasPassword;
+            delete db.password;
+            return {
+                wizardStep: state.step,
+                projectName: $('projectName').value.trim(),
+                installPath: $('installPath').value.trim(),
+                laravelVersion: selectedVersion(),
+                db: { ...db, hasPassword },
+                runMigrations: $('runMigrations').checked,
+                skipMigrations: state.skipMigrations,
+                phpPath: state.phpPath,
+                app: appValues(),
+                opts: collectOpts(),
+                install: {
+                    active: state.running,
+                    index: state.currentIndex,
+                    jobId: state.jobId,
+                    failedAt: state.failedAt,
+                    failMessage: state.failMessage.slice(0, 400),
+                    projectPath: state.projectPath
+                }
+            };
+        }
+
+        function saveState() {
+            if (!state.token || state.locked || state.resumePending || state.step === 6) return;
+            if (state.step === 1 && !state.running && !$('projectName').value.trim()) return;
+            api('state_save', { state: snapshot() }).catch(() => {});
+        }
+
+        function saveStateSoon() {
+            clearTimeout(saveTimer);
+            saveTimer = setTimeout(saveState, 800);
+        }
+
+        function clearState() {
+            clearTimeout(saveTimer);
+            if (state.token) api('state_clear').catch(() => {});
+        }
+
+        $('installerForm').addEventListener('change', saveStateSoon);
+        $('installerForm').addEventListener('submit', (e) => e.preventDefault());
+
+        /* ---------- Navigation ---------- */
+        function goTo(n) {
+            state.step = n;
+            $$('.pane').forEach((p) => p.classList.toggle('is-active', Number(p.dataset.step) === n));
+            $$('#stepper li').forEach((li) => {
+                const s = Number(li.dataset.step);
+                li.classList.toggle('active', s === n);
+                li.classList.toggle('done', s < n);
+                li.querySelector('.dot').innerHTML = s < n ? '<i class="bi bi-check-lg"></i>' : String(s);
+            });
+            if (n === 2 && !state.appNameTouched && !$('appName').value.trim()) {
+                $('appName').value = suggestAppName();
+            }
+            if (n === 4) updateFeatureAvailability();
+            if (n === 5 && !state.running) renderReview();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            saveState();
+        }
+
+        document.addEventListener('click', async (e) => {
+            const btn = e.target.closest('[data-action]');
+            if (!btn) return;
+            if (btn.dataset.action === 'next') {
+                if (state.step === 1) {
+                    clearTimeout(nameTimer);
+                    const unchecked = !(state.nameResult && state.nameResult.key === nameKey());
+                    if (nameLooksValid() && pathLooksValid() && unchecked) await checkName();
+                }
+                if (validateStep(state.step)) goTo(state.step + 1);
+            } else if (btn.dataset.action === 'back' && !state.running) {
+                goTo(state.step - 1);
+            }
+        });
+
+        /* ---------- Validation ---------- */
+        function setError(id, message) {
+            const field = $(id);
+            const err = $(id + 'Error');
+            field.classList.add('is-invalid');
+            field.classList.remove('is-valid');
+            if (err) err.textContent = message;
+            return false;
+        }
+
+        function setValid(id) {
+            const field = $(id);
+            field.classList.remove('is-invalid');
+            field.classList.add('is-valid');
+            return true;
+        }
+
+        function validateName() {
+            const v = $('projectName').value.trim();
+            if (!v) return setError('projectName', 'Project name is required');
+            if (!NAME_RE.test(v)) return setError('projectName', 'Use 3-50 lowercase letters, numbers and hyphens; start and end with a letter or number');
+            if (RESERVED.includes(v)) return setError('projectName', 'This name is reserved. Choose a different one');
+            const found = state.nameResult;
+            if (found && found.key === nameKey() && found.name) return setError('projectName', found.name);
+            return setValid('projectName');
+        }
+
+        function validatePath() {
+            const v = $('installPath').value.trim();
+            if (!v) return setError('installPath', 'Installation directory is required');
+            if (/^[\\/]{2}/.test(v)) return setError('installPath', 'Network (UNC) paths are not allowed');
+            if (/(^|[\\/])\.\.([\\/]|$)/.test(v)) return setError('installPath', 'The path cannot contain ".." segments');
+            if (!PATH_RE.test(v)) return setError('installPath', 'Enter an absolute path without special characters such as % ! ^ & |');
+            const found = state.nameResult;
+            if (found && found.key === nameKey() && found.path) return setError('installPath', found.path);
+            return setValid('installPath');
+        }
+
+        function validateVersion() {
+            const ok = Boolean(selectedVersion());
+            $('laravelVersionError').textContent = ok ? '' : 'Select a Laravel version';
+            return ok;
+        }
+
+        function validateDb() {
+            const d = dbValues();
+            if (d.connection === 'sqlite') return true;
+            let ok = true;
+            if (!/^[A-Za-z0-9._:-]{1,255}$/.test(d.host)) ok = setError('dbHost', 'Enter a valid host');
+            else setValid('dbHost');
+            const port = Number(d.port);
+            if (!Number.isInteger(port) || port < 1 || port > 65535) ok = setError('dbPort', 'Port must be 1-65535');
+            else setValid('dbPort');
+            if (!/^[A-Za-z0-9_.$-]{1,64}$/.test(d.database)) ok = setError('dbDatabase', 'Letters, numbers, _ . $ - only (max 64)');
+            else setValid('dbDatabase');
+            if (!d.username || d.username.length > 128) ok = setError('dbUsername', 'Username is required');
+            else setValid('dbUsername');
+            if (/[\x00-\x1f\x7f]/.test(d.password) || d.password.length > 256) ok = setError('dbPassword', 'Password contains invalid characters');
+            else setValid('dbPassword');
+            return ok;
+        }
+
+        function validateStep(n) {
+            if (n === 1) {
+                const a = validateName();
+                const b = validatePath();
+                if (!a) $('projectName').focus(); else if (!b) $('installPath').focus();
+                return a && b;
+            }
+            if (n === 2) {
+                const versionOk = validateVersion();
+                const appOk = validateApp();
+                return versionOk && appOk;
+            }
+            if (n === 3) return validateDb();
+            return true;
+        }
+
+        ['projectName', 'installPath'].forEach((id) => {
+            $(id).addEventListener('input', () => {
+                updateFullPath();
+                scheduleNameCheck();
+                if ($(id).classList.contains('is-invalid') || $(id).classList.contains('is-valid')) {
+                    id === 'projectName' ? validateName() : validatePath();
+                }
+            });
+        });
+
+        /* ---------- Folder picker ---------- */
+        async function loadPicker(path) {
+            const list = $('pickerList');
+            try {
+                const res = await api('list_dirs', { path });
+                state.pickerPath = res.path;
+                state.pickerParent = res.parent;
+                $('pickerPath').textContent = res.path || 'Drives';
+                $('pickerUp').disabled = res.parent === null;
+                $('pickerUse').disabled = !res.path;
+
+                list.innerHTML = '';
+                res.dirs.forEach((dir) => {
+                    const item = document.createElement('button');
+                    item.type = 'button';
+                    item.className = 'picker-item';
+                    const icon = document.createElement('i');
+                    icon.className = 'bi bi-folder-fill';
+                    const name = document.createElement('span');
+                    name.textContent = dir.name;
+                    item.append(icon, name);
+                    item.addEventListener('click', () => loadPicker(dir.path));
+                    list.appendChild(item);
+                });
+                if (!res.dirs.length) {
+                    const empty = document.createElement('div');
+                    empty.className = 'picker-empty';
+                    empty.textContent = 'No sub-folders here.';
+                    list.appendChild(empty);
+                }
+            } catch (err) {
+                list.innerHTML = '';
+                const msg = document.createElement('div');
+                msg.className = 'picker-empty';
+                msg.textContent = err.message;
+                list.appendChild(msg);
+            }
+        }
+
+        $('browseBtn').addEventListener('click', () => {
+            const picker = $('folderPicker');
+            if (picker.classList.toggle('open')) {
+                const current = $('installPath').value.trim();
+                loadPicker(pathLooksValid() ? current : '');
+            }
+        });
+        $('pickerUp').addEventListener('click', () => { if (state.pickerParent !== null) loadPicker(state.pickerParent); });
+        $('pickerCancel').addEventListener('click', () => $('folderPicker').classList.remove('open'));
+        $('pickerUse').addEventListener('click', () => {
+            if (!state.pickerPath) return;
+            $('installPath').value = state.pickerPath;
+            $('folderPicker').classList.remove('open');
+            $('installPath').dispatchEvent(new Event('input', { bubbles: true }));
+            $('installPath').dispatchEvent(new Event('change', { bubbles: true }));
+        });
+
+        /* ---------- Live folder check ---------- */
+        let nameTimer = null;
+
+        function nameLooksValid() {
+            const v = $('projectName').value.trim();
+            return NAME_RE.test(v) && !RESERVED.includes(v);
+        }
+
+        function pathLooksValid() {
+            const v = $('installPath').value.trim();
+            return PATH_RE.test(v) && !/^[\\/]{2}/.test(v) && !/(^|[\\/])\.\.([\\/]|$)/.test(v);
+        }
+
+        function nameKey() {
+            return $('projectName').value.trim() + '|' + $('installPath').value.trim();
+        }
+
+        function setNameStatus(text, cls) {
+            $('nameStatus').className = 'form-text ' + (cls || '');
+            $('nameStatus').textContent = text;
+        }
+
+        function scheduleNameCheck() {
+            clearTimeout(nameTimer);
+            state.nameResult = null;
+            setNameStatus('3-50 lowercase letters, numbers and hyphens.');
+            nameTimer = setTimeout(checkName, 450);
+        }
+
+        async function checkName() {
+            if (!state.token || !nameLooksValid() || !pathLooksValid()) return;
+            const key = nameKey();
+            setNameStatus('Checking the folder...');
+            try {
+                const res = await api('check_name');
+                if (key !== nameKey()) return;
+
+                const result = { key, name: '', path: '' };
+                if (res.status === 'exists') {
+                    result.name = `A ${res.kind} named "${$('projectName').value.trim()}" already exists in this directory`;
+                } else if (res.status === 'not_writable') {
+                    result.path = 'This directory is not writable';
+                } else if (res.status === 'invalid') {
+                    if (/director|path/i.test(res.message)) result.path = res.message; else result.name = res.message;
+                }
+                state.nameResult = result;
+
+                validateName();
+                validatePath();
+                if (!result.name && !result.path) {
+                    setNameStatus(`Available: ${$('fullPath').textContent}`, 'text-success');
+                } else {
+                    setNameStatus('3-50 lowercase letters, numbers and hyphens.');
+                }
+            } catch (err) {
+                setNameStatus('3-50 lowercase letters, numbers and hyphens.');
+            }
+        }
+
+        function updateFullPath() {
+            const name = $('projectName').value.trim();
+            const base = $('installPath').value.trim().replace(/[\\/]+$/, '');
+            $('fullPath').textContent = name && base ? `${base}\\${name}` : 'Enter a name and directory';
+        }
+
+        /* ---------- App settings ---------- */
+        const LOCALES = [
+            ['en', 'English'], ['es', 'Spanish'], ['fr', 'French'], ['de', 'German'], ['it', 'Italian'],
+            ['pt_BR', 'Portuguese (Brazil)'], ['nl', 'Dutch'], ['ru', 'Russian'], ['tr', 'Turkish'],
+            ['ar', 'Arabic'], ['hi', 'Hindi'], ['ja', 'Japanese'], ['zh_CN', 'Chinese (Simplified)']
+        ];
+        const FALLBACK_ZONES = [
+            'UTC', 'America/New_York', 'America/Chicago', 'America/Los_Angeles', 'Europe/London', 'Europe/Paris',
+            'Europe/Berlin', 'Asia/Dubai', 'Asia/Kolkata', 'Asia/Singapore', 'Asia/Tokyo', 'Australia/Sydney'
+        ];
+        const APP_URL_RE = /^https?:\/\/[A-Za-z0-9.-]+(:\d{1,5})?(\/[A-Za-z0-9._~/-]*)?$/;
+
+        function renderAppOptions() {
+            let zones = [];
+            try { zones = Intl.supportedValuesOf('timeZone'); } catch (e) { zones = []; }
+            if (zones.length < 5) zones = FALLBACK_ZONES.slice();
+            if (!zones.includes('UTC')) zones.unshift('UTC');
+
+            const tz = $('appTimezone');
+            tz.innerHTML = '';
+            zones.forEach((zone) => {
+                const option = document.createElement('option');
+                option.value = zone;
+                option.textContent = zone;
+                tz.appendChild(option);
+            });
+            const browserZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            tz.value = zones.includes(browserZone) ? browserZone : 'UTC';
+
+            const locale = $('appLocale');
+            locale.innerHTML = '';
+            LOCALES.forEach(([code, name]) => {
+                const option = document.createElement('option');
+                option.value = code;
+                option.textContent = `${name} (${code})`;
+                locale.appendChild(option);
+            });
+        }
+
+        function appValues() {
+            return {
+                name: $('appName').value.trim(),
+                url: $('appUrl').value.trim(),
+                env: $('appEnv').value,
+                debug: $('appDebug').checked,
+                timezone: $('appTimezone').value,
+                locale: $('appLocale').value
+            };
+        }
+
+        function suggestAppName() {
+            return $('projectName').value.trim().split('-').filter(Boolean)
+                .map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        }
+
+        function validateApp() {
+            const a = appValues();
+            let ok = true;
+            if (!a.name || a.name.length > 100 || /[\x00-\x1f\x7f]/.test(a.name)) ok = setError('appName', 'Enter a name (up to 100 characters)');
+            else setValid('appName');
+            if (a.url.length > 200 || !APP_URL_RE.test(a.url)) ok = setError('appUrl', 'Use a URL such as http://localhost:8000');
+            else setValid('appUrl');
+            return ok;
+        }
+
+        $('appName').addEventListener('input', () => { state.appNameTouched = true; });
+        $('appEnv').addEventListener('change', () => { $('appDebug').checked = $('appEnv').value !== 'production'; });
+
+        /* ---------- PHP selection ---------- */
+        function applyPhpSelection() {
+            const item = state.phpList.find((v) => v.path === $('phpSelect').value);
+            if (!item) return;
+            state.phpCli = item.version;
+            setEnvStatus($('envPhp'), item.version, true);
+            renderVersions();
+            updateDriverWarning();
+        }
+
+        function syncPhpSelect() {
+            const wanted = state.phpPath || state.phpDefaultPath;
+            if (wanted && state.phpList.some((v) => v.path === wanted)) $('phpSelect').value = wanted;
+            applyPhpSelection();
+        }
+
+        async function loadPhpList() {
+            const select = $('phpSelect');
+            try {
+                state.phpList = (await api('list_php')).versions || [];
+            } catch (e) {
+                state.phpList = [];
+            }
+
+            select.innerHTML = '';
+            if (!state.phpList.length) {
+                const option = document.createElement('option');
+                option.textContent = 'PHP from PATH (no other installations detected)';
+                select.appendChild(option);
+                select.disabled = true;
+                return;
+            }
+
+            state.phpList.forEach((v) => {
+                const option = document.createElement('option');
+                option.value = v.path;
+                option.textContent = `PHP ${v.version} - ${v.source}${v.is_default ? ' (current default)' : ''} - ${v.path}`;
+                select.appendChild(option);
+            });
+            const def = state.phpList.find((v) => v.is_default);
+            state.phpDefaultPath = def ? def.path : null;
+            select.disabled = false;
+
+            // Without a PATH default, the first entry is chosen explicitly.
+            if (!def && !state.phpPath) state.phpPath = state.phpList[0].path;
+            syncPhpSelect();
+        }
+
+        $('phpSelect').addEventListener('change', () => {
+            const value = $('phpSelect').value;
+            state.phpPath = value === state.phpDefaultPath ? '' : value;
+            applyPhpSelection();
+            runEnvCheck();
+            saveStateSoon();
+        });
+
+        /* ---------- System check ---------- */
+        function renderChecks(checks) {
+            state.checks = checks;
+            const list = $('checkList');
+            list.innerHTML = '';
+            const icons = { ok: 'bi-check-circle-fill', warn: 'bi-exclamation-triangle-fill', fail: 'bi-x-circle-fill' };
+            checks.forEach((c) => {
+                const li = document.createElement('li');
+                li.className = c.status;
+                const ico = document.createElement('span');
+                ico.className = 'ico';
+                ico.innerHTML = `<i class="bi ${icons[c.status] || icons.warn}"></i>`;
+                const body = document.createElement('span');
+                const name = document.createElement('span');
+                name.className = 'name';
+                name.textContent = c.label;
+                const detail = document.createElement('span');
+                detail.className = 'detail';
+                detail.textContent = c.detail;
+                body.append(name, detail);
+                li.append(ico, body);
+                list.appendChild(li);
+            });
+        }
+
+        function applyEnvResult(result) {
+            if (!result) return;
+            if (result.php_cli !== undefined) state.phpCli = result.php_cli || null;
+            if (result.default_path) state.defaultPath = result.default_path;
+            if (Array.isArray(result.cli_modules)) state.cliModules = result.cli_modules;
+            if (Array.isArray(result.checks)) renderChecks(result.checks);
+            updateDriverWarning();
+            updateFeatureAvailability();
+        }
+
+        async function runEnvCheck() {
+            const btn = $('recheckBtn');
+            btn.disabled = true;
+            $('checkList').innerHTML = '<li class="pending"><span class="ico"><span class="spinner"></span></span><span>Checking your environment...</span></li>';
+            try {
+                applyEnvResult(await api('check_environment'));
+            } catch (err) {
+                if (err.result && err.result.checks) {
+                    applyEnvResult(err.result);
+                } else {
+                    $('checkList').innerHTML = '';
+                    renderChecks([{ status: 'fail', label: 'System check', detail: err.message }]);
+                }
+            } finally {
+                btn.disabled = false;
+            }
+        }
+        $('recheckBtn').addEventListener('click', runEnvCheck);
+
+        /* ---------- Version cards ---------- */
+        function selectedVersion() {
+            const checked = document.querySelector('input[name="laravelVersion"]:checked');
+            return checked ? checked.value : '';
+        }
+
+        function renderVersions() {
+            const grid = $('versionGrid');
+            const previous = selectedVersion();
+            grid.innerHTML = '';
+            let firstCompatible = null;
+
+            VERSIONS.forEach((v) => {
+                const compatible = !state.phpCli || cmpVersion(state.phpCli, v.php) >= 0;
+                if (compatible && !firstCompatible) firstCompatible = v.id;
+
+                const label = document.createElement('label');
+                label.className = 'choice';
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'laravelVersion';
+                input.value = v.id;
+                input.disabled = !compatible;
+                const body = document.createElement('div');
+                body.className = 'card-body';
+
+                const title = document.createElement('div');
+                title.className = 'title';
+                const name = document.createElement('span');
+                name.textContent = 'Laravel ' + v.id.replace('.x', '');
+                const pill = document.createElement('span');
+                pill.className = 'pill ' + v.tone;
+                pill.textContent = v.badge;
+                title.append(name, pill);
+
+                const meta = document.createElement('div');
+                meta.className = 'meta';
+                const range = v.phpMax ? `PHP ${v.php} - ${v.phpMax}` : `PHP ${v.php}+`;
+                const untested = compatible && v.phpMax && state.phpCli && cmpVersion(state.phpCli, v.phpMax) > 0;
+                meta.textContent = !compatible
+                    ? `Needs PHP ${v.php}+ (CLI is ${state.phpCli})`
+                    : (untested ? `${range} (CLI ${state.phpCli} is newer)` : range);
+
+                body.append(title, meta);
+                label.append(input, body);
+                grid.appendChild(label);
+            });
+
+            const keepInput = previous ? grid.querySelector(`input[value="${previous}"]`) : null;
+            const keep = keepInput && !keepInput.disabled ? previous : firstCompatible;
+            if (keep) grid.querySelector(`input[value="${keep}"]`).checked = true;
+            renderFeatures();
+            updateFeatureAvailability();
+        }
+
+        function renderFeatures() {
+            const v = VERSIONS.find((x) => x.id === selectedVersion());
+            const list = $('versionFeatures');
+            list.innerHTML = '';
+            if (!v) { $('versionInfo').style.display = 'none'; return; }
+            v.features.forEach((f) => {
+                const li = document.createElement('li');
+                li.textContent = f;
+                list.appendChild(li);
+            });
+            $('versionInfo').style.display = 'block';
+        }
+        $('versionGrid').addEventListener('change', () => {
+            renderFeatures();
+            updateFeatureAvailability();
+        });
+
+        /* ---------- Database ---------- */
+        function selectedDriver() {
+            const checked = document.querySelector('input[name="dbDriver"]:checked');
+            return checked ? checked.value : 'mysql';
+        }
+
+        function renderDrivers() {
+            const grid = $('dbGrid');
+            Object.entries(DB_DRIVERS).forEach(([id, d]) => {
+                const label = document.createElement('label');
+                label.className = 'choice';
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'dbDriver';
+                input.value = id;
+                input.checked = id === 'mysql';
+                const body = document.createElement('div');
+                body.className = 'card-body';
+                const title = document.createElement('div');
+                title.className = 'title';
+                const name = document.createElement('span');
+                name.textContent = d.label;
+                const icon = document.createElement('i');
+                icon.className = 'bi ' + d.icon + ' icon';
+                title.append(name, icon);
+                body.appendChild(title);
+                label.append(input, body);
+                grid.appendChild(label);
+            });
+        }
+
+        function updateDriverWarning() {
+            const driver = selectedDriver();
+            const warn = $('dbExtWarn');
+            const missing = state.cliModules && state.cliModules.length && !state.cliModules.includes(DB_DRIVERS[driver].ext);
+            if (missing) {
+                warn.textContent = `The PHP CLI does not have ${DB_DRIVERS[driver].ext} enabled, so artisan cannot use this database. Enable it in the CLI php.ini (php --ini shows which file).`;
+                warn.style.display = 'block';
+            } else {
+                warn.style.display = 'none';
+            }
+        }
+
+        function resetDbTestUi() {
+            $('dbTestResult').className = 'test-result';
+            $('createDbBtn').style.display = 'none';
+        }
+
+        $('dbGrid').addEventListener('change', () => {
+            const driver = selectedDriver();
+            const isSqlite = driver === 'sqlite';
+            $('dbFields').style.display = isSqlite ? 'none' : 'block';
+            $('sqliteNote').style.display = isSqlite ? 'block' : 'none';
+            if (!isSqlite) $('dbPort').value = DB_DRIVERS[driver].port;
+            resetDbTestUi();
+            updateDriverWarning();
+        });
+
+        function dbValues() {
+            return {
+                connection: selectedDriver(),
+                host: $('dbHost').value.trim(),
+                port: $('dbPort').value.trim(),
+                database: $('dbDatabase').value.trim(),
+                username: $('dbUsername').value.trim(),
+                password: $('dbPassword').value
+            };
+        }
+
+        function showDbResult(message, ok, offerCreate) {
+            const tone = ok === true ? 'ok' : (ok === false ? 'bad' : ok);
+            const box = $('dbTestResult');
+            box.textContent = message;
+            box.className = 'test-result ' + tone;
+            $('createDbBtn').style.display = offerCreate ? 'inline-block' : 'none';
+        }
+
+        async function performDbTest() {
+            const btn = $('testDbBtn');
+            btn.disabled = true;
+            resetDbTestUi();
+            try {
+                const res = await api('test_database');
+                const tables = Number(res.tables) || 0;
+                if (tables > 0) {
+                    showDbResult(`${res.message}. It already contains ${tables} table${tables === 1 ? '' : 's'}; migrations will add to them.`, 'warn', false);
+                } else {
+                    showDbResult(res.message, true, false);
+                }
+            } catch (err) {
+                const missing = Boolean(err.result && err.result.db_missing) && DB_DRIVERS[selectedDriver()].canCreate;
+                showDbResult(err.message, false, missing);
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        $('testDbBtn').addEventListener('click', () => {
+            if (validateDb()) performDbTest();
+        });
+
+        // Checks the database as soon as its fields are complete, so a missing or non-empty database shows up early.
+        let dbTimer = null;
+
+        function isDbInputValid() {
+            const d = dbValues();
+            const port = Number(d.port);
+            return d.connection !== 'sqlite'
+                && /^[A-Za-z0-9._:-]{1,255}$/.test(d.host)
+                && Number.isInteger(port) && port >= 1 && port <= 65535
+                && /^[A-Za-z0-9_.$-]{1,64}$/.test(d.database)
+                && d.username.length > 0 && d.username.length <= 128
+                && d.password.length <= 256 && !/[\x00-\x1f\x7f]/.test(d.password);
+        }
+
+        ['dbHost', 'dbPort', 'dbDatabase', 'dbUsername', 'dbPassword'].forEach((id) => {
+            $(id).addEventListener('input', () => { clearTimeout(dbTimer); resetDbTestUi(); });
+            $(id).addEventListener('change', () => {
+                clearTimeout(dbTimer);
+                if (state.step === 3 && isDbInputValid()) dbTimer = setTimeout(performDbTest, 700);
+            });
+        });
+
+        $('createDbBtn').addEventListener('click', async () => {
+            if (!validateDb()) return;
+            const btn = $('createDbBtn');
+            btn.disabled = true;
+            try {
+                const res = await api('create_database');
+                showDbResult(res.message, true, false);
+            } catch (err) {
+                showDbResult(err.message, false, false);
+            } finally {
+                btn.disabled = false;
+            }
+        });
+
+        /* ---------- Review ---------- */
+        function addRow(list, label, value) {
+            const dt = document.createElement('dt');
+            dt.textContent = label;
+            const dd = document.createElement('dd');
+            dd.textContent = value;
+            list.append(dt, dd);
+        }
+
+        function renderReview() {
+            const list = $('reviewList');
+            list.innerHTML = '';
+            const d = dbValues();
+            addRow(list, 'Project', $('projectName').value.trim());
+            addRow(list, 'Location', $('fullPath').textContent);
+            const opts = collectOpts();
+            const kitInfo = KITS.find((k) => k.id === opts.kit);
+            addRow(list, 'Laravel', OFFICIAL_KITS.includes(opts.kit) ? `Set by the ${kitInfo.label} starter kit` : 'Laravel ' + selectedVersion());
+            addRow(list, 'PHP (CLI)', (state.phpCli || 'Unknown') + (state.phpPath ? ` - ${state.phpPath}` : ''));
+            const app = appValues();
+            addRow(list, 'App', `${app.name} (${app.env}, debug ${app.debug ? 'on' : 'off'})`);
+            addRow(list, 'App URL', app.url);
+            addRow(list, 'Timezone / locale', `${app.timezone} / ${app.locale}`);
+            addRow(list, 'Database', d.connection === 'sqlite'
+                ? 'SQLite'
+                : `${DB_DRIVERS[d.connection].label} - ${d.username}@${d.host}:${d.port}/${d.database}`);
+            addRow(list, 'Migrations', $('runMigrations').checked ? 'Run after install' : 'Skip');
+            addRow(list, 'Starter kit', kitInfo.label + (opts.kitStack ? ` (${opts.kitStack}${opts.kitTeams ? ', teams' : ''})` : ''));
+            addRow(list, 'Testing', opts.testing === 'pest' ? 'Pest' : 'PHPUnit');
+            addRow(list, 'Frontend', [opts.bootstrap ? 'Bootstrap 5' : null, opts.npm || ['breeze', 'jetstream'].includes(opts.kit) ? 'npm install and build' : null].filter(Boolean).join(', ') || 'Default');
+            addRow(list, 'Packages', opts.packages.length ? opts.packages.map((id) => PACKAGES.find((p) => p.id === id).label).join(', ') : 'None');
+            const drivers = Object.entries(opts.runtime).filter(([, v]) => v !== 'default').map(([k, v]) => `${k}: ${v}`);
+            addRow(list, 'Drivers', drivers.length ? drivers.join(', ') : 'Laravel defaults');
+            addRow(list, 'Docker (Sail)', opts.sail.enabled ? 'Yes' + (opts.sail.services.length ? ` (${opts.sail.services.join(', ')})` : '') : 'No');
+            addRow(list, 'Git', opts.git.enabled ? `Branch ${opts.git.branch}${opts.git.commit ? ', first commit' : ''}` : 'No');
+        }
+
+        /* ---------- Install ---------- */
+        function buildSteps() {
+            const d = dbValues();
+            const migrate = $('runMigrations').checked && !state.skipMigrations;
+            const list = [
+                { id: 'check_environment', label: 'Check system requirements' },
+                { id: 'check_directory', label: 'Validate install directory' }
+            ];
+            if (d.connection !== 'sqlite' && migrate) {
+                list.push({ id: 'test_database', label: 'Test database connection' });
+            }
+            const opts = collectOpts();
+            const kitLabel = (KITS.find((k) => k.id === opts.kit) || KITS[0]).label;
+            const hasNpmKit = ['breeze', 'jetstream'].includes(opts.kit);
+            list.push(
+                { id: 'create_project', label: OFFICIAL_KITS.includes(opts.kit) ? `Create project from the ${kitLabel} starter kit` : `Create Laravel ${selectedVersion()} project` },
+                { id: 'setup_environment', label: 'Configure .env' },
+                { id: 'generate_key', label: 'Generate application key' }
+            );
+            if (hasNpmKit) list.push({ id: 'starter_kit', label: `Install ${kitLabel} (${opts.kitStack})` });
+            if (opts.testing === 'pest' && !hasNpmKit) list.push({ id: 'testing_pest', label: 'Install Pest' });
+            if (opts.packages.length || ['cache', 'queue', 'session'].some((k) => opts.runtime[k] === 'redis')) {
+                list.push({ id: 'install_packages', label: opts.packages.length ? `Install ${opts.packages.length} package${opts.packages.length === 1 ? '' : 's'}` : 'Install Redis client' });
+            }
+            if (opts.bootstrap) list.push({ id: 'frontend_bootstrap', label: 'Set up Bootstrap 5' });
+            if (opts.npm && !hasNpmKit) list.push({ id: 'npm_build', label: 'Install npm packages and build assets' });
+            if (migrate) list.push({ id: 'run_migrations', label: 'Run migrations' });
+            if (opts.sail.enabled) list.push({ id: 'sail_install', label: 'Add Docker (Sail)' });
+            if (opts.git.enabled) list.push({ id: 'git_setup', label: 'Set up Git' });
+            list.push({ id: 'finalize', label: 'Finalize' });
+            return list;
+        }
+
+        function log(text, cls = '') {
+            const box = $('installLog');
+            const line = document.createElement('div');
+            if (cls) line.className = cls;
+            line.textContent = text;
+            box.appendChild(line);
+            state.logLines.push(text);
+            if (state.logLines.length > 5000) state.logLines.shift();
+            while (box.childElementCount > MAX_LOG_LINES) box.removeChild(box.firstChild);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function setTaskState(index, status) {
+            const li = $('taskList').children[index];
+            if (!li) return;
+            li.className = status;
+            const ico = li.querySelector('.ico');
+            ico.innerHTML = '';
+            if (status === 'running') {
+                const sp = document.createElement('span');
+                sp.className = 'spinner';
+                ico.appendChild(sp);
+            } else {
+                const icon = { done: 'bi-check-circle-fill', failed: 'bi-x-circle-fill', pending: 'bi-circle', skipped: 'bi-dash-circle' }[status];
+                ico.innerHTML = `<i class="bi ${icon}"></i>`;
+            }
+        }
+
+        function setProgress(done, total) {
+            const pct = Math.round((done / total) * 100);
+            $('progressBar').style.width = pct + '%';
+            $('progressPercent').textContent = pct + '%';
+        }
+
+        function renderTasks() {
+            const tasks = $('taskList');
+            tasks.innerHTML = '';
+            state.steps.forEach((s) => {
+                const li = document.createElement('li');
+                const ico = document.createElement('span');
+                ico.className = 'ico';
+                const text = document.createElement('span');
+                text.textContent = s.label;
+                li.append(ico, text);
+                tasks.appendChild(li);
+            });
+            state.steps.forEach((_, i) => setTaskState(i, 'pending'));
+        }
+
+        function showRunUi() {
+            $('reviewBox').style.display = 'none';
+            $('runBox').style.display = 'block';
+            $('installTitle').textContent = 'Installing Laravel';
+            $('installSubtitle').textContent = 'You can close this tab. Progress is saved and can be resumed.';
+        }
+
+        function showReviewUi() {
+            $('runBox').style.display = 'none';
+            $('reviewBox').style.display = 'block';
+            $('installTitle').textContent = 'Review and install';
+            $('installSubtitle').textContent = 'Check the details, then start the installation.';
+        }
+
+        // Streams a background job's output into the terminal until it finishes.
+        async function pollJob(jobId) {
+            let offset = 0;
+            let buffer = '';
+            let failures = 0;
+
+            const emit = (final) => {
+                const parts = buffer.split(/\r\n|\r|\n/);
+                buffer = final ? '' : parts.pop();
+                parts.forEach((line) => {
+                    const text = stripAnsi(line).trimEnd();
+                    if (text) log(text, 't-dim');
+                });
+            };
+
+            while (true) {
+                let res;
+                try {
+                    res = await api('job_status', { jobId, offset });
+                    failures = 0;
+                } catch (err) {
+                    if (err.result) {
+                        if (typeof err.result.chunk === 'string') buffer += err.result.chunk;
+                        emit(true);
+                        throw err;
+                    }
+                    if (++failures >= 5) throw err;
+                    await sleep(2000);
+                    continue;
+                }
+
+                offset = res.offset;
+                if (res.chunk) {
+                    buffer += res.chunk;
+                    emit(false);
+                }
+                if (!res.running) {
+                    emit(true);
+                    return res;
+                }
+                await sleep(1000);
+            }
+        }
+
+        function showFail(message, output, dbMissing, stepId) {
+            $('failMessage').textContent = message;
+            const text = stripAnsi(output).trim();
+            $('failOutput').textContent = text || 'No additional output.';
+            $('failOutput').style.display = text ? 'block' : 'none';
+            $('createDbRetryBtn').style.display = dbMissing ? 'inline-block' : 'none';
+            $('skipDbBtn').style.display = ['test_database', 'run_migrations'].includes(stepId) ? 'inline-block' : 'none';
+            $('skipStepBtn').style.display = OPTIONAL_STEPS.includes(stepId) ? 'inline-block' : 'none';
+            $('failBox').style.display = 'block';
+        }
+
+        function setRunning(value) {
+            state.running = value;
+            $('cancelBtn').style.display = value ? 'inline-flex' : 'none';
+            resetCancelBtn();
+        }
+
+        let cancelArmed = false;
+        let cancelTimer = null;
+
+        function resetCancelBtn() {
+            cancelArmed = false;
+            clearTimeout(cancelTimer);
+            $('cancelBtn').disabled = false;
+            $('cancelBtn').querySelector('span').textContent = 'Cancel';
+        }
+
+        function needsPassword(fromIndex) {
+            const d = dbValues();
+            if (d.connection === 'sqlite' || !state.savedHasPassword || d.password !== '') return false;
+            return state.steps.slice(fromIndex).some((s) => ['test_database', 'create_database', 'setup_environment'].includes(s.id));
+        }
+
+        function continueFrom(index, resume = null) {
+            if (needsPassword(index)) {
+                state.pendingRun = { index, resume };
+                $('resumePwBox').style.display = 'block';
+                $('currentTask').textContent = 'Waiting for the database password';
+                $('resumePw').focus();
+                return;
+            }
+            runInstall(index, resume);
+        }
+
+        async function runInstall(from = 0, resume = null) {
+            setRunning(true);
+            state.cancelRequested = false;
+            $('failBox').style.display = 'none';
+            $('resumePwBox').style.display = 'none';
+
+            for (let i = from; i < state.steps.length; i++) {
+                const step = state.steps[i];
+                if (state.cancelRequested) {
+                    state.cancelRequested = false;
+                    setRunning(false);
+                    state.failedAt = i;
+                    state.failMessage = 'Installation cancelled';
+                    $('currentTask').textContent = 'Installation cancelled';
+                    log(`CANCELLED before "${step.label}"`, 't-err');
+                    showFail(state.failMessage, '', false, step.id);
+                    saveState();
+                    return;
+                }
+                state.currentIndex = i;
+                state.failedAt = null;
+                $('currentTask').textContent = step.label;
+                setTaskState(i, 'running');
+                log('> ' + step.label, 't-info');
+                saveState();
+
+                try {
+                    let res;
+                    if (resume && resume.jobId && i === from) {
+                        state.jobId = resume.jobId;
+                        res = await pollJob(resume.jobId);
+                    } else {
+                        res = await api(step.id);
+                        if (res.job_id) {
+                            state.jobId = res.job_id;
+                            saveState();
+                            res = await pollJob(res.job_id);
+                        }
+                    }
+                    state.jobId = null;
+
+                    if (Array.isArray(res.checks)) {
+                        renderChecks(res.checks);
+                        res.checks.filter((c) => c.status === 'warn').forEach((c) => log(`WARN ${c.label}: ${c.detail}`, 't-warn'));
+                    }
+                    applyEnvResult(res);
+                    if (step.id === 'test_database' && Number(res.tables) > 0) {
+                        log(`WARN The database already contains ${res.tables} tables`, 't-warn');
+                    }
+
+                    setTaskState(i, 'done');
+                    setProgress(i + 1, state.steps.length);
+                    log('OK ' + res.message, 't-ok');
+                    if (res.project_path) state.projectPath = res.project_path;
+                } catch (err) {
+                    const cancelled = Boolean(err.result && err.result.cancelled) || state.cancelRequested;
+                    state.cancelRequested = false;
+                    state.jobId = null;
+                    setRunning(false);
+                    state.failedAt = i;
+                    state.failMessage = cancelled ? 'Installation cancelled' : err.message;
+                    setTaskState(i, cancelled ? 'pending' : 'failed');
+                    $('currentTask').textContent = cancelled ? 'Installation cancelled' : 'Installation failed';
+                    log((cancelled ? 'CANCELLED ' : 'ERROR ') + err.message, 't-err');
+                    if (err.result && Array.isArray(err.result.checks)) applyEnvResult(err.result);
+                    const dbMissing = !cancelled && Boolean(err.result && err.result.db_missing) && DB_DRIVERS[selectedDriver()].canCreate;
+                    showFail(state.failMessage, cancelled ? '' : err.output, dbMissing, step.id);
+                    saveState();
+                    return;
+                }
+            }
+
+            setRunning(false);
+            $('currentTask').textContent = 'Installation complete';
+            setTimeout(showDone, 900);
+        }
+
+        function startInstall() {
+            state.skipMigrations = false;
+            state.skippedSteps = [];
+            state.cancelRequested = false;
+            state.logLines = [];
+            state.steps = buildSteps();
+            state.failedAt = null;
+            state.failMessage = '';
+            state.savedHasPassword = false;
+            renderTasks();
+            $('installLog').innerHTML = '';
+            setProgress(0, state.steps.length);
+            log(`Installing Laravel ${selectedVersion()} as "${$('projectName').value.trim()}"`, 't-info');
+            showRunUi();
+            runInstall(0);
+        }
+
+        $('startBtn').addEventListener('click', startInstall);
+        $('retryBtn').addEventListener('click', () => { if (state.failedAt !== null) continueFrom(state.failedAt); });
+        $('createDbRetryBtn').addEventListener('click', async () => {
+            const btn = $('createDbRetryBtn');
+            btn.disabled = true;
+            try {
+                if (needsPassword(state.failedAt)) {
+                    continueFrom(state.failedAt);
+                    return;
+                }
+                const res = await api('create_database');
+                log('OK ' + res.message, 't-ok');
+                runInstall(state.failedAt);
+            } catch (err) {
+                $('failMessage').textContent = err.message;
+            } finally {
+                btn.disabled = false;
+            }
+        });
+        $('editBtn').addEventListener('click', () => {
+            state.failedAt = null;
+            state.failMessage = '';
+            showReviewUi();
+            goTo(1);
+        });
+
+        $('resumePwBtn').addEventListener('click', () => {
+            $('dbPassword').value = $('resumePw').value;
+            $('resumePw').value = '';
+            const pending = state.pendingRun;
+            state.pendingRun = null;
+            $('resumePwBox').style.display = 'none';
+            if (pending) runInstall(pending.index, pending.resume);
+        });
+
+        /* ---------- Cancel, skip migrations, error report ---------- */
+        $('cancelBtn').addEventListener('click', async () => {
+            const btn = $('cancelBtn');
+            const label = btn.querySelector('span');
+            if (!cancelArmed) {
+                cancelArmed = true;
+                label.textContent = 'Click again to confirm';
+                cancelTimer = setTimeout(resetCancelBtn, 4000);
+                return;
+            }
+
+            clearTimeout(cancelTimer);
+            btn.disabled = true;
+            label.textContent = 'Cancelling...';
+            state.cancelRequested = true;
+            $('currentTask').textContent = 'Cancelling...';
+            if (!state.jobId) return;
+
+            try {
+                await api('job_cancel', { jobId: state.jobId });
+            } catch (err) {
+                state.cancelRequested = false;
+                log('Could not cancel: ' + err.message, 't-err');
+                resetCancelBtn();
+            }
+        });
+
+        $('skipDbBtn').addEventListener('click', () => {
+            if (state.failedAt === null) return;
+            const index = state.failedAt;
+            state.skipMigrations = true;
+            state.steps = buildSteps();
+            renderTasks();
+            for (let i = 0; i < index; i++) setTaskState(i, 'done');
+            setProgress(index, state.steps.length);
+            log('Skipping migrations. Run them later with: php artisan migrate', 't-warn');
+            continueFrom(index);
+        });
+
+        // Removes secrets before a report leaves the page.
+        function redact(text) {
+            let out = String(text);
+            const password = $('dbPassword').value;
+            if (password.length >= 3) out = out.split(password).join('[redacted]');
+            if (state.token) out = out.split(state.token).join('[redacted]');
+            out = out.replace(/(password|passwd|pwd|secret|token|api[_-]?key)(["']?\s*[=:]\s*)("[^"]*"|'[^']*'|\S+)/gi, '$1$2[redacted]');
+            out = out.replace(/([A-Za-z]:[\\/]Users[\\/])[^\\/\s"']+/gi, '$1<user>');
+            out = out.replace(/\/(Users|home)\/[^/\s"']+/g, '/$1/<user>');
+            return out;
+        }
+
+        function buildReport() {
+            const d = dbValues();
+            const app = appValues();
+            const step = state.failedAt !== null ? state.steps[state.failedAt] : null;
+            const lines = [
+                'Laravel Installer error report',
+                `Generated: ${new Date().toISOString()}`,
+                `Browser: ${navigator.userAgent}`,
+                '',
+                '== Settings ==',
+                `Project: ${$('projectName').value.trim()}`,
+                `Location: ${$('fullPath').textContent}`,
+                `Laravel: ${selectedVersion()}`,
+                `PHP (CLI): ${state.phpCli || 'unknown'}${state.phpPath ? ` (${state.phpPath})` : ''}`,
+                `Database: ${d.connection}${d.connection === 'sqlite' ? '' : ` ${d.host}:${d.port}/${d.database}`}`,
+                `Migrations: ${$('runMigrations').checked && !state.skipMigrations ? 'run' : 'skipped'}`,
+                `App: env=${app.env} debug=${app.debug} timezone=${app.timezone} locale=${app.locale}`,
+                '',
+                '== Failure ==',
+                `Step: ${step ? `${step.label} (${step.id})` : 'unknown'}`,
+                `Error: ${state.failMessage}`,
+                '',
+                'Output:',
+                $('failOutput').textContent,
+                '',
+                '== System check ==',
+                ...state.checks.map((c) => `[${String(c.status).toUpperCase()}] ${c.label}: ${c.detail}`),
+                '',
+                '== Installer log ==',
+                ...state.logLines
+            ];
+            return redact(lines.join('\n'));
+        }
+
+        function downloadReport() {
+            const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
+            const url = URL.createObjectURL(new Blob([buildReport()], { type: 'text/plain;charset=utf-8' }));
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `laravel-installer-report-${stamp}.txt`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        $('downloadReportBtn').addEventListener('click', downloadReport);
+        $('copyReportBtn').addEventListener('click', async () => {
+            const btn = $('copyReportBtn');
+            const original = btn.innerHTML;
+            try {
+                await navigator.clipboard.writeText(buildReport());
+                btn.innerHTML = '<i class="bi bi-check-lg me-1"></i> Copied';
+                setTimeout(() => { btn.innerHTML = original; }, 1500);
+            } catch (e) {
+                downloadReport();
+            }
+        });
+
+        /* ---------- Done ---------- */
+        function showDone() {
+            const name = $('projectName').value.trim();
+            const path = state.projectPath || $('fullPath').textContent;
+            state.projectPath = path;
+            const list = $('doneList');
+            list.innerHTML = '';
+            addRow(list, 'Project', name);
+            addRow(list, 'Laravel', 'Laravel ' + selectedVersion());
+            addRow(list, 'Location', path);
+            $('cmdCd').textContent = `cd "${path}"`;
+
+            const migrationsPending = !$('runMigrations').checked || state.skipMigrations;
+            $('pendingNote').style.display = migrationsPending ? 'block' : 'none';
+            if (migrationsPending) {
+                const d = dbValues();
+                $('pendingText').textContent = d.connection === 'sqlite'
+                    ? 'Migrations were skipped. Run this command inside the project when you are ready:'
+                    : `Migrations were skipped. Create the database "${d.database}" and start the database server, then run this inside the project:`;
+            }
+            clearState();
+            goTo(6);
+            showDoneExtras();
+        }
+
+        async function copyText(text, button) {
+            try {
+                await navigator.clipboard.writeText(text);
+                const original = button.innerHTML;
+                button.innerHTML = '<i class="bi bi-check-lg"></i>';
+                setTimeout(() => { button.innerHTML = original; }, 1200);
+            } catch (e) {
+                window.prompt('Copy:', text);
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            const copy = e.target.closest('[data-copy]');
+            if (copy) copyText($(copy.dataset.copy).textContent, copy);
+            const copyPath = e.target.closest('[data-copy-path]');
+            if (copyPath) copyText(state.projectPath, copyPath);
+        });
+
+        $('lockBtn').addEventListener('click', async () => {
+            $('lockBtn').disabled = true;
+            try {
+                await api('lock');
+                $('lockStatus').textContent = 'Installer locked.';
+                $('lockStatus').className = 'small ms-2 text-success';
+            } catch (err) {
+                $('lockBtn').disabled = false;
+                $('lockStatus').textContent = err.message;
+                $('lockStatus').className = 'small ms-2 text-danger';
+            }
+        });
+
+        $('restartBtn').addEventListener('click', () => {
+            $('installerForm').reset();
+            $$('.is-valid, .is-invalid').forEach((el) => el.classList.remove('is-valid', 'is-invalid'));
+            state.failedAt = null;
+            state.failMessage = '';
+            state.projectPath = '';
+            state.savedHasPassword = false;
+            state.skipMigrations = false;
+            state.nameResult = null;
+            state.appNameTouched = false;
+            state.phpPath = '';
+            state.logLines = [];
+            state.skippedSteps = [];
+            resetServeUi();
+            $('installLog').innerHTML = '';
+            $('taskList').innerHTML = '';
+            $('failBox').style.display = 'none';
+            $('resumePwBox').style.display = 'none';
+            $('folderPicker').classList.remove('open');
+            setProgress(0, 1);
+            renderAppOptions();
+            syncPhpSelect();
+            setNameStatus('3-50 lowercase letters, numbers and hyphens.');
+            showReviewUi();
+            $('dbGrid').dispatchEvent(new Event('change'));
+            renderVersions();
+            if (state.defaultPath) $('installPath').value = state.defaultPath;
+            updateFullPath();
+            goTo(1);
+        });
+
+        /* ---------- Resume ---------- */
+        function selectRadio(name, value) {
+            const input = $$(`input[name="${name}"]`).find((i) => i.value === value && !i.disabled);
+            if (input) input.checked = true;
+            return Boolean(input);
+        }
+
+        function applySaved(s) {
+            $('projectName').value = typeof s.projectName === 'string' ? s.projectName : '';
+            $('installPath').value = typeof s.installPath === 'string' && s.installPath ? s.installPath : state.defaultPath;
+            updateFullPath();
+
+            if (s.laravelVersion) selectRadio('laravelVersion', s.laravelVersion);
+            renderFeatures();
+
+            const db = s.db || {};
+            if (db.connection) selectRadio('dbDriver', db.connection);
+            $('dbGrid').dispatchEvent(new Event('change'));
+            if (db.host) $('dbHost').value = String(db.host);
+            if (db.port) $('dbPort').value = String(db.port);
+            if (db.database) $('dbDatabase').value = String(db.database);
+            if (db.username) $('dbUsername').value = String(db.username);
+            $('runMigrations').checked = s.runMigrations !== false;
+            state.skipMigrations = Boolean(s.skipMigrations);
+            applyOpts(s.opts);
+
+            const app = s.app || {};
+            if (app.name) { $('appName').value = String(app.name); state.appNameTouched = true; }
+            if (app.url) $('appUrl').value = String(app.url);
+            [['appEnv', app.env], ['appTimezone', app.timezone], ['appLocale', app.locale]].forEach(([id, value]) => {
+                if (value && Array.from($(id).options).some((o) => o.value === value)) $(id).value = value;
+            });
+            if (typeof app.debug === 'boolean') $('appDebug').checked = app.debug;
+
+            if (typeof s.phpPath === 'string' && s.phpPath) {
+                state.phpPath = s.phpPath;
+                syncPhpSelect();
+                runEnvCheck();
+            }
+            scheduleNameCheck();
+
+            state.savedHasPassword = Boolean(db.hasPassword);
+            if (state.savedHasPassword) $('dbPassword').placeholder = 'Re-enter your password';
+        }
+
+        function describeSaved(s) {
+            const inst = s.install || {};
+            const name = s.projectName || 'an unnamed project';
+            if (inst.active) return `The installation of "${name}" was running. Resume to follow its progress.`;
+            if (Number.isInteger(inst.failedAt)) return `The installation of "${name}" stopped with an error. You can retry from the failed step.`;
+            return `You were setting up "${name}" (step ${s.wizardStep || 1} of 5).`;
+        }
+
+        async function resumeSaved(s) {
+            applySaved(s);
+            const inst = s.install || {};
+            const hasRun = inst.active || Number.isInteger(inst.failedAt);
+
+            if (!hasRun) {
+                goTo(Math.min(Math.max(Number(s.wizardStep) || 1, 1), 5));
+                return;
+            }
+
+            state.steps = buildSteps();
+            const index = Math.min(Math.max(Number.isInteger(inst.index) ? inst.index : inst.failedAt, 0), state.steps.length - 1);
+            state.projectPath = inst.projectPath || '';
+            renderTasks();
+            for (let i = 0; i < index; i++) setTaskState(i, 'done');
+            setProgress(index, state.steps.length);
+            $('installLog').innerHTML = '';
+            showRunUi();
+            goTo(5);
+            log('Resumed the previous session', 't-info');
+
+            if (inst.active) {
+                state.currentIndex = index;
+                continueFrom(index, inst.jobId ? { jobId: inst.jobId } : null);
+            } else {
+                state.failedAt = index;
+                state.failMessage = inst.failMessage || 'The previous attempt failed';
+                setTaskState(index, 'failed');
+                $('currentTask').textContent = 'Installation failed';
+                showFail(state.failMessage, '', false, state.steps[index].id);
+            }
+        }
+
+        function offerResume(s) {
+            state.resumePending = true;
+            $('resumeText').textContent = describeSaved(s);
+            $('resumeBanner').classList.add('show');
+
+            $('resumeBtn').onclick = async () => {
+                $('resumeBanner').classList.remove('show');
+                state.resumePending = false;
+                await resumeSaved(s);
+            };
+            $('freshBtn').onclick = () => {
+                $('resumeBanner').classList.remove('show');
+                state.resumePending = false;
+                clearState();
+            };
+        }
+
+        /* ---------- Features: starter kits, packages and tooling ---------- */
+        const KITS = [
+            { id: 'none', label: 'None', icon: 'bi-box', desc: 'Plain Laravel. Add your own frontend.' },
+            { id: 'react', label: 'React', icon: 'bi-lightning-charge', official: true, desc: 'Official kit with Inertia, React and shadcn/ui.' },
+            { id: 'vue', label: 'Vue', icon: 'bi-lightning-charge', official: true, desc: 'Official kit with Inertia, Vue and shadcn-vue.' },
+            { id: 'livewire', label: 'Livewire', icon: 'bi-lightning-charge', official: true, desc: 'Official kit with Livewire and Flux UI.' },
+            { id: 'svelte', label: 'Svelte', icon: 'bi-lightning-charge', official: true, desc: 'Official kit with Inertia and Svelte. Pre-release (dev-main).' },
+            { id: 'breeze', label: 'Breeze', icon: 'bi-wind', desc: 'Simple login and registration scaffolding.' },
+            { id: 'jetstream', label: 'Jetstream', icon: 'bi-shield-lock', desc: 'Teams, two-factor authentication and API tokens.' }
+        ];
+        const OFFICIAL_KITS = ['react', 'vue', 'livewire', 'svelte'];
+        const OPTIONAL_STEPS = ['starter_kit', 'testing_pest', 'install_packages', 'frontend_bootstrap', 'npm_build', 'sail_install', 'git_setup'];
+
+        const PACKAGES = [
+            { id: 'sanctum', label: 'Sanctum', cat: 'Auth & API', desc: 'API tokens and SPA authentication.', min: 11 },
+            { id: 'socialite', label: 'Socialite', cat: 'Auth & API', desc: 'OAuth login with Google, GitHub and more.' },
+            { id: 'fortify', label: 'Fortify', cat: 'Auth & API', desc: 'Headless authentication backend.', min: 11 },
+            { id: 'permission', label: 'Spatie Permission', cat: 'Auth & API', desc: 'Roles and permissions for users.' },
+            { id: 'livewire', label: 'Livewire', cat: 'Admin & UI', desc: 'Dynamic interfaces written in PHP.' },
+            { id: 'filament', label: 'Filament', cat: 'Admin & UI', desc: 'Admin panel and form builder.', min: 11, ext: ['intl'] },
+            { id: 'debugbar', label: 'Debugbar', cat: 'Developer tools', desc: 'Debug toolbar with queries and timings (dev only).' },
+            { id: 'ide-helper', label: 'IDE Helper', cat: 'Developer tools', desc: 'Better autocompletion in your editor (dev only).' },
+            { id: 'telescope', label: 'Telescope', cat: 'Developer tools', desc: 'Inspect requests, queries and jobs.' },
+            { id: 'horizon', label: 'Horizon', cat: 'Queues', desc: 'Dashboard for Redis queues.', unix: true, ext: ['pcntl', 'posix'] }
+        ];
+
+        function selectedKit() {
+            const checked = document.querySelector('input[name="kit"]:checked');
+            return checked ? checked.value : 'none';
+        }
+
+        function majorVersion() {
+            const v = selectedVersion();
+            return v ? parseInt(v, 10) : 0;
+        }
+
+        // Official starter kits ship their own Laravel release, so the version card is ignored for them.
+        function effectiveMajor() {
+            return OFFICIAL_KITS.includes(selectedKit()) ? 12 : majorVersion();
+        }
+
+        function isWindowsHost() {
+            return /^[A-Za-z]:[\\/]/.test(state.defaultPath || $('installPath').value);
+        }
+
+        function optionExists(id, value) {
+            return Array.from($(id).options).some((o) => o.value === value);
+        }
+
+        function renderFeatureControls() {
+            const kitGrid = $('kitGrid');
+            kitGrid.innerHTML = '';
+            KITS.forEach((k) => {
+                const label = document.createElement('label');
+                label.className = 'choice';
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'kit';
+                input.value = k.id;
+                input.defaultChecked = k.id === 'none';
+                input.checked = k.id === 'none';
+                const body = document.createElement('div');
+                body.className = 'card-body';
+                const title = document.createElement('div');
+                title.className = 'title';
+                const name = document.createElement('span');
+                name.textContent = k.label;
+                const icon = document.createElement('i');
+                icon.className = 'bi ' + k.icon + ' icon';
+                title.append(name, icon);
+                const desc = document.createElement('div');
+                desc.className = 'desc';
+                desc.textContent = k.desc;
+                const reason = document.createElement('div');
+                reason.className = 'reason';
+                body.append(title, desc, reason);
+                label.append(input, body);
+                kitGrid.appendChild(label);
+            });
+
+            const pkgGrid = $('pkgGrid');
+            pkgGrid.innerHTML = '';
+            PACKAGES.forEach((p) => {
+                const label = document.createElement('label');
+                label.className = 'choice';
+                label.dataset.search = `${p.label} ${p.cat} ${p.desc} ${p.id}`.toLowerCase();
+                const input = document.createElement('input');
+                input.type = 'checkbox';
+                input.name = 'pkg';
+                input.value = p.id;
+                const body = document.createElement('div');
+                body.className = 'card-body';
+                const cat = document.createElement('div');
+                cat.className = 'cat';
+                cat.textContent = p.cat;
+                const title = document.createElement('div');
+                title.className = 'title';
+                const name = document.createElement('span');
+                name.textContent = p.label;
+                title.appendChild(name);
+                const desc = document.createElement('div');
+                desc.className = 'desc';
+                desc.textContent = p.desc;
+                const reason = document.createElement('div');
+                reason.className = 'reason';
+                body.append(cat, title, desc, reason);
+                label.append(input, body);
+                pkgGrid.appendChild(label);
+            });
+        }
+
+        function updateFeatureAvailability() {
+            if (!$('kitGrid').firstChild) return;
+            const major = majorVersion();
+
+            $$('input[name="kit"]').forEach((input) => {
+                const needsNew = (input.value === 'breeze' || input.value === 'jetstream') && major && major < 11;
+                input.disabled = Boolean(needsNew);
+                input.parentElement.querySelector('.reason').textContent = needsNew ? 'Needs Laravel 11 or newer' : '';
+            });
+            const picked = document.querySelector('input[name="kit"]:checked');
+            if (picked && picked.disabled) document.querySelector('input[name="kit"][value="none"]').checked = true;
+
+            const kit = selectedKit();
+            const eff = effectiveMajor();
+            const runsNpm = kit === 'breeze' || kit === 'jetstream';
+
+            $('breezeRow').style.display = kit === 'breeze' ? 'block' : 'none';
+            $('jetRow').style.display = kit === 'jetstream' ? 'block' : 'none';
+            const kitInfo = KITS.find((k) => k.id === kit);
+            if (OFFICIAL_KITS.includes(kit)) {
+                $('kitNote').textContent = `Creates the project from the ${kitInfo.label} starter kit, which brings its own Laravel release (Laravel 12 today). The version chosen in step 2 is ignored.`;
+            } else if (runsNpm) {
+                $('kitNote').textContent = `${kitInfo.label} runs npm install and npm run build itself, so Node.js must be installed.`;
+            } else {
+                $('kitNote').textContent = 'Official kits: React, Vue, Livewire and Svelte. Breeze and Jetstream are the classic scaffolding packages.';
+            }
+
+            const npm = $('optNpm');
+            const bootstrap = $('optBootstrap');
+            if (runsNpm) {
+                npm.checked = true;
+                npm.disabled = true;
+            } else if (kit === 'none' && major && major < 10) {
+                npm.checked = false;
+                npm.disabled = true;
+            } else {
+                npm.disabled = false;
+            }
+            if (kit !== 'none' || (major && major < 10)) {
+                bootstrap.checked = false;
+                bootstrap.disabled = true;
+            } else {
+                bootstrap.disabled = false;
+            }
+            $('frontendNote').textContent = runsNpm
+                ? 'Breeze and Jetstream run npm themselves. Bootstrap is only available without a starter kit.'
+                : (kit !== 'none'
+                    ? 'The starter kit brings its own Tailwind frontend. Building the assets is recommended.'
+                    : (major && major < 10
+                        ? 'Laravel 9 and older use Laravel Mix instead of Vite, so these options are off.'
+                        : 'Vite is the bundler in every modern Laravel project, so there is nothing to pick. Tailwind is the default styling.'));
+
+            PACKAGES.forEach((p) => {
+                const input = document.querySelector(`input[name="pkg"][value="${p.id}"]`);
+                if (!input) return;
+                let off = '';
+                if (p.min && eff && eff < p.min) off = `Needs Laravel ${p.min} or newer`;
+                else if (p.unix && isWindowsHost()) off = 'Not supported on Windows';
+                else if (p.ext && state.cliModules && state.cliModules.length) {
+                    const missing = p.ext.filter((e) => !state.cliModules.includes(e));
+                    if (missing.length) off = `PHP extension missing: ${missing.join(', ')}`;
+                }
+                input.disabled = Boolean(off);
+                if (off) input.checked = false;
+                input.parentElement.querySelector('.reason').textContent = off;
+            });
+
+            $('sailServices').hidden = !$('optSail').checked;
+            $('gitOptions').style.display = $('optGit').checked ? 'block' : 'none';
+
+            const nodeCheck = state.checks.find((c) => c.id === 'node');
+            const needsNode = runsNpm || (!npm.disabled && npm.checked) || (!bootstrap.disabled && bootstrap.checked);
+            $('nodeWarn').style.display = needsNode && nodeCheck && nodeCheck.status !== 'ok' ? 'block' : 'none';
+        }
+
+        function collectOpts() {
+            const kit = selectedKit();
+            const testing = document.querySelector('input[name="testing"]:checked');
+            return {
+                kit,
+                kitStack: kit === 'breeze' ? $('breezeStack').value : (kit === 'jetstream' ? $('jetStack').value : ''),
+                kitTeams: kit === 'jetstream' && $('jetTeams').checked,
+                testing: testing ? testing.value : 'phpunit',
+                npm: $('optNpm').checked && !$('optNpm').disabled,
+                bootstrap: $('optBootstrap').checked && !$('optBootstrap').disabled,
+                packages: $$('input[name="pkg"]:checked').filter((i) => !i.disabled).map((i) => i.value),
+                runtime: { cache: $('rtCache').value, queue: $('rtQueue').value, session: $('rtSession').value, mail: $('rtMail').value },
+                sail: { enabled: $('optSail').checked, services: $$('input[name="sailService"]:checked').map((i) => i.value) },
+                git: {
+                    enabled: $('optGit').checked,
+                    commit: $('gitCommit').checked,
+                    branch: $('gitBranch').value.trim() || 'main',
+                    ignore: $$('input[name="gitIgnore"]:checked').map((i) => i.value)
+                }
+            };
+        }
+
+        function applyOpts(o) {
+            o = o || {};
+            const setRadio = (name, value) => {
+                const input = $$(`input[name="${name}"]`).find((i) => i.value === value);
+                if (input) input.checked = true;
+            };
+            setRadio('kit', o.kit || 'none');
+            if (o.kit === 'breeze' && optionExists('breezeStack', o.kitStack)) $('breezeStack').value = o.kitStack;
+            if (o.kit === 'jetstream' && optionExists('jetStack', o.kitStack)) $('jetStack').value = o.kitStack;
+            $('jetTeams').checked = Boolean(o.kitTeams);
+            setRadio('testing', o.testing || 'phpunit');
+            $('optNpm').checked = Boolean(o.npm);
+            $('optBootstrap').checked = Boolean(o.bootstrap);
+            const wanted = Array.isArray(o.packages) ? o.packages : [];
+            $$('input[name="pkg"]').forEach((i) => { i.checked = wanted.includes(i.value); });
+
+            const runtime = o.runtime || {};
+            [['rtCache', 'cache'], ['rtQueue', 'queue'], ['rtSession', 'session'], ['rtMail', 'mail']].forEach(([id, key]) => {
+                $(id).value = runtime[key] && optionExists(id, runtime[key]) ? runtime[key] : 'default';
+            });
+
+            const sail = o.sail || {};
+            $('optSail').checked = Boolean(sail.enabled);
+            $$('input[name="sailService"]').forEach((i) => { i.checked = Array.isArray(sail.services) && sail.services.includes(i.value); });
+
+            const git = o.git || {};
+            $('optGit').checked = Boolean(git.enabled);
+            $('gitCommit').checked = git.commit !== false;
+            $('gitBranch').value = typeof git.branch === 'string' && /^[A-Za-z0-9._/-]{1,50}$/.test(git.branch) ? git.branch : 'main';
+            $$('input[name="gitIgnore"]').forEach((i) => { i.checked = Array.isArray(git.ignore) && git.ignore.includes(i.value); });
+            updateFeatureAvailability();
+        }
+
+        $('kitGrid').addEventListener('change', () => {
+            if (OFFICIAL_KITS.includes(selectedKit())) $('optNpm').checked = true;
+            updateFeatureAvailability();
+        });
+        ['optNpm', 'optSail', 'optGit'].forEach((id) => $(id).addEventListener('change', updateFeatureAvailability));
+        $('optBootstrap').addEventListener('change', () => {
+            if ($('optBootstrap').checked && !$('optNpm').disabled) $('optNpm').checked = true;
+            updateFeatureAvailability();
+        });
+        $('pkgSearch').addEventListener('input', () => {
+            const query = $('pkgSearch').value.trim().toLowerCase();
+            let shown = 0;
+            $$('#pkgGrid .choice').forEach((label) => {
+                const match = !query || label.dataset.search.includes(query);
+                label.hidden = !match;
+                if (match) shown++;
+            });
+            $('pkgEmpty').style.display = shown ? 'none' : 'block';
+        });
+
+        $('skipStepBtn').addEventListener('click', () => {
+            if (state.failedAt === null) return;
+            const index = state.failedAt;
+            const step = state.steps[index];
+            state.skippedSteps.push(step.label);
+            setTaskState(index, 'skipped');
+            setProgress(index + 1, state.steps.length);
+            log(`Skipped: ${step.label}`, 't-warn');
+            continueFrom(index + 1);
+        });
+
+        /* ---------- Templates ---------- */
+        const GIT_ON = { enabled: true, commit: true, branch: 'main', ignore: ['ide', 'os'] };
+        const BUILTIN_TEMPLATES = [
+            { name: 'Blog + Admin', desc: 'MySQL, Filament admin, Spatie Permission, Debugbar, Pest, Git.', config: {
+                db: { connection: 'mysql' }, runMigrations: true, app: { env: 'local', debug: true },
+                opts: { kit: 'none', testing: 'pest', npm: true, packages: ['filament', 'permission', 'debugbar'], runtime: { mail: 'log' }, git: GIT_ON }
+            } },
+            { name: 'REST API', desc: 'SQLite, Sanctum, Telescope, Pest, database queue, no frontend build.', config: {
+                db: { connection: 'sqlite' }, runMigrations: true, app: { env: 'local', debug: true },
+                opts: { kit: 'none', testing: 'pest', npm: false, packages: ['sanctum', 'telescope'], runtime: { queue: 'database', mail: 'log' }, git: GIT_ON }
+            } },
+            { name: 'React full-stack', desc: 'Official React starter kit, MySQL, Debugbar, Pest, Git.', config: {
+                db: { connection: 'mysql' }, runMigrations: true,
+                opts: { kit: 'react', testing: 'pest', npm: true, packages: ['debugbar'], git: GIT_ON }
+            } },
+            { name: 'Livewire app', desc: 'Official Livewire starter kit, SQLite, Debugbar, Git.', config: {
+                db: { connection: 'sqlite' }, runMigrations: true,
+                opts: { kit: 'livewire', testing: 'phpunit', npm: true, packages: ['debugbar'], git: GIT_ON }
+            } },
+            { name: 'Minimal', desc: 'Plain Laravel with SQLite and nothing extra.', config: {
+                db: { connection: 'sqlite' }, runMigrations: true,
+                opts: { kit: 'none', testing: 'phpunit', npm: false, packages: [], git: { enabled: false } }
+            } }
+        ];
+
+        function allTemplates() {
+            return [
+                ...BUILTIN_TEMPLATES.map((t, i) => ({ key: `b:${i}`, name: t.name, desc: t.desc, config: t.config, saved: false })),
+                ...state.tplList.map((t, i) => ({ key: `u:${i}`, name: t.name, desc: 'Saved template', config: t.config, saved: true }))
+            ];
+        }
+
+        function renderTemplates() {
+            const select = $('tplSelect');
+            const previous = select.value;
+            select.innerHTML = '';
+            const first = document.createElement('option');
+            first.value = '';
+            first.textContent = 'Choose a template...';
+            select.appendChild(first);
+            [['Built-in', false], ['Saved', true]].forEach(([title, saved]) => {
+                const items = allTemplates().filter((t) => t.saved === saved);
+                if (!items.length) return;
+                const group = document.createElement('optgroup');
+                group.label = title;
+                items.forEach((t) => {
+                    const option = document.createElement('option');
+                    option.value = t.key;
+                    option.textContent = t.name;
+                    group.appendChild(option);
+                });
+                select.appendChild(group);
+            });
+            if (previous && allTemplates().some((t) => t.key === previous)) select.value = previous;
+            updateTemplateUi();
+        }
+
+        function updateTemplateUi() {
+            const picked = allTemplates().find((t) => t.key === $('tplSelect').value);
+            $('tplDesc').textContent = picked ? picked.desc : 'Fills in version, database, features and packages in one click.';
+            $('tplDelete').disabled = !(picked && picked.saved);
+        }
+
+        async function loadTemplates() {
+            try {
+                state.tplList = (await api('template_list')).templates || [];
+            } catch (e) {
+                state.tplList = [];
+            }
+            renderTemplates();
+        }
+
+        function applyTemplateConfig(cfg) {
+            if (cfg.laravelVersion) selectRadio('laravelVersion', cfg.laravelVersion);
+            renderFeatures();
+
+            const db = cfg.db || {};
+            if (db.connection) {
+                selectRadio('dbDriver', db.connection);
+                $('dbGrid').dispatchEvent(new Event('change'));
+            }
+            [['dbHost', 'host'], ['dbPort', 'port'], ['dbDatabase', 'database'], ['dbUsername', 'username']].forEach(([id, key]) => {
+                if (db[key]) $(id).value = String(db[key]);
+            });
+            if (typeof cfg.runMigrations === 'boolean') $('runMigrations').checked = cfg.runMigrations;
+
+            const app = cfg.app || {};
+            [['appEnv', app.env], ['appTimezone', app.timezone], ['appLocale', app.locale]].forEach(([id, value]) => {
+                if (value && optionExists(id, value)) $(id).value = value;
+            });
+            if (typeof app.debug === 'boolean') $('appDebug').checked = app.debug;
+            applyOpts(cfg.opts);
+            saveStateSoon();
+        }
+
+        $('tplSelect').addEventListener('change', updateTemplateUi);
+        $('tplApply').addEventListener('click', () => {
+            const picked = allTemplates().find((t) => t.key === $('tplSelect').value);
+            if (picked) applyTemplateConfig(picked.config);
+        });
+        $('tplDelete').addEventListener('click', async () => {
+            const picked = allTemplates().find((t) => t.key === $('tplSelect').value);
+            if (!picked || !picked.saved) return;
+            try {
+                state.tplList = (await api('template_delete', { templateName: picked.name })).templates || [];
+                $('tplSelect').value = '';
+                renderTemplates();
+            } catch (err) {
+                $('tplDesc').textContent = err.message;
+            }
+        });
+        $('tplSave').addEventListener('click', async () => {
+            const name = $('tplName').value.trim();
+            const status = $('tplStatus');
+            if (!name) { status.textContent = 'Enter a template name first.'; return; }
+            const d = dbValues();
+            const app = appValues();
+            const config = {
+                laravelVersion: selectedVersion(),
+                db: { connection: d.connection, host: d.host, port: d.port, database: d.database, username: d.username },
+                runMigrations: $('runMigrations').checked,
+                app: { env: app.env, debug: app.debug, timezone: app.timezone, locale: app.locale },
+                opts: collectOpts()
+            };
+            try {
+                state.tplList = (await api('template_save', { templateName: name, config })).templates || [];
+                renderTemplates();
+                status.textContent = `Saved "${name}". It appears under Saved templates on step 1.`;
+            } catch (err) {
+                status.textContent = err.message;
+            }
+        });
+
+        /* ---------- History ---------- */
+        function vscodeUri(path) {
+            return 'vscode://file/' + encodeURI(path.replace(/\\/g, '/'));
+        }
+
+        function renderHistory() {
+            const list = $('historyList');
+            list.innerHTML = '';
+            $('historyCard').style.display = state.historyList.length ? 'block' : 'none';
+            state.historyList.slice(0, 8).forEach((h) => {
+                const li = document.createElement('li');
+                const top = document.createElement('div');
+                top.className = 'd-flex justify-content-between align-items-start gap-2';
+                const name = document.createElement('span');
+                name.className = 'h-name';
+                name.textContent = h.name;
+                const actions = document.createElement('span');
+                actions.className = 'd-flex gap-1';
+
+                const copy = document.createElement('button');
+                copy.type = 'button';
+                copy.className = 'btn btn-ghost btn-sm';
+                copy.title = 'Copy path';
+                copy.innerHTML = '<i class="bi bi-clipboard"></i>';
+                copy.addEventListener('click', () => copyText(h.path, copy));
+
+                const open = document.createElement('a');
+                open.className = 'btn btn-ghost btn-sm' + (h.exists ? '' : ' disabled');
+                open.href = vscodeUri(h.path);
+                open.title = 'Open in VS Code';
+                open.innerHTML = '<i class="bi bi-code-slash"></i>';
+
+                const remove = document.createElement('button');
+                remove.type = 'button';
+                remove.className = 'btn btn-ghost btn-sm';
+                remove.title = 'Remove from history (the folder is not deleted)';
+                remove.innerHTML = '<i class="bi bi-x-lg"></i>';
+                remove.addEventListener('click', async () => {
+                    try { await api('history_delete', { historyId: h.id }); } catch (e) { /* keep the entry */ }
+                    loadHistory();
+                });
+                actions.append(copy, open, remove);
+                top.append(name, actions);
+
+                const meta = document.createElement('div');
+                meta.className = 'h-meta';
+                const bits = [`Laravel ${h.laravel}`, h.php ? `PHP ${h.php}` : null, h.db || null, h.kit && h.kit !== 'none' ? `${h.kit} kit` : null,
+                    new Date(h.date).toLocaleDateString(), h.exists ? null : 'folder no longer exists'].filter(Boolean);
+                meta.textContent = bits.join(' - ');
+
+                const path = document.createElement('div');
+                path.className = 'h-path';
+                path.textContent = h.path;
+                li.append(top, meta, path);
+                list.appendChild(li);
+            });
+        }
+
+        async function loadHistory() {
+            try {
+                state.historyList = (await api('history_list')).history || [];
+            } catch (e) {
+                state.historyList = [];
+            }
+            renderHistory();
+        }
+
+        /* ---------- Done screen: open, serve, health ---------- */
+        function resetServeUi() {
+            state.serveJob = null;
+            $('serveBtn').querySelector('span').textContent = 'Start dev server';
+            $('serveBtn').querySelector('i').className = 'bi bi-play-fill me-1';
+            $('browserLink').classList.add('disabled');
+            $('browserLink').setAttribute('aria-disabled', 'true');
+            $('browserLink').href = '#';
+            $('serveInfo').textContent = 'The dev server runs php artisan serve from the installer. Stop it when you are done.';
+        }
+
+        $('serveBtn').addEventListener('click', async () => {
+            const btn = $('serveBtn');
+            btn.disabled = true;
+            try {
+                if (state.serveJob) {
+                    await api('job_cancel', { jobId: state.serveJob });
+                    resetServeUi();
+                    $('serveInfo').textContent = 'Server stopped.';
+                    return;
+                }
+
+                const res = await api('serve_start');
+                state.serveJob = res.job_id;
+                $('serveInfo').textContent = 'Starting the server...';
+
+                let offset = 0;
+                let text = '';
+                let ready = false;
+                for (let i = 0; i < 25 && !ready; i++) {
+                    await sleep(700);
+                    const status = await api('job_status', { jobId: res.job_id, offset });
+                    offset = status.offset;
+                    text += status.chunk || '';
+                    if (/Server running on/i.test(text)) ready = true;
+                    else if (!status.running) break;
+                }
+                if (!ready) throw new InstallerError('The server did not report that it is running', stripAnsi(text));
+
+                $('browserLink').href = res.url;
+                $('browserLink').classList.remove('disabled');
+                $('browserLink').removeAttribute('aria-disabled');
+                btn.querySelector('span').textContent = 'Stop dev server';
+                btn.querySelector('i').className = 'bi bi-stop-fill me-1';
+                $('serveInfo').textContent = `Running at ${res.url}. Stop it when you are done.`;
+            } catch (err) {
+                if (state.serveJob) api('job_cancel', { jobId: state.serveJob }).catch(() => {});
+                resetServeUi();
+                $('serveInfo').textContent = err.message + (err.output ? `: ${stripAnsi(err.output).trim().slice(0, 300)}` : '');
+            } finally {
+                btn.disabled = false;
+            }
+        });
+
+        function healthNote(el, text) {
+            el.innerHTML = '';
+            const p = document.createElement('div');
+            p.className = 'small text-secondary';
+            p.textContent = text;
+            el.appendChild(p);
+        }
+
+        function formatHealth(value) {
+            if (typeof value === 'boolean') return value ? 'ON' : 'OFF';
+            if (Array.isArray(value)) return value.join(', ');
+            if (value !== null && typeof value === 'object') return JSON.stringify(value);
+            return String(value);
+        }
+
+        function renderAbout(about) {
+            const env = about.environment || {};
+            const drivers = about.drivers || {};
+            const items = [];
+            [['application_name', 'App'], ['laravel_version', 'Laravel'], ['php_version', 'PHP'], ['environment', 'Environment'],
+                ['debug_mode', 'Debug'], ['url', 'URL'], ['timezone', 'Timezone'], ['locale', 'Locale']]
+                .forEach(([key, label]) => { if (env[key] !== undefined) items.push([label, env[key]]); });
+            [['database', 'Database'], ['cache', 'Cache'], ['queue', 'Queue'], ['session', 'Session'], ['mail', 'Mail']]
+                .forEach(([key, label]) => { if (drivers[key] !== undefined) items.push([label, drivers[key]]); });
+
+            const grid = document.createElement('div');
+            grid.className = 'health-grid';
+            items.forEach(([label, value]) => {
+                const item = document.createElement('div');
+                item.className = 'health-item';
+                const k = document.createElement('div');
+                k.className = 'k';
+                k.textContent = label;
+                const v = document.createElement('div');
+                v.className = 'v';
+                v.textContent = formatHealth(value);
+                item.append(k, v);
+                grid.appendChild(item);
+            });
+            $('healthAbout').innerHTML = '';
+            $('healthAbout').appendChild(grid);
+        }
+
+        function renderRoutes(res) {
+            const box = $('healthRoutes');
+            box.innerHTML = '';
+            const title = document.createElement('div');
+            title.className = 'fw-semibold small mb-1';
+            title.textContent = `${res.count} route${res.count === 1 ? '' : 's'}`;
+            const table = document.createElement('table');
+            table.className = 'route-table';
+            res.sample.forEach((r) => {
+                const tr = document.createElement('tr');
+                const m = document.createElement('td');
+                m.className = 'm';
+                m.textContent = r.method.replace('|HEAD', '');
+                const u = document.createElement('td');
+                u.textContent = '/' + r.uri.replace(/^\//, '');
+                const n = document.createElement('td');
+                n.className = 'text-secondary';
+                n.textContent = r.name;
+                tr.append(m, u, n);
+                table.appendChild(tr);
+            });
+            box.append(title, table);
+            if (res.count > res.sample.length) {
+                const more = document.createElement('div');
+                more.className = 'small text-secondary mt-1';
+                more.textContent = `...and ${res.count - res.sample.length} more. Run php artisan route:list for all.`;
+                box.appendChild(more);
+            }
+        }
+
+        function renderMigrationStatus(res) {
+            const box = $('healthMigrations');
+            box.innerHTML = '';
+            const pill = (text, cls) => {
+                const s = document.createElement('span');
+                s.className = 'pill ' + cls + ' me-2';
+                s.textContent = text;
+                return s;
+            };
+            const title = document.createElement('span');
+            title.className = 'fw-semibold small me-2';
+            title.textContent = 'Migrations';
+            box.append(title, pill(`${res.ran} ran`, 'success'), pill(`${res.pending} pending`, res.pending ? 'warn' : ''));
+            if (res.pending) {
+                const hint = document.createElement('div');
+                hint.className = 'small text-secondary mt-1';
+                hint.textContent = 'Run php artisan migrate to apply the pending migrations.';
+                box.appendChild(hint);
+            }
+        }
+
+        async function loadHealth() {
+            const refresh = $('healthRefresh');
+            refresh.disabled = true;
+            ['healthAbout', 'healthRoutes', 'healthMigrations'].forEach((id) => healthNote($(id), 'Loading...'));
+
+            const attempts = [
+                ['health_about', 'healthAbout', (res) => renderAbout(res.about)],
+                ['health_routes', 'healthRoutes', renderRoutes],
+                ['health_migrations', 'healthMigrations', renderMigrationStatus]
+            ];
+            for (const [step, target, render] of attempts) {
+                try {
+                    render(await api(step));
+                } catch (err) {
+                    healthNote($(target), err.message);
+                }
+            }
+            refresh.disabled = false;
+        }
+        $('healthRefresh').addEventListener('click', loadHealth);
+
+        function showDoneExtras() {
+            $('vscodeLink').href = vscodeUri(state.projectPath);
+            $('skippedNote').style.display = state.skippedSteps.length ? 'block' : 'none';
+            const list = $('skippedList');
+            list.innerHTML = '';
+            state.skippedSteps.forEach((label) => {
+                const li = document.createElement('li');
+                li.textContent = label;
+                list.appendChild(li);
+            });
+            resetServeUi();
+            loadHealth();
+            loadHistory();
+        }
+
+        /* ---------- Init ---------- */
+        function showBanner(message) {
+            const b = $('banner');
+            b.textContent = message;
+            b.classList.add('show');
+        }
+
+        function setEnvStatus(el, text, ok) {
+            el.textContent = text;
+            el.className = 'status ' + (ok ? 'ok' : 'bad');
+        }
+
+        function lockUi() {
+            state.locked = true;
+            $$('#installerForm input, #installerForm button').forEach((el) => { el.disabled = true; });
+        }
+
+        async function init() {
+            applyThemeLabel();
+            renderDrivers();
+            renderAppOptions();
+            renderFeatureControls();
+            renderVersions();
+
+            try {
+                const res = await fetch(`${ENDPOINT}?action=token`, { credentials: 'same-origin' });
+                const json = await res.json();
+                if (!json.success) {
+                    showBanner(json.message || 'The installer is not available');
+                    setEnvStatus($('envPhp'), 'unavailable', false);
+                    setEnvStatus($('envComposer'), 'unavailable', false);
+                    $('checkList').innerHTML = '';
+                    if (json.locked) lockUi();
+                    return;
+                }
+                state.token = json.token;
+            } catch (e) {
+                showBanner('Could not reach install-backend.php. Open this page through http://localhost/ with PHP running.');
+                $('checkList').innerHTML = '';
+                lockUi();
+                return;
+            }
+
+            try {
+                const saved = await api('state_load');
+                if (saved.state) offerResume(saved.state);
+            } catch (e) {
+                // A missing saved state is not an error.
+            }
+
+            let result = null;
+            try {
+                result = await api('check_requirements');
+            } catch (err) {
+                result = err.result;
+                showBanner(err.message);
+            }
+
+            if (result) {
+                state.phpCli = result.php_cli || null;
+                state.defaultPath = result.default_path || '';
+                setEnvStatus($('envPhp'), result.php_cli || 'not found', Boolean(result.php_cli));
+                const composerVersion = result.composer ? (result.composer.match(/\d+\.\d+\.\d+/) || ['installed'])[0] : 'not found';
+                setEnvStatus($('envComposer'), composerVersion, Boolean(result.composer));
+                if (state.defaultPath && !$('installPath').value) {
+                    $('installPath').value = state.defaultPath;
+                    updateFullPath();
+                }
+                renderVersions();
+            }
+
+            loadTemplates();
+            loadHistory();
+            await loadPhpList();
+            runEnvCheck();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            goTo(1);
+            init();
+        });
+    </script>
+</body>
+</html>
